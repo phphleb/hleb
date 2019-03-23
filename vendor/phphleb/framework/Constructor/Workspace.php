@@ -50,9 +50,9 @@ class Workspace
 
             if (isset($action["before"])) {
 
-                $this->calculate_time('Class <i>' . $action["before"][0] . "</i>");
-
                 $this->all_action($action["before"], "Before");
+
+                $this->calculate_time('Class <i>' . $action["before"][0] . "</i>");
 
             }
         }

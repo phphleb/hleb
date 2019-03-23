@@ -123,14 +123,14 @@ require HLEB_PROJECT_DIRECTORY. "/Main/Insert/DeterminantStaticUncreated.php";
 
 require HLEB_PROJECT_DIRECTORY . "/Main/Info.php";
 
+require HLEB_PROJECT_DIRECTORY . "/Scheme/Home/Main/Connector.php";
+
+require HLEB_GLOBAL_DIRECTORY . "/app/Optional/MainConnector.php";
+
 
 if(HLEB_PROJECT_CLASSES_AUTOLOAD) {
 
     require HLEB_PROJECT_DIRECTORY . "/Main/MainAutoloader.php";
-
-    require HLEB_PROJECT_DIRECTORY . "/Scheme/Home/Main/Connector.php";
-
-    require HLEB_GLOBAL_DIRECTORY . "/app/Optional/MainConnector.php";
 
     require HLEB_PROJECT_DIRECTORY . "/Main/HomeConnector.php";
 }
