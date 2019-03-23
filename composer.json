@@ -1,0 +1,28 @@
+{
+    "name": "phphleb/hleb",
+    "description": "PHP Micro-Framework HLEB",
+    "type": "project",
+    "keywords": ["framework","hleb","phphleb"],
+    "homepage": "https://phphleb.ru",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Foma Tuturov",
+            "email": "fomiash@yandex.ru"
+        }
+    ],
+    "require": {
+        "php": "^7.0.0",
+        "phphleb/framework": "1.*",
+        "phphleb/debugpan": "1.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Phphleb\\": "vendor/phphleb/",
+            "Hleb\\": "vendor/phphleb/framework/"
+        }
+    },
+    "minimum-stability": "dev"
+
+}

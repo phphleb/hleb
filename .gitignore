@@ -1,0 +1,10 @@
+/.idea/*
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/cache/routes/routes.txt
+!/storage/cache/routes/.gitkeep
+/storage/cache/key/*
+!/storage/cache/key/.gitkeep
+/database/dbase.config.php
+/start.hleb.php
+
