@@ -228,7 +228,7 @@ class Workspace
 
         $call = explode("@", $action[0]);
 
-        $initiator = "App\Middleware\\" . $type . "\\" . $call[0];
+        $initiator = "App\Middleware\\" . $type . "\\" . trim($call[0], "\\");
 
         $method = $call[1] ?? "index";
 
@@ -248,7 +248,7 @@ class Workspace
 
         $call = explode("@", $action[0]);
 
-        $initiator = "App\Controllers\\" . $call[0];
+        $initiator = "App\Controllers\\" . trim($call[0], "\\");
 
         $method = $call[1] ?? "index";
 
