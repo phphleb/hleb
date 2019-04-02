@@ -13,6 +13,7 @@
     ],
     "require": {
         "php": "^7.0.0",
+        "ext-json": "*",
         "phphleb/framework": "1.*",
         "phphleb/debugpan": "1.*"
     },

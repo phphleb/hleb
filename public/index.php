@@ -11,7 +11,7 @@ define('HLEB_START', microtime(true));
 
 define('HLEB_PUBLIC_DIR', __DIR__);
 
-define('HLEB_FRAME_VERSION', "1.0.1");
+define('HLEB_FRAME_VERSION', "1.0.2");
 
 
 /*
