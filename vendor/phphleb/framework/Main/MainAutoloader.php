@@ -42,12 +42,12 @@ class MainAutoloader
                 if($path[0] == 'hleb') {
 
                     $path[0] = 'phphleb/framework';
-                    $clarification = '/vendor/';
+                    $clarification = '/' . HLEB_VENDOR_DIRECTORY . '/';
                 }
 
                 if($path[0] == 'phphleb') {
 
-                    $clarification = '/vendor/';
+                    $clarification = '/' . HLEB_VENDOR_DIRECTORY . '/';
                 }
 
                 $class = implode("/", $path);
