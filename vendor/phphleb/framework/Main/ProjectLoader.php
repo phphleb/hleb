@@ -4,10 +4,9 @@ namespace Hleb\Main;
 
 use Hleb\Constructor\Cache\CacheRoutes;
 use Hleb\Constructor\Handlers\{
-    ProtectedCSRF, URL, URLHandler
+    ProtectedCSRF, URL, URLHandler, Request
 };
 use Hleb\Constructor\Workspace;
-use Hleb\Constructor\Handlers\Request;
 use \Route;
 use DeterminantStaticUncreated;
 
@@ -27,6 +26,7 @@ class ProjectLoader
 
         $block = (new URLHandler())->page($routes_array);
 
+        Request::close();
 
         Route::delete();
 

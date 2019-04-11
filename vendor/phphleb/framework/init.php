@@ -6,7 +6,7 @@ define('HLEB_PROJECT_DIRECTORY', __DIR__);
 
 define('HLEB_PROJECT_VERSION', "1");
 
-define('HLEB_PROJECT_FULL_VERSION', "1.0.2");
+define('HLEB_PROJECT_FULL_VERSION', "1.0.3");
 
 $GLOBALS["HLEB_PROJECT_UPDATES"] = ["phphleb/hleb" => HLEB_FRAME_VERSION, "phphleb/framework" => HLEB_PROJECT_FULL_VERSION ];
 
@@ -127,13 +127,12 @@ require HLEB_PROJECT_DIRECTORY . "/Scheme/Home/Main/Connector.php";
 
 require HLEB_GLOBAL_DIRECTORY . "/app/Optional/MainConnector.php";
 
-
 // Чтобы установить другое название каталога 'vendor' добавить в константы HLEB_VENDOR_DIRECTORY
 if(defined(HLEB_VENDOR_DIRECTORY)){
     $hl_vendor_dir = HLEB_VENDOR_DIRECTORY;
 } else {
     // Автоопределение текущего каталога с библиотеками
-    $hl_project_dir = explode("/", trim(HLEB_PROJECT_DIRECTORY, "/") );
+    $hl_project_dir = explode("/", str_replace( "\\", "/", trim(HLEB_PROJECT_DIRECTORY, "/")));
     define('HLEB_VENDOR_DIRECTORY', $hl_project_dir[count($hl_project_dir)-3]);
 }
 
@@ -182,7 +181,7 @@ require HLEB_PROJECT_DIRECTORY. "/Main/TryClass.php";
 // Сторонний автозагрузчик классов
 
 if (file_exists(HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY . '/autoload.php')) {
-    require HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY . '/autoload.php';
+    require HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY  . '/autoload.php';
 }
 
 

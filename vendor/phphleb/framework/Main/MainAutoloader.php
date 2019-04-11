@@ -50,6 +50,33 @@ class MainAutoloader
                     $clarification = '/' . HLEB_VENDOR_DIRECTORY . '/';
                 }
 
+                // По имени библиотеки
+
+                if(isset($path[2])) {
+
+                    // Имя производителя
+                    $path_to_vendor_name = HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY . '/' . $path[0];
+
+                    if (is_dir($path_to_vendor_name)) {
+
+                        $clarification = '/' . HLEB_VENDOR_DIRECTORY . '/';
+
+                        if (is_dir($path_to_vendor_name . "/" . strtolower($path[1]))) {
+
+                            $path[1] = strtolower($path[1]);
+
+                        } else {
+                            // Составные классы с дефисами в названии файла
+                            $hyphenated_name = trim(strtolower(preg_replace('/([A-Z])/', '-$1', $path[1])), "-");
+
+                            if (is_dir( $path_to_vendor_name . "/" . $hyphenated_name)) {
+
+                                $path[1] = $hyphenated_name;
+                            }
+                        }
+                    }
+                }
+
                 $class = implode("/", $path);
 
             }
