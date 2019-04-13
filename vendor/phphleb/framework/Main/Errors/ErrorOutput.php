@@ -17,6 +17,10 @@ class ErrorOutput
     {
         if (gettype($messages) == "string") $messages = [$messages];
 
+        if (!headers_sent()) {
+            header($_SERVER["SERVER_PROTOCOL"] . " 500 Internal Server Error");
+        }
+
         foreach ($messages as $message) {
 
             if (isset($message)) {
@@ -35,8 +39,6 @@ class ErrorOutput
 
             }
         }
-
-
     }
 
     private static function content(string $message)
@@ -60,7 +62,6 @@ class ErrorOutput
 
     public static function run()
     {
-
         $errors = self::$messages;
 
         $content = '';
@@ -79,7 +80,6 @@ class ErrorOutput
 
                     $content .= self::content($value);
                 }
-
             }
 
             if (HLEB_PROJECT_DEBUG) {
@@ -89,9 +89,7 @@ class ErrorOutput
 
         }
 
-
     }
-
 
     public static function get($message)
     {
@@ -99,5 +97,5 @@ class ErrorOutput
         self::run();
     }
 
-
 }
+

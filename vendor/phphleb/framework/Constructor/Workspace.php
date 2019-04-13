@@ -162,15 +162,19 @@ class Workspace
 
             $this->hl_content_create = true;
 
-            if (is_readable($_hl_excluded_file)) {
+            if (file_exists($_hl_excluded_file)) {
 
-                include "$_hl_excluded_file";
+                require "$_hl_excluded_file";
 
+            } else {
+                $_hl_excluded_errors[] = "HL037-VIEW_ERROR: Error in function view() ! " .
+                    "Missing file `/resources/views/" . $_hl_excluded_params[0][0] . ".php` . ~ " .
+                    "Исключение в функции view() ! Отсутствует файл `/resources/views/" .  $_hl_excluded_params[0][0] . ".php`";
+
+                ErrorOutput::add($_hl_excluded_errors);
+                ErrorOutput::run();
             }
-
-
             return;
-
 
         } else if (isset($_hl_excluded_params[2]) && $_hl_excluded_params[2] == "render") {
 
