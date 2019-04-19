@@ -2,7 +2,15 @@
     "name": "phphleb/hleb",
     "description": "PHP Micro-Framework HLEB",
     "type": "project",
-    "keywords": ["framework","hleb","phphleb"],
+    "keywords": [
+      "framework",
+      "hleb",
+      "phphleb",
+      "microframework",
+      "micro-framework",
+      "php framework",
+      "php"
+    ],
     "homepage": "https://phphleb.ru",
     "license": "MIT",
     "authors": [

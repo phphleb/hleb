@@ -17,7 +17,7 @@ class DPanel
     public static function add($info)
     {
 
-        $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/debugpan"] = "1.0.0";
+        $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/debugpan"] = "1.0.1";
 
         $hl_block_name = "__hl_debug_panel";
 
@@ -144,15 +144,14 @@ class DPanel
 
     private static function my_links()
     {
-        $links = "<a href='https://phphleb.ru/'><span style='display:inline-block; margin: 15px 15px 0 0;color:#9d9d9d;'>phphleb.ru</span></a>";
-
+        $links = "<span style='display:inline-block; margin: 15px 15px 0 0;color:#9d9d9d;'>" .
+            "<a href='https://phphleb.ru/'><span style='color:#9d9d9d;'>phphleb.ru</span></a></span>";
         foreach($GLOBALS["HLEB_PROJECT_UPDATES"] as $key => $value) {
-
-            $links .= "<div style='display:inline-block; margin: 15px 15px 0 0; white-space: nowrap; color:grey;'><a href='https://github.com/$key/'>" .
-                "<span style='color:#9d9d9d;'>$key</span></a> $value </div>";
-
+            if(stripos($key, "phphleb/") === 0) {
+                $links .= "<div style='display:inline-block; margin: 15px 15px 0 0; white-space: nowrap; color:grey;'>" .
+                    "<a href='https://github.com/$key/'><span style='color:#9d9d9d;'>$key</span></a> $value </div>";
+            }
         }
-
         return $links;
     }
 
@@ -163,3 +162,4 @@ class DPanel
     }
 
 }
+

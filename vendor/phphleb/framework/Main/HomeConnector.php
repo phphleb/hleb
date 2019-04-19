@@ -39,7 +39,8 @@ class HomeConnector implements Connector
             'Hleb\Constructor\Handlers\Key'=> $vendor.'/phphleb/framework/Constructor/Handlers/Key.php',
             'Hleb\Constructor\Handlers\Request'=> $vendor.'/phphleb/framework/Constructor/Handlers/Request.php',
             'Hleb\Main\WorkDebug'=> $vendor.'/phphleb/framework/Main/WorkDebug.php',
-            'Hleb\Main\MyDebug'=>$vendor.'/phphleb/framework/Main/MyDebug.php'
+            'Hleb\Main\MyDebug'=>$vendor.'/phphleb/framework/Main/MyDebug.php',
+            'Phphleb\Debugpan\DPanel'=>$vendor.'/phphleb/debugpan/DPanel.php'
         ];
     }
 }

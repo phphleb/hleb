@@ -6,7 +6,7 @@ define('HLEB_PROJECT_DIRECTORY', __DIR__);
 
 define('HLEB_PROJECT_VERSION', "1");
 
-define('HLEB_PROJECT_FULL_VERSION', "1.0.3");
+define('HLEB_PROJECT_FULL_VERSION', "1.0.5");
 
 $GLOBALS["HLEB_PROJECT_UPDATES"] = ["phphleb/hleb" => HLEB_FRAME_VERSION, "phphleb/framework" => HLEB_PROJECT_FULL_VERSION ];
 
@@ -145,7 +145,7 @@ if(HLEB_PROJECT_CLASSES_AUTOLOAD) {
 }
 
 
-// Эти классы загружатся в любом случае
+// Эти классы загрузятся в любом случае
 
 require HLEB_PROJECT_DIRECTORY . "/Constructor/Routes/MainRoute.php";
 
