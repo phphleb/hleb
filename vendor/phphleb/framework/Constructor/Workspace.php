@@ -18,8 +18,6 @@ class Workspace
 
     protected $map;
 
-    protected $hl_content_create = false;
-
     protected $hl_debug_info = ["time" => [], "block" => []];
 
     /**
@@ -40,8 +38,6 @@ class Workspace
 
     private function create($block)
     {
-        if ($this->hl_content_create) return;
-
         $this->calculate_time('Loading HLEB');
 
         $actions = $block["actions"];
@@ -82,8 +78,6 @@ class Workspace
 
     private function render_get_method($_hl_excluded_block)
     {
-        if ($this->hl_content_create) return;
-
         $_hl_excluded_params = $_hl_excluded_block["data_params"];
 
         if (count($_hl_excluded_params) == 0) {
@@ -98,7 +92,7 @@ class Workspace
 
                     $_hl_excluded_params = self::get_controller($_hl_excluded_action["controller"]);
 
-                    if (gettype($_hl_excluded_params) == "array") {
+                    if (is_array($_hl_excluded_params)) {
 
                         if (isset($_hl_excluded_params[2]) && $_hl_excluded_params[2] == "render") {
                             // render
@@ -108,26 +102,20 @@ class Workspace
 
                     } else {
 
-                        $this->hl_content_create = true;
-
                         print $_hl_excluded_params;
-
 
                         return;
                     }
 
                     break;
                 }
-
             }
-
-
         }
 
         // Создание data() v2
 
 
-        if (gettype($_hl_excluded_params) == "array" && !empty($_hl_excluded_params[1])) {
+        if (is_array($_hl_excluded_params) && !empty($_hl_excluded_params[1])) {
 
             Data::create_data($_hl_excluded_params[1]);
 
@@ -144,9 +132,7 @@ class Workspace
         }
 
 
-        if (isset($_hl_excluded_params["text"]) && gettype($_hl_excluded_params["text"]) == "string") {
-
-            $this->hl_content_create = true;
+        if (isset($_hl_excluded_params["text"]) && is_string($_hl_excluded_params["text"])) {
 
             print $_hl_excluded_params["text"];
 
@@ -159,8 +145,6 @@ class Workspace
             $_hl_excluded_file = str_replace("//", "/", HLEB_GLOBAL_DIRECTORY . "/resources/views/" . $_hl_excluded_params[0][0] . ".php");
 
             //Отображение шаблона
-
-            $this->hl_content_create = true;
 
             if (file_exists($_hl_excluded_file)) {
 
@@ -179,8 +163,6 @@ class Workspace
         } else if (isset($_hl_excluded_params[2]) && $_hl_excluded_params[2] == "render") {
 
             // render(...)
-
-            $this->hl_content_create = true;
 
             $_hl_excluded_maps = $this->map;
 
@@ -244,8 +226,6 @@ class Workspace
 
     private function get_controller(array $action)
     {
-        if ($this->hl_content_create) return null;
-
         //Вызов controller
 
         $arguments = $action[1] ?? [];

@@ -15,7 +15,7 @@ class WorkDebug
      * @param $data
      * @param string|null $desc
      */
-    public static function add($data, string $desc = null): void
+    public static function add($data, string $desc = null)
     {   
         if(HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] == 'GET') {
 

@@ -6,31 +6,31 @@
  *
  */
 
-define ("HLEB_TYPE_DB", "mysql"); // mysql / sqlite / postgresql
+define ("HLEB_TYPE_DB", "mysql.myname");
 
 define("HLEB_PARAMETERS_FOR_DB", [
 
-   "mysql" => [
-       "DB_HOST" => "localhost",
-       "DB_PORT" =>  3360,
-       "DB_NAME" => "dbname",
-       "DB_CHAR" => "utf8",
-       "DB_USER" => "username",
-       "DB_PASS" => "password"
-   ] ,
-
-    "sqlite" => [
-        "DB_PATH" => "c:/main.db",
-        "DB_USER" => "username",
-        "DB_PASS" => "password"
+    "mysql.myname" => [
+        "mysql:host=localhost",
+        "port=3360",
+        "dbname=databasename",
+        "charset=utf8",
+        "user" => "username",
+        "pass" => "password"
     ] ,
 
-    "postgresql" => [
-        "DB_HOST" => "127.0.0.1",
-        "DB_PORT" =>  5432,
-        "DB_NAME" => "dbname",
-        "DB_USER" => "username",
-        "DB_PASS" => "password"
+    "sqlite.myname" => [
+        "sqlite:c:/main.db",
+        "user" => "username",
+        "pass" => "password"
+    ] ,
+
+    "postgresql.myname" => [
+        "pgsql:host=127.0.0.1",
+        "port=5432",
+        "dbname=databasename",
+        "user" => "username",
+        "pass" => "password"
     ] ,
 
 ]);

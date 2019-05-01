@@ -35,12 +35,18 @@ class HomeConnector implements Connector
             'Hleb\Constructor\Routes\Methods\RouteMethodEndType'=> $vendor.'/phphleb/framework/Constructor/Routes/Methods/RouteMethodEndType.php',
             'Hleb\Constructor\Routes\Methods\RouteMethodEnd'=> $vendor.'/phphleb/framework/Constructor/Routes/Methods/RouteMethodEnd.php',
             'Hleb\Main\Errors\ErrorOutput'=> $vendor.'/phphleb/framework/Main/Errors/ErrorOutput.php',
+            'Hleb\Main\DataDebug'=> $vendor.'/phphleb/framework/Main/DataDebug.php',
+            'Hleb\Main\MainTemplate'=> $vendor.'/phphleb/framework/Main/MainTemplate.php',
             'Hleb\Scheme\App\Middleware\MainMiddleware'=> $vendor.'/phphleb/framework/Scheme/App/Middleware/MainMiddleware.php',
             'Hleb\Constructor\Handlers\Key'=> $vendor.'/phphleb/framework/Constructor/Handlers/Key.php',
             'Hleb\Constructor\Handlers\Request'=> $vendor.'/phphleb/framework/Constructor/Handlers/Request.php',
             'Hleb\Main\WorkDebug'=> $vendor.'/phphleb/framework/Main/WorkDebug.php',
             'Hleb\Main\MyDebug'=>$vendor.'/phphleb/framework/Main/MyDebug.php',
-            'Phphleb\Debugpan\DPanel'=>$vendor.'/phphleb/debugpan/DPanel.php'
+            'Phphleb\Debugpan\DPanel'=>$vendor.'/phphleb/debugpan/DPanel.php',
+            'XdORM\Shell\XdHelper'=>$vendor.'/phphleb/xdorm/Shell/XdHelper.php',
+            'XdORM\XD'=>$vendor.'/phphleb/xdorm/XD.php',
+            'XdORM\Shell\XdDB'=>$vendor.'/phphleb/xdorm/Shell/XdDB.php',
+            
         ];
     }
 }

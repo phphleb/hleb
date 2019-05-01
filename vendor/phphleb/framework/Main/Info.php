@@ -8,7 +8,7 @@ class Info
 
     protected static $data = [];
 
-    const REG_NAMES = ["Autoload", "CacheRoutes", "RenderMap"];
+    const REG_NAMES = ["Autoload", "CacheRoutes", "RenderMap", "Templates"];
 
     public static function add(string $name, $data)
     {

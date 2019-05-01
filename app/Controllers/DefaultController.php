@@ -11,3 +11,4 @@ class DefaultController extends \MainController
     }
 
 }
+

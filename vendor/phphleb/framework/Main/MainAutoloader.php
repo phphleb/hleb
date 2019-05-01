@@ -17,6 +17,7 @@ class MainAutoloader
      */
     static function get(string $class)
     {
+        
         if(class_exists($class, false)) return;
 
         if (self::search_and_include($class, new HomeConnector())) {

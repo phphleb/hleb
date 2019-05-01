@@ -22,4 +22,5 @@ class TryClass
     {
         return class_exists($this->classname, false);
     }
+
 }

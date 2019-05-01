@@ -22,6 +22,7 @@ class MainConnector implements Connector
             // ...или, если добавляется конкретный класс,
             "DB" => "database/DB.php",
             "Phphleb\Debugpan\DPanel" => "vendor/phphleb/debugpan/DPanel.php",
+            "XdORM\XD" => "vendor/phphleb/xdorm/XD.php",
             // ... //
 
         ];

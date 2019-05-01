@@ -354,9 +354,27 @@ function hleb_a1a3b6di245ea_getStandardUrl(string $name)
 
 }
 
+function hleb_e0b1036c1070101_template(string $template, array $params = [])
+{
+
+    new \Hleb\Main\MainTemplate($template, $params);
+
+}
+
+function hleb_a581cdd66c107015_print_r2($data, $desc = null)
+{
+
+    \Hleb\Main\WorkDebug::add($data, $desc);
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+if ((new Hleb\Main\TryClass("XdORM\XD"))->is_connect() &&
+    file_exists(HLEB_GLOBAL_DIRECTORY . "/" . HLEB_VENDOR_DIRECTORY . "/phphleb/xdorm")){
+
+    \XdORM\XD::class_is_actual();
+}
 
 require HLEB_GLOBAL_DIRECTORY . "/app/Optional/shell.php";
 

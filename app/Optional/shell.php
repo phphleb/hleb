@@ -100,3 +100,15 @@ function getStandardUrl(string $name){
     return hleb_a1a3b6di245ea_getStandardUrl($name);
 
 }
+
+function print_r2($data, $desc = null){
+
+    hleb_a581cdd66c107015_print_r2($data, $desc);
+
+}
+
+function includeTemplate(string $template, array $params = []){
+
+    hleb_e0b1036c1070101_template($template, $params);
+
+}

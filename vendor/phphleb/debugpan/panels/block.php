@@ -5,19 +5,25 @@
      style='position:fixed; z-index: 2147483647; font-family: "PT Sans", "Arial", serif; font-size: 13px!important; right:0; top:0; display: inline-block; background-color: darkgray; border: 2px solid white; padding: 5px; opacity: 0.75; color: white; cursor:default'>
     <span style="display: <?= $hl_this_route['workpan']; ?>">
     <span style="background-color: #EA1F61; color: white;">
-        &nbsp;&nbsp;
         <span style="cursor: pointer;"
               onclick="document.getElementById('__hl_WorkDebug-panel_').style.display='block'"> +  WorkDebug </span>
-
-    </span>
-        &nbsp;&nbsp;
+    </span>        &nbsp;&nbsp;
+        </span>
+    <span style="display: <?= $hl_this_route['sqlqpan']; ?>">
+    <span style="background-color: #ea9548; color: white;">
+        <span style="cursor: pointer;"
+              onclick="document.getElementById('<?= $hl_block_name; ?>_orm').style.display='block'"
+              title="<?= $hl_this_route['orm_time_report'] ." sec" . " (" . $hl_this_route['orm_count'] . ")"; ?>"> + DB </span>
+    </span>        &nbsp;&nbsp;
         </span>
     <span style="cursor: pointer;"
-          onclick="document.getElementById('<?= $hl_block_name; ?>_over').style.display='block'"> +   HL</span>
+          onclick="document.getElementById('<?= $hl_block_name; ?>_over').style.display='block'" title="<?= $hl_preview." sec"; ?>"> +   HL</span>
     <span style="cursor: pointer; font-weight: bold; margin-left: 5px"
           onclick="document.getElementById('<?= $hl_block_name; ?>_main').parentNode.removeChild(document.getElementById('<?= $hl_block_name; ?>_main'));
                    document.getElementById('<?= $hl_block_name; ?>_over').parentNode.removeChild(document.getElementById('<?= $hl_block_name; ?>_over'));
-                   document.getElementById('__hl_WorkDebug-panel_').parentNode.removeChild(document.getElementById('__hl_WorkDebug-panel_'))">X
+                   if(document.getElementById('__hl_WorkDebug-panel_') != null){
+                       document.getElementById('__hl_WorkDebug-panel_').parentNode.removeChild(document.getElementById('__hl_WorkDebug-panel_'));
+                   } <?php if($hl_this_route['orm_report_active']): ?>document.getElementById('<?= $hl_block_name; ?>_orm').parentNode.removeChild(document.getElementById('<?= $hl_block_name; ?>_orm')); <?php endif; ?>">X
     </span>
 </div>
 <div id="<?= $hl_block_name; ?>_over"
@@ -58,13 +64,26 @@
         <br>
         <div style="padding-bottom: 25px; display: none;" id="<?= $hl_block_name; ?>_autoload">
             <span style="color: grey">Loading framework +</span><br>
-            <?php  foreach($hl_this_route['autoload'] as $key => $value){  ?>
+            <?php  foreach($hl_this_route['autoload'] as $key => $value):  ?>
             <div style='padding: 3px'><i><?= $value; ?></i></div>
-            <?php  } ?>
+            <?php  endforeach; ?>
         </div>
         <br>
+        <?php if(count($hl_this_route['templates'])): ?>
+        <div style="margin-bottom: 15px; display: inline-block; border-bottom: 1px solid grey;padding-bottom: 5px; color: grey; cursor: pointer"
+             onclick="document.getElementById('<?= $hl_block_name; ?>_templates').style.display = document.getElementById('<?= $hl_block_name; ?>_templates').style.display == 'none' ? 'block' : 'none';">
+            [<b>TEMPLATES</b>] (<?php  echo count($hl_this_route['templates']);  ?>)
+        </div>
+        <br>
+        <div style="padding-bottom: 25px; display: none;" id="<?= $hl_block_name; ?>_templates">
+            <?php  foreach($hl_this_route['templates'] as $key => $value):  ?>
+                <div style='padding: 3px'><span style="color:grey">resources/views/</span><?= $value; ?></div>
+            <?php  endforeach; ?>
+        </div>
+        <br>
+        <?php endif; ?>
         <!-- MyDebug -->
-        <?php $hl_id_add = 0; foreach($hl_this_route['my_params'] as $key => $value){ $hl_id_add++; ?>
+        <?php $hl_id_add = 0; foreach($hl_this_route['my_params'] as $key => $value): $hl_id_add++; ?>
         <div style="margin-bottom: 15px; display: inline-block; border-bottom: 1px solid #487070;padding-bottom: 5px; color: #487070; cursor: pointer"
              onclick="document.getElementById('<?= $hl_block_name; ?>_my_debugger<?= $hl_id_add;  ?>').style.display = document.getElementById('<?= $hl_block_name; ?>_my_debugger<?= $hl_id_add;  ?>').style.display == 'none' ? 'block' : 'none';">
             [<b><?= $key; ?></b>] <?php  echo empty($value['num']) ? "(0)" : " (" . $value['num'] . ")";  ?>
@@ -73,7 +92,7 @@
             <div style='padding: 3px'><?= $value['cont']; ?></div>
         </div>
         <br>
-        <?php }  ?>
+        <?php endforeach;  ?>
 
         <div style="color: grey; border-top: 1px solid grey; margin-top: 25px;"><?= $hl_pr_updates ?></div>
 
@@ -81,3 +100,22 @@
 </div>
 
 <!-- /HLEB DEBUG PANEL -->
+
+<?php if($hl_this_route['orm_report_active']): ?>
+
+<!-- SQL QUERIES DEBUG PANEL -->
+
+<div id="<?= $hl_block_name; ?>_orm"
+     style='position:fixed; z-index: 2147483647; display: none; width: 100%; font-family: "PT Sans", "Arial", serif; font-size: 13px!important; left:0; top:0; background-color: white; border-bottom: 5px solid #aaa; max-height: 100%; overflow-y: auto'>
+    <div style="position: fixed; right: 80px; top: 6px; background-color: white">
+        <div style="color:#999; cursor: pointer; display: inline-block;"
+             onclick="document.getElementById('<?= $hl_block_name; ?>_orm').style.display='none'">[ - ]
+        </div>
+    </div>
+    <div style="padding: 6px; color: grey; font-size: 16px"><span style="color: darkorange; font-weight: bold">SQL queries</span> [<?= $hl_this_route['orm_time_report']; ?> sec]</div>
+    <?php print $hl_this_route['orm_report']; ?>
+</div>
+
+<!-- /SQL QUERIES DEBUG PANEL -->
+
+<?php endif; ?>

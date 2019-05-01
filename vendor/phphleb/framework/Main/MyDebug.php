@@ -21,13 +21,14 @@ class MyDebug
      * @param string $name
      * @param $data
      */
-    public static function add(string $name, $data): void
+    public static function add(string $name, $data)
     {
         if (!in_array($name, self::$error)) self::$data[$name] = $data;
     }
 
     /**
      * @param string $name
+     * @return array
      */
     public static function get(string $name)
     {

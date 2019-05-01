@@ -7,35 +7,31 @@ class DB
     public static function instance()
     {
         if (self::$instance === null) {
-            $opt = array(
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => TRUE,
-            );
 
-            include HLEB_GLOBAL_DIRECTORY . "/database/dbase.config.php";
+            require_once HLEB_GLOBAL_DIRECTORY . "/database/dbase.config.php";
 
             $prms = HLEB_PARAMETERS_FOR_DB[HLEB_TYPE_DB];
 
-            $connection = "";
+            $opt = array(
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES =>
+                    $prms["emulate_prepares"] ?? false
+            );
 
-            switch(HLEB_TYPE_DB){
-                case "mysql":
-                    $connection = "mysql:host=" . $prms["DB_HOST"] . ";port=" . $prms["DB_PORT"] . ";dbname=" . $prms["DB_NAME"] . ";charset=" . $prms["DB_CHAR"];
-                    break;
+            $user = $prms["user"];
 
-                case "postgresql":
-                    $connection = "pgsql:host=" . $prms["DB_HOST"] . ";port=" . $prms["DB_PORT"] . ";dbname=" . $prms["DB_NAME"];
-                    break;
+            $pass = $prms["pass"];
 
-                case "sqlite":
-                    $connection= "sqlite:" . $prms["DB_PATH"];
-                    break;
+            $condition = [];
+
+            foreach($prms as $key => $prm){
+                if(is_numeric($key)) {
+                    $condition [] = preg_replace('/\s+/', '', $prm);
+                }
             }
 
-            $user = $prms["DB_USER"];
-
-            $pass = $prms["DB_PASS"];
+            $connection = implode(";", $condition );
 
             self::$instance = new PDO($connection, $user, $pass, $opt);
         }
@@ -44,8 +40,13 @@ class DB
 
     public static function run($sql, $args = array())
     {
+        $time = microtime(true);
+
         $stmt = self::instance()->prepare($sql);
         $stmt->execute($args);
+
+        \Hleb\Main\DataDebug::add($sql, microtime(true) - $time, HLEB_TYPE_DB, true);
+
         return $stmt;
     }
 
@@ -128,8 +129,14 @@ class DB
 
     public static function db_query($sql)
     {
+        $time = microtime(true);
+
         $stmt = self::query($sql);
+
         $data = $stmt->fetchAll();
+
+        \Hleb\Main\DataDebug::add(htmlentities($sql), microtime(true) - $time, HLEB_TYPE_DB, true);
+
         return $data;
     }
 
@@ -152,6 +159,7 @@ class DB
     в итоге:
     DB::db_query("SELECT id FROM tablename WHERE name=".(DB::quote($per)) );
      */
+
 
 }
 
