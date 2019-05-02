@@ -373,7 +373,7 @@ function hleb_a581cdd66c107015_print_r2($data, $desc = null)
 if ((new Hleb\Main\TryClass("XdORM\XD"))->is_connect() &&
     file_exists(HLEB_GLOBAL_DIRECTORY . "/" . HLEB_VENDOR_DIRECTORY . "/phphleb/xdorm")){
 
-    \XdORM\XD::class_is_actual();
+    $GLOBALS["HLEB_PROJECT_UPDATES"]['phphleb/xdorm'] = "1";
 }
 
 require HLEB_GLOBAL_DIRECTORY . "/app/Optional/shell.php";
