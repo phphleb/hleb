@@ -122,6 +122,23 @@ class UserModel extends \MainModel
 }
 ```
 
+ORM
+-----------------------------------
+Recommended [phphleb/xdorm](https://github.com/phphleb/xdorm)
+
+Templates
+-----------------------------------
+```php
+// File /resources/views/content.php
+includeTemplate('templates/name', ['p1'=>'data1', 'p2'=>'data2']);
+```
+```php
+// File /resources/views/templates/name.php
+echo $p1; // data1
+echo $p2; // data2
+```
+
+
 Page Builder
 -----------------------------------
 ```php
