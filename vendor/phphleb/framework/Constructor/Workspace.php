@@ -144,11 +144,11 @@ class Workspace
 
             $_hl_excluded_file = str_replace("//", "/", HLEB_GLOBAL_DIRECTORY . "/resources/views/" . $_hl_excluded_params[0][0] . ".php");
 
-            //Отображение шаблона
+            //Отображение файла
 
             if (file_exists($_hl_excluded_file)) {
 
-                require "$_hl_excluded_file";
+                (new VCreator($_hl_excluded_file))->view();
 
             } else {
                 $_hl_excluded_errors[] = "HL037-VIEW_ERROR: Error in function view() ! " .

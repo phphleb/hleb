@@ -36,17 +36,22 @@ class HomeConnector implements Connector
             'Hleb\Constructor\Routes\Methods\RouteMethodEnd'=> $vendor.'/phphleb/framework/Constructor/Routes/Methods/RouteMethodEnd.php',
             'Hleb\Main\Errors\ErrorOutput'=> $vendor.'/phphleb/framework/Main/Errors/ErrorOutput.php',
             'Hleb\Main\DataDebug'=> $vendor.'/phphleb/framework/Main/DataDebug.php',
+            'Hleb\Constructor\Workspace'=> $vendor.'/phphleb/framework/Constructor/Workspace.php',
+            'Hleb\Constructor\Cache\CacheRoutes'=> $vendor.'/phphleb/framework/Constructor/Cache/CacheRoutes.php',
+            'Hleb\Constructor\Handlers\Key'=> $vendor.'/phphleb/framework/Constructor/Handlers/Key.php',
+            'Hleb\Constructor\Handlers\ProtectedCSRF'=> $vendor.'/phphleb/framework/Constructor/Handlers/ProtectedCSRF.php',
+            'Hleb\Constructor\Handlers\Request'=> $vendor.'/phphleb/framework/Constructor/Handlers/Request.php',
+            'Hleb\Constructor\Handlers\URL'=> $vendor.'/phphleb/framework/Constructor/Handlers/URL.php',
+            'Hleb\Constructor\Handlers\URLHandlers'=> $vendor.'/phphleb/framework/Constructor/Handlers/URLHandlers.php',
+            'Hleb\Constructor\VCreator'=> $vendor.'/phphleb/framework/Constructor/VCreator.php',
             'Hleb\Main\MainTemplate'=> $vendor.'/phphleb/framework/Main/MainTemplate.php',
             'Hleb\Scheme\App\Middleware\MainMiddleware'=> $vendor.'/phphleb/framework/Scheme/App/Middleware/MainMiddleware.php',
-            'Hleb\Constructor\Handlers\Key'=> $vendor.'/phphleb/framework/Constructor/Handlers/Key.php',
-            'Hleb\Constructor\Handlers\Request'=> $vendor.'/phphleb/framework/Constructor/Handlers/Request.php',
             'Hleb\Main\WorkDebug'=> $vendor.'/phphleb/framework/Main/WorkDebug.php',
             'Hleb\Main\MyDebug'=>$vendor.'/phphleb/framework/Main/MyDebug.php',
             'Phphleb\Debugpan\DPanel'=>$vendor.'/phphleb/debugpan/DPanel.php',
             'XdORM\Shell\XdHelper'=>$vendor.'/phphleb/xdorm/Shell/XdHelper.php',
             'XdORM\XD'=>$vendor.'/phphleb/xdorm/XD.php',
             'XdORM\Shell\XdDB'=>$vendor.'/phphleb/xdorm/Shell/XdDB.php',
-            
         ];
     }
 }
