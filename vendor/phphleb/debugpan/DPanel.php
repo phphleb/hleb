@@ -95,7 +95,7 @@ class DPanel
             "cache_routes_text" => $cashe_routes ? " Updated now" : "",
             "route_path" => self::create_path($block["data_path"]),
             "autoload" => is_array(Info::get("Autoload")) ? Info::get("Autoload") : [],
-            "templates" => is_array(Info::get("Autoload")) ? Info::get("Templates") : [],
+            "templates" => is_array(Info::get("Templates")) ? Info::get("Templates") : [],
             "cache" => date(DATE_ATOM, filemtime(HLEB_GLOBAL_DIRECTORY . "/storage/cache/routes/routes.txt")),
             "orm_report" => $orm_report[0],
             "orm_time_report" => $orm_report[1],
