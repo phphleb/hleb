@@ -48,7 +48,7 @@ class LoadRoutes
             foreach ($fileinfos as $pathname => $fileinfo) {
                 if (!$fileinfo->isFile()) continue;
 
-                if (filemtime($fileinfo) > $time) {
+                if (filemtime($fileinfo->getRealPath()) > $time) {
 
                     return false;
                 }
