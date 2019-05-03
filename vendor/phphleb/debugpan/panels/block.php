@@ -27,7 +27,7 @@
     </span>
 </div>
 <div id="<?= $hl_block_name; ?>_over"
-     style='position: absolute; font-family: "PT Sans", "Arial", serif; z-index: 2147483647; left: 0; top: 0; display:none; font-size: 14px!important; background-color: #1a044d; width: 100%; max-height: 100%; overflow-y: auto; box-sizing:border-box; padding: 0!important; margin: 0!important; color: white; cursor: default; border-bottom: 15px solid #ea1f61'>
+     style='position: fixed; font-family: "PT Sans", "Arial", serif; z-index: 2147483647; left: 0; top: 0; display:none; font-size: 14px!important; background-color: #1a044d; width: 100%; max-height: 100%; overflow-y: auto; box-sizing:border-box; padding: 0!important; margin: 0!important; color: white; cursor: default; border-bottom: 15px solid #ea1f61'>
     <div style="padding: 15px 35px 50px 15px; opacity: 0.9">
         <div style="position: fixed; right: 35px; top: 6px; background-color: #1a044d">
             <div style="color:#999; cursor: pointer; display: inline-block;"
