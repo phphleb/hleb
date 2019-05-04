@@ -21,7 +21,8 @@ class MainTemplate
         if(!HLEB_PROJECT_DEBUG) return "";
         $trace = debug_backtrace(2,4);
         if(isset($trace[3])){
-            return  " (" . end(explode(HLEB_GLOBAL_DIRECTORY, $trace[3]["file"] ?? "")) . " : " . ($trace[3]["line"] ?? "") . ")";
+            $path = explode(HLEB_GLOBAL_DIRECTORY, ($trace[3]["file"] ?? ""));
+            return  " (" . end($path) . " : " . ($trace[3]["line"] ?? "") . ")";
         }
         return "";
     }
