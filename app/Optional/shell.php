@@ -112,3 +112,10 @@ function includeTemplate(string $template, array $params = []){
     hleb_e0b1036c1070101_template($template, $params);
 
 }
+
+function includeCachedTemplate(string $template, array $params = []){
+
+    hleb_e0b1036c1070102_template($template, $params);
+
+}
+

@@ -2,18 +2,21 @@
 
 namespace Hleb\Main;
 
+use Hleb\Constructor\TCreator;
+
 class MainTemplate
 {
-    function __construct(string $_hl_template_x_, array $_hl_template_params_x_ = [])
+    function __construct(string $path, array $template = [])
     {
-        Info::insert("Templates", trim($_hl_template_x_, "/") . $this->hl_debug_backtrace());
+        $time = microtime(true);
 
-        if(count($_hl_template_params_x_)) extract ($_hl_template_params_x_, EXTR_SKIP);
+        $backtrace = $this->hl_debug_backtrace();
 
-        $_hl_template_params_x_ = null;
+        (new TCreator(HLEB_GLOBAL_DIRECTORY . "/resources/views/" . trim($path, "/") . ".php", $template))->include();
 
-        // Create HLEB Template.
-        require HLEB_GLOBAL_DIRECTORY . "/resources/views/" . trim($_hl_template_x_, "/") . ".php";
+        $time = microtime(true) - $time;
+
+        Info::insert("Templates", trim($path, "/") . $backtrace . " load: " . (round($time, 4) * 1000) . " ms");
     }
 
     function hl_debug_backtrace()

@@ -6,7 +6,7 @@ define('HLEB_PROJECT_DIRECTORY', __DIR__);
 
 define('HLEB_PROJECT_VERSION', "1");
 
-define('HLEB_PROJECT_FULL_VERSION', "1.1.0");
+define('HLEB_PROJECT_FULL_VERSION', "1.1.1");
 
 $GLOBALS["HLEB_PROJECT_UPDATES"] = ["phphleb/hleb" => HLEB_FRAME_VERSION, "phphleb/framework" => HLEB_PROJECT_FULL_VERSION ];
 
@@ -358,6 +358,13 @@ function hleb_e0b1036c1070101_template(string $template, array $params = [])
 {
 
     new \Hleb\Main\MainTemplate($template, $params);
+
+}
+
+function hleb_e0b1036c1070102_template(string $template, array $params = [])
+{
+
+    new \Hleb\Main\CachedTemplate($template, $params);
 
 }
 

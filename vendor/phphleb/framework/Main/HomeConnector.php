@@ -7,7 +7,7 @@ use Hleb\Scheme\Home\Main\Connector;
 class HomeConnector implements Connector
 {
     function __construct(){}
-     /**
+    /**
      *  Добавление пути для автозагрузки класса: namespace => realpath
      */
     public function add()
@@ -43,8 +43,10 @@ class HomeConnector implements Connector
             'Hleb\Constructor\Handlers\Request'=> $vendor.'/phphleb/framework/Constructor/Handlers/Request.php',
             'Hleb\Constructor\Handlers\URL'=> $vendor.'/phphleb/framework/Constructor/Handlers/URL.php',
             'Hleb\Constructor\Handlers\URLHandlers'=> $vendor.'/phphleb/framework/Constructor/Handlers/URLHandlers.php',
+            'Hleb\Constructor\TCreator'=> $vendor.'/phphleb/framework/Constructor/TCreator.php',
             'Hleb\Constructor\VCreator'=> $vendor.'/phphleb/framework/Constructor/VCreator.php',
             'Hleb\Main\MainTemplate'=> $vendor.'/phphleb/framework/Main/MainTemplate.php',
+            'Hleb\Main\CachedTemplate'=> $vendor.'/phphleb/framework/Main/CachedTemplate.php',
             'Hleb\Scheme\App\Middleware\MainMiddleware'=> $vendor.'/phphleb/framework/Scheme/App/Middleware/MainMiddleware.php',
             'Hleb\Main\WorkDebug'=> $vendor.'/phphleb/framework/Main/WorkDebug.php',
             'Hleb\Main\MyDebug'=>$vendor.'/phphleb/framework/Main/MyDebug.php',
