@@ -77,7 +77,8 @@ class CachedTemplate
             }
 
             $s_file = $search_all[0];
-            if (filemtime($s_file) >= time() - $this->getFileTime($s_file)) {
+            $this->casheTime = $this->getFileTime($s_file);
+            if (filemtime($s_file) >= time() - $this->casheTime) {
                 return $s_file;
             }
 
