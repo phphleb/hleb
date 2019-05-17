@@ -25,10 +25,12 @@ class CachedTemplate
      */
     function __construct(string $template, array $template_params = [])
     {
-        $backtrace = $this->hl_debug_backtrace();
-        $this->templateParams = $template_params;
-        $time = microtime(true);
+        if(HLEB_PROJECT_DEBUG) {
+            $backtrace = $this->hl_debug_backtrace();
+            $time = microtime(true);
+        }
 
+        $this->templateParams = $template_params;
         $path_to_file = $this->hl_search_cache_file($template);
         $this->tempfile = HLEB_GLOBAL_DIRECTORY . "/resources/views/" . trim($template, "/") . ".php";
         if ($path_to_file == null) {
@@ -41,15 +43,17 @@ class CachedTemplate
         }
         $this->tempfile = $this->content;
         $this->hl_add_content();
-        $time = microtime(true) - $time;
-        Info::insert("Templates", trim($template, "/") . $backtrace . $this->info_cache() . " load: " .
-            (round($time, 4) * 1000) . " ms" .  ", includeCachedTemplate(...)");
+
+        if(HLEB_PROJECT_DEBUG) {
+            $time = microtime(true) - $time;
+            Info::insert("Templates", trim($template, "/") . $backtrace . $this->info_cache() . " load: " .
+                (round($time, 4) * 1000) . " ms" . ", includeCachedTemplate(...)");
+        }
     }
 
 
     private function hl_debug_backtrace()
     {
-        if (!HLEB_PROJECT_DEBUG) return "";
         $trace = debug_backtrace(2, 4);
         if (isset($trace[3])) {
             $path = explode(HLEB_GLOBAL_DIRECTORY, ($trace[3]["file"] ?? ""));
