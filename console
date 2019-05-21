@@ -4,4 +4,4 @@
  * All service commands: php console --help
  */
 $args = implode(" ",  $argv);
-passthru ("php vendor/phphleb/framework/console.php $args");
+passthru ("php vendor/phphleb/framework/console.php $args " . __DIR__);
