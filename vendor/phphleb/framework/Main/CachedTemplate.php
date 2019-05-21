@@ -25,7 +25,7 @@ class CachedTemplate
      */
     function __construct(string $template, array $template_params = [])
     {
-        if(HLEB_PROJECT_DEBUG) {
+        if (HLEB_PROJECT_DEBUG) {
             $backtrace = $this->hl_debug_backtrace();
             $time = microtime(true);
         }
@@ -44,7 +44,7 @@ class CachedTemplate
         $this->tempfile = $this->content;
         $this->hl_add_content();
 
-        if(HLEB_PROJECT_DEBUG) {
+        if (HLEB_PROJECT_DEBUG) {
             $time = microtime(true) - $time;
             Info::insert("Templates", trim($template, "/") . $backtrace . $this->info_cache() . " load: " .
                 (round($time, 4) * 1000) . " ms" . ", includeCachedTemplate(...)");
@@ -68,7 +68,9 @@ class CachedTemplate
 
         $template_name = md5($template . Key::get() . session_id());
 
-        $this->hashfile = $path . $template_name;
+        $hash_params = count($this->templateParams) ? md5(json_encode($this->templateParams)) : "";
+
+        $this->hashfile = $path . $template_name . $hash_params;
 
         $search_all = glob($this->hashfile . "_*.txt");
 
@@ -100,24 +102,28 @@ class CachedTemplate
             $this->hl_add_content();
         } else {
 
-            $this->delRandOldFile();
+            $this->delOldFile();
             $this->content = $content;
 
             $file = $this->hashfile . "_" . $this->casheTime . ".txt";
             file_put_contents($file, $content, LOCK_EX);
         }
-        if (rand(0, 50) === 0) $this->delRandOldFile();
+        if (rand(0, 1000) === 0) $this->delOldFile();
     }
 
-    private function delRandOldFile()
+    private function delOldFile()
     {
-        $path = HLEB_GLOBAL_DIRECTORY . "/storage/cache/templates/";
-        $files = glob($path . "*.txt");
-        if ($files && count($files)) {
-            $file = $files[array_rand($files)];
-            if (filemtime($file) < strtotime('-' . $this->getFileTime($file) . ' seconds')) {
-                unlink("$file");
+        if (!isset($GLOBALS['HLEB_CACHED_TEMPLATES_CLEARED'])) {
+            $path = HLEB_GLOBAL_DIRECTORY . "/storage/cache/templates/";
+            $files = glob($path . "*.txt");
+            if ($files && count($files)) {
+                foreach ($files as $file) {
+                    if (filemtime($file) < strtotime('-' . $this->getFileTime($file) . ' seconds')) {
+                        unlink("$file");
+                    }
+                }
             }
+            $GLOBALS['HLEB_CACHED_TEMPLATES_CLEARED'] = true;
         }
     }
 
