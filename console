@@ -3,5 +3,7 @@
  * Enter console commands from framework HLEB.
  * All service commands: php console --help
  */
-$args = implode(" ",  $argv);
-passthru ("php vendor/phphleb/framework/console.php $args " . __DIR__);
+
+$vendor_dir_name = "vendor";
+$path = "$vendor_dir_name/phphleb/framework/console.php";
+passthru ("php $path " . $argv[1] . " " . __DIR__ . " " . $vendor_dir_name . " " . implode(" ",  $argv));
