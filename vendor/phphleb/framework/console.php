@@ -12,7 +12,7 @@ if ($arguments) {
     switch ($arguments) {
         case "--version":
         case "-v":
-            print "  Framework HLEB version 1.1.1" . "\n" . "  " . hl_console_copyright();
+            print "  Framework HLEB version 1.1.2" . "\n" . "  " . hl_console_copyright();
             break;
         case "--clear-cache":
         case "-cc":
