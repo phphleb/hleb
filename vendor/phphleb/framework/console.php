@@ -34,15 +34,11 @@ if ($arguments) {
             print hl_list($path);
             break;
         default:
-            $file = hl_convert_command_to_task($arguments);
+            $file = hl_convert_command_to_task($arguments, $path);
 
             if (file_exists($path . '/app/Commands/' . $file . ".php")) {
 
                 hl_create_users_task($path, $file, $set_arguments ?? null, $vendor_name ?? null);
-
-            } else if (file_exists($path . '/app/Commands/' . lcfirst($file) . ".php")) {
-
-                hl_create_users_task($path, lcfirst($file), $set_arguments ?? null, $vendor_name ?? null);
 
             } else {
 
@@ -136,9 +132,9 @@ function hl_create_users_task($path, $class, $arg, $vendor)
 
                 $class_name = 'App\Commands\\' . $search_name;
 
-                (new $class_name())->create_tack($arg);
+                (new $class_name())->create_task($arg);
 
-                continue;
+                break;
             }
         }
     }
@@ -183,50 +179,57 @@ function hl_sort_data($data)
 
 function hl_list($path){
 
-   $files = hl_search_files($path . "/app/Commands/");
+    $files = hl_search_files($path . "/app/Commands/");
 
-   $tasks_array = [["TASK", "COMMAND",  "DESCRIPTION"]];
+    $tasks_array = [["TASK", "COMMAND",  "DESCRIPTION"]];
 
-   include $path . "/" . HLEB_VENDOR_NAME . "/phphleb/framework/Scheme/App/Commands/MainTask.php";
+    include $path . "/" . HLEB_VENDOR_NAME . "/phphleb/framework/Scheme/App/Commands/MainTask.php";
 
-   foreach ($files as $file){
+    foreach ($files as $file){
 
-       $names = hl_search_once_namespace($file, $path);
+        $names = hl_search_once_namespace($file, $path);
 
-       include_once "$file";
+        include_once "$file";
 
-       if($names) {
+        if($names) {
 
-           foreach ($names as $name) {
+            foreach ($names as $name) {
 
-               if (class_exists('App\Commands\\' . $name)) {
+                if (class_exists('App\Commands\\' . $name)) {
 
-                   $cl_name = 'App\Commands\\' . $name;
+                    $cl_name = 'App\Commands\\' . $name;
 
-                   $class = new $cl_name;
+                    $class = new $cl_name;
 
-                   $tasks_array[] = [$name, hl_convert_task_to_command($name), $class::DESCRIPTION];
-               }
-           }
-       }
-   }
+                    $tasks_array[] = [$name, hl_convert_task_to_command($name, $path), $class::DESCRIPTION];
+                }
+            }
+        }
+    }
 
     if (count($tasks_array) === 1) return "No tasks in project." . "\n";
 
-   return hl_sort_data($tasks_array);
+    return hl_sort_data($tasks_array);
 
 }
 
-function hl_convert_task_to_command($name)
+
+function hl_convert_task_to_command($name, $path)
 {
     $result = "";
     $parts = explode("/", str_replace(DIRECTORY_SEPARATOR, "/", $name));
-    $class_name = str_split(array_pop($parts));
+    $end_name = array_pop($parts);
+
+    if(!file_exists(str_replace("//", "/", $path . "/app/Commands/" . (implode("/", $parts)) . "/" . $end_name . ".php"))){
+        return "undefined (wrong namespace)";
+    }
+    $class_name = str_split($end_name);
+
     $path = count($parts) ? implode("/", $parts) . "/" : "";
     foreach($class_name as $key => $part){
-       if(isset($class_name[$key-1]) && $class_name[$key-1] == strtolower($class_name[$key-1]) && $part == strtoupper($part)){
-           $result .= "-";
-       }
+        if(isset($class_name[$key-1]) && $class_name[$key-1] == strtolower($class_name[$key-1]) && $part == strtoupper($part)){
+            $result .= "-";
+        }
         $result .= $part;
     }
 
@@ -241,10 +244,10 @@ function hl_convert_command_to_task($name)
     if(count($parts) > 1) {
         $name =  array_pop($parts);
         $path = implode("/", $parts ) . "/";
-        }
+    }
     $parts = explode("-", $name);
     foreach($parts as $key => $part){
-            $result .= ucfirst($part);
+        $result .= ucfirst($part);
     }
 
     return $path . $result;
