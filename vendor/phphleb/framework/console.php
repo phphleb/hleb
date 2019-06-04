@@ -5,7 +5,13 @@ $arguments = $argv[1] ?? null;
 $set_arguments = $argv[6] ?? null;
 $vendor_name = $argv[3] ?? null;
 
-define("HLEB_VENDOR_NAME", $vendor_name);
+define('HLEB_GLOBAL_DIRECTORY', $path);
+
+define('HLEB_VENDOR_DIRECTORY', $vendor_name);
+
+define('HLEB_PROJECT_DIRECTORY', $path . '/' . $vendor_name . '/phphleb/framework');
+
+define('HLEB_PROJECT_DEBUG', false);
 
 if ($arguments) {
 
@@ -22,7 +28,7 @@ if ($arguments) {
             break;
         case "--help":
         case "-h":
-            print " --version or -v" . "\n" . " --clear-cache or -cc" .
+            print " --version or -v" . "\n" . " --clear-cache or -cc" . "\n" . " --key or -k" . "\n" . " --info or -i" .
                 "\n" . " --help or -h" . "\n" . " --routes or -r" . "\n" . " --list or -l";
             break;
         case "--routes":
@@ -33,8 +39,16 @@ if ($arguments) {
         case "-l":
             print hl_list($path);
             break;
+        case "--info":
+        case "-i":
+            hl_get_info($path);
+            break;
+        case "--key":
+        case "-k":
+            print hl_get_key($path, $vendor_name);
+            break;
         default:
-            $file = hl_convert_command_to_task($arguments, $path);
+            $file = hl_convert_command_to_task($arguments);
 
             if (file_exists($path . '/app/Commands/' . $file . ".php")) {
 
@@ -45,6 +59,60 @@ if ($arguments) {
                 print "Missing required arguments after `console`. Add --help to display more options.";
             }
     }
+}
+
+function hl_get_info($path){
+
+    $file = $path . DIRECTORY_SEPARATOR . 'default.start.hleb.php';
+    if (file_exists($path .  DIRECTORY_SEPARATOR .'start.hleb.php')) {
+        $file =  $path .  DIRECTORY_SEPARATOR . 'start.hleb.php';
+    }
+
+    $info_array = [
+        'HLEB_PROJECT_DEBUG',
+        'HLEB_PROJECT_CLASSES_AUTOLOAD',
+        'HLEB_PROJECT_ENDING_URL',
+        'HLEB_PROJECT_LOG_ON',
+        'HLEB_PROJECT_VALIDITY_URL'
+    ];
+
+    if(!file_exists($file)){
+        print "Missing file " . $file;
+        exit();
+    }
+
+    print "\n" . "File: " . $file . "\n" ."\n";
+
+    $handle = fopen($file, "r");
+
+    while (!feof($handle)) {
+        $buffer = trim(fgets($handle));
+        $search = preg_match_all("|^define\(\s*\'([A-Z0-9\_]+)\'\s*\,\s*([^\)]+)\)|u", $buffer, $def, PREG_PATTERN_ORDER);
+        if($search == 1 ){
+            if(in_array($def[1][0], $info_array)) {
+                echo " " . $def[1][0] . " = " . str_replace(["\"", "'"], "", trim($def[2][0])) . "\n";
+            }
+        }
+        $search_errors = preg_match_all('|^error_reporting\(\s*([^)]+)\)|u', $buffer, $def, PREG_PATTERN_ORDER);
+        if($search_errors == 1){
+            print " error_reporting = " . str_replace("  ", " ", trim($def[1][0])) . "\n";
+        }
+    }
+    fclose($handle);
+}
+
+function hl_get_key($path, $vendor)
+{
+    require HLEB_PROJECT_DIRECTORY . "/Main/Insert/DeterminantStaticUncreated.php";
+
+    require HLEB_PROJECT_DIRECTORY . "/Main/Errors/ErrorOutput.php";
+
+    require HLEB_PROJECT_DIRECTORY . "/Constructor/Handlers/Key.php";
+
+    require HLEB_PROJECT_DIRECTORY . "/Constructor/Handlers/ProtectedCSRF.php";
+
+    return Hleb\Constructor\Handlers\ProtectedCSRF::key();
+
 }
 
 function hl_console_copyright()
@@ -58,7 +126,7 @@ function hl_get_routes($path)
 {
     $file = $path . "/storage/cache/routes/routes.txt";
 
-    $data = [["ROUTE", "TYPE", "NAME"]];
+    $data = [["PREFIX", "ROUTE", "TYPE", "PROTECTED", "CONTROLLER", "NAME"]];
 
     if (file_exists($file)) {
 
@@ -67,7 +135,29 @@ function hl_get_routes($path)
         if (!empty($routes)) {
             foreach ($routes as $route) {
                 if (isset($route['data_path']) && !empty($route['data_path'])) {
-                    $data[] = array($route['data_path'], strtoupper(implode(", ", $route['type'] ?? [])), $route['data_name']);
+                    $prefix = "";
+                    $protect = $name = $controller = "-";
+                    if(isset($route['actions']) && count($route['actions'])){
+                        foreach($route['actions'] as $action){
+                            if(isset($action["protect"]) && $action["protect"][0] == "CSRF"){
+                                $protect = "ON";
+                            }
+                            if(isset($action["name"])){
+                                $name = $action["name"];
+                            }
+                            if(isset($action["controller"])){
+                                $controller = $action["controller"][0];
+                            }
+
+                            if(isset($action["prefix"])){
+                                $prefix .= trim($action["prefix"], "/") . "/";
+                            }
+                        }
+                    }
+                    $prefix = empty($prefix) ? "" : "/" . $prefix;
+                    $router = $route['data_path'] == "/" ? $route['data_path'] : "/" . trim($route["data_path"], "/") . "/";
+                    $type = strtoupper(implode(", ", $route['type'] ?? []));
+                    $data[] = array($prefix, $router, $type, $protect , $controller, $name);
                 }
             }
         }
@@ -79,14 +169,6 @@ function hl_get_routes($path)
 
 function hl_create_users_task($path, $class, $arg, $vendor)
 {
-
-    define('HLEB_GLOBAL_DIRECTORY', $path);
-
-    define('HLEB_VENDOR_DIRECTORY', $vendor);
-
-    define('HLEB_PROJECT_DIRECTORY', $path . '/' . $vendor . '/phphleb/framework');
-
-
     require HLEB_PROJECT_DIRECTORY . "/Main/Insert/DeterminantStaticUncreated.php";
 
     require HLEB_PROJECT_DIRECTORY . "/Scheme/App/Commands/MainTask.php";
@@ -183,7 +265,7 @@ function hl_list($path){
 
     $tasks_array = [["TASK", "COMMAND",  "DESCRIPTION"]];
 
-    include $path . "/" . HLEB_VENDOR_NAME . "/phphleb/framework/Scheme/App/Commands/MainTask.php";
+    include $path . "/" . HLEB_VENDOR_DIRECTORY . "/phphleb/framework/Scheme/App/Commands/MainTask.php";
 
     foreach ($files as $file){
 
