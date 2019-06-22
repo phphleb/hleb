@@ -30,6 +30,14 @@ class URLHandler
 
         $url = Functions::clearMainUrl();
 
+        $blocks = $this->match_subdomains($blocks);
+
+        if (empty(count($blocks))) {
+
+            /// Подходящего роута по текущему поддомену не найдено
+            return false;
+        }
+
         $blocks = $this->match_search_type($blocks);
 
         if (empty(count($blocks))) {
@@ -59,6 +67,46 @@ class URLHandler
 
         return $stroke;
 
+    }
+
+    private function match_subdomains($blocks)
+    {
+
+        $host = array_reverse(explode(".", hleb_get_host()));
+
+        if($host[0] === 'localhost'){
+            array_unshift($host, "");
+        }
+
+        $result_blocks = [];
+
+        foreach ($blocks as $block) {
+
+            $search = [];
+
+            $actions = !empty($block["actions"]) ? $block["actions"] : [];
+
+            foreach ($actions as $action) {
+                if(!in_array(false, $search)) {
+                    if (!empty($action["domain"])) {
+                        if(!$action["domain"][2]) {
+                            foreach ($action["domain"][0] as $domain) {
+                                $search[] = strtolower($host[intval($action["domain"][1]) - 1]) == strtolower($domain);
+                            }
+                        } else {
+                            foreach ($action["domain"][0] as $domain) {
+                                preg_match("/^" . $domain . "$/", strtolower($host[intval($action["domain"][1]) - 1]), $matches);
+                                $search[] = (count($matches) &&  $matches[0] == strtolower($host[intval($action["domain"][1]) - 1]));
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(count($search) == 0 || in_array(true, $search)) $result_blocks[]= $block;
+        }
+
+        return $result_blocks;
     }
 
 
@@ -226,5 +274,6 @@ class URLHandler
         return false;
 
     }
+
 
 }

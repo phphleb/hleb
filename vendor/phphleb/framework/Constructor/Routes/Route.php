@@ -7,7 +7,7 @@ use Hleb\Constructor\Routes\Methods\{
     RouteMethodGet, RouteMethodType, RouteMethodName, RouteMethodController,
     RouteMethodGetGroup, RouteMethodEndGroup, RouteMethodBefore, RouteMethodAfter, RouteMethodWhere, RouteMethodGetType,
     RouteMethodEndType, RouteMethodEnd, RouteMethodPrefix, RouteMethodProtect, RouteMethodGetProtect, RouteMethodEndProtect,
-    RouteMethodRenderMap
+    RouteMethodRenderMap, RouteMethodDomain
 };
 use Hleb\Constructor\Routes\MainRoute;
 
@@ -100,6 +100,18 @@ class Route extends MainRoute implements StandardRoute
     {
 
         return self::add(new RouteMethodEndProtect(self::instance()));
+    }
+
+    public static function domain($name, $level = 3)
+    {
+
+        return self::add(new RouteMethodDomain(self::instance(), $name, $level, false));
+    }
+
+    public static function domainPattern($name, $level = 3)
+    {
+
+        return self::add(new RouteMethodDomain(self::instance(), $name, $level, true));
     }
 
     public static function name($name)

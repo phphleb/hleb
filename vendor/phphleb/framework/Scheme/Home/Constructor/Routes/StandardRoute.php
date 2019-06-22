@@ -29,6 +29,10 @@ interface StandardRoute
 
     public static function protect();
 
+    public static function domain($name);
+
+    public static function domainPattern($name);
+
     public static function getProtect();
 
     public static function endProtect();

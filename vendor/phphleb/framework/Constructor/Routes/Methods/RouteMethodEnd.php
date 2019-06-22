@@ -224,7 +224,7 @@ class RouteMethodEnd extends MainRouteMethod
 
         for ($i = $start - 1; $i >= 0; $i--) {
 
-            if (in_array($blocks[$i]['method_type_name'], ["before", "type", "prefix", "protect"])) {
+            if (in_array($blocks[$i]['method_type_name'], ["before", "type", "prefix", "protect", "domain"])) {
 
                 $merge_on_first_position = $template["actions"]["previous"] ?? [];
 
@@ -306,6 +306,13 @@ class RouteMethodEnd extends MainRouteMethod
                         $normalize_action[] = ["prefix" => $action['data_path']];
 
                         break;
+
+                    case "domain":
+
+                        $normalize_action[] = ["domain" => $action['domain']];
+
+                        break;
+
 
                 }
 
@@ -561,7 +568,7 @@ class RouteMethodEnd extends MainRouteMethod
 
                 for ($i = $key + 1; $i < count($blocks); $i++) {
 
-                    if (in_array($blocks[$i]['method_type_name'], ["before", "type", "prefix", "protect"])) {
+                    if (in_array($blocks[$i]['method_type_name'], ["before", "type", "prefix", "protect", "domain"])) {
 
                         $this->main_params[] = $blocks[$i]['method_type_name'];
 

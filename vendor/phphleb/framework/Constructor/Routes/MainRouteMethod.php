@@ -32,6 +32,8 @@ class MainRouteMethod extends DataRoute implements RouteMethodStandard
 
     protected $errors = [];
 
+    protected $domain = [];
+
 
 //================================//
 
@@ -71,6 +73,8 @@ class MainRouteMethod extends DataRoute implements RouteMethodStandard
                 "protect" => array_unique($this->protect),
 
                 "method_type_name" => $this->method_type_name,
+
+                "domain" => $this->domain,
 
             ];
 
