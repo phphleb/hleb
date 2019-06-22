@@ -87,33 +87,32 @@ class URLHandler
             $actions = !empty($block["actions"]) ? $block["actions"] : [];
 
             foreach ($actions as $action) {
-                if (!in_array(false, $search)) {
-                    if (!empty($action["domain"])) {
-                        $domain_part = $host[intval($action["domain"][1]) - 1] ?? null;
-                        if (!$action["domain"][2]) {
-                            $valid_domain = 0;
-                            foreach ($action["domain"][0] as $domain) {
-                                if (($domain == null && $domain_part == null) || ($domain_part != null && strtolower($domain_part) == strtolower($domain))) {
-                                    $valid_domain++;
-                                }
+                if (!empty($action["domain"])) {
+                    $domain_part = $host[intval($action["domain"][1]) - 1] ?? null;
+                    if (!$action["domain"][2]) {
+                        $valid_domain = 0;
+                        foreach ($action["domain"][0] as $domain) {
+                            if (($domain == null && $domain_part == null) || ($domain_part != null && strtolower($domain_part) == strtolower($domain))) {
+                                $valid_domain++;
                             }
-                            $search[] = $valid_domain > 0;
-                        } else {
-                            $valid_domain = 0;
-                            foreach ($action["domain"][0] as $domain) {
-                                if (($domain == null && $domain_part == null)) {
-                                    $valid_domain++;
-                                } else if ($domain_part != null) {
-                                    preg_match("/^" . $domain . "$/", strtolower($domain_part), $matches);
-                                    if (count($matches) && $matches[0] == strtolower($domain_part)) {
-                                        $valid_domain++;
-                                    }
-                                }
-                            }
-                            $search[] = $valid_domain > 0;
                         }
+                        $search[] = $valid_domain > 0;
+                    } else {
+                        $valid_domain = 0;
+                        foreach ($action["domain"][0] as $domain) {
+                            if (($domain == null && $domain_part == null)) {
+                                $valid_domain++;
+                            } else if ($domain_part != null) {
+                                preg_match("/^" . $domain . "$/", strtolower($domain_part), $matches);
+                                if (count($matches) && $matches[0] == strtolower($domain_part)) {
+                                    $valid_domain++;
+                                }
+                            }
+                        }
+                        $search[] = $valid_domain > 0;
                     }
                 }
+                if (!in_array(false, $search)) break;
             }
 
             if (count($search) == 0 || !in_array(false, $search)) $result_blocks[] = $block;
