@@ -28,7 +28,7 @@ if ($arguments) {
             break;
         case "--help":
         case "-h":
-            print " --version or -v" . "\n" . " --clear-cache or -cc" . "\n" . " --key or -k" . "\n" . " --info or -i" .
+            print " --version or -v" . "\n" . " --clear-cache or -cc" .  "\n" . " --info or -i" .
                 "\n" . " --help or -h" . "\n" . " --routes or -r" . "\n" . " --list or -l";
             break;
         case "--routes":
@@ -42,10 +42,6 @@ if ($arguments) {
         case "--info":
         case "-i":
             hl_get_info($path);
-            break;
-        case "--key":
-        case "-k":
-            print hl_get_key($path, $vendor_name);
             break;
         default:
             $file = hl_convert_command_to_task($arguments);
@@ -101,19 +97,6 @@ function hl_get_info($path){
     fclose($handle);
 }
 
-function hl_get_key($path, $vendor)
-{
-    require HLEB_PROJECT_DIRECTORY . "/Main/Insert/DeterminantStaticUncreated.php";
-
-    require HLEB_PROJECT_DIRECTORY . "/Main/Errors/ErrorOutput.php";
-
-    require HLEB_PROJECT_DIRECTORY . "/Constructor/Handlers/Key.php";
-
-    require HLEB_PROJECT_DIRECTORY . "/Constructor/Handlers/ProtectedCSRF.php";
-
-    return Hleb\Constructor\Handlers\ProtectedCSRF::key();
-
-}
 
 function hl_console_copyright()
 {
