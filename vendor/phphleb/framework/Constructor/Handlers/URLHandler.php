@@ -74,7 +74,7 @@ class URLHandler
 
         $host = array_reverse(explode(".", hleb_get_host()));
 
-        if($host[0] === 'localhost'){
+        if ($host[0] === 'localhost') {
             array_unshift($host, "");
         }
 
@@ -87,23 +87,36 @@ class URLHandler
             $actions = !empty($block["actions"]) ? $block["actions"] : [];
 
             foreach ($actions as $action) {
-                if(!in_array(false, $search)) {
+                if (!in_array(false, $search)) {
                     if (!empty($action["domain"])) {
-                        if(!$action["domain"][2]) {
+                        $domain_part = $host[intval($action["domain"][1]) - 1] ?? null;
+                        if (!$action["domain"][2]) {
+                            $valid_domain = 0;
                             foreach ($action["domain"][0] as $domain) {
-                                $search[] = strtolower($host[intval($action["domain"][1]) - 1]) == strtolower($domain);
+                                if (($domain == null && $domain_part == null) || ($domain_part != null && strtolower($domain_part) == strtolower($domain))) {
+                                    $valid_domain++;
+                                }
                             }
+                            $search[] = $valid_domain > 0;
                         } else {
+                            $valid_domain = 0;
                             foreach ($action["domain"][0] as $domain) {
-                                preg_match("/^" . $domain . "$/", strtolower($host[intval($action["domain"][1]) - 1]), $matches);
-                                $search[] = (count($matches) &&  $matches[0] == strtolower($host[intval($action["domain"][1]) - 1]));
+                                if (($domain == null && $domain_part == null)) {
+                                    $valid_domain++;
+                                } else if ($domain_part != null) {
+                                    preg_match("/^" . $domain . "$/", strtolower($domain_part), $matches);
+                                    if (count($matches) && $matches[0] == strtolower($domain_part)) {
+                                        $valid_domain++;
+                                    }
+                                }
                             }
+                            $search[] = $valid_domain > 0;
                         }
                     }
                 }
             }
 
-            if(count($search) == 0 || in_array(true, $search)) $result_blocks[]= $block;
+            if (count($search) == 0 || !in_array(false, $search)) $result_blocks[] = $block;
         }
 
         return $result_blocks;
