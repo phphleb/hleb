@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hleb\Constructor\Routes\Methods;
 
 use Hleb\Scheme\Home\Constructor\Routes\{

@@ -9,19 +9,25 @@ use Hleb\Main\Info;
 use Hleb\Main\MyDebug;
 use Hleb\Main\MyWork;
 use Hleb\Main\WorkDebug;
+use Hleb\Main\DataDebug;
 
 class DPanel
 {
     use \DeterminantStaticUncreated;
-    
+
     private static $queries = false;
 
     private static $wdebug = false;
 
     public static function add($info)
     {
+        $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/debugpan"] = "1.0.3";
 
-        $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/debugpan"] = "1.0.2";
+        if(isset($GLOBALS["HLEB_MAIN_DEBUG_NANOROUTER"])){
+            $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/nanorouter"] = "1";
+            if(count($GLOBALS["HLEB_MAIN_DEBUG_NANOROUTER"]))
+                MyDebug::add("NANOROUTER", $GLOBALS["HLEB_MAIN_DEBUG_NANOROUTER"] );
+        }
 
         $hl_block_name = "__hl_debug_panel";
 
@@ -34,13 +40,13 @@ class DPanel
         foreach ($timing as $key => $value) {
 
             $hl_data_time .= "<div style='padding: 3px'>" . $key . ": " . $value . ($hl_preview > 0 ?
-            " (+" . round($value - $hl_preview, 4) . ")" : "") . "</div>";
+                    " (+" . round($value - $hl_preview, 4) . ")" : "") . "</div>";
 
             $hl_preview = $value;
         }
 
         $hl_this_route = self::this_block($info["block"]);
-        
+
         $hl_pr_updates = self::my_links();
 
         $hl_block_data = $info["block"];
@@ -49,7 +55,7 @@ class DPanel
 
     }
 
-    protected static function this_block($block)
+    protected static function this_block(array $block)
     {
         $name = $where = $actions = $path = "";
 
@@ -65,7 +71,7 @@ class DPanel
             }
             foreach ($bl as $key => $value) {
 
-                $actions .= "<div style='padding-left: 8px'>" . $key . ": ";
+                $actions .= "<div style='padding-left: 8px; white-space: nowrap;'>" . $key . ": ";
                 $actions .= htmlspecialchars(stripcslashes(json_encode($value))) . "</div>";
 
             }
@@ -104,11 +110,11 @@ class DPanel
         ];
     }
 
-    private static function create_path($path)
+    private static function create_path($p)
     {
-        $path = "/" . trim(preg_replace('|([/]+)|s', "/", $path), "/") . "/";
+        $path = "/" . trim(preg_replace('|([/]+)|s', "/", $p), "/") . "/";
 
-        $path = $path == "//" ? "/" : $path;
+        $path = ($path == "//") ? "/" : $path;
 
         $path = preg_replace('|\{(.*?)\}|s', "<span style='color: #e3d027'>$1</span>", $path);
 
@@ -121,17 +127,17 @@ class DPanel
         $rows = "";
         if(class_exists("\Hleb\Main\DataDebug")){
 
-           $data = \Hleb\Main\DataDebug::get();
-           $all_time = 0;
-           foreach($data as $key => $value){
-               $ms = round($value[1], 4);
-               $all_time += round($ms, 4);
-               $rows .= "<div style='padding: 4px; margin-bottom: 4px; background-color: whitesmoke; line-height: 2'>" .
-                   "<div style='display: inline-block; min-width: 16px; color:gray; padding: 0 5px;" .
-                   "' align = 'center'>" . ($key+1) . "</div> <span style='color:gray'>[" .
-                   "<div style='display: inline-block; color:black; min-width: 26px' align='right'>" . $value[3] . ($ms * 1000) .
-                   "</div> ms] " . htmlentities($value[2]) . "</span>&#8195;" . trim($value[0], ";") . ";</div>";
-           }
+            $data = DataDebug::get();
+            $all_time = 0;
+            foreach($data as $key => $value){
+                $ms = round($value[1], 4);
+                $all_time += round($ms, 4);
+                $rows .= "<div style='padding: 4px; margin-bottom: 4px; background-color: whitesmoke; line-height: 2'>" .
+                    "<div style='display: inline-block; min-width: 16px; color:gray; padding: 0 5px;" .
+                    "' align = 'center'>" . ($key+1) . "</div> <span style='color:gray'>[" .
+                    "<div style='display: inline-block; color:black; min-width: 26px' align='right'>" . $value[3] . ($ms * 1000) .
+                    "</div> ms] " . htmlentities($value[2]) . "</span>&#8195;" . trim($value[0], ";") . ";</div>";
+            }
         }
         return [$rows, round($all_time, 4), count($data)];
     }
@@ -156,24 +162,24 @@ class DPanel
 
     private static function my_debug()
     {
-      $info = MyDebug::all();
-      $result = [];
-      foreach($info as $k=>$inf) {
-          $result[$k] = ['name'=>$k, 'cont'=>'', 'num'=>0];
-          if (is_array($inf)) {
-              $result[$k]['num'] = count($inf);
-              foreach ($inf as $key=>$value) {
-                  $result[$k]['cont'] .=  "<div style='padding: 3px;'><b>" . $key . "</b>: ";
-                  $result[$k]['cont'] .= (is_array($value) ? htmlspecialchars(stripcslashes(json_encode($value))) : $value);
-                  $result[$k]['cont'] .= "</div>";
-              }
-          } else {
-              $to_str = strval($inf);
-              $result[$k]['cont'] .= $to_str;
-              $result[$k]['num'] = "len " . strlen($to_str);
-          }
-      }
-      return $result;
+        $info = MyDebug::all();
+        $result = [];
+        foreach($info as $k=>$inf) {
+            $result[$k] = ['name'=>$k, 'cont'=>'', 'num'=>0];
+            if (is_array($inf)) {
+                $result[$k]['num'] = count($inf);
+                foreach ($inf as $key=>$value) {
+                    $result[$k]['cont'] .=  "<div style='padding: 3px;'><b>" . $key . "</b>: ";
+                    $result[$k]['cont'] .= (is_array($value) ? htmlspecialchars(stripcslashes(json_encode($value))) : $value);
+                    $result[$k]['cont'] .= "</div>";
+                }
+            } else {
+                $to_str = strval($inf);
+                $result[$k]['cont'] .= $to_str;
+                $result[$k]['num'] = "len " . strlen($to_str);
+            }
+        }
+        return $result;
     }
 
     private static function my_links()
