@@ -231,11 +231,21 @@ class URLHandler
         $result_url = self::trim_end($result_url);
 
 
-        if ($result_url == $url) {
+        $result_url_parts = array_reverse(explode("/", $result_url));
 
+        $url_parts = array_reverse(explode("/", $url));
+
+        $result_shift = array_shift($url_parts);
+
+        // /.../.../ или /.../...?/
+
+        if ($result_url == trim($url, "?") ||
+            ($result_shift{strlen($result_shift) - 1} === "?" && implode($result_url_parts) === implode($url_parts))) {
+            // Прямое совпадение
             return $block;
 
         } else {
+            // Если есть вариативность в маршруте /{...}/, /{...?}/ или where(...)
 
             if (count($mat) > 0 || strpos($url, '{') !== false) {
 
@@ -243,49 +253,59 @@ class URLHandler
 
                 $generate_urls = explode("/", $url);
 
-                if (count($generate_real_urls) != count($generate_urls)) {
+                if (count($generate_real_urls) !== count($generate_urls) &&
+                    !(($result_shift{strlen($result_shift) - 2} == "?" || $result_shift{strlen($result_shift) - 1} == "?") &&
+                        count($generate_real_urls) + 1 == count($generate_urls))) {
+                    // Не совпадает длина маршрута с url
 
                     return false;
+
                 }
 
-
                 foreach ($generate_urls as $q => $generate_url) {
+
+                    $generate_real_urls[$q] = $generate_real_urls[$q] ?? "";
 
                     if (!empty($generate_url)) {
 
                         if ($generate_url{0} == "{" && $generate_url{strlen($generate_url) - 1} == "}") {
 
-                            $exp = trim($generate_url, "}");
-
-                            $exp = trim($exp, "{");
+                            $exp = trim($generate_url, "{?}");
 
                             if (isset($mat[$exp])) {
 
-                                preg_match("/^" . $mat[$exp] . "$/", $generate_real_urls[$q], $matches);
+                                if (!(empty($generate_real_urls[$q]) && $generate_url{strlen($generate_url) - 2} === "?")) {
 
-                                if (empty($matches[0]) || $matches[0] != $generate_real_urls[$q]) {
+                                    preg_match("/^" . $mat[$exp] . "$/", $generate_real_urls[$q], $matches);
 
-                                    return false;
+                                    if (empty($matches[0]) || $matches[0] != $generate_real_urls[$q]) {
+
+                                        return false;
+                                    }
                                 }
+                            } else {
+                                // Предупреждение (?)
                             }
 
                             Request::add($exp, $generate_real_urls[$q]);
 
-                        } else if ($generate_url !== $generate_real_urls[$q]) {
+                        } else {
+                            // Есть вариативность, но и есть прямые совпадения:
+                            if (!(empty($generate_real_urls[$q]) && $generate_url{strlen($generate_url) - 1} == "?")) {
+                                if (trim($generate_url, "?") !== $generate_real_urls[$q]) {
 
-                            return false;
+                                    return false;
+                                }
+                            }
                         }
                     }
-                }
+                } // foreach
 
                 return $block;
-
             }
 
         }
-
         return false;
-
     }
 
 
