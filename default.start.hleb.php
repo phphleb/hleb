@@ -116,7 +116,7 @@ define( 'HLEB_PROJECT_LOG_ON', true );
  | which of them will be displayed.
  | Add all PHP errors to the report:  error_reporting(-1);
  | Disable error logging: error_reporting(0);
- | Default: E_ALL & ~E_NOTICE
+ | Default: E_ALL
  |
  |
  |-----------------------------------------------------------------------------
@@ -126,10 +126,10 @@ define( 'HLEB_PROJECT_LOG_ON', true );
  | В PHP много уровней ошибок, здесь определяется какие из них будут выведены.
  | Добавлять в отчет все ошибки PHP: error_reporting(-1);
  | Выключение протоколирования ошибок: error_reporting(0);
- | Изначально: E_ALL & ~E_NOTICE (Все ошибки кроме E_NOTICE)
+ | Изначально: E_ALL (Все ошибки)
  |
  */
-error_reporting(E_ALL & ~E_NOTICE);
+error_reporting(E_ALL);
 
 /*
  |-----------------------------------------------------------------------------

@@ -22,102 +22,22 @@ if (HLEB_PROJECT_LOG_ON) {
 ini_set('display_errors', HLEB_PROJECT_DEBUG ? '1' : '0');
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-$hl_val_array_address = explode("?", $_SERVER['REQUEST_URI']);
-
-$hl_val_address = rawurldecode(array_shift($hl_val_array_address));
-
-$hl_rel_params = count($hl_val_array_address) > 0 ? "?" . implode("?", $hl_val_array_address) : "";// params
+require HLEB_PROJECT_DIRECTORY. "/Constructor/Handlers/AddressBar.php";
 
 $hl_actual_protocol = (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") ? "https://" : "http://";
 
-$hl_rel_protocol = HLEB_PROJECT_ONLY_HTTPS ? "https://" : $hl_actual_protocol; // protocol
+new \Hleb\Constructor\Handlers\AddressBar(
+    [
+        "SERVER" => $_SERVER,
+        "HTTPS" => $hl_actual_protocol,
+        "HLEB_PROJECT_ONLY_HTTPS" => HLEB_PROJECT_ONLY_HTTPS,
+        "HLEB_PROJECT_ENDING_URL" => HLEB_PROJECT_ENDING_URL,
+        "HLEB_PROJECT_DIRECTORY" => HLEB_PROJECT_DIRECTORY,
+        "HLEB_PROJECT_GLUE_WITH_WWW" => HLEB_PROJECT_GLUE_WITH_WWW,
+        "HLEB_PROJECT_VALIDITY_URL" => HLEB_PROJECT_VALIDITY_URL
+    ]
+);
 
-define("HLEB_PROJECT_PROTOCOL", $hl_rel_protocol);
-
-$hl_end_element = explode("/", $hl_val_address);
-
-$hl_file_url = stripos(end($hl_end_element), ".") === false ? false : true;
-
-$hl_rel_address = "";
-
-if (!empty($hl_val_address)) {
-
-    $hl_var_first = HLEB_PROJECT_ENDING_URL ? $hl_val_address : mb_substr($hl_val_address, 0, -1);
-
-    $hl_var_second = HLEB_PROJECT_ENDING_URL ? $hl_val_address . "/" : $hl_val_address;
-
-    $hl_var_all = $hl_val_address{strlen($hl_val_address) - 1} == "/" ? $hl_var_first : $hl_var_second;
-
-    $hl_rel_address = $hl_file_url ? $hl_val_address : $hl_var_all; // address
-}
-
-$hl_val_host = $_SERVER['HTTP_HOST'];
-
-$idn = null;
-
-define("HLEB_MAIN_DOMAIN_ORIGIN", $hl_val_host);
-
-if (stripos($hl_val_host, 'xn--') !== false) {
-
-    include(HLEB_PROJECT_DIRECTORY . '/idnaconv/idna_convert.class.php');
-
-    $idn = new idna_convert(array('idn_version' => 2008));
-
-    $hl_val_host = $idn->decode($hl_val_host);
-
-}
-
-$hl_val_array_host = explode(".", $hl_val_host);
-
-if (HLEB_PROJECT_GLUE_WITH_WWW == 1) {
-
-    if ($hl_val_array_host[0] == "www") array_shift($hl_val_array_host);
-
-} else if (HLEB_PROJECT_GLUE_WITH_WWW == 2) {
-
-    if ($hl_val_array_host[0] != "www") $hl_val_array_host = array_merge(["www"], $hl_val_array_host);
-
-}
-
-
-$hl_rel_host_www = implode(".", $hl_val_array_host); // host
-
-define("HLEB_MAIN_DOMAIN", $hl_val_host);
-
-//Проверка на валидность адреса
-
-if (!preg_match(HLEB_PROJECT_VALIDITY_URL, $hl_val_address)) {
-
-    header('Location: ' . $hl_rel_protocol . $hl_rel_host_www, true, 301);
-    exit();
-}
-
-//Проверка на корректность URL
-
-$hl_rel_host_www = empty($hl_rel_address) ? $hl_rel_host_www . HLEB_PROJECT_ENDING_URL ? "/" : "" : $hl_rel_host_www;
-
-$hl_rel_url = $hl_rel_protocol . (preg_replace("/\/{2,}/", "/", $hl_rel_host_www . $hl_rel_address)) . $hl_rel_params;
-
-$hl_val_array_actual_uri = explode("?", $_SERVER['REQUEST_URI']);
-
-$hl_val_first_actual_uri = rawurldecode(array_shift($hl_val_array_actual_uri));
-
-$hl_val_first_actual_params = count($hl_val_array_actual_uri) > 0 ? "?" . implode("?", $hl_val_array_actual_uri) : "";
-
-$hl_val_actual_host = $idn === null ? $_SERVER['HTTP_HOST'] : $idn->decode($_SERVER['HTTP_HOST']);
-
-$hl_actual_url = $hl_actual_protocol . $hl_val_actual_host . $hl_val_first_actual_uri . $hl_val_first_actual_params;
-
-if ($hl_rel_url !== $hl_actual_url) {
-
-    header('Location: ' . $hl_rel_url, true, 301);
-    exit();
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 require HLEB_PROJECT_DIRECTORY. "/Main/Insert/DeterminantStaticUncreated.php";
 

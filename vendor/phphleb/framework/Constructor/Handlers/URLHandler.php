@@ -240,7 +240,7 @@ class URLHandler
         // /.../.../ или /.../...?/
 
         if ($result_url == trim($url, "?") ||
-            ($result_shift{strlen($result_shift) - 1} === "?" && implode($result_url_parts) === implode($url_parts))) {
+            (strlen($result_shift) && $result_shift{strlen($result_shift) - 1} === "?" && implode($result_url_parts) === implode($url_parts))) {
             // Прямое совпадение
             return $block;
 
