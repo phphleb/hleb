@@ -18,7 +18,14 @@ if ($arguments) {
     switch ($arguments) {
         case "--version":
         case "-v":
-            print "  Framework HLEB version 1.1.4" . "\n" . "  " . hl_console_copyright();
+            $ver = [ hl_get_frame_version(), hl_get_framework_version()];
+            $bsp = hl_add_bsp($ver);
+            print "\n" .
+                " ╔═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╗ " . "\n" .
+                " ║ HLEB frame project version " . $ver[0] . $bsp[0] . "  ║" . "\n" .
+                " ║ phphleb/framework version  " . $ver[1] . $bsp[1] . "  ║" . "\n" .
+                " ║ " . hl_console_copyright() . "                  ║" . "\n" .
+                " ╚═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╝ " . "\n";
             break;
         case "--clear-cache":
         case "-cc":
@@ -28,7 +35,7 @@ if ($arguments) {
             break;
         case "--help":
         case "-h":
-            print " --version or -v" . "\n" . " --clear-cache or -cc" .  "\n" . " --info or -i" .
+            print " --version or -v" . "\n" . " --clear-cache or -cc" . "\n" . " --info or -i" .
                 "\n" . " --help or -h" . "\n" . " --routes or -r" . "\n" . " --list or -l";
             break;
         case "--routes":
@@ -57,11 +64,22 @@ if ($arguments) {
     }
 }
 
-function hl_get_info($path){
+function hl_get_info($path)
+{
+    $index = $path . DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . 'index.php';
+
+    if (file_exists($index)) {
+        print "\n" . "File: " . $index . "\n" . "\n";
+
+        print " HLEB_PROJECT_ONLY_HTTPS = " . hl_search_version($index, "HLEB_PROJECT_ONLY_HTTPS") . "\n";
+
+        print " HLEB_PROJECT_GLUE_WITH_WWW = " . hl_search_version($index, "HLEB_PROJECT_GLUE_WITH_WWW") . "\n" . "\n";
+
+    }
 
     $file = $path . DIRECTORY_SEPARATOR . 'default.start.hleb.php';
-    if (file_exists($path .  DIRECTORY_SEPARATOR .'start.hleb.php')) {
-        $file =  $path .  DIRECTORY_SEPARATOR . 'start.hleb.php';
+    if (file_exists($path . DIRECTORY_SEPARATOR . 'start.hleb.php')) {
+        $file = $path . DIRECTORY_SEPARATOR . 'start.hleb.php';
     }
 
     $info_array = [
@@ -72,25 +90,25 @@ function hl_get_info($path){
         'HLEB_PROJECT_VALIDITY_URL'
     ];
 
-    if(!file_exists($file)){
+    if (!file_exists($file)) {
         print "Missing file " . $file;
         exit();
     }
 
-    print "\n" . "File: " . $file . "\n" ."\n";
+    print "\n" . "File: " . $file . "\n" . "\n";
 
     $handle = fopen($file, "r");
 
     while (!feof($handle)) {
         $buffer = trim(fgets($handle));
         $search = preg_match_all("|^define\(\s*\'([A-Z0-9\_]+)\'\s*\,\s*([^\)]+)\)|u", $buffer, $def, PREG_PATTERN_ORDER);
-        if($search == 1 ){
-            if(in_array($def[1][0], $info_array)) {
+        if ($search == 1) {
+            if (in_array($def[1][0], $info_array)) {
                 echo " " . $def[1][0] . " = " . str_replace(["\"", "'"], "", trim($def[2][0])) . "\n";
             }
         }
         $search_errors = preg_match_all('|^error_reporting\(\s*([^)]+)\)|u', $buffer, $def, PREG_PATTERN_ORDER);
-        if($search_errors == 1){
+        if ($search_errors == 1) {
             print " error_reporting = " . str_replace("  ", " ", trim($def[1][0])) . "\n";
         }
     }
@@ -120,19 +138,19 @@ function hl_get_routes($path)
                 if (isset($route['data_path']) && !empty($route['data_path'])) {
                     $prefix = "";
                     $protect = $name = $controller = "-";
-                    if(isset($route['actions']) && count($route['actions'])){
-                        foreach($route['actions'] as $action){
-                            if(isset($action["protect"]) && $action["protect"][0] == "CSRF"){
+                    if (isset($route['actions']) && count($route['actions'])) {
+                        foreach ($route['actions'] as $action) {
+                            if (isset($action["protect"]) && $action["protect"][0] == "CSRF") {
                                 $protect = "ON";
                             }
-                            if(isset($action["name"])){
+                            if (isset($action["name"])) {
                                 $name = $action["name"];
                             }
-                            if(isset($action["controller"])){
+                            if (isset($action["controller"])) {
                                 $controller = $action["controller"][0];
                             }
 
-                            if(isset($action["prefix"])){
+                            if (isset($action["prefix"])) {
                                 $prefix .= trim($action["prefix"], "/") . "/";
                             }
                         }
@@ -140,7 +158,7 @@ function hl_get_routes($path)
                     $prefix = empty($prefix) ? "" : "/" . $prefix;
                     $router = $route['data_path'] == "/" ? $route['data_path'] : "/" . trim($route["data_path"], "/") . "/";
                     $type = strtoupper(implode(", ", $route['type'] ?? []));
-                    $data[] = array($prefix, $router, $type, $protect , $controller, $name);
+                    $data[] = array($prefix, $router, $type, $protect, $controller, $name);
                 }
             }
         }
@@ -183,13 +201,13 @@ function hl_create_users_task($path, $class, $arg, $vendor)
 
     // Выполнение команды
 
-    $real_path = $path . DIRECTORY_SEPARATOR .'app' . DIRECTORY_SEPARATOR . 'Commands' . DIRECTORY_SEPARATOR . $class . ".php";
+    $real_path = $path . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Commands' . DIRECTORY_SEPARATOR . $class . ".php";
 
     include_once "$real_path";
 
-    $search_names = hl_search_once_namespace($real_path, $path . DIRECTORY_SEPARATOR .'app' . DIRECTORY_SEPARATOR . 'Commands');
+    $search_names = hl_search_once_namespace($real_path, $path . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Commands');
 
-    if($search_names) {
+    if ($search_names) {
 
         foreach ($search_names as $search_name) {
 
@@ -242,21 +260,22 @@ function hl_sort_data($data)
     return $r;
 }
 
-function hl_list($path){
+function hl_list($path)
+{
 
     $files = hl_search_files($path . "/app/Commands/");
 
-    $tasks_array = [["TASK", "COMMAND",  "DESCRIPTION"]];
+    $tasks_array = [["TASK", "COMMAND", "DESCRIPTION"]];
 
     include $path . "/" . HLEB_VENDOR_DIRECTORY . "/phphleb/framework/Scheme/App/Commands/MainTask.php";
 
-    foreach ($files as $file){
+    foreach ($files as $file) {
 
         $names = hl_search_once_namespace($file, $path);
 
         include_once "$file";
 
-        if($names) {
+        if ($names) {
 
             foreach ($names as $name) {
 
@@ -285,14 +304,14 @@ function hl_convert_task_to_command($name, $path)
     $parts = explode("/", str_replace(DIRECTORY_SEPARATOR, "/", $name));
     $end_name = array_pop($parts);
 
-    if(!file_exists(str_replace("//", "/", $path . "/app/Commands/" . (implode("/", $parts)) . "/" . $end_name . ".php"))){
+    if (!file_exists(str_replace("//", "/", $path . "/app/Commands/" . (implode("/", $parts)) . "/" . $end_name . ".php"))) {
         return "undefined (wrong namespace)";
     }
     $class_name = str_split($end_name);
 
     $path = count($parts) ? implode("/", $parts) . "/" : "";
-    foreach($class_name as $key => $part){
-        if(isset($class_name[$key-1]) && $class_name[$key-1] == strtolower($class_name[$key-1]) && $part == strtoupper($part)){
+    foreach ($class_name as $key => $part) {
+        if (isset($class_name[$key - 1]) && $class_name[$key - 1] == strtolower($class_name[$key - 1]) && $part == strtoupper($part)) {
             $result .= "-";
         }
         $result .= $part;
@@ -306,12 +325,12 @@ function hl_convert_command_to_task($name)
     $result = '';
     $parts = explode("/", $name);
     $path = "";
-    if(count($parts) > 1) {
-        $name =  array_pop($parts);
-        $path = implode("/", $parts ) . "/";
+    if (count($parts) > 1) {
+        $name = array_pop($parts);
+        $path = implode("/", $parts) . "/";
     }
     $parts = explode("-", $name);
-    foreach($parts as $key => $part){
+    foreach ($parts as $key => $part) {
         $result .= ucfirst($part);
     }
 
@@ -338,12 +357,12 @@ function hl_search_files($path)
 
 function hl_search_once_namespace($link, $path)
 {
-    if(strpos($link, ".php", strlen($link) - strlen(".php")) !== false) {
+    if (strpos($link, ".php", strlen($link) - strlen(".php")) !== false) {
 
         $pathname = explode("/", str_replace("\\", "/", explode($path, $link)[1]));
         $file = explode(".php", array_pop($pathname))[0];
-        foreach($pathname as $key =>$pathn){
-            $pathname[$key] = trim($pathn, ".-\\/" );
+        foreach ($pathname as $key => $pathn) {
+            $pathname[$key] = trim($pathn, ".-\\/");
         }
         $nsp_1 = ucfirst(end($pathname));
         $nsp_1 = empty($nsp_1) ? "" : $nsp_1 . "\\";
@@ -353,5 +372,47 @@ function hl_search_once_namespace($link, $path)
         return array_unique([$file, $nsp_1 . $file, $nsp_2 . $file]);
     }
     return false;
+}
+
+function hl_get_frame_version()
+{
+
+    return hl_search_version(HLEB_GLOBAL_DIRECTORY . "/public/index.php", "HLEB_FRAME_VERSION");
+}
+
+/**
+ * @param array $versions
+ * @return array
+ */
+function hl_add_bsp($versions)
+{
+    $origin = 9;
+    $versions = array_map("strlen", $versions);
+    $result = ["", ""];
+    foreach ($versions as $key => $version) {
+        for ($i = 0; $i < $origin - $version; $i++) {
+            $result[$key] .= " ";
+        }
+}
+
+return $result;
+
+}
+
+function hl_get_framework_version()
+{
+
+    return hl_search_version(HLEB_PROJECT_DIRECTORY . "/init.php", "HLEB_PROJECT_FULL_VERSION");
+}
+
+function hl_search_version($file, $const)
+{
+
+    $content = file_get_contents($file, true);
+
+    $search = preg_match_all("|define\(\s*\'" . $const . "\'\s*\,\s*([^\)]+)\)|u", $content, $def);
+
+    return trim($def[1][0] ?? 'undefined', "' \"");
+
 }
 
