@@ -48,9 +48,7 @@ require HLEB_PROJECT_DIRECTORY . "/Scheme/Home/Main/Connector.php";
 require HLEB_GLOBAL_DIRECTORY . "/app/Optional/MainConnector.php";
 
 // Чтобы установить другое название каталога 'vendor' добавить в константы HLEB_VENDOR_DIRECTORY
-if(defined('HLEB_VENDOR_DIRECTORY')){
-    $hl_vendor_dir = HLEB_VENDOR_DIRECTORY;
-} else {
+if(!defined('HLEB_VENDOR_DIRECTORY')){
     // Автоопределение текущего каталога с библиотеками
     $hl_project_dir = explode("/", str_replace( "\\", "/", trim(HLEB_PROJECT_DIRECTORY, "/")));
     define('HLEB_VENDOR_DIRECTORY', $hl_project_dir[count($hl_project_dir)-3]);
