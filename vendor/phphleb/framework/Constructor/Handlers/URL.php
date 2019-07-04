@@ -44,11 +44,16 @@ class URL
         $address_parts = explode("/", self::$addresses[$name]);
 
         foreach ($address_parts as $key => $part) {
+            if (count($part)>2 && $part{0} == "{") {
 
-            foreach ($perem as $k => $p) {
-
-                if ($address_parts[$key] == "{" . $k . "}") $address_parts[$key] = $p;
-
+                foreach ($perem as $k => $p) {
+                    if (($part{strlen($part) - 2} == "?" && $address_parts[$key] == "{" . $k . "?}") ||
+                        $address_parts[$key] == "{" . $k . "}") {
+                        $address_parts[$key] = $p;
+                    } else if ($part{strlen($part) - 2} == "?") {
+                        $address_parts[$key] = "";
+                    }
+                }
             }
         }
 
@@ -78,7 +83,7 @@ class URL
 
         }
 
-        return $url;
+        return str_replace("?", "", $url);
 
     }
 
