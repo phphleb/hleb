@@ -16,10 +16,9 @@ class AddressBar
     {
         $this->INPUT_PARAMS = $params;
 
-        $this->set();
     }
 
-    private function set(){
+    public function get_state(){
 
         $val_array_address = explode("?", $this->INPUT_PARAMS['SERVER']['REQUEST_URI']);
 
@@ -113,6 +112,8 @@ class AddressBar
             self::redirect($rel_url);
 
         }
+
+        return $rel_url;
 
     }
 

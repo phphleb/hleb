@@ -22,6 +22,8 @@ class Workspace
 
     protected $hl_debug_info = ["time" => [], "block" => []];
 
+    protected $adm_footer;
+
     /**
      * Workspace constructor.
      * @param array $block
@@ -88,34 +90,32 @@ class Workspace
 
             $_hl_excluded_actions = $_hl_excluded_block["actions"];
 
-            foreach ($_hl_excluded_actions as $_hl_excluded_action) {
+            foreach ($_hl_excluded_actions as $_hl_exc) {
 
-                if (isset($_hl_excluded_action["controller"])) {
+               if (isset($_hl_exc["controller"]) || isset($_hl_exc["adminPanController"])) {
 
-                    $_hl_excluded_params = self::get_controller($_hl_excluded_action["controller"]);
+                    $_hl_excluded_params =  isset($_hl_exc["controller"]) ? self::get_controller($_hl_exc["controller"]) :
+                            self::get_adminPanController($_hl_exc["adminPanController"], $_hl_excluded_block);
 
                     if (is_array($_hl_excluded_params)) {
-
                         if (isset($_hl_excluded_params[2]) && $_hl_excluded_params[2] == "render") {
                             // render
                         } else {
                             $_hl_excluded_params[0] = [$_hl_excluded_params[0]];
                         }
-
                     } else {
 
                         print $_hl_excluded_params;
-
+                        if(!empty($this->adm_footer)) print $this->adm_footer;
                         return;
-                    }
 
+                    }
                     break;
                 }
             }
         }
 
         // Создание data() v2
-
 
         if (is_array($_hl_excluded_params) && !empty($_hl_excluded_params[1])) {
 
@@ -138,8 +138,6 @@ class Workspace
 
             print $_hl_excluded_params["text"];
 
-            return;
-
         } else if (isset($_hl_excluded_params[2]) && $_hl_excluded_params[2] == "views") {
 
             //  view(...)
@@ -153,14 +151,13 @@ class Workspace
                 (new VCreator($_hl_excluded_file))->view();
 
             } else {
-                $_hl_excluded_errors[] = "HL037-VIEW_ERROR: Error in function view() ! " .
+                $_hl_excluded_errors = "HL037-VIEW_ERROR: Error in function view() ! " .
                     "Missing file `/resources/views/" . $_hl_excluded_params[0][0] . ".php` . ~ " .
                     "Исключение в функции view() ! Отсутствует файл `/resources/views/" .  $_hl_excluded_params[0][0] . ".php`";
 
-                ErrorOutput::add($_hl_excluded_errors);
-                ErrorOutput::run();
+                ErrorOutput::get($_hl_excluded_errors);
+
             }
-            return;
 
         } else if (isset($_hl_excluded_params[2]) && $_hl_excluded_params[2] == "render") {
 
@@ -204,6 +201,8 @@ class Workspace
             if (count($_hl_excluded_errors) > 0) ErrorOutput::run();
 
         }
+
+        if(!empty($this->adm_footer)) print $this->adm_footer;
     }
 
 
@@ -243,11 +242,41 @@ class Workspace
 
     }
 
+    private function get_adminPanController(array $action, $block)
+    {
+        //Вызов adminPanController
+
+        $arguments = $action[1] ?? [];
+
+        $call = explode("@", $action[0]);
+
+        $initiator = "App\Controllers\\" . trim($call[0], "\\");
+
+        $method = $call[1] ?? "index";
+
+        if(!class_exists("Phphleb\Adminpan\MainAdminPanel")){
+            ErrorOutput::get("HL030-ADMIN_PANEL_ERROR: Error in method adminPanController() ! " .
+                "Library <a href='https://github.com/phphleb/adminpan'>phphleb/adminpan</a> not connected ! ~");
+            return null;
+        }
+
+        $controller = (new $initiator())->{$method}(...$arguments);
+
+        $adm_obj = new \Phphleb\Adminpan\Add\AdminPanHandler();
+
+        $this->adm_footer = $adm_obj->getFooter();
+
+        print $adm_obj->getHeader($block["number"],$block["_AdminPanelData"]);
+
+        return $controller;
+      }
+
     function calculate_time($name)
     {
         $num = count($this->hl_debug_info["time"]) + 1;
         $this->hl_debug_info["time"][$num . " " . $name] = round((microtime(true) - HLEB_START), 4);
     }
 
-
 }
+
+

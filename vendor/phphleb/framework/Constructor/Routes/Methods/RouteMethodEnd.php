@@ -245,7 +245,7 @@ class RouteMethodEnd extends MainRouteMethod
 
         for ($i = $end + 1; $i < count($blocks); $i++) {
 
-            if (in_array($blocks[$i]['method_type_name'], ["after", "name", "where", "controller"])) {
+            if (in_array($blocks[$i]['method_type_name'], ["after", "name", "where", "controller", "adminPanController"])) {
 
                 $template["actions"]["following"][] = $blocks[$i];
 
@@ -285,6 +285,7 @@ class RouteMethodEnd extends MainRouteMethod
                     case "after":
                     case "where":
                     case "controller":
+                    case "adminPanController":
                     case "before":
 
                         $normalize_action[] = [$action['method_type_name'] => $action['actions']];
@@ -540,7 +541,7 @@ class RouteMethodEnd extends MainRouteMethod
 
                 for ($i = $key - 1; $i >= 0; $i--) {
 
-                    if (in_array($blocks[$i]['method_type_name'], ["name", "where", "controller"])) {
+                    if (in_array($blocks[$i]['method_type_name'], ["name", "where", "controller", "adminPanController"])) {
 
                         $this->main_params[] = $blocks[$i]['method_type_name'];
 
@@ -593,13 +594,15 @@ class RouteMethodEnd extends MainRouteMethod
 
                         break;
 
-                    } else if (empty($block["data_params"]) && ($i == $key + 1) && $blocks[$i]['method_type_name'] != "controller") {
+                    } else if (empty($block["data_params"]) && ($i == $key + 1) &&
+                        ($blocks[$i]['method_type_name'] != "controller" && $blocks[$i]['method_type_name'] != "adminPanController")) {
 
-                        $this->errors[] = "HL022-ROUTE_ERROR: Error in method ->get() ! " .
-                            "Missing controller() for get() method without parameters. ~ " .
-                            "Исключение в методе ->get() ! Отсутствует controller() у метода get() без параметров.";
+                            $this->errors[] = "HL022-ROUTE_ERROR: Error in method ->get() ! " .
+                                "Missing controller() for get() method without parameters. ~ " .
+                                "Исключение в методе ->get() ! Отсутствует controller у метода get() без параметров.";
 
-                        ErrorOutput::add($this->errors);
+                            ErrorOutput::add($this->errors);
+
 
                     }
 

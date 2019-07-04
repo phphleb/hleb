@@ -28,7 +28,6 @@ class CacheRoutes
         $this->opt = new LoadRoutes();
 
 
-
             if ($this->opt->comparison()) {
 
                 $cache = $this->opt->load_cache();

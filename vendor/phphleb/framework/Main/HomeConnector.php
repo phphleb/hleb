@@ -55,6 +55,12 @@ class HomeConnector implements Connector
             'XdORM\Shell\XdHelper'=>$vendor.'/phphleb/xdorm/Shell/XdHelper.php',
             'XdORM\XD'=>$vendor.'/phphleb/xdorm/XD.php',
             'XdORM\Shell\XdDB'=>$vendor.'/phphleb/xdorm/Shell/XdDB.php',
+            'Phphleb\Adminpan\MainAdminPanel'=>$vendor.'/phphleb/adminpan/MainAdminPanel.php',
+            'Phphleb\Adminpan\Add\AdminPanHandler'=>$vendor.'/phphleb/adminpan/Add/AdminPanHandler.php',
+            'Phphleb\Adminpan\Add\GetDataList'=>$vendor.'/phphleb/adminpan/Add/GetDataList.php',
+            'Phphleb\Adminpan\Add\GetDataTable'=>$vendor.'/phphleb/adminpan/Add/GetDataTable.php',
+            'Phphleb\Adminpan\Add\GetDataHTML'=>$vendor.'/phphleb/adminpan/Add/GetDataHTML.php',
+            'Phphleb\Adminpan\Add\GetDataGraph'=>$vendor.'/phphleb/adminpan/Add/GetDataGraph.php',
         ];
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
-session_start();
+if(!isset($_SESSION)) session_start();
 
 define('HLEB_PROJECT_DIRECTORY', __DIR__);
 
 define('HLEB_PROJECT_VERSION', "1");
 
-define('HLEB_PROJECT_FULL_VERSION', "1.1.4");
+define('HLEB_PROJECT_FULL_VERSION', "1.1.5");
 
 $GLOBALS["HLEB_PROJECT_UPDATES"] = ["phphleb/hleb" => HLEB_FRAME_VERSION, "phphleb/framework" => HLEB_PROJECT_FULL_VERSION ];
 
@@ -26,7 +26,7 @@ require HLEB_PROJECT_DIRECTORY. "/Constructor/Handlers/AddressBar.php";
 
 $hl_actual_protocol = (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") ? "https://" : "http://";
 
-new \Hleb\Constructor\Handlers\AddressBar(
+(new \Hleb\Constructor\Handlers\AddressBar(
     [
         "SERVER" => $_SERVER,
         "HTTPS" => $hl_actual_protocol,
@@ -36,7 +36,7 @@ new \Hleb\Constructor\Handlers\AddressBar(
         "HLEB_PROJECT_GLUE_WITH_WWW" => HLEB_PROJECT_GLUE_WITH_WWW,
         "HLEB_PROJECT_VALIDITY_URL" => HLEB_PROJECT_VALIDITY_URL
     ]
-);
+))->get_state();
 
 
 require HLEB_PROJECT_DIRECTORY. "/Main/Insert/DeterminantStaticUncreated.php";
@@ -321,11 +321,6 @@ function hleb_a581cdd66c107015_print_r2($data, $desc = null)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-if ((new Hleb\Main\TryClass("XdORM\XD"))->is_connect() &&
-    file_exists(HLEB_GLOBAL_DIRECTORY . "/" . HLEB_VENDOR_DIRECTORY . "/phphleb/xdorm")){
-
-    $GLOBALS["HLEB_PROJECT_UPDATES"]['phphleb/xdorm'] = "1";
-}
 
 require HLEB_GLOBAL_DIRECTORY . "/app/Optional/shell.php";
 

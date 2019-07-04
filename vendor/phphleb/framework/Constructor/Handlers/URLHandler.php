@@ -14,6 +14,7 @@ class URLHandler
 
     }
 
+    protected $adm_blocks = [];
 
     /**
      * @param array $blocks
@@ -130,8 +131,9 @@ class URLHandler
 
         $result_blocks = [];
 
+        $admin_pan_data = [];
 
-        foreach ($blocks as $block) {
+        foreach ($blocks as $key => $block) {
 
             $type = [];
 
@@ -148,6 +150,11 @@ class URLHandler
                         $type[] = $action_type;
                     }
 
+                }
+
+                if (isset($action["adminPanController"])) {
+
+                    $admin_pan_data[] = $block;
                 }
 
             }
@@ -169,6 +176,11 @@ class URLHandler
                 $result_blocks[] = $block;
 
             }
+        }
+
+        foreach($result_blocks as &$result_block){
+
+            $result_block["_AdminPanelData"] = $admin_pan_data;
         }
 
         return $result_blocks;
