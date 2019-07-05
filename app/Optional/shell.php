@@ -89,7 +89,14 @@ function getMainClearUrl(){
 
 }
 
+/* Deprecated and will be removed in the future  */
 function getByName($name, $args=[]){
+
+    return hleb_i245eaa1a3b6d_getByName($name, $args);
+
+}
+
+function getUrlByName($name, $args=[]){
 
     return hleb_i245eaa1a3b6d_getByName($name, $args);
 

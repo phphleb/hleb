@@ -35,29 +35,43 @@ class URL
 
     }
 
+    public static function getRouteByName(string $name, array $perem = []) // Название и замена переменных
+    {
+        return self::getByName($name, $perem);
+    }
+
     public static function getByName(string $name, array $perem = []) // Название и замена переменных
     {
         // Получение пути с префиксами по существующему имени роута
+        if(!isset(self::$addresses[$name])) return false;
 
-        if (count($perem) == 0) return self::endingUrl(self::$addresses[$name]);
+        if (count($perem)  == 0 && (strpos(self::$addresses[$name], '?}') === false)) {
+            return self::endingUrl(self::$addresses[$name]);
+        }
 
         $address_parts = explode("/", self::$addresses[$name]);
 
         foreach ($address_parts as $key => $part) {
-            if (count($part)>2 && $part{0} == "{") {
+            if (strlen($part)>2 && $part{0} == "{") {
+                if(count($perem)) {
 
-                foreach ($perem as $k => $p) {
-                    if (($part{strlen($part) - 2} == "?" && $address_parts[$key] == "{" . $k . "?}") ||
-                        $address_parts[$key] == "{" . $k . "}") {
-                        $address_parts[$key] = $p;
-                    } else if ($part{strlen($part) - 2} == "?") {
+                    foreach ($perem as $k => $p) {
+                        if (($part{strlen($part) - 2} == "?" && $address_parts[$key] == "{" . $k . "?}") ||
+                            $address_parts[$key] == "{" . $k . "}") {
+                            $address_parts[$key] = $p;
+                        } else if ($part{strlen($part) - 2} == "?") {
+                            $address_parts[$key] = "";
+                        }
+                    }
+                } else {
+                    if ($part{strlen($part) - 2} == "?") {
                         $address_parts[$key] = "";
                     }
                 }
             }
         }
 
-        return self::endingUrl(str_replace(["//", "///", "////"], "/", "/" . implode("/", $address_parts) . "/"));
+        return self::endingUrl(preg_replace('|([/]+)|s', '/', "/" . implode("/", $address_parts) . "/"));
 
     }
 

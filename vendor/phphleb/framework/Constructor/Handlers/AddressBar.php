@@ -88,7 +88,10 @@ class AddressBar
 
         if (!preg_match($this->INPUT_PARAMS['HLEB_PROJECT_VALIDITY_URL'], $val_address)) {
 
-            self::redirect($rel_protocol . $rel_host_www);
+            $rel_url_main = $rel_protocol . $rel_host_www;
+            self::redirect($rel_url_main);
+            return $rel_url_main;
+
         }
 
         //Проверка на корректность URL
@@ -108,9 +111,7 @@ class AddressBar
         $actual_url = $actual_protocol . $val_actual_host . $val_first_actual_uri . $val_first_actual_params;
 
         if ($rel_url !== $actual_url) {
-
             self::redirect($rel_url);
-
         }
 
         return $rel_url;
@@ -120,9 +121,6 @@ class AddressBar
     private function redirect($rel_url){
 
         $this->redirect = $rel_url;
-
-        header('Location: ' . $this->redirect, true, 301);
-        exit();
 
     }
 }

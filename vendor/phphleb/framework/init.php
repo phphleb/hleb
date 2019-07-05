@@ -26,7 +26,7 @@ require HLEB_PROJECT_DIRECTORY. "/Constructor/Handlers/AddressBar.php";
 
 $hl_actual_protocol = (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") ? "https://" : "http://";
 
-(new \Hleb\Constructor\Handlers\AddressBar(
+$hl_address_object =(new \Hleb\Constructor\Handlers\AddressBar(
     [
         "SERVER" => $_SERVER,
         "HTTPS" => $hl_actual_protocol,
@@ -36,7 +36,16 @@ $hl_actual_protocol = (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") ? 
         "HLEB_PROJECT_GLUE_WITH_WWW" => HLEB_PROJECT_GLUE_WITH_WWW,
         "HLEB_PROJECT_VALIDITY_URL" => HLEB_PROJECT_VALIDITY_URL
     ]
-))->get_state();
+));
+
+$hl_address = $hl_address_object->get_state();
+
+if($hl_address_object->redirect != null){
+    if (!headers_sent()) {
+        header('Location: ' . $hl_address_object->redirect, true, 301);
+    }
+    exit();
+}
 
 
 require HLEB_PROJECT_DIRECTORY. "/Main/Insert/DeterminantStaticUncreated.php";
