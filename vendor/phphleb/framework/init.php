@@ -12,6 +12,18 @@ $GLOBALS["HLEB_PROJECT_UPDATES"] = ["phphleb/hleb" => HLEB_FRAME_VERSION, "phphl
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Demo redirection from "http" to "https"
+if(!defined('HLEB_PROJECT_ONLY_HTTPS')) {
+    define('HLEB_PROJECT_ONLY_HTTPS', false);
+}
+
+// Demo URL redirection from "www" to without "www" and back 0/1/2
+if(!defined('HLEB_PROJECT_GLUE_WITH_WWW')) {
+    define('HLEB_PROJECT_GLUE_WITH_WWW', 0);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 if (HLEB_PROJECT_LOG_ON) {
 
     ini_set('log_errors', 'On');

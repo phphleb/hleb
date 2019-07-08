@@ -23,13 +23,6 @@ header("X-XSS-Protection: 1; mode=block");
 header("X-Frame-Options: SAMEORIGIN");
 // ...
 
-// Demo redirection from "http" to "https".
-// Демонстрационное перенаправление с "http" на "https".
-define('HLEB_PROJECT_ONLY_HTTPS', false);
-
-// Demo URL redirection from "www" to without "www" and back 0/1/2.
-// Демонстрационное перенаправление URL с "www" на без "www" и обратно 0/1/2.
-define('HLEB_PROJECT_GLUE_WITH_WWW', 0);
 
 // Initialization.
 // Инициализация.
