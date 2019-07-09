@@ -551,8 +551,8 @@ class RouteMethodEnd extends MainRouteMethod
                         if (count($this->main_params) > 0) {
 
                             $this->errors[] = "HL007-3-ROUTE_ERROR: Error in method ->getGroup() ! " .
-                                "Call `" . implode(", ", array_unique($this->main_params[])) . "` cannot be applied to a method `getGroup`. ~ " .
-                                "Исключение в методе ->getGroup() ! Вызовы `" . implode(", ", array_unique($this->main_params[])) . "` не могут быть применены к методу `getGroup`";
+                                "Call `" . implode(", ", array_unique($this->main_params)) . "` cannot be applied to a method `getGroup`. ~ " .
+                                "Исключение в методе ->getGroup() ! Вызовы `" . implode(", ", array_unique($this->main_params)) . "` не могут быть применены к методу `getGroup`";
 
                             ErrorOutput::add($this->errors);
                         }
@@ -581,8 +581,8 @@ class RouteMethodEnd extends MainRouteMethod
                         if (count($this->main_params) > 0) {
 
                             $this->errors[] = "HL007-1-ROUTE_ERROR: Error in method ->endGroup() ! " .
-                                "Call `" . implode(", ", array_unique($this->main_params[])) . "` cannot be applied to a method `endGroup`. ~ " .
-                                "Исключение в методе ->endGroup() ! Вызовы `" . implode(", ", array_unique($this->main_params[])) . "` не могут быть применены к методу `endGroup`.";
+                                "Call `" . implode(", ", array_unique($this->main_params)) . "` cannot be applied to a method `endGroup`. ~ " .
+                                "Исключение в методе ->endGroup() ! Вызовы `" . implode(", ", array_unique($this->main_params)) . "` не могут быть применены к методу `endGroup`.";
 
                             ErrorOutput::add($this->errors);
                         }
@@ -597,11 +597,11 @@ class RouteMethodEnd extends MainRouteMethod
                     } else if (empty($block["data_params"]) && ($i == $key + 1) &&
                         ($blocks[$i]['method_type_name'] != "controller" && $blocks[$i]['method_type_name'] != "adminPanController")) {
 
-                            $this->errors[] = "HL022-ROUTE_ERROR: Error in method ->get() ! " .
-                                "Missing controller() for get() method without parameters. ~ " .
-                                "Исключение в методе ->get() ! Отсутствует controller у метода get() без параметров.";
+                        $this->errors[] = "HL022-ROUTE_ERROR: Error in method ->get() ! " .
+                            "Missing controller() for get() method without parameters. ~ " .
+                            "Исключение в методе ->get() ! Отсутствует controller у метода get() без параметров.";
 
-                            ErrorOutput::add($this->errors);
+                        ErrorOutput::add($this->errors);
 
 
                     }
