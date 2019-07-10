@@ -83,6 +83,26 @@ if(HLEB_PROJECT_CLASSES_AUTOLOAD) {
     require HLEB_PROJECT_DIRECTORY . "/Main/HomeConnector.php";
 }
 
+require HLEB_PROJECT_DIRECTORY. "/Scheme/App/Controllers/MainController.php";
+
+require HLEB_PROJECT_DIRECTORY. "/Scheme/App/Middleware/MainMiddleware.php";
+
+require HLEB_PROJECT_DIRECTORY. "/Scheme/App/Models/MainModel.php";
+
+
+
+if (file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/nano.php') &&
+    file_exists(HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY . "/phphleb/nanorouter/")) {
+
+    require HLEB_PROJECT_DIRECTORY . "/Constructor/Routes/NanoRoute.php";
+
+    require HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY . "/phphleb/nanorouter/HlebNanoRouter.php";
+
+    include_once HLEB_GLOBAL_DIRECTORY . '/routes/nano.php';
+
+    \NanoRoute::run();
+}
+
 
 // Эти классы загрузятся в любом случае
 
@@ -91,12 +111,6 @@ require HLEB_PROJECT_DIRECTORY . "/Constructor/Routes/MainRoute.php";
 require HLEB_PROJECT_DIRECTORY. "/Scheme/Home/Constructor/Routes/StandardRoute.php";
 
 require HLEB_PROJECT_DIRECTORY. "/Constructor/Routes/Route.php";
-
-require HLEB_PROJECT_DIRECTORY. "/Scheme/App/Controllers/MainController.php";
-
-require HLEB_PROJECT_DIRECTORY. "/Scheme/App/Middleware/MainMiddleware.php";
-
-require HLEB_PROJECT_DIRECTORY. "/Scheme/App/Models/MainModel.php";
 
 require HLEB_PROJECT_DIRECTORY. "/Main/ProjectLoader.php";
 
