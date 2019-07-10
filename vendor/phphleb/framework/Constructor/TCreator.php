@@ -23,7 +23,7 @@ class TCreator
     {
         extract($this->teplateData);
 
-        require $this->contentData;
+        include $this->contentData;
 
         return $this->casheTime;
 
