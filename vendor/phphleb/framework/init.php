@@ -96,8 +96,6 @@ if (file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/nano.php') &&
 
     require HLEB_PROJECT_DIRECTORY . "/Constructor/Routes/NanoRoute.php";
 
-    require HLEB_GLOBAL_DIRECTORY . "/app/Optional/shell.php";
-
     require HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY . "/phphleb/nanorouter/HlebNanoRouter.php";
 
     include_once HLEB_GLOBAL_DIRECTORY . '/routes/nano.php';
@@ -157,19 +155,17 @@ spl_autoload_register('hl_main_autoloader', true, true);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-if(!function_exists("hleb_v5ds34hop4nm1d_page_view")) {
 
-    function hleb_v5ds34hop4nm1d_page_view($view = null, $data = null)
-    {
+function hleb_v5ds34hop4nm1d_page_view($view = null, $data = null)
+{
 
-        if (func_num_args() === 0) {
-            return [null, null, "views"];
-        }
-
-
-        return [$view, $data, "views"];
+    if (func_num_args() === 0) {
+        return [null, null, "views"];
     }
+
+    return [$view, $data, "views"];
 }
+
 
 function hleb_gop0m3f4hpe10d_all($view = null, $data = null, $type = "views")
 {
@@ -177,7 +173,6 @@ function hleb_gop0m3f4hpe10d_all($view = null, $data = null, $type = "views")
     if (func_num_args() === 0) {
         return [null, null, $type];
     }
-
 
     return [$view, $data, $type];
 }
