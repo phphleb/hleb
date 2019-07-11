@@ -20,7 +20,7 @@ if ($arguments) {
     switch ($arguments) {
         case "--version":
         case "-v":
-            $ver = [ hl_get_frame_version(), hl_get_framework_version()];
+            $ver = [hl_get_frame_version(), hl_get_framework_version()];
             $bsp = hl_add_bsp($ver);
             print "\n" .
                 " ╔═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╗ " . "\n" .
@@ -143,10 +143,10 @@ function hl_get_routes($path)
                     $protect = "";
                     $types = [];
                     $domain = "";
-                    $all_pro = !empty($route['protect']) && array_reverse($route['protect'])[0]  == "CSRF" ? "ON" : "-";
+                    $all_pro = !empty($route['protect']) && array_reverse($route['protect'])[0] == "CSRF" ? "ON" : "-";
                     if (isset($route['actions']) && count($route['actions'])) {
                         foreach ($route['actions'] as $action) {
-                            if (!empty($action["protect"])){
+                            if (!empty($action["protect"])) {
                                 $protect = ($action["protect"][0] == "CSRF") ? "ON" : "-";
                             }
                             if (isset($action["name"])) {
@@ -157,7 +157,7 @@ function hl_get_routes($path)
                             }
 
                             if (isset($action["domain"])) {
-                                $domain = $domain ||  hl_domain_calc($action["domain"]);
+                                $domain = $domain || hl_domain_calc($action["domain"]);
                             }
 
                             if (isset($action["prefix"])) {
@@ -166,14 +166,14 @@ function hl_get_routes($path)
 
                             if (isset($action["type"])) {
                                 $atype = $action["type"];
-                                foreach($atype as $tp) {
+                                foreach ($atype as $tp) {
                                     $types [] = $tp;
                                 }
                             }
                         }
                     }
 
-                    if(empty($protect)){
+                    if (empty($protect)) {
                         $protect = $all_pro;
                     }
 
@@ -181,9 +181,9 @@ function hl_get_routes($path)
 
                     $router = $route['data_path'] == "/" ? $route['data_path'] : "/" . trim($route["data_path"], "/") . "/";
 
-                    $type = strtoupper(empty($types) ? (implode(", ", is_array($route['type']) ?
-                        array_map("hl_allowed_http_types", $route['type']) : [hl_allowed_http_types($route['type'])])) :
-                        implode(", ", array_map("hl_allowed_http_types", array_unique($types))));
+                    $type = strtoupper( implode(", ", array_map("hl_allowed_http_types", array_unique(empty($types) ?
+                        (is_array($route['type']) ? $route['type'] : [$route['type']]) : $types) )));
+
 
                     $data[] = array($domain ? "YES" : "-", $prefix, $router, $type, $protect, $controller, $name);
                 }
@@ -195,11 +195,13 @@ function hl_get_routes($path)
     return hl_sort_data($data);
 }
 
-function hl_allowed_http_types($type){
+function hl_allowed_http_types($type)
+{
     return empty($type) ? "GET" : ((in_array(strtolower($type), HLEB_HTTP_TYPE_SUPPORT)) ? $type : $type . "[NOT SUPPORTED]");
 }
 
-function hl_domain_calc($data){
+function hl_domain_calc($data)
+{
 
     return is_array($data) && count($data) > 1 && $data[1] > 2;
 
@@ -430,9 +432,9 @@ function hl_add_bsp($versions)
         for ($i = 0; $i < $origin - $version; $i++) {
             $result[$key] .= " ";
         }
-}
+    }
 
-return $result;
+    return $result;
 
 }
 
