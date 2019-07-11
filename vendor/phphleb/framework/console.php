@@ -13,6 +13,8 @@ define('HLEB_PROJECT_DIRECTORY', $path . '/' . $vendor_name . '/phphleb/framewor
 
 define('HLEB_PROJECT_DEBUG', false);
 
+define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'options']);
+
 if ($arguments) {
 
     switch ($arguments) {
@@ -127,7 +129,7 @@ function hl_get_routes($path)
 {
     $file = $path . "/storage/cache/routes/routes.txt";
 
-    $data = [["PREFIX", "ROUTE", "TYPE", "PROTECTED", "CONTROLLER", "NAME"]];
+    $data = [["SDOMAIN", "PREFIX", "ROUTE", "TYPE", "PROTECTED", "CONTROLLER", "NAME"]];
 
     if (file_exists($file)) {
 
@@ -137,11 +139,15 @@ function hl_get_routes($path)
             foreach ($routes as $route) {
                 if (isset($route['data_path']) && !empty($route['data_path'])) {
                     $prefix = "";
-                    $protect = $name = $controller = "-";
+                    $name = $controller = "-";
+                    $protect = "";
+                    $types = [];
+                    $domain = "";
+                    $all_pro = !empty($route['protect']) && array_reverse($route['protect'])[0]  == "CSRF" ? "ON" : "-";
                     if (isset($route['actions']) && count($route['actions'])) {
                         foreach ($route['actions'] as $action) {
-                            if (isset($action["protect"]) && $action["protect"][0] == "CSRF") {
-                                $protect = "ON";
+                            if (!empty($action["protect"])){
+                                $protect = ($action["protect"][0] == "CSRF") ? "ON" : "-";
                             }
                             if (isset($action["name"])) {
                                 $name = $action["name"];
@@ -150,15 +156,36 @@ function hl_get_routes($path)
                                 $controller = $action["controller"][0];
                             }
 
+                            if (isset($action["domain"])) {
+                                $domain = $domain ||  hl_domain_calc($action["domain"]);
+                            }
+
                             if (isset($action["prefix"])) {
                                 $prefix .= trim($action["prefix"], "/") . "/";
                             }
+
+                            if (isset($action["type"])) {
+                                $atype = $action["type"];
+                                foreach($atype as $tp) {
+                                    $types [] = $tp;
+                                }
+                            }
                         }
                     }
+
+                    if(empty($protect)){
+                        $protect = $all_pro;
+                    }
+
                     $prefix = empty($prefix) ? "" : "/" . $prefix;
+
                     $router = $route['data_path'] == "/" ? $route['data_path'] : "/" . trim($route["data_path"], "/") . "/";
-                    $type = strtoupper(implode(", ", $route['type'] ?? []));
-                    $data[] = array($prefix, $router, $type, $protect, $controller, $name);
+
+                    $type = strtoupper(empty($types) ? (implode(", ", is_array($route['type']) ?
+                        array_map("hl_allowed_http_types", $route['type']) : [hl_allowed_http_types($route['type'])])) :
+                        implode(", ", array_map("hl_allowed_http_types", array_unique($types))));
+
+                    $data[] = array($domain ? "YES" : "-", $prefix, $router, $type, $protect, $controller, $name);
                 }
             }
         }
@@ -166,6 +193,16 @@ function hl_get_routes($path)
     if (count($data) === 1) return "No cached routes in project." . "\n";
 
     return hl_sort_data($data);
+}
+
+function hl_allowed_http_types($type){
+    return empty($type) ? "GET" : ((in_array(strtolower($type), HLEB_HTTP_TYPE_SUPPORT)) ? $type : $type . "[NOT SUPPORTED]");
+}
+
+function hl_domain_calc($data){
+
+    return is_array($data) && count($data) > 1 && $data[1] > 2;
+
 }
 
 function hl_create_users_task($path, $class, $arg, $vendor)

@@ -129,6 +129,17 @@ class URLHandler
 
         $real_type = strtolower($_SERVER['REQUEST_METHOD']);
 
+        if(!in_array($real_type, HLEB_HTTP_TYPE_SUPPORT)){
+
+            if (!headers_sent()) {
+                header($_SERVER["SERVER_PROTOCOL"]." 405 Method Not Allowed");
+                header("Allow: " . strtoupper(implode(",",HLEB_HTTP_TYPE_SUPPORT)));
+                header("Content-length: 0");
+            }
+            exit();
+        }
+
+
         $result_blocks = [];
 
         $admin_pan_data = [];
@@ -168,10 +179,10 @@ class URLHandler
 
             if (count($type) == 0) {
 
-                $type = ["get"];
+                $type = ['get'];
             }
 
-            if (in_array($real_type, $type)) {
+            if (in_array($real_type, $type) || $real_type == 'options') {
 
                 $result_blocks[] = $block;
 

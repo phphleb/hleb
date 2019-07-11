@@ -32,6 +32,8 @@ class ProjectLoader
 
         if ($block) {
 
+           if(!isset($_SESSION)) session_start();
+
             ProtectedCSRF::testPage($block);
 
             new Workspace($block, $render_map);

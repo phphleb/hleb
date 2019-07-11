@@ -46,6 +46,8 @@ class Workspace
 
         $actions = $block["actions"];
 
+        $types = [];
+
         foreach ($actions as $key => $action) {
 
             if (isset($action["before"])) {
@@ -55,6 +57,43 @@ class Workspace
                 $this->calculate_time('Class <i>' . $action["before"][0] . "</i>");
 
             }
+
+            if (!empty($action["type"])) { // Определяется тип действия
+
+                $action_types = $action["type"];
+
+                foreach ($action_types as $action_type) {
+
+                    $types[] = $action_type;
+                }
+
+            }
+        }
+
+            if (count($types) == 0) {
+
+                $types = !empty($block["type"]) ? $block["type"] : [];
+
+            }
+
+            if (count($types) == 0) {
+
+                $types = ['get'];
+            }
+
+
+        $real_type = strtolower($_SERVER['REQUEST_METHOD']);
+
+        if($real_type == "options" && implode($types) != "options"){
+
+            $types[] = "options";
+
+            if (!headers_sent()) {
+                header($_SERVER["SERVER_PROTOCOL"]." 200 OK");
+                header("Allow: " . strtoupper(implode(",",array_unique($types))));
+                header("Content-length: 0");
+            }
+            exit();
         }
 
         //Обработчик get()

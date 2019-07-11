@@ -1,7 +1,5 @@
 <?php
 
-if(!isset($_SESSION)) session_start();
-
 define('HLEB_PROJECT_DIRECTORY', __DIR__);
 
 define('HLEB_PROJECT_VERSION', "1");
@@ -21,6 +19,8 @@ if(!defined('HLEB_PROJECT_ONLY_HTTPS')) {
 if(!defined('HLEB_PROJECT_GLUE_WITH_WWW')) {
     define('HLEB_PROJECT_GLUE_WITH_WWW', 0);
 }
+
+define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'options']);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -102,9 +102,6 @@ if (file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/nano.php') &&
 
     \NanoRoute::run();
 }
-
-
-// Эти классы загрузятся в любом случае
 
 require HLEB_PROJECT_DIRECTORY . "/Constructor/Routes/MainRoute.php";
 

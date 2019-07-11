@@ -22,7 +22,7 @@ class MainRouteMethod extends DataRoute implements RouteMethodStandard
 
     protected $type = [];
 
-    protected $types = ['get', 'post', 'delete', 'put'];
+    protected $types = HLEB_HTTP_TYPE_SUPPORT;
 
     protected $actions = [];
 

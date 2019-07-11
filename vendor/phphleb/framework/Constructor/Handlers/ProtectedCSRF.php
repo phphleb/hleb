@@ -44,30 +44,23 @@ class ProtectedCSRF
     public static function testPage(array $block)
     {
 
-        // При помощи protect() - имеет преимущество
+        // При помощи protect() - имеет преимущество (по последнему)
 
         $actions = $block['actions'];
 
-        $miss = false;
+        $miss = "";
 
         foreach ($actions as $action) {
 
             if (isset($action['protect'])) {
-
-                if (in_array("CSRF", $action['protect'])) {
-
-                    self::blocked();
-
-                }
-
-                $miss = true;
-
+                $miss = $action['protect'][0];
             }
         }
 
-        // При помощи getProtect()
+        // При помощи getProtect() (по последнему)
 
-        if (!$miss && isset($block['protect']) && in_array("CSRF", $block['protect'])) {
+        if ($miss == "CSRF" || (empty($miss) && isset($block['protect']) &&
+                count($block['protect']) && array_reverse($block['protect'])[0] == "CSRF")) {
 
             self::blocked();
 

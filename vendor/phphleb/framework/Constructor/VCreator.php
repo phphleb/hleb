@@ -17,7 +17,7 @@ class VCreator
    {
        extract (hleb_to0me1cd6vo7gd_data());
 
-      include $this->includeFile;
+      require $this->includeFile;
 
    }
 }

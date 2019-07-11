@@ -129,7 +129,7 @@ class Route extends MainRoute implements StandardRoute
 
     }
 
-    public static function adminPanController($class_name, $block_name, array $params = [])
+    public static function adminPanController($class_name, string $block_name, array $params = [])
     {
 
         return self::add(new RouteMethodAdminPanController(self::instance(), $class_name, $block_name, $params));
