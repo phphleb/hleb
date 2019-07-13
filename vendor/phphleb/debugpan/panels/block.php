@@ -88,7 +88,7 @@
              onclick="document.getElementById('<?= $hl_block_name; ?>_my_debugger<?= $hl_id_add;  ?>').style.display = document.getElementById('<?= $hl_block_name; ?>_my_debugger<?= $hl_id_add;  ?>').style.display == 'none' ? 'block' : 'none';">
             [<b><?= $key; ?></b>] <?php  echo empty($value['num']) ? "(0)" : " (" . $value['num'] . ")";  ?>
         </div>
-        <div style="padding-bottom: 25px; display: none;" id="<?= $hl_block_name; ?>_my_debugger<?= $hl_id_add;  ?>">
+        <div style="padding-bottom: 25px; display: none; white-space: nowrap" id="<?= $hl_block_name; ?>_my_debugger<?= $hl_id_add;  ?>">
             <div style='padding: 3px'><?= $value['cont']; ?></div>
         </div>
         <br>

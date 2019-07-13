@@ -22,9 +22,9 @@ class Key
     private static function set()
     {
 
-        if (isset($_SESSION['HLEB_SECURITY_KEY'])) {
+        if (isset($_SESSION['_SECURITY_TOKEN'])) {
 
-            return $_SESSION['HLEB_SECURITY_KEY'];
+            return $_SESSION['_SECURITY_TOKEN'];
 
         }
 
@@ -44,7 +44,7 @@ class Key
 
             file_put_contents(self::$path, $keygen, LOCK_EX);
 
-            $_SESSION['HLEB_SECURITY_KEY'] = $keygen;
+            $_SESSION['_SECURITY_TOKEN'] = $keygen;
 
             if (!file_exists(self::$path)) {
 
@@ -67,7 +67,7 @@ class Key
             $key = $keygen;
         }
 
-        $_SESSION['HLEB_SECURITY_KEY'] = $key;
+        $_SESSION['_SECURITY_TOKEN'] = $key;
 
         return $key;
     }

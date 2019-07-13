@@ -21,12 +21,12 @@ class DPanel
 
     public static function add($info)
     {
-        $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/debugpan"] = "1.0.3";
+        $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/debugpan"] = "1.0.4";
 
-        if(isset($GLOBALS["HLEB_MAIN_DEBUG_NANOROUTER"])){
-            $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/nanorouter"] = "1";
-            if(count($GLOBALS["HLEB_MAIN_DEBUG_NANOROUTER"]))
-                MyDebug::add("NANOROUTER", $GLOBALS["HLEB_MAIN_DEBUG_NANOROUTER"] );
+        if(isset($GLOBALS["HLEB_MAIN_DEBUG_RADJAX"])){
+            $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/radjax"] = "dev";
+            if(count($GLOBALS["HLEB_MAIN_DEBUG_RADJAX"]))
+                MyDebug::add("RADJAX routes", $GLOBALS["HLEB_MAIN_DEBUG_RADJAX"] );
         }
 
         $hl_block_name = "__hl_debug_panel";
@@ -169,7 +169,7 @@ class DPanel
             if (is_array($inf)) {
                 $result[$k]['num'] = count($inf);
                 foreach ($inf as $key=>$value) {
-                    $result[$k]['cont'] .=  "<div style='padding: 3px;'><b>" . $key . "</b>: ";
+                    $result[$k]['cont'] .=  "<div style='padding: 6px;'><b>" .  htmlspecialchars($key) . "</b>: ";
                     $result[$k]['cont'] .= (is_array($value) ? htmlspecialchars(stripcslashes(json_encode($value))) : $value);
                     $result[$k]['cont'] .= "</div>";
                 }

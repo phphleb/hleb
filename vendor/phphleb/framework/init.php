@@ -60,7 +60,7 @@ if($hl_address_object->redirect != null){
 }
 
 
-require HLEB_PROJECT_DIRECTORY. "/Main/Insert/DeterminantStaticUncreated.php";
+require_once HLEB_PROJECT_DIRECTORY. "/Main/Insert/DeterminantStaticUncreated.php";
 
 require HLEB_PROJECT_DIRECTORY . "/Main/Info.php";
 
@@ -71,8 +71,7 @@ require HLEB_GLOBAL_DIRECTORY . "/app/Optional/MainConnector.php";
 // Чтобы установить другое название каталога 'vendor' добавить в константы HLEB_VENDOR_DIRECTORY
 if(!defined('HLEB_VENDOR_DIRECTORY')){
     // Автоопределение текущего каталога с библиотеками
-    $hl_project_dir = explode("/", str_replace( "\\", "/", trim(HLEB_PROJECT_DIRECTORY, "/")));
-    define('HLEB_VENDOR_DIRECTORY', $hl_project_dir[count($hl_project_dir)-3]);
+    define('HLEB_VENDOR_DIRECTORY', array_reverse(explode(DIRECTORY_SEPARATOR, dirname(__DIR__, 2)))[0] );
 }
 
 
@@ -89,19 +88,6 @@ require HLEB_PROJECT_DIRECTORY. "/Scheme/App/Middleware/MainMiddleware.php";
 
 require HLEB_PROJECT_DIRECTORY. "/Scheme/App/Models/MainModel.php";
 
-
-
-if (file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/nano.php') &&
-    file_exists(HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY . "/phphleb/nanorouter/")) {
-
-    require HLEB_PROJECT_DIRECTORY . "/Constructor/Routes/NanoRoute.php";
-
-    require HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY . "/phphleb/nanorouter/HlebNanoRouter.php";
-
-    include_once HLEB_GLOBAL_DIRECTORY . '/routes/nano.php';
-
-    \NanoRoute::run();
-}
 
 require HLEB_PROJECT_DIRECTORY . "/Constructor/Routes/MainRoute.php";
 
@@ -131,7 +117,7 @@ require HLEB_PROJECT_DIRECTORY. "/Main/TryClass.php";
 // Сторонний автозагрузчик классов
 
 if (file_exists(HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY . '/autoload.php')) {
-    require HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY  . '/autoload.php';
+    require_once HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY  . '/autoload.php';
 }
 
 
@@ -351,6 +337,16 @@ function hleb_a581cdd66c107015_print_r2($data, $desc = null)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+if (HLEB_PROJECT_DEBUG && (new Hleb\Main\TryClass("XdORM\XD"))->is_connect() &&
+    file_exists(HLEB_GLOBAL_DIRECTORY . "/" . HLEB_VENDOR_DIRECTORY . "/phphleb/xdorm")){
+
+    $GLOBALS["HLEB_PROJECT_UPDATES"]['phphleb/xdorm'] = "dev";
+}
+if(HLEB_PROJECT_DEBUG &&(file_exists(HLEB_GLOBAL_DIRECTORY . "/" . HLEB_VENDOR_DIRECTORY . "/phphleb/adminpan"))){
+    $GLOBALS["HLEB_PROJECT_UPDATES"]['phphleb/adminpan'] = "dev";
+}
+
 
 
 require HLEB_GLOBAL_DIRECTORY . "/app/Optional/shell.php";

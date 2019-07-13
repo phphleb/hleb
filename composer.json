@@ -1,40 +1,44 @@
 {
-    "name": "phphleb/hleb",
-    "description": "PHP Micro-Framework HLEB",
-    "type": "project",
-    "keywords": [
-      "framework",
-      "hleb",
-      "phphleb",
-      "microframework",
-      "micro-framework",
-      "php framework",
-      "php"
-    ],
-    "homepage": "https://phphleb.ru",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Foma Tuturov",
-            "email": "fomiash@yandex.ru"
-        }
-    ],
-    "require": {
-        "php": "^7.0.0",
-        "ext-json": "*",
-        "phphleb/framework": "1.*",
-        "phphleb/debugpan": "1.*"
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "app/",
-            "Phphleb\\": "vendor/phphleb/",
-            "Hleb\\": "vendor/phphleb/framework/"
-        }
-    },
-    "config": {
-      "optimize-autoloader": true
-    },
-    "minimum-stability": "dev"
-
+  "name": "phphleb/hleb",
+  "description": "PHP Micro-Framework HLEB",
+  "type": "project",
+  "keywords": [
+    "framework",
+    "hleb",
+    "phphleb",
+    "microframework",
+    "micro-framework",
+    "php framework",
+    "php"
+  ],
+  "homepage": "https://phphleb.ru",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Foma Tuturov",
+      "email": "fomiash@yandex.ru"
+    }
+  ],
+  "require": {
+    "php": "^7.0.0",
+    "ext-json": "*",
+    "phphleb/framework": "1.*",
+    "phphleb/debugpan": "1.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/",
+      "Phphleb\\": "vendor/phphleb/",
+      "Hleb\\": "vendor/phphleb/framework/"
+    }
+  },
+  "suggest": {
+    "phphleb/xdorm": "XD ORM is a compact shell over PHP PDO",
+    "phphleb/adminpan": "Simple and adaptive Admin Panel"
+  },
+  "config": {
+    "optimize-autoloader": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

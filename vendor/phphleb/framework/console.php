@@ -42,7 +42,7 @@ if ($arguments) {
             break;
         case "--routes":
         case "-r":
-            print hl_get_routes($path);
+            print hl_search_nanorouter() . hl_get_routes($path);
             break;
         case "--list":
         case "-l":
@@ -155,6 +155,10 @@ function hl_get_routes($path)
                             if (isset($action["controller"])) {
                                 $controller = $action["controller"][0];
                             }
+                            if (isset($action["adminPanController"])) {
+                                $controller = $action["adminPanController"][0] . " [AdmPan]";
+                                $name .= " [" . $action["adminPanController"][2] . "]";
+                            }
 
                             if (isset($action["domain"])) {
                                 $domain = $domain || hl_domain_calc($action["domain"]);
@@ -181,8 +185,8 @@ function hl_get_routes($path)
 
                     $router = $route['data_path'] == "/" ? $route['data_path'] : "/" . trim($route["data_path"], "/") . "/";
 
-                    $type = strtoupper( implode(", ", array_map("hl_allowed_http_types", array_unique(empty($types) ?
-                        (is_array($route['type']) ? $route['type'] : [$route['type']]) : $types) )));
+                    $type = strtoupper(implode(", ", array_map("hl_allowed_http_types", array_unique(empty($types) ?
+                        (is_array($route['type']) ? $route['type'] : [$route['type']]) : $types))));
 
 
                     $data[] = array($domain ? "YES" : "-", $prefix, $router, $type, $protect, $controller, $name);
@@ -192,12 +196,13 @@ function hl_get_routes($path)
     }
     if (count($data) === 1) return "No cached routes in project." . "\n";
 
+
     return hl_sort_data($data);
 }
 
 function hl_allowed_http_types($type)
 {
-    return empty($type) ? "GET" : ((in_array(strtolower($type), HLEB_HTTP_TYPE_SUPPORT)) ? $type : $type . "[NOT SUPPORTED]");
+    return empty($type) ? "GET" : ((in_array(strtolower($type), HLEB_HTTP_TYPE_SUPPORT)) ? $type : $type . " [NOT SUPPORTED]");
 }
 
 function hl_domain_calc($data)
@@ -454,4 +459,40 @@ function hl_search_version($file, $const)
     return trim($def[1][0] ?? 'undefined', "' \"");
 
 }
+
+function hl_search_nanorouter()
+{
+    if (is_dir(dirname(__FILE__, 3) . "/phphleb/radjax/") &&
+        (file_exists(dirname(__FILE__, 4) .  '/routes/ajax.php') ||
+            file_exists(dirname(__FILE__, 4) .  '/routes/api.php'))
+    ) {
+
+        require dirname(__FILE__, 3) . "/phphleb/radjax/Route.php";
+
+        if(file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/api.php')) include_once HLEB_GLOBAL_DIRECTORY . '/routes/api.php';
+
+        if(file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/ajax.php')) include_once HLEB_GLOBAL_DIRECTORY . '/routes/ajax.php';
+
+        $nano = Radjax\Route::getParams();
+
+        $parameters = [["RADJAX:ROUTE",  "TYPE", "PROTECTED", "CONTROLLER"]];
+
+        foreach($nano as $params){
+
+            $parameters []= [
+                " " . str_replace("//", "/", "/" . trim(($params['route'] ?? "undefined"), "\\/") . "/"),
+                (strtoupper(isset($params['type']) ? implode(",", is_array($params['type']) ? $params['type'] : [$params['type']]) : "GET" )),
+                ($params['protected'] ? "ON" : "-"),
+                ($params['controller'] ?? "undefined")
+            ];
+        }
+
+        if (count($parameters) > 1) {
+            return  hl_sort_data($parameters) . "\n";
+        }
+
+        return null;
+    }
+}
+
 
