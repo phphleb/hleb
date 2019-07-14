@@ -19,7 +19,7 @@ class Request
 
     public static function add(string $name, string $value)
     {
-        if(!self::$close) self::$request[$name] = $value;
+        if(!self::$close) self::$request[$name] = is_numeric($value) ? floatval($value) : $value;
     }
 
     public static function close()
