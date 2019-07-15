@@ -216,16 +216,23 @@ function hl_create_users_task($path, $class, $arg, $vendor)
 {
     require HLEB_PROJECT_DIRECTORY . "/Main/Insert/DeterminantStaticUncreated.php";
 
+    require HLEB_PROJECT_DIRECTORY . "/Main/Info.php";
+
     require HLEB_PROJECT_DIRECTORY . "/Scheme/App/Commands/MainTask.php";
+
+    require HLEB_PROJECT_DIRECTORY . "/Scheme/App/Controllers/MainController.php";
+
+    require HLEB_PROJECT_DIRECTORY . "/Scheme/App/Middleware/MainMiddleware.php";
+
+    require HLEB_PROJECT_DIRECTORY . "/Scheme/App/Models/MainModel.php";
 
     require HLEB_PROJECT_DIRECTORY . "/Scheme/Home/Main/Connector.php";
 
-    require HLEB_GLOBAL_DIRECTORY . "/app/Optional/MainConnector.php";
+    require HLEB_GLOBAL_DIRECTORY  . "/app/Optional/MainConnector.php";
 
     require HLEB_PROJECT_DIRECTORY . "/Main/MainAutoloader.php";
 
     require HLEB_PROJECT_DIRECTORY . "/Main/HomeConnector.php";
-
 
     // Сторонний автозагрузчик классов
 
