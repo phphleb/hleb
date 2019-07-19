@@ -28,25 +28,40 @@ if ($arguments) {
                 " ║ phphleb/framework version  " . $ver[1] . $bsp[1] . "  ║" . "\n" .
                 " ║ " . hl_console_copyright() . "                  ║" . "\n" .
                 " ╚═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╝ " . "\n";
+            print "\n";
             break;
         case "--clear-cache":
         case "-cc":
             array_map('unlink', glob($path . '/storage/cache/routes/*.txt'));
-            array_map('unlink', glob($path . '/storage/cache/templates/*.txt'));
-            print "  Cache cleared.";
+            print "\n" . "Clearing cache [          ] 0% ";
+            $files = glob($path . '/storage/cache/templates/*', GLOB_NOSORT );
+            if(count($files)) {
+                foreach ($files as $k => $value) {
+                    @unlink($value);
+                    progressConsole(count($files), $k);
+                }
+            } else {
+                fwrite(STDOUT, "\r");
+                fwrite(STDOUT, "No files in /storage/cache/templates/. Cache cleared.");
+            }
+            print "\n" . "\n";
             break;
         case "--help":
         case "-h":
+            print "\n";
             print " --version or -v" . "\n" . " --clear-cache or -cc" . "\n" . " --info or -i" .
                 "\n" . " --help or -h" . "\n" . " --routes or -r" . "\n" . " --list or -l";
+            print "\n" . "\n";
             break;
         case "--routes":
         case "-r":
             print hl_search_nanorouter() . hl_get_routes($path);
+            print "\n";
             break;
         case "--list":
         case "-l":
             print hl_list($path);
+            print "\n" . "\n";
             break;
         case "--info":
         case "-i":
@@ -61,7 +76,7 @@ if ($arguments) {
 
             } else {
 
-                print "Missing required arguments after `console`. Add --help to display more options.";
+                print "Missing required arguments after `console`. Add --help to display more options." . "\n";
             }
     }
 }
@@ -115,6 +130,7 @@ function hl_get_info($path)
         }
     }
     fclose($handle);
+    print "\n";
 }
 
 
@@ -500,6 +516,26 @@ function hl_search_nanorouter()
 
         return null;
     }
+}
+
+function progressConsole($all, $total)
+{
+    $step = floor($all / 10);
+    if($total == 0) return;
+    $count = floor($total / $step);
+    $str = 'Clearing cache [';
+    for ($i = 0; $i < 10; $i++) {
+        if (floor($count) < $i) {
+            $str .= ' ';
+        } else {
+            $str .= '/';
+        }
+    }
+    $str .= '] ' . ceil(100 / $all * $total) . "% " ;
+
+    fwrite(STDOUT, "\r");
+    fwrite(STDOUT, $str);
+
 }
 
 
