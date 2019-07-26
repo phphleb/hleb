@@ -329,6 +329,13 @@ function hleb_e0b1036c1070102_template(string $template, array $params = [])
 
 }
 
+function hleb_e0b1036c1070103_template(string $template, array $params = [])
+{
+
+    new \Hleb\Main\OwnCachedTemplate($template, $params);
+
+}
+
 function hleb_a581cdd66c107015_print_r2($data, $desc = null)
 {
 

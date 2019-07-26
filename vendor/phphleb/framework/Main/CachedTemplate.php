@@ -49,10 +49,17 @@ class CachedTemplate
         if (HLEB_PROJECT_DEBUG) {
             $time = microtime(true) - $time;
             Info::insert("Templates", trim($template, "/") . $backtrace . $this->info_cache() . " load: " .
-                (round($time, 4) * 1000) . " ms" . ", includeCachedTemplate(...)");
+                (round($time, 4) * 1000) . " ms" . ", " . $this->hl_info_template_name() . "(...)");
         }
     }
 
+    protected function hl_info_template_name(){
+        return  'includeCachedTemplate';
+    }
+
+    protected function hl_template_area_key(){
+        return  "";
+    }
 
     private function hl_debug_backtrace()
     {
@@ -68,7 +75,7 @@ class CachedTemplate
     {
         $path = HLEB_GLOBAL_DIRECTORY . "/storage/cache/templates/";
 
-        $template_name = md5($template . Key::get() . session_id());
+        $template_name = md5($template . Key::get() . $this->hl_template_area_key() );
 
         $hash_params = count($this->templateParams) ? md5(json_encode($this->templateParams)) : "";
 
