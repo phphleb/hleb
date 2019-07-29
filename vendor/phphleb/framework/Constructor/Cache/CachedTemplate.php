@@ -2,17 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Hleb\Main;
+namespace Hleb\Constructor\Cache;
 
 use Hleb\Constructor\Handlers\Key;
 
 use Hleb\Constructor\TCreator;
 
+use Hleb\Main\Info;
+
 class CachedTemplate
 {
-    private $casheTime = 0;
+    private $cacheTime = 0;
 
-    private $templateParams = [];
+    protected $templateParams = [];
 
     private $content = null;
 
@@ -54,7 +56,7 @@ class CachedTemplate
     }
 
     protected function hl_info_template_name(){
-        return  'includeCachedTemplate';
+       return  'includeCachedTemplate';
     }
 
     protected function hl_template_area_key(){
@@ -92,8 +94,8 @@ class CachedTemplate
             }
 
             $s_file = $search_all[0];
-            $this->casheTime = $this->getFileTime($s_file);
-            if (filemtime($s_file) >= time() - $this->casheTime) {
+            $this->cacheTime = $this->getFileTime($s_file);
+            if (filemtime($s_file) >= time() - $this->cacheTime) {
                 return $s_file;
             }
 
@@ -104,7 +106,7 @@ class CachedTemplate
 
     private function hl_cache_template($content)
     {
-        if ($this->casheTime === 0) {
+        if ($this->cacheTime === 0) {
             // Without caching.
 
             $this->content = $content;
@@ -114,7 +116,7 @@ class CachedTemplate
             $this->delOldFile();
             $this->content = $content;
 
-            $file = $this->hashfile . "_" . $this->casheTime . ".txt";
+            $file = $this->hashfile . "_" . $this->cacheTime . ".txt";
             file_put_contents($file, $content, LOCK_EX);
         }
         if (rand(0, 1000) === 0) $this->delOldFile();
@@ -143,7 +145,7 @@ class CachedTemplate
 
     private function info_cache()
     {
-        return " cache " . $this->casheTime . " s , ";
+        return " cache " . $this->cacheTime . " s , ";
     }
 
     private function hl_add_content()
@@ -153,7 +155,7 @@ class CachedTemplate
 
     private function hl_create_content()
     {
-        $this->casheTime = (new TCreator($this->tempfile, $this->templateParams))->include();
+        $this->cacheTime = (new TCreator($this->tempfile, $this->templateParams))->include();
     }
 
 }

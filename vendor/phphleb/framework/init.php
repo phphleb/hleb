@@ -325,14 +325,14 @@ function hleb_e0b1036c1070101_template(string $template, array $params = [])
 function hleb_e0b1036c1070102_template(string $template, array $params = [])
 {
 
-    new \Hleb\Main\CachedTemplate($template, $params);
+    new \Hleb\Constructor\Cache\CachedTemplate($template, $params);
 
 }
 
-function hleb_e0b1036c1070103_template(string $template, array $params = [])
+function hleb_ade9e72e1018c6_template(string $template, array $params = [])
 {
 
-    new \Hleb\Main\OwnCachedTemplate($template, $params);
+    new \Hleb\Constructor\Cache\OwnCachedTemplate($template, $params);
 
 }
 

@@ -10,7 +10,7 @@ class TCreator
 
     private $teplateData = [];
 
-    private $casheTime = 0;
+    private $cacheTime = 0;
 
     function __construct( $content, $data = [])
     {
@@ -25,7 +25,7 @@ class TCreator
 
         require $this->contentData;
 
-        return $this->casheTime;
+        return $this->cacheTime;
 
     }
 
@@ -45,7 +45,7 @@ class TCreator
      */
     public function setCacheTime(int $seconds)
     {
-        $this->casheTime = $seconds;
+        $this->cacheTime = $seconds;
     }
 }
 

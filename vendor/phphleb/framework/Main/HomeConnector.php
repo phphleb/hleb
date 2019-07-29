@@ -47,8 +47,8 @@ class HomeConnector implements Connector
             'Hleb\Constructor\VCreator'=> $vendor.'/phphleb/framework/Constructor/VCreator.php',
             'Hleb\Main\MainTemplate'=> $vendor.'/phphleb/framework/Main/MainTemplate.php',
             'MainTask'=> $vendor.'/phphleb/framework/Scheme/App/Commands/MainTask.php',
-            'Hleb\Main\CachedTemplate'=> $vendor.'/phphleb/framework/Main/CachedTemplate.php',
-            'Hleb\Main\OwnCachedTemplate'=> $vendor.'/phphleb/framework/Main/OwnCachedTemplate.php',
+            'Hleb\Constructor\Cache\CachedTemplate'=> $vendor.'/phphleb/framework/Constructor/Cache/CachedTemplate.php',
+            'Hleb\Constructor\Cache\OwnCachedTemplate'=> $vendor.'/phphleb/framework/Constructor/Cache/OwnCachedTemplate.php',
             'Hleb\Scheme\App\Middleware\MainMiddleware'=> $vendor.'/phphleb/framework/Scheme/App/Middleware/MainMiddleware.php',
             'Hleb\Main\WorkDebug'=> $vendor.'/phphleb/framework/Main/WorkDebug.php',
             'Hleb\Main\MyDebug'=>$vendor.'/phphleb/framework/Main/MyDebug.php',
@@ -65,4 +65,3 @@ class HomeConnector implements Connector
         ];
     }
 }
-

@@ -121,7 +121,8 @@ function includeCachedTemplate(string $template, array $params = []){
 
 function includeOwnCachedTemplate(string $template, array $params = []){
 
-    hleb_e0b1036c1070103_template($template, $params);
+    hleb_ade9e72e1018c6_template($template, $params);
 
 }
+
 

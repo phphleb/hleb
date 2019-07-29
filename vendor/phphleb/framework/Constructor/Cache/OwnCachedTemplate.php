@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Hleb\Main;
+namespace Hleb\Constructor\Cache;
 
 class OwnCachedTemplate extends CachedTemplate
 {
     function hl_info_template_name(){
-        return  'includeOwnCachedTemplate';
+       return  'include<b>Own</b>CachedTemplate';
     }
 
     function hl_template_area_key(){
