@@ -56,7 +56,7 @@ class CachedTemplate
     }
 
     protected function hl_info_template_name(){
-       return  'includeCachedTemplate';
+        return  'includeCachedTemplate';
     }
 
     protected function hl_template_area_key(){
@@ -77,9 +77,9 @@ class CachedTemplate
     {
         $path = HLEB_GLOBAL_DIRECTORY . "/storage/cache/templates/";
 
-        $template_name = md5($template . Key::get() . $this->hl_template_area_key() );
+        $template_name = $this->acollmd5($template . Key::get() ) . $this->acollmd5($this->hl_template_area_key());
 
-        $hash_params = count($this->templateParams) ? md5(json_encode($this->templateParams)) : "";
+        $hash_params = count($this->templateParams) ? $this->acollmd5(json_encode($this->templateParams)) : "";
 
         $this->hashfile = $path . $template_name . $hash_params;
 
@@ -102,6 +102,10 @@ class CachedTemplate
             unlink("$s_file");
         }
         return null;
+    }
+
+    private function acollmd5( string $str){
+        return  empty($str) ? "" : md5($str) .  md5(strrev($str)){0};
     }
 
     private function hl_cache_template($content)
