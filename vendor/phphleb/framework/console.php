@@ -522,16 +522,24 @@ function progressConsole($all, $total)
 {
     $step = floor($all / 10);
     if($total == 0) return;
-    $count = floor($total / $step);
     $str = 'Clearing cache [';
-    for ($i = 0; $i < 10; $i++) {
-        if (floor($count) < $i) {
-            $str .= ' ';
-        } else {
-            $str .= '/';
+    if($all >100 ) {
+        $count = $step == 0 ? 0 : floor($total / $step);
+
+        for ($i = 0; $i < 10; $i++) {
+            if (floor($count) < $i) {
+                $str .= ' ';
+            } else {
+                $str .= '/';
+            }
         }
+
+        $str .= '] - ' . ceil(100 / $all * $total) . "% " ;
+
+    } else {
+
+        $str .= $all-2 < $total ? '//////////] - 100% ' : '/////     ] ~ 50% ';
     }
-    $str .= '] ' . ceil(100 / $all * $total) . "% " ;
 
     fwrite(STDOUT, "\r");
     fwrite(STDOUT, $str);

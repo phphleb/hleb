@@ -77,11 +77,11 @@ class CachedTemplate
     {
         $path = HLEB_GLOBAL_DIRECTORY . "/storage/cache/templates/";
 
-        $template_name = $this->acollmd5($template . Key::get() ) . $this->acollmd5($this->hl_template_area_key());
-
         $hash_params = count($this->templateParams) ? $this->acollmd5(json_encode($this->templateParams)) : "";
 
-        $this->hashfile = $path . $template_name . $hash_params;
+        $template_name = $this->acollmd5($template . Key::get() . $this->hl_template_area_key() . $hash_params);
+
+        $this->hashfile = $path . $template_name;
 
         $search_all = glob($this->hashfile . "_*.txt");
 
@@ -105,7 +105,7 @@ class CachedTemplate
     }
 
     private function acollmd5( string $str){
-        return  empty($str) ? "" : md5($str) .  md5(strrev($str)){0};
+        return  empty($str) ? "" : md5($str) .  substr(md5(strrev($str)),0,5);
     }
 
     private function hl_cache_template($content)
