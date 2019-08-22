@@ -19,12 +19,14 @@ class MainConnector implements Connector
             "Models\*" => "app/Models/",
             "App\Middleware\Before\*" => "app/Middleware/Before/",
             "App\Middleware\After\*" => "app/Middleware/After/",
+            "App\Commands\*"=>"app/Commands/",
             // ...или, если добавляется конкретный класс,
             "DB" => "database/DB.php",
             "Phphleb\Debugpan\DPanel" => "vendor/phphleb/debugpan/DPanel.php",
             "XdORM\XD" => "vendor/phphleb/xdorm/XD.php",
             'Phphleb\Adminpan\MainAdminPanel'=>'vendor/phphleb/adminpan/MainAdminPanel.php',
             // ... //
+
 
         ];
 
