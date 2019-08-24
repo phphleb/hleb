@@ -6,27 +6,26 @@ class RotateLogsTask extends \MainTask
 {
     // php console rotate-logs-task
 
-    const DESCRIPTION = "Delete old logs";
+    const DESCRIPTION = "Delete old logs in storage/logs/";
 
     protected function execute($arg = null)
     {
         // Задание для cron (~ ежедневно) или запуск вручную для ротирования логов
 
         $temp = 60 * 60 * 12 * 3; // 3 дня
-        $count = 0;
+        $total = 0;
 
         $logs = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(HLEB_GLOBAL_DIRECTORY . "/storage/logs/")
         );
-        foreach ($logs as $pathname => $log) {
-            if (!$log->isFile()) continue;
+        foreach ($logs as $log) {
 
-            if (!in_array(".gitkeep", explode(DIRECTORY_SEPARATOR, $log->getRealPath())) && filemtime($log->getRealPath()) < (time() - $temp)) {
+            if ($log->isFile() && $log->getFileName() !== ".gitkeep" && filemtime($log->getRealPath()) < (time() - $temp)) {
                 @unlink($log->getRealPath());
-                $count++;
+                $total++;
             }
         }
-        print "Deleted " . $count . " files";
+        print "Deleted " . $total . " files";
 
         print "\n" . __CLASS__ . " done." . "\n";
     }

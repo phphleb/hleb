@@ -6,4 +6,4 @@
 
 $vendor_dir_name = "vendor";
 $path = "$vendor_dir_name/phphleb/framework/console.php";
-passthru ("php $path " . $argv[1] . " " . __DIR__ . " " . $vendor_dir_name . " " . implode(" ",  $argv));
+passthru ("php $path " . ($argv[1] ?? null) . " " . __DIR__ . " " . $vendor_dir_name . " " . implode(" ",  $argv));
