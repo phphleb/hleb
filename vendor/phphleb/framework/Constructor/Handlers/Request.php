@@ -49,7 +49,7 @@ class Request
 
     public static function getHttpHeader($value = null)
     {
-        return !empty($value) ? $_SERVER[$value] : $_SERVER;
+        return $value != null ? (isset($_SERVER[$value]) ? $_SERVER[$value] : null ) : $_SERVER;
     }
 
     public static function isXmlHttpRequest()
@@ -59,7 +59,7 @@ class Request
 
     public static function getCookie($value = null)
     {
-        return !empty($value) ? $_COOKIE[$value] : $_COOKIE;
+        return $value != null ? (isset($_COOKIE[$value]) ? $_COOKIE[$value] : null ) : $_COOKIE;
     }
 
     public static function getFiles()
@@ -79,17 +79,17 @@ class Request
 
     public static function getGet($value = null)
     {
-        return !empty($value) ? $_GET[$value] : $_GET;
+        return $value != null ? (isset($_GET[$value]) ? $_GET[$value] : null ) : $_GET;
     }
 
     public static function getPost($value = null)
     {
-        return !empty($value) ? $_POST[$value] : $_POST;
+        return $value != null ? (isset($_POST[$value]) ? $_POST[$value] : null ) : $_POST;
     }
 
     public static function getRequest($value = null)
     {
-        return !empty($value) ? $_REQUEST[$value] : $_REQUEST;
+        return $value != null ? (isset($_REQUEST[$value]) ? $_REQUEST[$value] : null ) : $_REQUEST;
     }
 
 }
