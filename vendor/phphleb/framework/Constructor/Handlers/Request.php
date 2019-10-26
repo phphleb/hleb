@@ -12,6 +12,12 @@ class Request
 
     private static $close = false;
 
+
+    private static function checkValueInArray($value, $array)
+    {
+        return $value != null ? ((true === array_key_exists($value, $array) && strlen($array[$value]) > 0) ? $array[$value] : null) : $array;
+    }
+
     public static function get(string $name = null)
     {
         return empty($name) ? self::$request : self::$request[$name];
@@ -19,7 +25,7 @@ class Request
 
     public static function add(string $name, string $value)
     {
-        if(!self::$close) self::$request[$name] = is_numeric($value) ? floatval($value) : $value;
+        if (!self::$close) self::$request[$name] = is_numeric($value) ? floatval($value) : $value;
     }
 
     public static function close()
@@ -49,7 +55,7 @@ class Request
 
     public static function getHttpHeader($value = null)
     {
-        return $value != null ? (isset($_SERVER[$value]) ? $_SERVER[$value] : null ) : $_SERVER;
+        return self::checkValueInArray($value, $_SERVER);
     }
 
     public static function isXmlHttpRequest()
@@ -59,7 +65,7 @@ class Request
 
     public static function getCookie($value = null)
     {
-        return $value != null ? (isset($_COOKIE[$value]) ? $_COOKIE[$value] : null ) : $_COOKIE;
+        return self::checkValueInArray($value, $_COOKIE);
     }
 
     public static function getFiles()
@@ -79,18 +85,17 @@ class Request
 
     public static function getGet($value = null)
     {
-        return $value != null ? (isset($_GET[$value]) ? $_GET[$value] : null ) : $_GET;
+        return self::checkValueInArray($value, $_GET);
     }
 
     public static function getPost($value = null)
     {
-        return $value != null ? (isset($_POST[$value]) ? $_POST[$value] : null ) : $_POST;
+        return self::checkValueInArray($value, $_POST);
     }
 
     public static function getRequest($value = null)
     {
-        return $value != null ? (isset($_REQUEST[$value]) ? $_REQUEST[$value] : null ) : $_REQUEST;
+        return self::checkValueInArray($value, $_REQUEST);
     }
-
 }
 
