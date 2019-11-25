@@ -1,13 +1,16 @@
 <?php
 
-$path = $argv[2] ?? ".";
-$arguments = $argv[1] ?? null;
-$set_arguments = $argv[6] ?? null;
-$vendor_name = $argv[3] ?? null;
+$path = $initial_dir ?? ($argv[2] ?? ".");
+$arguments = $initial_command ?? ($argv[1] ?? null);
+$set_arguments = $initial_args[3] ?? ($argv[6] ?? null);
+$vendor_name = $initial_vendor_dir_name ?? ($argv[3] ?? null);
+$initial_public_name = $initial_public_name ?? "public";
 
 define('HLEB_GLOBAL_DIRECTORY', $path);
 
 define('HLEB_VENDOR_DIRECTORY', $vendor_name);
+
+define('HLEB_PUBLIC_DIR', $initial_public_name);
 
 define('HLEB_PROJECT_DIRECTORY', $path . '/' . $vendor_name . '/phphleb/framework');
 
@@ -83,7 +86,7 @@ if ($arguments) {
 
 function hl_get_info($path)
 {
-    $index = $path . DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . 'index.php';
+    $index = $path . DIRECTORY_SEPARATOR . HLEB_PUBLIC_DIR . DIRECTORY_SEPARATOR . 'index.php';
 
     if (file_exists($index)) {
         print "\n" . "File: " . $index . "\n" . "\n";
@@ -444,7 +447,7 @@ function hl_search_once_namespace($link, $path)
 function hl_get_frame_version()
 {
 
-    return hl_search_version(HLEB_GLOBAL_DIRECTORY . "/public/index.php", "HLEB_FRAME_VERSION");
+    return hl_search_version(HLEB_GLOBAL_DIRECTORY . "/" . HLEB_PUBLIC_DIR . "/index.php", "HLEB_FRAME_VERSION");
 }
 
 /**
