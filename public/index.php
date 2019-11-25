@@ -10,7 +10,7 @@ define('HLEB_START', microtime(true));
 
 define('HLEB_PUBLIC_DIR', __DIR__);
 
-define('HLEB_FRAME_VERSION', "1.2.2");
+define('HLEB_FRAME_VERSION', "1.2.3");
 
 // This block contains the optional project settings.
 // В этом блоке опциональные настройки проекта.
