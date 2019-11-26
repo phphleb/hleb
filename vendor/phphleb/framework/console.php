@@ -1,22 +1,21 @@
 <?php
 
-$path = $initial_dir ?? ($argv[2] ?? ".");
-$arguments = $initial_command ?? ($argv[1] ?? null);
-$set_arguments = $initial_args[3] ?? ($argv[6] ?? null);
-$vendor_name = $initial_vendor_dir_name ?? ($argv[3] ?? null);
-$initial_public_name = $initial_public_name ?? "public";
+$arguments = $argv[1] ?? null;
 
-define('HLEB_GLOBAL_DIRECTORY', $path);
 
-define('HLEB_VENDOR_DIRECTORY', $vendor_name);
+if(!defined("HLEB_PUBLIC_DIR")) die( "Update your version of the `console` file above HLEB 1.2.2");
 
-define('HLEB_PUBLIC_DIR', $initial_public_name);
-
-define('HLEB_PROJECT_DIRECTORY', $path . '/' . $vendor_name . '/phphleb/framework');
+define('HLEB_PROJECT_DIRECTORY', HLEB_GLOBAL_DIRECTORY . "/" . HLEB_VENDOR_DIRECTORY .'/phphleb/framework');
 
 define('HLEB_PROJECT_DEBUG', false);
 
 define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'options']);
+
+$path = HLEB_GLOBAL_DIRECTORY;
+
+$set_arguments = $argv[2] ?? null;
+
+$vendor_name = HLEB_VENDOR_DIRECTORY;
 
 if ($arguments) {
 

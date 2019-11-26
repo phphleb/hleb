@@ -4,13 +4,10 @@
  * All service commands: php console --help
  */
 
-$initial_vendor_dir_name = "vendor";
-$initial_public_name = "public";
-$initial_path = "$initial_vendor_dir_name/phphleb/framework/console.php";
-$initial_command = $argv[1];
-$initial_dir =  __DIR__ ;
-$initial_args = implode(" ",  $argv);
-$argv = [];
-require("$initial_path");
+define('HLEB_PUBLIC_DIR', "public");
+define('HLEB_GLOBAL_DIRECTORY', __DIR__);
+define('HLEB_VENDOR_DIRECTORY', "vendor");
+
+require(HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . HLEB_VENDOR_DIRECTORY . "/phphleb/framework/console.php");
 
 
