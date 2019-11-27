@@ -68,12 +68,13 @@ require HLEB_PROJECT_DIRECTORY . "/Scheme/Home/Main/Connector.php";
 
 require HLEB_GLOBAL_DIRECTORY . "/app/Optional/MainConnector.php";
 
-// Чтобы установить другое название каталога 'vendor' добавить в константы HLEB_VENDOR_DIRECTORY
-if(!defined('HLEB_VENDOR_DIRECTORY')){
+// Чтобы установить другое название каталога 'vendor' добавить в константы HLEB_VENDOR_DIR_NAME
+if(!defined('HLEB_VENDOR_DIR_NAME')){
     // Автоопределение текущего каталога с библиотеками
-    define('HLEB_VENDOR_DIRECTORY', array_reverse(explode(DIRECTORY_SEPARATOR, dirname(__DIR__, 2)))[0] );
+    define('HLEB_VENDOR_DIR_NAME', array_reverse(explode(DIRECTORY_SEPARATOR, dirname(__DIR__, 2)))[0] );
 }
 
+define('HLEB_VENDOR_DIRECTORY', HLEB_GLOBAL_DIRECTORY . "/" . HLEB_VENDOR_DIR_NAME );
 
 if(HLEB_PROJECT_CLASSES_AUTOLOAD) {
 
@@ -116,8 +117,8 @@ require HLEB_PROJECT_DIRECTORY. "/Main/TryClass.php";
 
 // Сторонний автозагрузчик классов
 
-if (file_exists(HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY . '/autoload.php')) {
-    require_once HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY  . '/autoload.php';
+if (file_exists(HLEB_VENDOR_DIRECTORY. '/autoload.php')) {
+    require_once HLEB_VENDOR_DIRECTORY . '/autoload.php';
 }
 
 
@@ -346,11 +347,11 @@ function hleb_a581cdd66c107015_print_r2($data, $desc = null)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (HLEB_PROJECT_DEBUG && (new Hleb\Main\TryClass("XdORM\XD"))->is_connect() &&
-    file_exists(HLEB_GLOBAL_DIRECTORY . "/" . HLEB_VENDOR_DIRECTORY . "/phphleb/xdorm")){
+    file_exists(HLEB_VENDOR_DIRECTORY . "/phphleb/xdorm")){
 
     $GLOBALS["HLEB_PROJECT_UPDATES"]['phphleb/xdorm'] = "dev";
 }
-if(HLEB_PROJECT_DEBUG &&(file_exists(HLEB_GLOBAL_DIRECTORY . "/" . HLEB_VENDOR_DIRECTORY . "/phphleb/adminpan"))){
+if(HLEB_PROJECT_DEBUG &&(file_exists(HLEB_VENDOR_DIRECTORY . "/phphleb/adminpan"))){
     $GLOBALS["HLEB_PROJECT_UPDATES"]['phphleb/adminpan'] = "dev";
 }
 

@@ -12,7 +12,7 @@ class HomeConnector implements Connector
      */
     public function add()
     {
-        $vendor = HLEB_VENDOR_DIRECTORY;
+        $vendor = HLEB_VENDOR_DIR_NAME;
         return [
             'Hleb\Constructor\Routes\Methods\RouteMethodBefore'=> $vendor.'/phphleb/framework/Constructor/Routes/Methods/RouteMethodBefore.php',
             'Hleb\Constructor\Routes\MainRouteMethod'=> $vendor.'/phphleb/framework/Constructor/Routes/MainRouteMethod.php',

@@ -45,12 +45,12 @@ class MainAutoloader
                 if($path[0] == 'hleb') {
 
                     $path[0] = 'phphleb/framework';
-                    $clarification = '/' . HLEB_VENDOR_DIRECTORY . '/';
+                    $clarification = '/' . HLEB_VENDOR_DIR_NAME . '/';
                 }
 
                 if($path[0] == 'phphleb') {
 
-                    $clarification = '/' . HLEB_VENDOR_DIRECTORY . '/';
+                    $clarification = '/' . HLEB_VENDOR_DIR_NAME . '/';
                 }
 
                 // По имени библиотеки
@@ -58,11 +58,11 @@ class MainAutoloader
                 if(isset($path[2])) {
 
                     // Имя производителя
-                    $path_to_vendor_name = HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIRECTORY . '/' . $path[0];
+                    $path_to_vendor_name = HLEB_VENDOR_DIRECTORY . '/' . $path[0];
 
                     if (is_dir($path_to_vendor_name)) {
 
-                        $clarification = '/' . HLEB_VENDOR_DIRECTORY . '/';
+                        $clarification = '/' . HLEB_VENDOR_DIR_NAME. '/';
 
                         if (is_dir($path_to_vendor_name . "/" . strtolower($path[1]))) {
 

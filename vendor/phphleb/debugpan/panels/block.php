@@ -52,7 +52,7 @@
             <div style='padding: 3px'>Route path: <?= $hl_this_route['route_path']; ?></div>
             <div style='padding: 3px'>Full path: <?= $hl_this_route['path']; ?></div>
             <div style='padding: 3px'>Render: <?= $hl_this_route['render_map']; ?></div>
-            <div style='padding: 3px'>Actions:</span><br><span
+            <div style='padding: 3px'>Actions:</div><br><div
                         style='background-color: black;'><?= $hl_this_route['actions']; ?></div>
             <div style='padding: 3px'>Last cache: <span style='color:<?= $hl_this_route['cache_routes_color']; ?>;'>
             <?= $hl_this_route['cache'] ?> <?= $hl_this_route['cache_routes_text']; ?></span></div>

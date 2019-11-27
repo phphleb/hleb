@@ -6,8 +6,8 @@
 
 define('HLEB_PUBLIC_DIR', "public");
 define('HLEB_GLOBAL_DIRECTORY', __DIR__);
-define('HLEB_VENDOR_DIRECTORY', "vendor");
+define('HLEB_VENDOR_DIR_NAME', "vendor");
 
-require(HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . HLEB_VENDOR_DIRECTORY . "/phphleb/framework/console.php");
+require(HLEB_GLOBAL_DIRECTORY . "/" . HLEB_VENDOR_DIR_NAME . "/phphleb/framework/console.php");
 
 
