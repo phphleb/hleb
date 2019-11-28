@@ -61,7 +61,8 @@ class HomeConnector implements Connector
             'Phphleb\Adminpan\Add\GetDataList'=>$vendor.'/phphleb/adminpan/Add/GetDataList.php',
             'Phphleb\Adminpan\Add\GetDataTable'=>$vendor.'/phphleb/adminpan/Add/GetDataTable.php',
             'Phphleb\Adminpan\Add\GetDataHTML'=>$vendor.'/phphleb/adminpan/Add/GetDataHTML.php',
-            'Phphleb\Adminpan\Add\GetDataGraph'=>$vendor.'/phphleb/adminpan/Add/GetDataGraph.php',
+            'Phphleb\Adminpan\Add\GetDataGraph'=>$vendor.'/phphlecomposerb/adminpan/Add/GetDataGraph.php',
+            'Hleb\Main\Commands\MainLaunchTask'=>$vendor.'/phphleb/framework/Main/Commands/MainLaunchTask.php',
         ];
     }
 }

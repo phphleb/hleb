@@ -189,19 +189,15 @@ class MainConsole
 
         $tasks_array = [["TASK", "COMMAND", "DESCRIPTION"]];
 
-        include HLEB_VENDOR_DIRECTORY . "/phphleb/framework/Scheme/App/Commands/MainTask.php";
-
         foreach ($files as $file) {
 
             $names = $this->searchOnceNamespace($file, HLEB_GLOBAL_DIRECTORY);
-
-            include_once "$file";
 
             if ($names) {
 
                 foreach ($names as $name) {
 
-                    if (class_exists('App\Commands\\' . $name)) {
+                    if (class_exists('App\Commands\\' . $name, true)) {
 
                         $cl_name = 'App\Commands\\' . $name;
 

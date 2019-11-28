@@ -6,7 +6,7 @@ define("HLEB_VENDOR_DIR_NAME", array_reverse(explode(DIRECTORY_SEPARATOR,HLEB_VE
 
 define('HLEB_PROJECT_DIRECTORY', HLEB_VENDOR_DIRECTORY .'/phphleb/framework');
 
-define('HLEB_PROJECT_DEBUG', false);
+require HLEB_VENDOR_DIRECTORY . "/../" . (file_exists(HLEB_VENDOR_DIRECTORY   . '/../start.hleb.php') ? "" : "default.") . 'start.hleb.php';
 
 define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'options']);
 
@@ -63,6 +63,7 @@ if ($arguments) {
             break;
         case "--list":
         case "-l":
+             hl_upload_all();
             print $fn->listing();
             print "\n" . "\n";
             break;
@@ -74,6 +75,8 @@ if ($arguments) {
             $file = $fn->convertCommandToTask($arguments);
 
             if (file_exists(HLEB_GLOBAL_DIRECTORY . '/app/Commands/' . $file . ".php")) {
+
+                hl_upload_all();
 
                 hl_create_users_task(HLEB_GLOBAL_DIRECTORY, $file, $set_arguments ?? null, HLEB_VENDOR_DIR_NAME ?? null, $fn);
 
@@ -99,8 +102,8 @@ function hl_allowed_http_types($type)
     return empty($type) ? "GET" : ((in_array(strtolower($type), HLEB_HTTP_TYPE_SUPPORT)) ? $type : $type . " [NOT SUPPORTED]");
 }
 
-function hl_create_users_task($path, $class, $arg, $vendor, $fn)
-{
+function hl_upload_all(){
+
     require HLEB_PROJECT_DIRECTORY . "/Main/Insert/DeterminantStaticUncreated.php";
 
     require HLEB_PROJECT_DIRECTORY . "/Main/Info.php";
@@ -134,7 +137,11 @@ function hl_create_users_task($path, $class, $arg, $vendor, $fn)
         \Hleb\Main\MainAutoloader::get($class);
     }
 
-    spl_autoload_register('hl_main_autoloader', true, true);
+    if(HLEB_PROJECT_CLASSES_AUTOLOAD) spl_autoload_register('hl_main_autoloader', true, true);
+}
+
+function hl_create_users_task($path, $class, $arg, $vendor, $fn)
+{
 
     // Выполнение команды
 

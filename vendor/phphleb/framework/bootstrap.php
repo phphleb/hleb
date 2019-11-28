@@ -14,7 +14,7 @@ if(empty($_SERVER['HTTP_HOST']))
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-require_once HLEB_PUBLIC_DIR . '/../' . (file_exists(__DIR__ . '/../start.hleb.php') ? "" : "default.") . 'start.hleb.php';
+require HLEB_PUBLIC_DIR . '/../' . (file_exists(__DIR__ . '/../start.hleb.php') ? "" : "default.") . 'start.hleb.php';
 
 
 if (is_dir(dirname(__FILE__, 3) . "/phphleb/radjax/")) {

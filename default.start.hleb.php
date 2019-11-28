@@ -1,14 +1,19 @@
 <?php
 
-// This block contains the optional project settings.
-// В этом блоке опциональные настройки проекта.
-
-// General headers
-// Общие заголовки
 
 header("X-XSS-Protection: 1; mode=block");
 header("X-Frame-Options: SAMEORIGIN");
 // ...
+
+
+// Demo redirection from "http" to "https".
+// Демонстрационное перенаправление с "http" на "https".
+define('HLEB_PROJECT_ONLY_HTTPS', false);
+
+// Demo URL redirection from "www" to without "www" and back 0/1/2.
+// Демонстрационное перенаправление URL с "www" на без "www" и обратно 0/1/2.
+define('HLEB_PROJECT_GLUE_WITH_WWW', 0);
+
 
 /*
  |-----------------------------------------------------------------------------
@@ -25,7 +30,7 @@ header("X-Frame-Options: SAMEORIGIN");
  | Неизменяемое значение, служит для установки глобального пути.
  |
  */
-   define( 'HLEB_GLOBAL_DIRECTORY', __DIR__ );
+define( 'HLEB_GLOBAL_DIRECTORY', __DIR__ );
 
 /*
  |-----------------------------------------------------------------------------
@@ -46,7 +51,7 @@ header("X-Frame-Options: SAMEORIGIN");
  | Изначально: true
  |
  */
-   define( 'HLEB_PROJECT_DEBUG', true );
+define( 'HLEB_PROJECT_DEBUG', true );
 
 /*
  |-----------------------------------------------------------------------------
@@ -184,5 +189,22 @@ error_reporting(E_ALL);
  |
  */
 define( 'HLEB_PROJECT_VALIDITY_URL', "/^[a-z0-9а-яё\_\-\/\.]+$/u" );
+
+/*
+ |-----------------------------------------------------------------------------
+ | Initialization of the project
+ |-----------------------------------------------------------------------------
+ |
+ | Unchanging value.
+ |
+ |
+ |-----------------------------------------------------------------------------
+ | Инициализация проекта
+ |-----------------------------------------------------------------------------
+ |
+ | Неизменяемое значение.
+ |
+ */
+
 
 
