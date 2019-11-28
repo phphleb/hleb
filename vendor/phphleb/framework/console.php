@@ -1,8 +1,8 @@
 <?php
 
-if(!defined("HLEB_PUBLIC_DIR")) die( "Update your version of the `console` file above HLEB 1.2.2");
+define('HLEB_VENDOR_DIRECTORY', dirname(__DIR__, 2) );
 
-define('HLEB_VENDOR_DIRECTORY', HLEB_GLOBAL_DIRECTORY . "/" . HLEB_VENDOR_DIR_NAME );
+define("HLEB_VENDOR_DIR_NAME", array_reverse(explode(DIRECTORY_SEPARATOR,HLEB_VENDOR_DIRECTORY))[0]);
 
 define('HLEB_PROJECT_DIRECTORY', HLEB_VENDOR_DIRECTORY .'/phphleb/framework');
 

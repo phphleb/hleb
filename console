@@ -4,10 +4,8 @@
  * All service commands: php console --help
  */
 
-define('HLEB_PUBLIC_DIR', "public");
 define('HLEB_GLOBAL_DIRECTORY', __DIR__);
-define('HLEB_VENDOR_DIR_NAME', "vendor");
+define('HLEB_PUBLIC_DIR', "public");
 
-require(HLEB_GLOBAL_DIRECTORY . "/" . HLEB_VENDOR_DIR_NAME . "/phphleb/framework/console.php");
-
+require(HLEB_GLOBAL_DIRECTORY . "/vendor/phphleb/framework/console.php");
 

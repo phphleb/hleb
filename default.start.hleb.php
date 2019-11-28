@@ -1,4 +1,15 @@
 <?php
+
+// This block contains the optional project settings.
+// В этом блоке опциональные настройки проекта.
+
+// General headers
+// Общие заголовки
+
+header("X-XSS-Protection: 1; mode=block");
+header("X-Frame-Options: SAMEORIGIN");
+// ...
+
 /*
  |-----------------------------------------------------------------------------
  | Project Root Directory
@@ -174,20 +185,4 @@ error_reporting(E_ALL);
  */
 define( 'HLEB_PROJECT_VALIDITY_URL', "/^[a-z0-9а-яё\_\-\/\.]+$/u" );
 
-/*
- |-----------------------------------------------------------------------------
- | Initialization of the project
- |-----------------------------------------------------------------------------
- |
- | Unchanging value.
- |
- |
- |-----------------------------------------------------------------------------
- | Инициализация проекта
- |-----------------------------------------------------------------------------
- |
- | Неизменяемое значение.
- |
- */
-require HLEB_GLOBAL_DIRECTORY . "/vendor/phphleb/framework/init.php";
 

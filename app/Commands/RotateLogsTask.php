@@ -6,10 +6,11 @@ class RotateLogsTask extends \MainTask
 {
     // php console rotate-logs-task
 
-    const DESCRIPTION = "Delete old logs in storage/logs/";
+    const DESCRIPTION = "Delete old logs";
 
     protected function execute($arg = null)
     {
+        // Task for cron (~ daily) or a separate run for log rotation
         // Задание для cron (~ ежедневно) или запуск вручную для ротирования логов
 
         $temp = 60 * 60 * 12 * 3; // 3 дня

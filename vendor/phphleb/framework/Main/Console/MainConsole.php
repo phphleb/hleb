@@ -237,7 +237,7 @@ class MainConsole
             $result .= $part;
         }
 
-        return strtolower(HLEB_GLOBAL_DIRECTORY . $result);
+        return strtolower($path . $result);
     }
 
     public function convertCommandToTask($name)
