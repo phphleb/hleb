@@ -17,17 +17,6 @@ class MainConsole
 
     public function getInfo()
     {
-        $index = HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . HLEB_PUBLIC_DIR . DIRECTORY_SEPARATOR . 'index.php';
-
-        if (file_exists($index)) {
-            print "\n" . "File: " . $index . "\n" . "\n";
-
-            print " HLEB_PROJECT_ONLY_HTTPS = " . $this->searchVersion($index, "HLEB_PROJECT_ONLY_HTTPS") . "\n";
-
-            print " HLEB_PROJECT_GLUE_WITH_WWW = " . $this->searchVersion($index, "HLEB_PROJECT_GLUE_WITH_WWW") . "\n" . "\n";
-
-        }
-
         $file = HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'default.start.hleb.php';
         if (file_exists(HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'start.hleb.php')) {
             $file = HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'start.hleb.php';
@@ -38,7 +27,9 @@ class MainConsole
             'HLEB_PROJECT_CLASSES_AUTOLOAD',
             'HLEB_PROJECT_ENDING_URL',
             'HLEB_PROJECT_LOG_ON',
-            'HLEB_PROJECT_VALIDITY_URL'
+            'HLEB_PROJECT_VALIDITY_URL',
+            'HLEB_PROJECT_ONLY_HTTPS',
+            'HLEB_PROJECT_GLUE_WITH_WWW'
         ];
 
         if (!file_exists($file)) {
