@@ -42,7 +42,7 @@ class HomeConnector implements Connector
             'Hleb\Constructor\Handlers\ProtectedCSRF'=> $vendor.'/phphleb/framework/Constructor/Handlers/ProtectedCSRF.php',
             'Hleb\Constructor\Handlers\Request'=> $vendor.'/phphleb/framework/Constructor/Handlers/Request.php',
             'Hleb\Constructor\Handlers\URL'=> $vendor.'/phphleb/framework/Constructor/Handlers/URL.php',
-            'Hleb\Constructor\Handlers\URLHandlers'=> $vendor.'/phphleb/framework/Constructor/Handlers/URLHandlers.php',
+            'Hleb\Constructor\Handlers\URLHandler'=> $vendor.'/phphleb/framework/Constructor/Handlers/URLHandler.php',
             'Hleb\Constructor\TCreator'=> $vendor.'/phphleb/framework/Constructor/TCreator.php',
             'Hleb\Constructor\VCreator'=> $vendor.'/phphleb/framework/Constructor/VCreator.php',
             'Hleb\Main\MainTemplate'=> $vendor.'/phphleb/framework/Main/MainTemplate.php',
@@ -63,6 +63,17 @@ class HomeConnector implements Connector
             'Phphleb\Adminpan\Add\GetDataHTML'=>$vendor.'/phphleb/adminpan/Add/GetDataHTML.php',
             'Phphleb\Adminpan\Add\GetDataGraph'=>$vendor.'/phphlecomposerb/adminpan/Add/GetDataGraph.php',
             'Hleb\Main\Commands\MainLaunchTask'=>$vendor.'/phphleb/framework/Main/Commands/MainLaunchTask.php',
+            'MainController'=>$vendor."/phphleb/framework/Scheme/App/Controllers/MainController.php",
+            'MainMiddleware'=>$vendor."/phphleb/framework/Scheme/App/Middleware/MainMiddleware.php",
+            'MainModel'=>$vendor."/phphleb/framework/Scheme/App/Models/MainModel.php",
+            'Hleb\Constructor\Routes\MainRoute'=>$vendor."/phphleb/framework/Constructor/Routes/MainRoute.php",
+            'Route'=>$vendor."/phphleb/framework/Constructor/Routes/Route.php",
+            'Hleb\Main\Route\ProjectLoader'=>$vendor."/phphleb/framework/Main/ProjectLoader.php",
+            'Hleb\Constructor\Routes\LoadRoutes'=>$vendor."/phphleb/framework/Constructor/Routes/LoadRoutes.php",
+            'Hleb\Main\Functions'=>$vendor."/phphleb/framework/Main/Functions.php",
+            'Hleb\Main\TryClass'=>$vendor."/phphleb/framework/Main/TryClass.php",
+
         ];
     }
 }
+
