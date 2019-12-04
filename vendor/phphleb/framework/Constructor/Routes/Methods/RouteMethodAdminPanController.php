@@ -60,7 +60,7 @@ class RouteMethodAdminPanController extends MainRouteMethod
 
         $files = implode(" ", hleb_search_filenames(HLEB_GLOBAL_DIRECTORY . "/app/Controllers/"));
 
-        $pos = strripos($files, "/" . $name . ".php");
+        $pos = strripos($files, "/" . str_replace (["\\", "/"], DIRECTORY_SEPARATOR, $name) . ".php");
 
         return !($pos === false);
 

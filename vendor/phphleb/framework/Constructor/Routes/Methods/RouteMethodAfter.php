@@ -60,7 +60,7 @@ class RouteMethodAfter extends MainRouteMethod
 
         $files = implode(" ", hleb_search_filenames(HLEB_GLOBAL_DIRECTORY . "/app/Middleware/After/"));
 
-        $pos = strripos($files, "/" . $name . ".php");
+        $pos = strripos($files, "/" . str_replace (["\\", "/"], DIRECTORY_SEPARATOR, $name) . ".php");
 
         if ($pos === false) {
 
