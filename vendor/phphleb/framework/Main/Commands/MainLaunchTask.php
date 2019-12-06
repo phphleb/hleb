@@ -197,7 +197,7 @@ class MainLaunchTask  extends \MainTask
 
     private function execute_command(string $cmd)
     {
-        exec($cmd . " &", $output, $var);
+        exec($cmd, $output, $var);
         print implode("\n", $output);
         return $var;
     }
