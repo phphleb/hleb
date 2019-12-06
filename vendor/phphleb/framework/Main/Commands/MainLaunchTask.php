@@ -76,7 +76,7 @@ class MainLaunchTask  extends \MainTask
         return $this->searchData($wd, "N");
     }
 
-    protected function givenMounthlyDay($md = [1])  // 1-31
+    protected function givenMonthlyDay($md = [1])  // 1-31
     {
         return $this->searchData($md, "j");
     }
@@ -153,9 +153,14 @@ class MainLaunchTask  extends \MainTask
         return false;
     }
 
-    protected function NewYearsDay()
+    protected function inNewYearDay()
     {
         return $this->byPattern("m-d", "12-31");
+    }
+
+    protected function inHalloweenDay()
+    {
+        return $this->byPattern("m-d", "10-31");
     }
 
 
