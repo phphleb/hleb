@@ -10,7 +10,7 @@ define('HLEB_START', microtime(true));
 
 define('HLEB_PUBLIC_DIR', __DIR__);
 
-define('HLEB_FRAME_VERSION', "1.2.3");
+define('HLEB_FRAME_VERSION', "1.2.4");
 
 // Initialization.
 // Инициализация.
