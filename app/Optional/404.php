@@ -39,11 +39,11 @@ header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
             white-space: nowrap;
         }
     </style>
-    <title>No data to issue</title>
+    <title>404. Not Found</title>
 </head>
 <body>
     <div id="hl-cont">
-        <h1>No data to issue</h1>
+        <h1>404. Not Found</h1>
     </div>
 </body>
 </html>
