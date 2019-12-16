@@ -23,7 +23,9 @@ class Request
 
     private static $req = null;
 
-    private static $cookie = null;
+    private static $initial_cookie = null;
+
+    private static $initial_session = null;
 
     private static $head = null;
 
@@ -38,32 +40,52 @@ class Request
 
     private static function getPostData()
     {
-        if(!isset(self::$post)) self::$post = self::convertPrivateTagsInArray($_POST ?? []);
+        if(!isset(self::$post)) self::$post = self::clearData($_POST ?? []);
 
         return self::$post;
     }
 
     private static function getGetData()
     {
-        if(!isset(self::$get)) self::$get = self::convertPrivateTagsInArray($_GET ?? []);
+        if(!isset(self::$get)) self::$get = self::clearData($_GET ?? []);
 
         return self::$get;
     }
 
     private static function getRequestData()
     {
-        if(!isset(self::$req)) self::$req = self::convertPrivateTagsInArray($_REQUEST ?? []);
+        if(!isset(self::$req)) self::$req = self::clearData($_REQUEST ?? []);
 
         return self::$req;
     }
 
-    private static function getCookieData()
+    public static function getInitialSession($name = null)
     {
-        if(!isset(self::$cookie)) self::$cookie = self::convertPrivateTagsInArray($_COOKIE ?? []);
-
-        return self::$cookie;
+        return $name == null ? self::$initial_session : (isset(self::$initial_session[$name]) ? self::$initial_session[$name] : null);
     }
 
+    public static function getInitialCookie($name = null)
+    {
+        return $name == null ? self::$initial_cookie : (isset(self::$initial_cookie[$name]) ? self::$initial_cookie[$name] : null);
+    }
+
+    public static function getSession($name = null)
+    {
+        return $name == null ? $_COOKIE ?? [] : (isset($_COOKIE) && isset($_COOKIE[$name]) ? $_COOKIE[$name] : null);
+    }
+
+    public static function getCookie($name = null)
+    {
+        return $name == null ? self::clearData($_COOKIE ?? []) : (isset($_COOKIE) && isset($_COOKIE[$name]) ? self::clearData($_COOKIE[$name]) : null);
+    }
+
+    private static function clearData($value)
+    {
+        if(is_numeric($value)) return $value;
+        if(is_array($value))   return array_map( [self::class,'clearData'], $value);
+        if(is_string($value))  return  self::convertPrivateTags($value);
+        return null;
+    }
 
     private static function checkValueInArray($value, $array)
     {
@@ -82,6 +104,11 @@ class Request
 
     public static function close()
     {
+        self::$post = self::getPostData();
+        self::$get = self::getGetData();
+        self::$request = self::getRequestData();
+        self::$initial_cookie = self::clearData($_COOKIE?? []);
+        self::$initial_session = $_SESSION ?? [];
         self::$close = true;
     }
 
@@ -92,24 +119,23 @@ class Request
 
     public static function getUri()
     {
-        if(!isset(self::$uri)) self::$uri = self::convertPrivateTags($_SERVER['REQUEST_URI'] ?? null);
+        if(!isset(self::$uri)) self::$uri = self::clearData($_SERVER['REQUEST_URI'] ?? null);
 
         return self::$uri;
     }
 
     public static function getFullUrl()
     {
-        if(!isset(self::$url)) self::$url = self::convertPrivateTags(Functions::mainFullHostUrl());
+        if(!isset(self::$url)) self::$url = self::clearData(Functions::mainFullHostUrl());
 
         return self::$url;
     }
 
     public static function getReferer()
     {
-        if(!isset(self::$referer)) self::$referer = self::convertPrivateTags($_SERVER['HTTP_REFERER'] ?? null);
+        if(!isset(self::$referer)) self::$referer = self::clearData($_SERVER['HTTP_REFERER'] ?? null);
 
         return self::$referer;
-
     }
 
     public static function getHost()
@@ -125,11 +151,6 @@ class Request
     public static function isXmlHttpRequest()
     {
         return $_SERVER['X_REQUESTED_WITH'] == 'XMLHttpRequest';
-    }
-
-    public static function getCookie($value = null)
-    {
-        return self::checkValueInArray($value, self::getCookieData());
     }
 
     public static function getFiles()
@@ -164,12 +185,7 @@ class Request
 
     private static function convertPrivateTags(string $value)
     {
-      return  str_replace(self::NEEDED_TAGS, self::REPLACING_TAGS, $value);
-    }
-
-    private static function convertPrivateTagsInArray(array $value)
-    {
-        return  array_map( [self::class,'convertPrivateTags'], $value);
+        return  str_replace(self::NEEDED_TAGS, self::REPLACING_TAGS, $value);
     }
 
     public static function returnPrivateTags(string $value)

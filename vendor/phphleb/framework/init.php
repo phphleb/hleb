@@ -114,6 +114,12 @@ require HLEB_PROJECT_DIRECTORY. "/Constructor/Workspace.php";
 
 require HLEB_PROJECT_DIRECTORY. "/Main/TryClass.php";
 
+require HLEB_PROJECT_DIRECTORY. "/Constructor/Handlers/Request.php";
+
+require HLEB_PROJECT_DIRECTORY. "/Constructor/VCreator.php";
+
+require HLEB_PROJECT_DIRECTORY. "/Constructor/Routes/Data.php";
+
 
 // Сторонний автозагрузчик классов
 
