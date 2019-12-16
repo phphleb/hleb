@@ -3,6 +3,7 @@
 namespace Hleb\Constructor\Handlers;
 
 use DeterminantStaticUncreated;
+use Hleb\Main\Functions;
 
 class Request
 {
@@ -26,6 +27,12 @@ class Request
 
     private static $head = null;
 
+    private static $uri = null;
+
+    private static $url = null;
+
+    private static $referer = null;
+
     private static $resources = null;
 
 
@@ -45,14 +52,14 @@ class Request
 
     private static function getRequestData()
     {
-        if(!isset(self::$req)) self::$req = self::convertPrivateTagsInArray($_REQUEST?? []);
+        if(!isset(self::$req)) self::$req = self::convertPrivateTagsInArray($_REQUEST ?? []);
 
         return self::$req;
     }
 
     private static function getCookieData()
     {
-        if(!isset(self::$cookie)) self::$cookie = self::convertPrivateTagsInArray($_COOKIE?? []);
+        if(!isset(self::$cookie)) self::$cookie = self::convertPrivateTagsInArray($_COOKIE ?? []);
 
         return self::$cookie;
     }
@@ -85,12 +92,24 @@ class Request
 
     public static function getUri()
     {
-        return $_SERVER['REQUEST_URI'];
+        if(!isset(self::$uri)) self::$uri = self::convertPrivateTags($_SERVER['REQUEST_URI'] ?? null);
+
+        return self::$uri;
+    }
+
+    public static function getFullUrl()
+    {
+        if(!isset(self::$url)) self::$url = self::convertPrivateTags(Functions::mainFullHostUrl());
+
+        return self::$url;
     }
 
     public static function getReferer()
     {
-        return $_SERVER['HTTP_REFERER'];
+        if(!isset(self::$referer)) self::$referer = self::convertPrivateTags($_SERVER['HTTP_REFERER'] ?? null);
+
+        return self::$referer;
+
     }
 
     public static function getHost()
