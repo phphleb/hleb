@@ -59,9 +59,9 @@ class AddressBar
 
             $idn_path = $this->INPUT_PARAMS['HLEB_PROJECT_DIRECTORY'] . self::IDNACONV_PATH;
 
-            include("$idn_path");
+            require("$idn_path");
 
-            $idn = new idna_convert(array('idn_version' => 2008));
+            $idn = new \idna_convert(array('idn_version' => 2008));
 
             $val_host = $idn->decode($val_host);
 
