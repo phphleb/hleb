@@ -11,7 +11,7 @@ class Key
 
     private static $key = null;
 
-    private static $path = HLEB_GLOBAL_DIRECTORY . "/storage/cache/key/security-key.txt";
+    private static $path = HLEB_GLOBAL_DIRECTORY . '/storage/cache/key/security-key.txt';
 
     public static function create()
     {
@@ -48,9 +48,9 @@ class Key
 
             if (!file_exists(self::$path)) {
 
-                ErrorOutput::add("HL028-KEY_ERROR: No write permission '/storage/cashe/key/' ! " .
-                    "Failed to save file to folder `/storage/*`.  You need to change permissions on this folder. ~ " .
-                    "Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права для этой папки и вложений всем пользователям.");
+                ErrorOutput::add('HL028-KEY_ERROR: No write permission '/storage/cashe/key/' ! ' .
+                    'Failed to save file to folder `/storage/*`.  You need to change permissions on this folder. ~ ' .
+                    'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права для этой папки и вложений всем пользователям.');
 
                 ErrorOutput::run();
 

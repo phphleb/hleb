@@ -6,7 +6,7 @@ namespace Hleb\Constructor;
 
 class VCreator
 {
-    private $includeFile = "";
+    private $includeFile = '';
 
     function __construct(string $include)
    {

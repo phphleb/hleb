@@ -33,11 +33,11 @@ class MainConsole
         ];
 
         if (!file_exists($file)) {
-            print "Missing file " . $file;
+            echo "Missing file " . $file;
             exit();
         }
 
-        print "\n" . "File: " . $file . "\n" . "\n";
+        echo "\n" . "File: " . $file . "\n" . "\n";
 
         $handle = fopen($file, "r");
 
@@ -51,18 +51,18 @@ class MainConsole
             }
             $search_errors = preg_match_all('|^error_reporting\(\s*([^)]+)\)|u', $buffer, $def, PREG_PATTERN_ORDER);
             if ($search_errors == 1) {
-                print " error_reporting = " . str_replace("  ", " ", trim($def[1][0])) . "\n";
+                echo " error_reporting = " . str_replace("  ", " ", trim($def[1][0])) . "\n";
             }
         }
         fclose($handle);
-        print "\n";
+        echo "\n";
     }
 
     public function getRoutes()
     {
-        $file = HLEB_GLOBAL_DIRECTORY . "/storage/cache/routes/routes.txt";
+        $file = HLEB_GLOBAL_DIRECTORY . '/storage/cache/routes/routes.txt';
 
-        $data = [["SDOMAIN", "PREFIX", "ROUTE", "TYPE", "PROTECTED", "CONTROLLER", "NAME"]];
+        $data = [['SDOMAIN', 'PREFIX', 'ROUTE', 'TYPE', 'PROTECTED', 'CONTROLLER', 'NAME']];
 
         if (file_exists($file)) {
 
@@ -72,11 +72,11 @@ class MainConsole
                 foreach ($routes as $route) {
                     if (isset($route['data_path']) && !empty($route['data_path'])) {
                         $prefix = "";
-                        $name = $controller = "-";
-                        $protect = "";
+                        $name = $controller = '-';
+                        $protect = '';
                         $types = [];
-                        $domain = "";
-                        $all_pro = !empty($route['protect']) && array_reverse($route['protect'])[0] == "CSRF" ? "ON" : "-";
+                        $domain = '';
+                        $all_pro = !empty($route['protect']) && array_reverse($route['protect'])[0] == 'CSRF' ? 'ON' : '-';
                         if (isset($route['actions']) && count($route['actions'])) {
                             foreach ($route['actions'] as $action) {
                                 if (!empty($action["protect"])) {
@@ -116,7 +116,7 @@ class MainConsole
 
                         $prefix = empty($prefix) ? "" : "/" . $prefix;
 
-                        $router = $route['data_path'] == "/" ? $route['data_path'] : "/" . trim($route["data_path"], "/") . "/";
+                        $router = $route['data_path'] === "/" ? $route['data_path'] : "/" . trim($route["data_path"], "/") . "/";
 
                         $type = strtoupper(implode(", ", array_map("hl_allowed_http_types", array_unique(empty($types) ?
                             (is_array($route['type']) ? $route['type'] : [$route['type']]) : $types))));
@@ -165,7 +165,7 @@ class MainConsole
 
                 if ($k + 1 == count($dt)) {
                     $r .= "\n";
-                    if ($key == 0) {
+                    if ($key === 0) {
                         $r .= "\n";
                     }
                 }
@@ -264,17 +264,17 @@ class MainConsole
 
     public function searchOnceNamespace($link, $path)
     {
-        if (strpos($link, ".php", strlen($link) - strlen(".php")) !== false) {
+        if (strpos($link, '.php', strlen($link) - strlen('.php')) !== false) {
 
-            $pathname = explode("/", str_replace("\\", "/", explode($path, $link)[1]));
-            $file = explode(".php", array_pop($pathname))[0];
+            $pathname = explode('/', str_replace("\\", "/", explode($path, $link)[1]));
+            $file = explode('.php', array_pop($pathname))[0];
             foreach ($pathname as $key => $pathn) {
                 $pathname[$key] = trim($pathn, ".-\\/");
             }
             $nsp_1 = ucfirst(end($pathname));
-            $nsp_1 = empty($nsp_1) ? "" : $nsp_1 . "\\";
-            $nsp_2 = trim(implode("\\", array_map("ucfirst", $pathname)), " \\/");
-            $nsp_2 = empty($nsp_2) ? "" : $nsp_2 . "\\";
+            $nsp_1 = empty($nsp_1) ? '' : $nsp_1 . "\\";
+            $nsp_2 = trim(implode("\\", array_map('ucfirst', $pathname)), " \\/");
+            $nsp_2 = empty($nsp_2) ? '' : $nsp_2 . "\\";
 
             return array_unique([$file, $nsp_1 . $file, $nsp_2 . $file]);
         }
@@ -284,7 +284,7 @@ class MainConsole
     public function progressConsole($all, $total)
     {
         $step = floor($all / 10);
-        if ($total == 0) return;
+        if ($total === 0) return;
         $str = 'Clearing cache [';
         if ($all > 100) {
             $count = $step == 0 ? 0 : floor($total / $step);
@@ -311,12 +311,12 @@ class MainConsole
 
     public function searchNanorouter()
     {
-        if (is_dir(HLEB_VENDOR_DIRECTORY . "/phphleb/radjax/") &&
+        if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/') &&
             (file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/ajax.php') ||
                 file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/api.php'))
         ) {
 
-            require_once HLEB_VENDOR_DIRECTORY . "/phphleb/radjax/Route.php";
+            require_once HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Route.php';
 
             if (file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/api.php')) include_once HLEB_GLOBAL_DIRECTORY . '/routes/api.php';
 
@@ -324,7 +324,7 @@ class MainConsole
 
             $nano = \Radjax\Route::getParams();
 
-            $parameters = [["RADJAX:ROUTE", "TYPE", "PROTECTED", "CONTROLLER"]];
+            $parameters = [['RADJAX:ROUTE', 'TYPE', 'PROTECTED', 'CONTROLLER']];
 
             foreach ($nano as $params) {
 
@@ -347,11 +347,11 @@ class MainConsole
     public function addBsp($versions)
     {
         $origin = 9;
-        $versions = array_map("strlen", $versions);
-        $result = ["", ""];
+        $versions = array_map('strlen', $versions);
+        $result = ['', ''];
         foreach ($versions as $key => $version) {
             for ($i = 0; $i < $origin - $version; $i++) {
-                $result[$key] .= " ";
+                $result[$key] .= ' ';
             }
         }
         return $result;

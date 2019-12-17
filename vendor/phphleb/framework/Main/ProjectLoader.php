@@ -19,12 +19,13 @@ class ProjectLoader
 
         $routes_array = (new CacheRoutes())->load();
 
-        $render_map = $routes_array["render"] ?? [];
+        $render_map = $routes_array['render'] ?? [];
 
-        if (isset($routes_array["addresses"])) URL::create($routes_array["addresses"]);
-
+        if (isset($routes_array['addresses'])) URL::create($routes_array['addresses']);
 
         $block = (new URLHandler())->page($routes_array);
+
+        unset($routes_array);
 
         Request::close();
 
@@ -38,14 +39,15 @@ class ProjectLoader
 
             new Workspace($block, $render_map);
 
-        } else if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'GET') {
+        } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-            include HLEB_GLOBAL_DIRECTORY . "/app/Optional/404.php";
+            include HLEB_GLOBAL_DIRECTORY . '/app/Optional/404.php';
 
         } else {
 
-            header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
+            header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
         }
 
     }
 }
+

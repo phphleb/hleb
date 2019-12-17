@@ -36,13 +36,13 @@ class CacheRoutes
 
                     $this->create_routes();
 
-                    Info::add("CacheRoutes", true);
+                    Info::add('CacheRoutes', true);
 
                     return $this->check($this->opt->update(Route::data()));
 
                 }
 
-                Info::add("CacheRoutes", false);
+                Info::add('CacheRoutes', false);
 
                 return $cache;
 
@@ -51,7 +51,7 @@ class CacheRoutes
 
         $this->create_routes();
 
-        Info::add("CacheRoutes", true);
+        Info::add('CacheRoutes', true);
 
         return $this->check($this->opt->update(Route::data()));
 
@@ -65,9 +65,9 @@ class CacheRoutes
 
         if (json_encode($cache) !== json_encode($data)) {
 
-            $errors = "HL021-CACHE_ERROR: No write permission ! " .
-                "Failed to save file to folder `/storage/*`.  You need to change permissions on this folder. ~ " .
-                "Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права для этой папки и вложений всем пользователям.";
+            $errors = 'HL021-CACHE_ERROR: No write permission ! ' .
+                'Failed to save file to folder `/storage/*`.  You need to change permissions on this folder. ~ ' .
+                'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права для этой папки и вложений всем пользователям.';
 
             ErrorOutput::get($errors);
         }
@@ -79,10 +79,11 @@ class CacheRoutes
     private function create_routes()
     {
 
-        require HLEB_GLOBAL_DIRECTORY . "/routes/main.php";
+        require HLEB_GLOBAL_DIRECTORY . '/routes/main.php';
 
         Route::end();
 
     }
 
 }
+

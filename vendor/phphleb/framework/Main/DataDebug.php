@@ -20,9 +20,9 @@ class DataDebug
      */
     public static function add(string $sql, $time, string $dbname, $exec = false)
     {   
-        if(HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] == 'GET') {
+        if(HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] === 'GET') {
 
-            $time_about = $exec ? self::time_about($sql) : "";
+            $time_about = $exec ? self::time_about($sql) : '';
 
             self::$data[] = [$sql, $time, $dbname, $time_about];
         }
@@ -45,7 +45,7 @@ class DataDebug
 
     private static function time_about($sql): string
     {
-        return stripos(trim($sql), "select") == 0 ? "&asymp;" : "";
+        return stripos(trim($sql), 'select') == 0 ? '&asymp;' : '';
     }
 
     public static function create_html_param($param): string
@@ -53,13 +53,13 @@ class DataDebug
         if ($param == null) return "";
 
         switch (gettype($param)){
-            case "double":
+            case 'double':
                 return "<span style='color: #4e759d'>" . strval($param) . "</span>";
                 break;
-            case "integer":
+            case 'integer':
                 return "<span style='color: #51519d'>" . strval($param) . "</span>";
                 break;
-            case "string":
+            case 'string':
             default:
                 return "<span style='color: #4c8442'>" . htmlentities($param) . "</span>";
          }

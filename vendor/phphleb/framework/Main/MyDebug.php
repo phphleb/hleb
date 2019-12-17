@@ -72,7 +72,7 @@ class MyDebug
             if (!in_array($name, self::$error)) {
 
                 if (!isset(self::$data[$name]))
-                    self::$data[$name] = "";
+                    self::$data[$name] = '';
 
                 is_string(self::$data[$name]) ? self::$data[$name] .= $data : self::error_type($name, 'string');
             }
@@ -82,7 +82,7 @@ class MyDebug
 
     private static function error_type(string $name, string $type)
     {
-        self::$data[$name] = "Invalid source value format ( insert_to_" . $type . " for " . $name . ": " . gettype(self::$data[$name]) . " ) !";
+        self::$data[$name] = "Invalid source value format ( insert_to_$type for $name: " . gettype(self::$data[$name]) . ' ) !';
 
         self::$error[$name] = $name;
     }

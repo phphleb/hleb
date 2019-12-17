@@ -150,13 +150,13 @@ class DPanel
             $right = self::$queries ? 100 : 60;
             require_once "panels/w_header.php";
             foreach ($data as $key => $value) {
-                print "<div style='border: 1px solid #bfbfbf; padding: 10px;'><pre>";
-                print "#" . ($key + 1) . ($value[1] != null ? " description: " . $value[1] . PHP_EOL : " ");
+                echo "<div style='border: 1px solid #bfbfbf; padding: 10px;'><pre>";
+                echo "#" . ($key + 1) . ($value[1] != null ? " description: " . $value[1] . PHP_EOL : " ");
                 var_dump($value[0]);
-                print "</pre></div>";
+                echo "</pre></div>";
             }
-            print "</div>" . PHP_EOL;
-            print "<!-- /WORK DEBUG PANEL -->";
+            echo "</div>" . PHP_EOL;
+            echo "<!-- /WORK DEBUG PANEL -->";
         }
     }
 

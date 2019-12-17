@@ -30,7 +30,7 @@ function data()
 function csrf_field()
 {
 
-    print hleb_ds5bol10m0bep2_csrf_field();
+    echo hleb_ds5bol10m0bep2_csrf_field();
 
 }
 

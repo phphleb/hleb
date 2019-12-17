@@ -35,7 +35,7 @@ class RouteMethodType extends MainRouteMethod
     {
         if (!empty($types)) $this->type = [];
 
-        if (gettype($types) == "string") $types = [strtolower($types)];
+        if (is_string($types)) $types = [strtolower($types)];
 
         foreach ($types as $type) {
 

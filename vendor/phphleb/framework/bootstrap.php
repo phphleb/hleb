@@ -14,20 +14,20 @@ if(empty($_SERVER['HTTP_HOST']))
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-require HLEB_PUBLIC_DIR . '/../' . (file_exists(__DIR__ . '/../start.hleb.php') ? "" : "default.") . 'start.hleb.php';
+require HLEB_PUBLIC_DIR . '/../' . (file_exists(__DIR__ . '/../start.hleb.php') ? '' : 'default.') . 'start.hleb.php';
 
 
-if (is_dir(dirname(__FILE__, 3) . "/phphleb/radjax/")) {
+if (is_dir(dirname(__FILE__, 3) . '/phphleb/radjax/')) {
 
-    $GLOBALS["HLEB_MAIN_DEBUG_RADJAX"] = [];
+    $GLOBALS['HLEB_MAIN_DEBUG_RADJAX'] = [];
 
     if ((file_exists(dirname(__FILE__, 4) . '/routes/ajax.php') ||
         file_exists(dirname(__FILE__, 4) . '/routes/api.php'))
     ){
 
-        require dirname(__DIR__, 2) . "/phphleb/radjax/Route.php";
+        require dirname(__DIR__, 2) . '/phphleb/radjax/Route.php';
 
-        require dirname(__DIR__, 2) . "/phphleb/radjax/Src/App.php";
+        require dirname(__DIR__, 2) . '/phphleb/radjax/Src/App.php';
 
         if (file_exists(dirname(__DIR__, 3) . '/routes/api.php'))
             include_once dirname(__DIR__, 3) . '/routes/api.php';

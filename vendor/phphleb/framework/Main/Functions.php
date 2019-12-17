@@ -15,12 +15,12 @@ class Functions
 
     static function mainUrl() // "site.ru/main/?get=on"
     {
-       return  self::convertUrl($_SERVER["REQUEST_URI"]);
+       return  self::convertUrl($_SERVER['REQUEST_URI']);
     }
 
     static function mainClearUrl() // "/main/"
     {
-        return explode("?", $_SERVER["REQUEST_URI"])[0];
+        return explode('?', $_SERVER['REQUEST_URI'])[0];
     }
 
     static function clearMainUrl() // "/main/url/"
@@ -45,7 +45,7 @@ class Functions
 
     static function mainRequestUrl() // "/main/?get=on"
     {
-         return $_SERVER["REQUEST_URI"];
+         return $_SERVER['REQUEST_URI'];
     }
 
 

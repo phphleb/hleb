@@ -13,7 +13,7 @@ class DefaultTask extends \MainTask
 
         // Your code here
 
-        print "\n" .__CLASS__ . " done." . "\n";
+        echo "\n" .__CLASS__ . " done." . "\n";
     }
 
 }

@@ -208,7 +208,7 @@ class RouteMethodEnd extends MainRouteMethod
 
         foreach ($array as $arr) {
 
-            if (gettype($arr) == "array") {
+            if (is_array($arr)) {
 
                 foreach ($arr as $a) {
 

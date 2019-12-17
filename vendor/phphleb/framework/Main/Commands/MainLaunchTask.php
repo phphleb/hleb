@@ -15,90 +15,90 @@ class MainLaunchTask  extends \MainTask
 
     protected function everyHour($cms = []) // XX:00:00
     {
-        if ($this->getDate()->format("i") == "00")  $this->run($cms);
+        if ($this->getDate()->format('i') === '00')  $this->run($cms);
     }
 
 
     protected function everyDay($cms = []) // 00:00:00
     {
-        if ($this->getDate()->format("H:i") == "00:00") $this->run($cms);
+        if ($this->getDate()->format('H:i') === '00:00') $this->run($cms);
     }
 
 
     protected function every5Minutes($cmds = [])
     {
-        $date = $this->getDate()->format("i");
-        if ($date{1} == "0" || $date{1} == "5")  $this->run($cmds);
+        $date = $this->getDate()->format('i');
+        if ($date{1} == '0' || $date{1} === '5')  $this->run($cmds);
     }
 
 
     protected function every10Minutes($cmds = [])
     {
-        $date = $this->getDate()->format("i");
-        if ($date{1} == "0") $this->run($cmds);
+        $date = $this->getDate()->format('i');
+        if ($date{1} == '0') $this->run($cmds);
     }
 
 
     protected function every15Minutes($cmds = [])
     {
-        $date = $this->getDate()->format("i");
-        if (in_array($date, ["00", "15", "30", "45"])) $this->run($cmds);
+        $date = $this->getDate()->format('i');
+        if (in_array($date, ['00', '15', '30', '45'])) $this->run($cmds);
     }
 
 
     protected function every20Minutes($cmds = [])
     {
-        $date = $this->getDate()->format("i");
-        if (in_array($date, ["00", "20", "40"])) $this->run($cmds);
+        $date = $this->getDate()->format('i');
+        if (in_array($date, ['00', '20', '40'])) $this->run($cmds);
     }
 
 
     protected function givenMinutes($m = [0], $cmds = [])  // 0-60
     {
-        return $this->searchData($m,  "i", $cmds);
+        return $this->searchData($m,  'i', $cmds);
     }
 
 
     protected function givenHour($h = [0])  // 0-24
     {
-        return $this->searchData($h, "H");
+        return $this->searchData($h, 'H');
     }
 
 
     protected function givenMonth($mn = [1])  // 1-12
     {
-        return $this->searchData($mn, "m");
+        return $this->searchData($mn, 'm');
     }
 
 
     protected function givenWeeklyDay($wd = [1])  // 1-7
     {
-        return $this->searchData($wd, "N");
+        return $this->searchData($wd, 'N');
     }
 
     protected function givenMonthlyDay($md = [1])  // 1-31
     {
-        return $this->searchData($md, "j");
+        return $this->searchData($md, 'j');
     }
 
     protected function givenYearDay($yd = [1])  // 1-365
     {
-        return $this->searchData($yd, "z");
+        return $this->searchData($yd, 'z');
     }
 
     protected function changeLeapYear()  // Високосный год
     {
-        return $this->getDate()->format("L") === 1;
+        return $this->getDate()->format('L') === 1;
     }
 
     protected function changeAm()  // До полудня
     {
-        return $this->getDate()->format("a") === "am";
+        return $this->getDate()->format('a') === 'am';
     }
 
     protected function changePm()  // После полудня
     {
-        return $this->getDate()->format("a") === "ap";
+        return $this->getDate()->format('a') === 'ap';
     }
 
     // Понедельник
@@ -144,7 +144,7 @@ class MainLaunchTask  extends \MainTask
     }
 
 
-    protected function byPattern(string $format = "Y-m-d H:i:s", string $date = "0000-00-00 00:00:00", $cmds = [])
+    protected function byPattern(string $format = 'Y-m-d H:i:s', string $date = '0000-00-00 00:00:00', $cmds = [])
     {
         if ($this->getDate()->format($format) === $date){
             $this->run($cmds);
@@ -155,12 +155,12 @@ class MainLaunchTask  extends \MainTask
 
     protected function inNewYearDay()
     {
-        return $this->byPattern("m-d", "12-31");
+        return $this->byPattern('m-d', '12-31');
     }
 
     protected function inHalloweenDay()
     {
-        return $this->byPattern("m-d", "10-31");
+        return $this->byPattern('m-d', '10-31');
     }
 
 
@@ -198,7 +198,7 @@ class MainLaunchTask  extends \MainTask
     private function execute_command(string $cmd)
     {
         exec($cmd, $output, $var);
-        print implode("\n", $output);
+        echo implode("\n", $output);
         return $var;
     }
 

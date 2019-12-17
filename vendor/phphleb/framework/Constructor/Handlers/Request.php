@@ -13,9 +13,9 @@ class Request
 
     private static $close = false;
 
-    const NEEDED_TAGS = ["<", ">"];
+    const NEEDED_TAGS = ['<', '>'];
 
-    const REPLACING_TAGS = ["&lt;", "&gt;"];
+    const REPLACING_TAGS = ['&lt;', '&gt;'];
 
     private static $post = null;
 
@@ -82,7 +82,7 @@ class Request
     private static function clearData($value)
     {
         if(is_numeric($value)) return $value;
-        if(is_array($value))   return array_map( [self::class,'clearData'], $value);
+        if(is_array($value))   return array_map( [self::class, 'clearData'], $value);
         if(is_string($value))  return  self::convertPrivateTags($value);
         return null;
     }
@@ -99,7 +99,7 @@ class Request
 
     public static function add(string $name, string $value)
     {
-        if (!self::$close) self::$request[$name] = is_numeric($value) ? floatval($value) : $value;
+        if (!self::$close) self::$request[$name] = is_numeric($value) ? floatval($value) : self::clearData($value);
     }
 
     public static function close()
@@ -107,7 +107,7 @@ class Request
         self::$post = self::getPostData();
         self::$get = self::getGetData();
         self::$request = self::getRequestData();
-        self::$initial_cookie = self::clearData($_COOKIE?? []);
+        self::$initial_cookie = self::clearData($_COOKIE ?? []);
         self::$initial_session = $_SESSION ?? [];
         self::$close = true;
     }

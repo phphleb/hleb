@@ -26,9 +26,9 @@ class RotateLogsTask extends \MainTask
                 $total++;
             }
         }
-        print "Deleted " . $total . " files";
+        echo "Deleted " . $total . " files";
 
-        print "\n" . __CLASS__ . " done." . "\n";
+        echo "\n" . __CLASS__ . " done." . "\n";
     }
 
 }

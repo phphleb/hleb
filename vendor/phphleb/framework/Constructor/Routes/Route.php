@@ -85,14 +85,14 @@ class Route extends MainRoute implements StandardRoute
         return self::add(new RouteMethodRenderMap(self::instance(), $name, $map));
     }
 
-    public static function protect($validate = "CSRF")
+    public static function protect($validate = 'CSRF')
     {
 
         return self::add(new RouteMethodProtect(self::instance(), $validate));
 
     }
 
-    public static function getProtect($validate = "CSRF")
+    public static function getProtect($validate = 'CSRF')
     {
 
         return self::add(new RouteMethodGetProtect(self::instance(), $validate));

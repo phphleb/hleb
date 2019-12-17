@@ -5,9 +5,9 @@ namespace Hleb\Scheme\Home\Constructor\Handlers;
 class ResourceStandard
 {
 
-    const NEEDED_TAGS = ["\"", "'", "<", ">"];
+    const NEEDED_TAGS = ["\"", "'", '<', '>'];
 
-    const REPLACING_TAGS = ["&quot;", "&apos;", "&lt;", "&gt;"];
+    const REPLACING_TAGS = ['&quot;', '&apos;', '&lt;', '&gt;'];
 
 
     protected static function convertPrivateTags(string $value)
@@ -17,7 +17,7 @@ class ResourceStandard
 
     protected static function convertPrivateTagsInArray(array $value)
     {
-        return  array_map( [self::class,'convertPrivateTags'], $value);
+        return  array_map( [self::class, 'convertPrivateTags'], $value);
     }
 
     protected static function returnPrivateTags(string $value)

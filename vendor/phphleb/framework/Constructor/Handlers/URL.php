@@ -15,24 +15,17 @@ class URL
 
     public static function create($address)
     {
-
         self::$addresses = $address;
-
     }
-
 
     public static function add($new_address)
     {
-
         self::$addresses = array_merge(self::$addresses, $new_address);
-
     }
 
     public static function getAll()
     {
-
         return self::$addresses;
-
     }
 
     public static function getRouteByName(string $name, array $perem = []) // Название и замена переменных
@@ -45,33 +38,33 @@ class URL
         // Получение пути с префиксами по существующему имени роута
         if(!isset(self::$addresses[$name])) return false;
 
-        if (count($perem)  == 0 && (strpos(self::$addresses[$name], '?}') === false)) {
+        if (count($perem) === 0 && (strpos(self::$addresses[$name], '?}') === false)) {
             return self::endingUrl(self::$addresses[$name]);
         }
 
-        $address_parts = explode("/", self::$addresses[$name]);
+        $address_parts = explode('/', self::$addresses[$name]);
 
         foreach ($address_parts as $key => $part) {
-            if (strlen($part)>2 && $part{0} == "{") {
+            if (strlen($part)>2 && $part{0} == '{') {
                 if(count($perem)) {
 
                     foreach ($perem as $k => $p) {
-                        if (($part{strlen($part) - 2} == "?" && $address_parts[$key] == "{" . $k . "?}") ||
-                            $address_parts[$key] == "{" . $k . "}") {
+                        if (($part{strlen($part) - 2} == '?' && $address_parts[$key] == '{' . $k . '?}') ||
+                            $address_parts[$key] == '{' . $k . '}') {
                             $address_parts[$key] = $p;
-                        } else if ($part{strlen($part) - 2} == "?") {
-                            $address_parts[$key] = "";
+                        } else if ($part{strlen($part) - 2} == '?') {
+                            $address_parts[$key] = '';
                         }
                     }
                 } else {
-                    if ($part{strlen($part) - 2} == "?") {
-                        $address_parts[$key] = "";
+                    if ($part{strlen($part) - 2} == '?') {
+                        $address_parts[$key] = '';
                     }
                 }
             }
         }
 
-        return self::endingUrl(preg_replace('|([/]+)|s', '/', "/" . implode("/", $address_parts) . "/"));
+        return self::endingUrl(preg_replace('|([/]+)|s', '/', '/' . implode('/', $address_parts) . '/'));
 
     }
 
@@ -80,24 +73,24 @@ class URL
 
         $ending = $url{strlen($url) - 1};
 
-        $element = explode("/", $ending);
+        $element = explode('/', $ending);
 
         $end_element = end($element);
 
-        if (strpos($end_element, ".") !== false) return $url;
+        if (strpos($end_element, '.') !== false) return $url;
 
 
-        if (HLEB_PROJECT_ENDING_URL && $ending !== "/") {
+        if (HLEB_PROJECT_ENDING_URL && $ending !== '/') {
 
-            return $url . "/";
+            return $url . '/';
 
-        } else if (!HLEB_PROJECT_ENDING_URL && $ending == "/") {
+        } else if (!HLEB_PROJECT_ENDING_URL && $ending == '/') {
 
             return substr($url, 0, -1);
 
         }
 
-        return str_replace("?", "", $url);
+        return str_replace('?', '', $url);
 
     }
 
@@ -133,22 +126,22 @@ class URL
     public static function getProtectUrl($url) // Защита URL
     {
 
-        $new_url = explode("?", $url);
+        $new_url = explode('?', $url);
 
-        if (count($new_url) == 1) {
+        if (count($new_url) === 1) {
 
-            return self::getStandard(self::endingUrl($new_url[0])) . "?_token=" . ProtectedCSRF::key();
+            return self::getStandard(self::endingUrl($new_url[0])) . '?_token=' . ProtectedCSRF::key();
         }
-        $params = "";
+        $params = '';
 
         foreach ($new_url as $key => $param) {
-            if ($key != 0) {
-                $params .= "?" . $param;
+            if ($key !== 0) {
+                $params .= '?' . $param;
             }
 
         }
 
-        return self::getStandard(self::endingUrl($new_url[0])) . $params . "&_token=" . ProtectedCSRF::key();
+        return self::getStandard(self::endingUrl($new_url[0])) . $params . '&_token=' . ProtectedCSRF::key();
 
     }
 
@@ -161,9 +154,9 @@ class URL
 
         foreach ($all_urls as $key => $all_url) {
 
-            if ($key != 0) {
+            if ($key !== 0) {
 
-                $params .= "?" . $all_url;
+                $params .= '?' . $all_url;
             }
         }
 
@@ -176,9 +169,9 @@ class URL
 
         if (self::ifHttp($url)) {
 
-            $arr_url = array_slice(explode("/", $url), 3);
+            $arr_url = array_slice(explode('/', $url), 3);
 
-            return Functions::mainFullHostUrl() . ($url{0} == "/" ? "" : "/") . (implode("/", $arr_url));
+            return Functions::mainFullHostUrl() . ($url{0} == '/' ? '' : '/') . (implode('/', $arr_url));
 
         }
 
@@ -197,7 +190,7 @@ class URL
 
         if (!self::ifHttp($url)) {
 
-            return Functions::mainFullHostUrl() . ($url{0} == "/" ? "" : "/") . self::getStandardUrl($url);
+            return Functions::mainFullHostUrl() . ($url{0} == '/' ? '' : '/') . self::getStandardUrl($url);
 
         }
 

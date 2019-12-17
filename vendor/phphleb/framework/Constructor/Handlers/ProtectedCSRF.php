@@ -59,8 +59,8 @@ class ProtectedCSRF
 
         // При помощи getProtect() (по последнему)
 
-        if ($miss == "CSRF" || (empty($miss) && isset($block['protect']) &&
-                count($block['protect']) && array_reverse($block['protect'])[0] == "CSRF")) {
+        if ($miss === 'CSRF' || (empty($miss) && isset($block['protect']) &&
+                count($block['protect']) && array_reverse($block['protect'])[0] == 'CSRF')) {
 
             self::blocked();
 
@@ -69,13 +69,13 @@ class ProtectedCSRF
 
     public static function blocked()
     {
-        $request = $_REQUEST['_token'] ?? "";
+        $request = $_REQUEST['_token'] ?? '';
 
         if (!self::test_key($request)) {
 
-            header($_SERVER["SERVER_PROTOCOL"] . " 403 Forbidden");
+            header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
 
-            die("Protected from CSRF");
+            die('Protected from CSRF');
         }
     }
 

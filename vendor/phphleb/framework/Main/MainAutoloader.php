@@ -32,23 +32,23 @@ class MainAutoloader
 
         } else {
 
-            $clarification = "/";
+            $clarification = '/';
 
             // Сокращение внутреннего перенаправления
 
-            $path = explode("\\", $class);
+            $path = explode('\\', $class);
 
             if (count($path) > 1) {
 
                 $path[0] = strtolower($path[0]);
 
-                if($path[0] == 'hleb') {
+                if($path[0] === 'hleb') {
 
                     $path[0] = 'phphleb/framework';
                     $clarification = '/' . HLEB_VENDOR_DIR_NAME . '/';
                 }
 
-                if($path[0] == 'phphleb') {
+                if($path[0] === 'phphleb') {
 
                     $clarification = '/' . HLEB_VENDOR_DIR_NAME . '/';
                 }
@@ -64,13 +64,13 @@ class MainAutoloader
 
                         $clarification = '/' . HLEB_VENDOR_DIR_NAME. '/';
 
-                        if (is_dir($path_to_vendor_name . "/" . strtolower($path[1]))) {
+                        if (is_dir($path_to_vendor_name . '/' . strtolower($path[1]))) {
 
                             $path[1] = strtolower($path[1]);
 
                         } else {
                             // Составные классы с дефисами в названии файла
-                            $hyphenated_name = trim(strtolower(preg_replace('/([A-Z])/', '-$1', $path[1])), "-");
+                            $hyphenated_name = trim(strtolower(preg_replace('/([A-Z])/', '-$1', $path[1])), '-');
 
                             if (is_dir( $path_to_vendor_name . "/" . $hyphenated_name)) {
 
@@ -101,7 +101,7 @@ class MainAutoloader
 
         if (isset($responding[$class])) {
 
-            self::init(HLEB_GLOBAL_DIRECTORY . "/" . $responding[$class]);
+            self::init(HLEB_GLOBAL_DIRECTORY . '/' . $responding[$class]);
 
             return true;
 
@@ -112,32 +112,27 @@ class MainAutoloader
         foreach ($responding as $key => $value) {
             if (strpos($key, '/*') !== false) {
 
-                $cleared_str = str_replace("*", "", $key);
+                $cleared_str = str_replace('*', '', $key);
 
-                if (strpos($cleared_str, $class) == 0) {
+                if (strpos($cleared_str, $class) === 0) {
 
-                    self::init(HLEB_GLOBAL_DIRECTORY . "/" . $value . $class . ".php");
+                    self::init(HLEB_GLOBAL_DIRECTORY . '/' . $value . $class . '.php');
 
                     return true;
                 }
             }
-
         }
 
         return false;
-
     }
 
 
     static private function init(string $path)
     {
-
         if (is_readable($path) !== false) {
 
             include_once "$path";
         }
-
-
     }
 
 

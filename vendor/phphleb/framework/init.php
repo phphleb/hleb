@@ -2,11 +2,11 @@
 
 define('HLEB_PROJECT_DIRECTORY', __DIR__);
 
-define('HLEB_PROJECT_VERSION', "1");
+define('HLEB_PROJECT_VERSION', '1');
 
-define('HLEB_PROJECT_FULL_VERSION', "1.2.4");
+define('HLEB_PROJECT_FULL_VERSION', '1.2.4');
 
-$GLOBALS["HLEB_PROJECT_UPDATES"] = ["phphleb/hleb" => HLEB_FRAME_VERSION, "phphleb/framework" => HLEB_PROJECT_FULL_VERSION ];
+$GLOBALS['HLEB_PROJECT_UPDATES'] = ['phphleb/hleb' => HLEB_FRAME_VERSION, 'phphleb/framework' => HLEB_PROJECT_FULL_VERSION ];
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -28,25 +28,25 @@ if (HLEB_PROJECT_LOG_ON) {
 
     ini_set('log_errors', 'On');
 
-    ini_set('error_log', HLEB_GLOBAL_DIRECTORY . '/storage/logs/' . date("Y_m_d_") . 'errors.log');
+    ini_set('error_log', HLEB_GLOBAL_DIRECTORY . '/storage/logs/' . date('Y_m_d_') . 'errors.log');
 }
 
 ini_set('display_errors', HLEB_PROJECT_DEBUG ? '1' : '0');
 
 
-require HLEB_PROJECT_DIRECTORY. "/Constructor/Handlers/AddressBar.php";
+require HLEB_PROJECT_DIRECTORY. '/Constructor/Handlers/AddressBar.php';
 
-$hl_actual_protocol = (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") ? "https://" : "http://";
+$hl_actual_protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
 
 $hl_address_object =(new \Hleb\Constructor\Handlers\AddressBar(
     [
-        "SERVER" => $_SERVER,
-        "HTTPS" => $hl_actual_protocol,
-        "HLEB_PROJECT_ONLY_HTTPS" => HLEB_PROJECT_ONLY_HTTPS,
-        "HLEB_PROJECT_ENDING_URL" => HLEB_PROJECT_ENDING_URL,
-        "HLEB_PROJECT_DIRECTORY" => HLEB_PROJECT_DIRECTORY,
-        "HLEB_PROJECT_GLUE_WITH_WWW" => HLEB_PROJECT_GLUE_WITH_WWW,
-        "HLEB_PROJECT_VALIDITY_URL" => HLEB_PROJECT_VALIDITY_URL
+        'SERVER' => $_SERVER,
+        'HTTPS' => $hl_actual_protocol,
+        'HLEB_PROJECT_ONLY_HTTPS' => HLEB_PROJECT_ONLY_HTTPS,
+        'HLEB_PROJECT_ENDING_URL' => HLEB_PROJECT_ENDING_URL,
+        'HLEB_PROJECT_DIRECTORY' => HLEB_PROJECT_DIRECTORY,
+        'HLEB_PROJECT_GLUE_WITH_WWW' => HLEB_PROJECT_GLUE_WITH_WWW,
+        'HLEB_PROJECT_VALIDITY_URL' => HLEB_PROJECT_VALIDITY_URL
     ]
 ));
 
@@ -60,13 +60,13 @@ if($hl_address_object->redirect != null){
 }
 
 
-require_once HLEB_PROJECT_DIRECTORY. "/Main/Insert/DeterminantStaticUncreated.php";
+require_once HLEB_PROJECT_DIRECTORY. '/Main/Insert/DeterminantStaticUncreated.php';
 
-require HLEB_PROJECT_DIRECTORY . "/Main/Info.php";
+require HLEB_PROJECT_DIRECTORY . '/Main/Info.php';
 
-require HLEB_PROJECT_DIRECTORY . "/Scheme/Home/Main/Connector.php";
+require HLEB_PROJECT_DIRECTORY . '/Scheme/Home/Main/Connector.php';
 
-require HLEB_GLOBAL_DIRECTORY . "/app/Optional/MainConnector.php";
+require HLEB_GLOBAL_DIRECTORY . '/app/Optional/MainConnector.php';
 
 // Чтобы установить другое название каталога 'vendor' добавить в константы HLEB_VENDOR_DIR_NAME
 if(!defined('HLEB_VENDOR_DIR_NAME')){
@@ -74,51 +74,51 @@ if(!defined('HLEB_VENDOR_DIR_NAME')){
     define('HLEB_VENDOR_DIR_NAME', array_reverse(explode(DIRECTORY_SEPARATOR, dirname(__DIR__, 2)))[0] );
 }
 
-define('HLEB_VENDOR_DIRECTORY', HLEB_GLOBAL_DIRECTORY . "/" . HLEB_VENDOR_DIR_NAME );
+define('HLEB_VENDOR_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME );
 
 if(HLEB_PROJECT_CLASSES_AUTOLOAD) {
 
-    require HLEB_PROJECT_DIRECTORY . "/Main/MainAutoloader.php";
+    require HLEB_PROJECT_DIRECTORY . '/Main/MainAutoloader.php';
 
-    require HLEB_PROJECT_DIRECTORY . "/Main/HomeConnector.php";
+    require HLEB_PROJECT_DIRECTORY . '/Main/HomeConnector.php';
 }
 
-require HLEB_PROJECT_DIRECTORY. "/Scheme/App/Controllers/MainController.php";
+require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Controllers/MainController.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Scheme/App/Middleware/MainMiddleware.php";
+require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Middleware/MainMiddleware.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Scheme/App/Models/MainModel.php";
+require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Models/MainModel.php';
 
 
 require HLEB_PROJECT_DIRECTORY . "/Constructor/Routes/MainRoute.php";
 
-require HLEB_PROJECT_DIRECTORY. "/Scheme/Home/Constructor/Routes/StandardRoute.php";
+require HLEB_PROJECT_DIRECTORY . '/Scheme/Home/Constructor/Routes/StandardRoute.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Constructor/Routes/Route.php";
+require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/Route.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Main/ProjectLoader.php";
+require HLEB_PROJECT_DIRECTORY . '/Main/ProjectLoader.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Constructor/Cache/CacheRoutes.php";
+require HLEB_PROJECT_DIRECTORY . '/Constructor/Cache/CacheRoutes.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Constructor/Routes/LoadRoutes.php";
+require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/LoadRoutes.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Constructor/Handlers/URL.php";
+require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/URL.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Constructor/Handlers/URLHandler.php";
+require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/URLHandler.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Main/Functions.php";
+require HLEB_PROJECT_DIRECTORY . '/Main/Functions.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Constructor/Handlers/ProtectedCSRF.php";
+require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/ProtectedCSRF.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Constructor/Workspace.php";
+require HLEB_PROJECT_DIRECTORY . '/Constructor/Workspace.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Main/TryClass.php";
+require HLEB_PROJECT_DIRECTORY . '/Main/TryClass.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Constructor/Handlers/Request.php";
+require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/Request.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Constructor/VCreator.php";
+require HLEB_PROJECT_DIRECTORY . '/Constructor/VCreator.php';
 
-require HLEB_PROJECT_DIRECTORY. "/Constructor/Routes/Data.php";
+require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/Data.php';
 
 
 // Сторонний автозагрузчик классов
@@ -136,7 +136,7 @@ function hl_main_autoloader($class)
         \Hleb\Main\MainAutoloader::get($class);
     }
     if(HLEB_PROJECT_DEBUG){
-        \Hleb\Main\Info::insert("Autoload", $class);
+        \Hleb\Main\Info::insert('Autoload', $class);
     }
 }
 
@@ -150,14 +150,14 @@ function hleb_v5ds34hop4nm1d_page_view($view = null, $data = null)
 {
 
     if (func_num_args() === 0) {
-        return [null, null, "views"];
+        return [null, null, 'views'];
     }
 
-    return [$view, $data, "views"];
+    return [$view, $data, 'views'];
 }
 
 
-function hleb_gop0m3f4hpe10d_all($view = null, $data = null, $type = "views")
+function hleb_gop0m3f4hpe10d_all($view = null, $data = null, $type = 'views')
 {
 
     if (func_num_args() === 0) {
@@ -170,7 +170,7 @@ function hleb_gop0m3f4hpe10d_all($view = null, $data = null, $type = "views")
 function hleb_hol6h1d32sm0l1of_storage($view = null, $data = null)
 {
 
-    return hleb_gop0m3f4hpe10d_all($view, $data, "storage");
+    return hleb_gop0m3f4hpe10d_all($view, $data, 'storage');
 
 }
 
@@ -184,12 +184,12 @@ function hleb_to0me1cd6vo7gd_data()
 
 function hleb_v10s20hdp8nm7c_render($render, $data = null)
 {
-    if (gettype($render) == "string") {
+    if (is_string($render)) {
 
         $render = [$render];
     }
 
-    return hleb_gop0m3f4hpe10d_all($render, $data, "render");
+    return hleb_gop0m3f4hpe10d_all($render, $data, 'render');
 
 }
 
@@ -202,21 +202,18 @@ function hleb_search_filenames($dir)
     $files = Array();
 
     while (false !== ($file = readdir($handle))) {
-        if ($file != "." && $file != "..") {
+        if ($file != '.' && $file != '..') {
 
-            if (is_dir($dir . "/" . $file)) {
-                $subfiles = hleb_search_filenames($dir . "/" . $file);
+            if (is_dir($dir . '/' . $file)) {
+                $subfiles = hleb_search_filenames($dir . '/' . $file);
 
                 $files = array_merge($files, $subfiles);
 
             } else {
 
-                $files[] = $dir . "/" . $file;
-
+                $files[] = $dir . '/' . $file;
             }
-
         }
-
     }
 
     closedir($handle);
@@ -303,8 +300,7 @@ function hleb_e2d3aeb0253b7_getMainUrl()
 function hleb_daa581cdd6323_getMainClearUrl()
 {
 
-
-    return explode("?", hleb_e2d3aeb0253b7_getMainUrl())[0];
+    return explode('?', hleb_e2d3aeb0253b7_getMainUrl())[0];
 
 }
 
@@ -352,18 +348,18 @@ function hleb_a581cdd66c107015_print_r2($data, $desc = null)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-if (HLEB_PROJECT_DEBUG && (new Hleb\Main\TryClass("XdORM\XD"))->is_connect() &&
-    file_exists(HLEB_VENDOR_DIRECTORY . "/phphleb/xdorm")){
+if (HLEB_PROJECT_DEBUG && (new Hleb\Main\TryClass('XdORM\XD'))->is_connect() &&
+    file_exists(HLEB_VENDOR_DIRECTORY . '/phphleb/xdorm')){
 
-    $GLOBALS["HLEB_PROJECT_UPDATES"]['phphleb/xdorm'] = "dev";
+    $GLOBALS['HLEB_PROJECT_UPDATES']['phphleb/xdorm'] = 'dev';
 }
-if(HLEB_PROJECT_DEBUG &&(file_exists(HLEB_VENDOR_DIRECTORY . "/phphleb/adminpan"))){
-    $GLOBALS["HLEB_PROJECT_UPDATES"]['phphleb/adminpan'] = "dev";
+if(HLEB_PROJECT_DEBUG &&(file_exists(HLEB_VENDOR_DIRECTORY . '/phphleb/adminpan'))){
+    $GLOBALS['HLEB_PROJECT_UPDATES']['phphleb/adminpan'] = 'dev';
 }
 
 
 
-require HLEB_GLOBAL_DIRECTORY . "/app/Optional/shell.php";
+require HLEB_GLOBAL_DIRECTORY . '/app/Optional/shell.php';
 
 \Hleb\Main\ProjectLoader::start();
 

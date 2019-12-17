@@ -6,9 +6,9 @@ use Hleb\Scheme\Home\Constructor\Handlers\ResourceStandard;
 
 class Head extends ResourceStandard
 {
-    private $description = "";
+    private $description = '';
 
-    private $title = "";
+    private $title = '';
 
     private $scripts = [];
 
@@ -24,9 +24,9 @@ class Head extends ResourceStandard
        $this->styles[$url]= $url;
     }
 
-    function addScript(string $url, string $attr = "defer", string $charset = "utf-8")
+    function addScript(string $url, string $attr = 'defer', string $charset = 'utf-8')
     {
-        $this->scripts[$url] = ["url" => $url, "charset" => $charset, "attribute" => $attr];
+        $this->scripts[$url] = ['url' => $url, 'charset' => $charset, 'attribute' => $attr];
     }
 
     function setTitle(string $value)
@@ -50,13 +50,13 @@ class Head extends ResourceStandard
     {
         $result = "\n";
 
-        $ind = str_repeat(" ", $indents);
+        $ind = str_repeat(' ', $indents);
 
         if(!empty($this->title)){
-            $result .= $ind . "<title>" . $this->convertPrivateTags($this->title) . "</title>" . "\n";
+            $result .= $ind . '<title>' . $this->convertPrivateTags($this->title) . '</title>' . "\n";
         }
         if(!empty($this->description)){
-            $result .= $ind . "<meta name=\"description\" content=\"" . $this->convertPrivateTags($this->description) . "\" />" . "\n";
+            $result .= $ind . '<meta name="description" content="' . $this->convertPrivateTags($this->description) . '" />' . "\n";
         }
 
         if(count($this->meta)){
@@ -67,18 +67,18 @@ class Head extends ResourceStandard
 
         if(count($this->styles)){
             foreach($this->styles as $style){
-                $result .= $ind . "<link rel=\"stylesheet\" href=\"" . $this->convertPrivateTags($style) . "\" type=\"text/css\" >" . "\n";
+                $result .= $ind . '<link rel="stylesheet" href="' . $this->convertPrivateTags($style) . '" type="text/css" >' . "\n";
             }
         }
 
         if(count($this->scripts)){
             foreach($this->scripts as $script){
                 $script = $this->convertPrivateTagsInArray($script);
-                $result .= $ind . "<script " . $script["attribute"] . " src=\"" . $script["url"] . "\" charset=\"" . $script["charset"] . "\"></script>" . "\n";
+                $result .= $ind . '<script ' . $script["attribute"] . ' src="' . $script["url"] . '" charset="' . $script["charset"] . '"></script>' . "\n";
             }
         }
 
-        if($print) print $result;
+        if($print) echo $result;
         return $result;
     }
 

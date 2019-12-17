@@ -6,7 +6,7 @@ namespace Hleb\Constructor;
 
 class TCreator
 {
-    private $contentData = "";
+    private $contentData = '';
 
     private $teplateData = [];
 
@@ -33,7 +33,7 @@ class TCreator
     {
         extract($this->teplateData);
 
-        print $this->contentData;
+        echo $this->contentData;
 
         return null;
     }

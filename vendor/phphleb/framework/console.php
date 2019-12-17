@@ -14,29 +14,29 @@ $arguments = $argv[1] ?? null;
 
 $set_arguments = $argv[2] ?? null;
 
-include_once HLEB_PROJECT_DIRECTORY . "/Main/Console/MainConsole.php";
+include_once HLEB_PROJECT_DIRECTORY . '/Main/Console/MainConsole.php';
 
 $fn = new \Hleb\Main\Console\MainConsole();
 
 if ($arguments) {
 
     switch ($arguments) {
-        case "--version":
-        case "-v":
+        case '--version':
+        case '-v':
             $ver = [hl_get_frame_version(), hl_get_framework_version()];
             $bsp = $fn->addBsp($ver);
-            print "\n" .
+            echo "\n" .
                 " ╔═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╗ " . "\n" .
                 " ║ " . "HLEB frame". " project version " . $ver[0] . $bsp[0] . "  ║" . "\n" .
                 " ║ " . "phphleb/framework" . " version  " . $ver[1] . $bsp[1] . "  ║" . "\n" .
                 " ║ " . hl_console_copyright() . "                  ║" . "\n" .
                 " ╚═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╝ " . "\n";
-            print "\n";
+            echo "\n";
             break;
-        case "--clear-cache":
-        case "-cc":
+        case '--clear-cache':
+        case '-cc':
             array_map('unlink', glob(HLEB_GLOBAL_DIRECTORY . '/storage/cache/routes/*.txt'));
-            print "\n" . "Clearing cache [          ] 0% ";
+            echo "\n" . "Clearing cache [          ] 0% ";
             $files = glob(HLEB_GLOBAL_DIRECTORY . '/storage/cache/templates/*', GLOB_NOSORT);
             if (count($files)) {
                 foreach ($files as $k => $value) {
@@ -47,45 +47,45 @@ if ($arguments) {
                 fwrite(STDOUT, "\r");
                 fwrite(STDOUT, "No files in /storage/cache/templates/. Cache cleared.");
             }
-            print "\n" . "\n";
+            echo "\n" . "\n";
             break;
-        case "--help":
-        case "-h":
-            print "\n";
-            print " --version or -v" . "\n" . " --clear-cache or -cc" . "\n" . " --info or -i" .
+        case '--help':
+        case '-h':
+            echo "\n";
+            echo " --version or -v" . "\n" . " --clear-cache or -cc" . "\n" . " --info or -i" .
                 "\n" . " --help or -h" . "\n" . " --routes or -r" . "\n" . " --list or -l";
-            print "\n" . "\n";
+            echo "\n" . "\n";
             break;
-        case "--routes":
-        case "-r":
-            print $fn->searchNanorouter() . $fn->getRoutes();
-            print "\n";
+        case '--routes':
+        case '-r':
+            echo $fn->searchNanorouter() . $fn->getRoutes();
+            echo "\n";
             break;
-        case "--list":
-        case "-l":
+        case '--list':
+        case '-l':
              hl_upload_all();
-            print $fn->listing();
-            print "\n" . "\n";
+            echo $fn->listing();
+            echo "\n" . "\n";
             break;
-        case "--info":
-        case "-i":
+        case '--info':
+        case '-i':
             $fn->getInfo();
             break;
         default:
             $file = $fn->convertCommandToTask($arguments);
 
-            if (file_exists(HLEB_GLOBAL_DIRECTORY . '/app/Commands/' . $file . ".php")) {
+            if (file_exists(HLEB_GLOBAL_DIRECTORY . "/app/Commands/$file.php")) {
 
                 hl_upload_all();
 
                 hl_create_users_task(HLEB_GLOBAL_DIRECTORY, $file, $set_arguments ?? null, HLEB_VENDOR_DIR_NAME ?? null, $fn);
 
             } else {
-                print "Missing required arguments after `console`. Add --help to display more options." . "\n";
+                echo "Missing required arguments after `console`. Add --help to display more options." . "\n";
             }
     }
 } else {
-    print "Missing arguments after `console`. Add --help to display more options." . "\n";
+    echo "Missing arguments after `console`. Add --help to display more options." . "\n";
 }
 
 
@@ -104,25 +104,25 @@ function hl_allowed_http_types($type)
 
 function hl_upload_all(){
 
-    require HLEB_PROJECT_DIRECTORY . "/Main/Insert/DeterminantStaticUncreated.php";
+    require HLEB_PROJECT_DIRECTORY . '/Main/Insert/DeterminantStaticUncreated.php';
 
-    require HLEB_PROJECT_DIRECTORY . "/Main/Info.php";
+    require HLEB_PROJECT_DIRECTORY . '/Main/Info.php';
 
-    require HLEB_PROJECT_DIRECTORY . "/Scheme/App/Commands/MainTask.php";
+    require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Commands/MainTask.php';
 
-    require HLEB_PROJECT_DIRECTORY . "/Scheme/App/Controllers/MainController.php";
+    require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Controllers/MainController.php';
 
-    require HLEB_PROJECT_DIRECTORY . "/Scheme/App/Middleware/MainMiddleware.php";
+    require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Middleware/MainMiddleware.php';
 
-    require HLEB_PROJECT_DIRECTORY . "/Scheme/App/Models/MainModel.php";
+    require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Models/MainModel.php';
 
-    require HLEB_PROJECT_DIRECTORY . "/Scheme/Home/Main/Connector.php";
+    require HLEB_PROJECT_DIRECTORY . '/Scheme/Home/Main/Connector.php';
 
-    require HLEB_GLOBAL_DIRECTORY  . "/app/Optional/MainConnector.php";
+    require HLEB_GLOBAL_DIRECTORY  . '/app/Optional/MainConnector.php';
 
-    require HLEB_PROJECT_DIRECTORY . "/Main/MainAutoloader.php";
+    require HLEB_PROJECT_DIRECTORY . '/Main/MainAutoloader.php';
 
-    require HLEB_PROJECT_DIRECTORY . "/Main/HomeConnector.php";
+    require HLEB_PROJECT_DIRECTORY . '/Main/HomeConnector.php';
 
     // Сторонний автозагрузчик классов
 
@@ -170,12 +170,12 @@ function hl_create_users_task($path, $class, $arg, $vendor, $fn)
 
 function hl_get_frame_version()
 {
-    return hl_search_version(HLEB_GLOBAL_DIRECTORY . "/" . HLEB_PUBLIC_DIR . "/index.php", "HLEB_FRAME_VERSION");
+    return hl_search_version(HLEB_GLOBAL_DIRECTORY . "/" . HLEB_PUBLIC_DIR . '/index.php', 'HLEB_FRAME_VERSION');
 }
 
 function hl_get_framework_version()
 {
-    return hl_search_version(HLEB_PROJECT_DIRECTORY . "/init.php", "HLEB_PROJECT_FULL_VERSION");
+    return hl_search_version(HLEB_PROJECT_DIRECTORY . '/init.php', 'HLEB_PROJECT_FULL_VERSION');
 }
 
 function hl_search_version($file, $const)

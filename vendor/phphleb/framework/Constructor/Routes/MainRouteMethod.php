@@ -44,7 +44,7 @@ class MainRouteMethod extends DataRoute implements RouteMethodStandard
     public function calculate_incoming_object($obj)
     {
 
-        if (gettype($obj) == "object") {
+        if (is_object($obj)) {
 
             return $obj();
         }
@@ -58,23 +58,23 @@ class MainRouteMethod extends DataRoute implements RouteMethodStandard
     {
         $this->method_data =
             [
-                "number" => 1000,
+                'number' => 1000,
 
-                "data_name" => $this->data_name,
+                'data_name' => $this->data_name,
 
-                "data_path" => $this->data_path,
+                'data_path' => $this->data_path,
 
-                "data_params" => $this->data_params,
+                'data_params' => $this->data_params,
 
-                "type" => $this->type,
+                'type' => $this->type,
 
-                "actions" => $this->actions,
+                'actions' => $this->actions,
 
-                "protect" => array_unique($this->protect),
+                'protect' => array_unique($this->protect),
 
-                "method_type_name" => $this->method_type_name,
+                'method_type_name' => $this->method_type_name,
 
-                "domain" => $this->domain,
+                'domain' => $this->domain,
 
             ];
 
@@ -83,7 +83,7 @@ class MainRouteMethod extends DataRoute implements RouteMethodStandard
     public function error()
     {
 
-        return implode(", ", $this->errors);
+        return implode(', ', $this->errors);
     }
 
 

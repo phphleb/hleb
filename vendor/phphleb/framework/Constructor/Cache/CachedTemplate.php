@@ -36,7 +36,7 @@ class CachedTemplate
 
         $this->templateParams = $template_params;
         $path_to_file = $this->hl_search_cache_file($template);
-        $this->tempfile = HLEB_GLOBAL_DIRECTORY . "/resources/views/" . trim($template, "/") . ".php";
+        $this->tempfile = HLEB_GLOBAL_DIRECTORY . '/resources/views/' . trim($template, '/') . '.php';
         if ($path_to_file == null) {
             ob_start();
             $this->hl_create_content();
@@ -50,8 +50,8 @@ class CachedTemplate
 
         if (HLEB_PROJECT_DEBUG) {
             $time = microtime(true) - $time;
-            Info::insert("Templates", trim($template, "/") . $backtrace . $this->info_cache() . " load: " .
-                (round($time, 4) * 1000) . " ms" . ", " . $this->hl_info_template_name() . "(...)");
+            Info::insert('Templates', trim($template, '/') . $backtrace . $this->info_cache() . ' load: ' .
+                (round($time, 4) * 1000) . ' ms , ' . $this->hl_info_template_name() . '(...)');
         }
     }
 
@@ -60,30 +60,30 @@ class CachedTemplate
     }
 
     protected function hl_template_area_key(){
-        return  "";
+        return  '';
     }
 
     private function hl_debug_backtrace()
     {
         $trace = debug_backtrace(2, 4);
         if (isset($trace[3])) {
-            $path = explode(HLEB_GLOBAL_DIRECTORY, ($trace[3]["file"] ?? ""));
-            return " (" . end($path) . " : " . ($trace[3]["line"] ?? "") . ")";
+            $path = explode(HLEB_GLOBAL_DIRECTORY, ($trace[3]['file'] ?? ''));
+            return ' (' . end($path) . " : " . ($trace[3]['line'] ?? '') . ')';
         }
-        return "";
+        return '';
     }
 
     private function hl_search_cache_file($template)
     {
-        $path = HLEB_GLOBAL_DIRECTORY . "/storage/cache/templates/";
+        $path = HLEB_GLOBAL_DIRECTORY . '/storage/cache/templates/';
 
-        $hash_params = count($this->templateParams) ? $this->acollmd5(json_encode($this->templateParams)) : "";
+        $hash_params = count($this->templateParams) ? $this->acollmd5(json_encode($this->templateParams)) : '';
 
         $template_name = $this->acollmd5($template . Key::get() . $this->hl_template_area_key() . $hash_params);
 
         $this->hashfile = $path . $template_name;
 
-        $search_all = glob($this->hashfile . "_*.txt");
+        $search_all = glob($this->hashfile . '_*.txt');
 
         if ($search_all && count($search_all)) {
 
@@ -105,7 +105,7 @@ class CachedTemplate
     }
 
     private function acollmd5( string $str){
-        return  empty($str) ? "" : md5($str) .  substr(md5(strrev($str)),0,5);
+        return  empty($str) ? '' : md5($str) .  substr(md5(strrev($str)),0,5);
     }
 
     private function hl_cache_template($content)
@@ -120,7 +120,7 @@ class CachedTemplate
             $this->delOldFile();
             $this->content = $content;
 
-            $file = $this->hashfile . "_" . $this->cacheTime . ".txt";
+            $file = $this->hashfile . '_' . $this->cacheTime . '.txt';
             file_put_contents($file, $content, LOCK_EX);
         }
         if (rand(0, 1000) === 0) $this->delOldFile();
@@ -129,8 +129,8 @@ class CachedTemplate
     private function delOldFile()
     {
         if (!isset($GLOBALS['HLEB_CACHED_TEMPLATES_CLEARED'])) {
-            $path = HLEB_GLOBAL_DIRECTORY . "/storage/cache/templates/";
-            $files = glob($path . "*.txt");
+            $path = HLEB_GLOBAL_DIRECTORY . '/storage/cache/templates/';
+            $files = glob($path . '*.txt');
             if ($files && count($files)) {
                 foreach ($files as $file) {
                     if (filemtime($file) < strtotime('-' . $this->getFileTime($file) . ' seconds')) {
@@ -149,7 +149,7 @@ class CachedTemplate
 
     private function info_cache()
     {
-        return " cache " . $this->cacheTime . " s , ";
+        return ' cache ' . $this->cacheTime . ' s , ';
     }
 
     private function hl_add_content()

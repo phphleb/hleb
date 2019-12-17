@@ -15,9 +15,9 @@ class Resources extends ResourceStandard
     protected $bottom_styles_once = false;
 
 
-    function addBottomScript(string $url, string $charset = "utf-8")
+    function addBottomScript(string $url, string $charset = 'utf-8')
     {
-        $this->bottom_scripts[$url] = ["url" => $url, "charset" => $charset];
+        $this->bottom_scripts[$url] = ['url' => $url, 'charset' => $charset];
     }
 
     // Print to bottom of page
@@ -26,7 +26,7 @@ class Resources extends ResourceStandard
         $result = "\n";
         foreach($this->bottom_scripts as $script){
             $script = $this->convertPrivateTagsInArray($script);
-            $result .= str_repeat(" ", $indents) . "<script src=\"" . $script["url"] . "\" charset=\"" . $script["charset"] . "\"></script>" . "\n";
+            $result .= str_repeat(' ', $indents) . '<script src="' . $script["url"] . '" charset="' . $script["charset"] . '"></script>' . "\n";
         }
 
         return $result;
@@ -52,7 +52,7 @@ class Resources extends ResourceStandard
     {
         $result = "\n";
         foreach($this->bottom_styles as $style){
-            $result .= str_repeat(" ", $indents) . "<link rel=\"stylesheet\" href=\"" . $this->convertPrivateTags($style) . "\" type=\"text/css\" media=\"screen\">" . "\n";
+            $result .= str_repeat(' ', $indents) . '<link rel="stylesheet" href="' . $this->convertPrivateTags($style) . '" type="text/css" media="screen">' . "\n";
         }
 
         return $result;

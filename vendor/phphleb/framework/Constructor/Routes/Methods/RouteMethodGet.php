@@ -38,7 +38,7 @@ class RouteMethodGet extends MainRouteMethod
 
         $this->data_path = $route_path;
 
-        if (gettype($params) == "array") {
+        if (is_array($params)) {
 
             if (count($params) == 0) {
 
@@ -84,11 +84,11 @@ class RouteMethodGet extends MainRouteMethod
     private function calc_arg($value)
     {
 
-        if (gettype($value) == "string") {
+        if (is_string($value)) {
 
             return [$value];
 
-        } else if (gettype($value) == "object") {
+        } else if (is_object($value)) {
 
             return $this->calculate_incoming_object($value);
         }

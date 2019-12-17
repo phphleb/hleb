@@ -37,7 +37,7 @@ class RouteMethodRenderMap extends MainRouteMethod
 
         $this->data_name = $name;
 
-        if (gettype($map) == "string") $map = [$map];
+        if (is_string($map)) $map = [$map];
 
         $this->data_params = $map;
 

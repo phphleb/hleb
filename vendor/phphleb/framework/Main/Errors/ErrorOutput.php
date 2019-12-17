@@ -17,10 +17,10 @@ class ErrorOutput
      */
     public static function add($messages)
     {
-        if (gettype($messages) == "string") $messages = [$messages];
+        if (is_string($messages)) $messages = [$messages];
 
         if (!headers_sent()) {
-            header($_SERVER["SERVER_PROTOCOL"] . " 500 Internal Server Error");
+            header($_SERVER["SERVER_PROTOCOL"] . ' 500 Internal Server Error');
         }
 
         foreach ($messages as $message) {
@@ -29,15 +29,15 @@ class ErrorOutput
 
                 self::$messages[] = $message;
 
-                error_log(" " . explode("~", $message)[0] . PHP_EOL);
+                error_log(" " . explode('~', $message)[0] . PHP_EOL);
 
                 if (!HLEB_PROJECT_DEBUG) exit();
 
             } else {
 
-                self::$messages[] = "ErrorOutput:: Indefinite error.";
+                self::$messages[] = 'ErrorOutput:: Indefinite error.';
 
-                error_log(" " . explode("~", $message)[0] . PHP_EOL);
+                error_log(' ' . explode('~', $message)[0] . PHP_EOL);
 
             }
         }
@@ -45,20 +45,12 @@ class ErrorOutput
 
     private static function content(string $message)
     {
-
-        return "<div style='color:#c17840; margin: 5px; padding: 10px; border: 1px solid #f5f8c9; background-color: #f5f8c9;'>" .
-            "<h4>" . $message . "</h4>" . "</div>";
-
-
+        return "<div style='color:#c17840; margin: 5px; padding: 10px; border: 1px solid #f5f8c9; background-color: #f5f8c9;'><h4>$message</h4></div>";
     }
 
     private static function first_content(string $message)
     {
-
-        return "<div style='color:#d24116; margin: 5px; padding: 10px; border: 1px solid #f28454; background-color: seashell;'>" .
-            "<h4>" . $message . "</h4>" . "</div>";
-
-
+        return "<div style='color:#d24116; margin: 5px; padding: 10px; border: 1px solid #f28454; background-color: seashell;'><h4>$message</h4></div>";
     }
 
 
@@ -72,7 +64,7 @@ class ErrorOutput
 
             foreach ($errors as $key => $value) {
 
-                if (HLEB_PROJECT_DEBUG) $value = str_replace("~", "<br><br>", $value);
+                if (HLEB_PROJECT_DEBUG) $value = str_replace('~', '<br><br>', $value);
 
                 if ($key == 0) {
 
