@@ -299,7 +299,7 @@ class URLHandler
 
                                     preg_match('/^' . $mat[$exp] . '$/', $generate_real_urls[$q], $matches);
 
-                                    if (empty($matches[0]) || $matches[0] != $generate_real_urls[$q]) {
+                                    if (!isset($matches[0]) || $matches[0] != $generate_real_urls[$q]) {
 
                                         return false;
                                     }
