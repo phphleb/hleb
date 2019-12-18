@@ -50,7 +50,7 @@ class ProtectedCSRF
 
         $miss = "";
 
-        foreach ($actions as $action) {
+        foreach ($actions as $key => $action) {
 
             if (isset($action['protect'])) {
                 $miss = $action['protect'][0];

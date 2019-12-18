@@ -62,7 +62,7 @@ class Workspace
 
                 $action_types = $action['type'];
 
-                foreach ($action_types as $action_type) {
+                foreach ($action_types as $k => $action_type) {
 
                     $types[] = $action_type;
                 }
@@ -129,7 +129,7 @@ class Workspace
 
             $_hl_excluded_actions = $_hl_excluded_block['actions'];
 
-            foreach ($_hl_excluded_actions as $_hl_exc) {
+            foreach ($_hl_excluded_actions as $k =>$_hl_exc) {
 
                if (isset($_hl_exc['controller']) || isset($_hl_exc['adminPanController'])) {
 
@@ -210,13 +210,13 @@ class Workspace
 
             Info::add('RenderMap', $_hl_excluded_params_maps);
 
-            foreach ($_hl_excluded_params_maps as $_hl_excluded_params_map) {
+            foreach ($_hl_excluded_params_maps as $hl_in_key => $_hl_excluded_params_map) {
 
                 foreach ($_hl_excluded_maps as $_hl_excluded_key => $_hl_excluded_map_) {
 
                     if ($_hl_excluded_key == $_hl_excluded_params_map) {
 
-                        foreach ($_hl_excluded_map_ as $_hl_excluded_map) {
+                        foreach ($_hl_excluded_map_ as $hl_k => $_hl_excluded_map) {
 
                             $_hl_excluded_file = str_replace('//', '/', HLEB_GLOBAL_DIRECTORY . '/resources/views/' . $_hl_excluded_map . '.php');
 

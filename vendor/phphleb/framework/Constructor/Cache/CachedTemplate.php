@@ -132,7 +132,7 @@ class CachedTemplate
             $path = HLEB_GLOBAL_DIRECTORY . '/storage/cache/templates/';
             $files = glob($path . '*.txt');
             if ($files && count($files)) {
-                foreach ($files as $file) {
+                foreach ($files as $key => $file) {
                     if (filemtime($file) < strtotime('-' . $this->getFileTime($file) . ' seconds')) {
                         unlink("$file");
                     }

@@ -43,7 +43,7 @@ class RouteMethodRenderMap extends MainRouteMethod
 
         $instance_data = $this->instance->data();
 
-        foreach ($instance_data as $inst) {
+        foreach ($instance_data as $key =>$inst) {
 
             if ($inst["data_name"] === $name) {
 

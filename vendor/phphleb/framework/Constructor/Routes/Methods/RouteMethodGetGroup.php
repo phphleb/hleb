@@ -38,7 +38,7 @@ class RouteMethodGetGroup extends MainRouteMethod
 
         $instance_data = $this->instance->data();
 
-        foreach ($instance_data as $inst) {
+        foreach ($instance_data as $k =>$inst) {
 
             if ($inst["data_name"] === $name && $inst["method_type_name"] === $this->method_type_name) {
 

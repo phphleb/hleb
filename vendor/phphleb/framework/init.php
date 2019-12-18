@@ -232,7 +232,7 @@ function hleb_get_host() {
         }
     );
     $host = '';
-    foreach ($possibleHostSources as $source)
+    foreach ($possibleHostSources as $key => $source)
     {
         if (!empty($host)) break;
         if (empty($_SERVER[$source])) continue;

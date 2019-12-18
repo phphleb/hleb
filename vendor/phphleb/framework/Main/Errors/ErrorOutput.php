@@ -23,7 +23,7 @@ class ErrorOutput
             header($_SERVER["SERVER_PROTOCOL"] . ' 500 Internal Server Error');
         }
 
-        foreach ($messages as $message) {
+        foreach ($messages as $key => $message) {
 
             if (isset($message)) {
 

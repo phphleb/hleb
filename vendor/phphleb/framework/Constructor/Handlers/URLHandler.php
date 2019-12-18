@@ -29,9 +29,13 @@ class URLHandler
 
         if (isset($blocks['addresses'])) unset($blocks['addresses']);
 
+        $search_domains = $blocks['domains'] ?? false;
+
+        if (isset($blocks['domains'])) unset($blocks['domains']);
+
         $url = Functions::clearMainUrl();
 
-        $blocks = $this->match_subdomains($blocks);
+        $blocks = $search_domains ? $this->match_subdomains($blocks) : $blocks;
 
         if (empty(count($blocks))) {
 
@@ -55,7 +59,7 @@ class URLHandler
     private function compound_url($strokes)
     {
 
-        return str_replace(['/////', '////', '///', '//'], '/', implode('/', $strokes));
+        return preg_replace('#(/){2,}#', '/', implode('/', $strokes));
 
     }
 
@@ -79,13 +83,13 @@ class URLHandler
 
         $result_blocks = [];
 
-        foreach ($blocks as $block) {
+        foreach ($blocks as $key => $block) {
 
             $search = [];
 
             $actions = !empty($block['actions']) ? $block['actions'] : [];
 
-            foreach ($actions as $action) {
+            foreach ($actions as $k => $action) {
                 if (!empty($action['domain'])) {
                     $domain_part = $host[intval($action['domain'][1]) - 1] ?? null;
                     if (!$action['domain'][2]) {
@@ -148,13 +152,13 @@ class URLHandler
 
             $actions = !empty($block['actions']) ? $block['actions'] : [];
 
-            foreach ($actions as $action) {
+            foreach ($actions as $key => $action) {
 
                 if (!empty($action['type'])) { // Определяется тип действия
 
                     $action_types = $action['type'];
 
-                    foreach ($action_types as $action_type) {
+                    foreach ($action_types as $k => $action_type) {
 
                         $type[] = $action_type;
                     }
@@ -202,10 +206,13 @@ class URLHandler
      */
     private function match_search_all_path($blocks, $result_url)
     {
+        $result_url_parts = array_reverse(explode('/', $result_url));
+
+        $url = self::trim_end($result_url);
 
         foreach ($blocks as $key => $block) {
 
-            $result = self::match_search_path($block, $result_url);
+            $result = self::match_search_path($block, $url, $result_url_parts);
 
             if ($result !== false) return $result;
 
@@ -217,9 +224,10 @@ class URLHandler
     /**
      * @param array $block
      * @param string $result_url
+     * @param array $result_url_parts
      * @return bool|array
      */
-    private function match_search_path($block, $result_url)
+    private function match_search_path($block, $result_url, $result_url_parts)
     {
 
         $url = '';
@@ -228,7 +236,7 @@ class URLHandler
 
         $mat = [];
 
-        foreach ($actions as $action) {
+        foreach ($actions as $k => $action) {
 
             if (isset($action['prefix'])) {
 
@@ -249,10 +257,6 @@ class URLHandler
 
         $url = self::trim_end($origin_url);
 
-        $result_url = self::trim_end($result_url);
-
-
-        $result_url_parts = array_reverse(explode('/', $result_url));
 
         $url_parts = array_reverse(explode('/', $url));
 
@@ -304,10 +308,7 @@ class URLHandler
                                         return false;
                                     }
                                 }
-                            } else {
-                                // Предупреждение (?)
                             }
-
                             Request::add($exp, $generate_real_urls[$q]);
 
                         } else {

@@ -47,7 +47,28 @@ class RouteMethodEnd extends MainRouteMethod
 
         $this->result["update"] = date("r") . " / " . rand();
 
+        $this->result["domains"] = self::search_domains();
+
         ErrorOutput::run();
+
+    }
+
+
+    private function search_domains()
+    {
+        $blocks = $this->result;
+
+        foreach ($blocks as $key => $block) {
+
+            $actions = $block["actions"];
+
+            foreach ($actions as $action) {
+
+                if (isset($action["domain"]) && count($action["domain"])) return true;
+            }
+
+        }
+        return false;
 
     }
 
@@ -206,7 +227,7 @@ class RouteMethodEnd extends MainRouteMethod
 
         $result = [];
 
-        foreach ($array as $arr) {
+        foreach ($array as $key => $arr) {
 
             if (is_array($arr)) {
 
@@ -644,7 +665,7 @@ class RouteMethodEnd extends MainRouteMethod
 
                 }
 
-                $path = str_replace(["////", "///", "//"], "/", $prefix . "/" . $path);
+                $path = preg_replace('#(/){2,}#',  "/", $prefix . "/" . $path);
 
                 if (isset($block['data_name'])) $this->addresses[$block['data_name']] = $path;
 
