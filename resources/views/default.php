@@ -25,8 +25,11 @@
         .hl-block{
             display:block;
             margin-bottom: 30px;
-            color: #EA1F61;
-            margin-left: 20px;
+            color: #FF786C;
+            margin-left: 10px;
+        }
+        .hl-link{
+            padding-left: 20px;
         }
 
     </style>
@@ -34,8 +37,8 @@
 </head>
 <body>
     <div id="hl-cont" align="center">
-        <img src="/images/logo.jpg" width="200" height="200" class="hl-block" alt="HL">
-        <a href="https://phphleb.ru/ru/v<?= HLEB_PROJECT_VERSION ?>/"  target="_blank" class="hl-block">Link to instructions</a>
+        <img src="/svg/hl-logo.svg" width="200" height="200" class="hl-block" alt="HL">
+        <a href="https://phphleb.ru/ru/v<?= HLEB_PROJECT_VERSION ?>/"  target="_blank" class="hl-block hl-link">Instruction for use</a>
     </div>
     <br>
     <div class="hl-block">v<?= HLEB_PROJECT_VERSION ?></div>
