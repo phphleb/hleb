@@ -38,7 +38,7 @@
 <body>
     <div id="hl-cont" align="center">
         <img src="/svg/logo.svg" width="200" height="200" class="hl-block" alt="HL">
-        <a href="https://phphleb.ru/ru/v<?= HLEB_PROJECT_VERSION ?>/"  target="_blank" class="hl-block hl-link">Instruction for use</a>
+        <a href="https://github.com/phphleb/hleb/blob/master/readme.md"  target="_blank" class="hl-block hl-link">Instruction for use</a>
     </div>
     <br>
     <div class="hl-block">v<?= HLEB_PROJECT_VERSION ?></div>
