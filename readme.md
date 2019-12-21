@@ -1,5 +1,5 @@
 # HLEB
-### ![HLEB LOGO](https://raw.githubusercontent.com/phphleb/hleb/master/public/images/logo.jpg)
+### ![HLEB LOGO](https://raw.githubusercontent.com/phphleb/hleb/master/public/images/logo.png)
 # PHP Micro-Framework
 
 Requires PHP version 7.0 or higher.
