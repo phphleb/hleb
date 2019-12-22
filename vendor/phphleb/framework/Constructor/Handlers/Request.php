@@ -92,9 +92,9 @@ class Request
         return $value != null ? ((true === array_key_exists($value, $array) && strlen($array[$value]) > 0) ? $array[$value] : null) : $array;
     }
 
-    public static function get(string $name = null)
+    public static function get(string $name = '')
     {
-        return empty($name) ? self::$request : self::$request[$name];
+        return empty($name) ? self::$request : (self::$request[$name] ?? null);
     }
 
     public static function add(string $name, string $value)
