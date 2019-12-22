@@ -152,7 +152,7 @@ class URLHandler
 
             $actions = !empty($block['actions']) ? $block['actions'] : [];
 
-            foreach ($actions as $key => $action) {
+            foreach ($actions as $kt => $action) {
 
                 if (!empty($action['type'])) { // Определяется тип действия
 
