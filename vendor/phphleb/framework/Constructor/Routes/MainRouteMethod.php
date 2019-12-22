@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hleb\Constructor\Routes;
 
 use \Closure;
@@ -53,33 +55,6 @@ class MainRouteMethod extends DataRoute implements RouteMethodStandard
 
     }
 
-
-    protected function create_method_data()
-    {
-        $this->method_data =
-            [
-                'number' => 1000,
-
-                'data_name' => $this->data_name,
-
-                'data_path' => $this->data_path,
-
-                'data_params' => $this->data_params,
-
-                'type' => $this->type,
-
-                'actions' => $this->actions,
-
-                'protect' => array_unique($this->protect),
-
-                'method_type_name' => $this->method_type_name,
-
-                'domain' => $this->domain,
-
-            ];
-
-    }
-
     public function error()
     {
 
@@ -111,4 +86,33 @@ class MainRouteMethod extends DataRoute implements RouteMethodStandard
     }
 
 
+
+    protected function create_method_data()
+    {
+        $this->method_data =
+            [
+                'number' => 1000,
+
+                'data_name' => $this->data_name,
+
+                'data_path' => $this->data_path,
+
+                'data_params' => $this->data_params,
+
+                'type' => $this->type,
+
+                'actions' => $this->actions,
+
+                'protect' => array_unique($this->protect),
+
+                'method_type_name' => $this->method_type_name,
+
+                'domain' => $this->domain,
+
+            ];
+
+    }
+
+
 }
+

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hleb\Constructor\Handlers;
 
 use DeterminantStaticUncreated;
@@ -17,6 +19,13 @@ class Key
     {
 
         if (empty(self::$key)) self::$key = self::set();
+    }
+
+    public static function get()
+    {
+        if (empty(self::$key)) self::$key = self::set();
+
+        return self::$key;
     }
 
     private static function set()
@@ -72,11 +81,5 @@ class Key
         return $key;
     }
 
-    public static function get()
-    {
-
-        if (empty(self::$key)) self::$key = self::set();
-
-        return self::$key;
-    }
 }
+

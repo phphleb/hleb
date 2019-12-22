@@ -17,7 +17,7 @@ class MainAutoloader
     /**
      * @param $class string
      */
-    static function get(string $class)
+    public static function get(string $class)
     {
         
         if(class_exists($class, false)) return;
@@ -93,7 +93,7 @@ class MainAutoloader
 
     }
 
-    static function search_and_include(string $class, Connector $connector): bool
+    public static function search_and_include(string $class, Connector $connector): bool
     {
         $responding = $connector->add();
 
@@ -127,7 +127,7 @@ class MainAutoloader
     }
 
 
-    static private function init(string $path)
+    private static function init(string $path)
     {
         if (is_readable($path) !== false) {
 

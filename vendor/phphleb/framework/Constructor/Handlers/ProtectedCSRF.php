@@ -21,25 +21,6 @@ class ProtectedCSRF
 
     }
 
-    private static function test_key(string $key)
-    {
-
-        $secret_key = self::key();
-
-        if (strlen($secret_key) !== strlen($key)) return false;
-
-        $identical = true;
-
-        for ($i = 0; $i < strlen($secret_key); $i++) {
-
-            if ($secret_key{$i} !== $key{$i}) $identical = false;
-
-        }
-
-        return $identical;
-
-
-    }
 
     public static function testPage(array $block)
     {
@@ -79,5 +60,26 @@ class ProtectedCSRF
         }
     }
 
+    private static function test_key(string $key)
+    {
+
+        $secret_key = self::key();
+
+        if (strlen($secret_key) !== strlen($key)) return false;
+
+        $identical = true;
+
+        for ($i = 0; $i < strlen($secret_key); $i++) {
+
+            if ($secret_key{$i} !== $key{$i}) $identical = false;
+
+        }
+
+        return $identical;
+
+
+    }
+
 
 }
+

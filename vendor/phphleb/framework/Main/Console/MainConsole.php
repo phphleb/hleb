@@ -1,7 +1,8 @@
 <?php
 
-namespace Hleb\Main\Console;
+declare(strict_types=1);
 
+namespace Hleb\Main\Console;
 
 class MainConsole
 {
@@ -131,11 +132,6 @@ class MainConsole
 
 
         return $this->sortData($data);
-    }
-
-    private function domainCalc($data)
-    {
-        return is_array($data) && count($data) > 1 && $data[1] > 2;
     }
 
     public function sortData($data)
@@ -355,6 +351,11 @@ class MainConsole
             }
         }
         return $result;
+    }
+
+    private function domainCalc($data)
+    {
+        return is_array($data) && count($data) > 1 && $data[1] > 2;
     }
 
 }

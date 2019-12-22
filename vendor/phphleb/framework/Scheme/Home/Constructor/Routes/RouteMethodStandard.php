@@ -10,3 +10,4 @@ interface RouteMethodStandard
 
     public function error();
 }
+

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 trait DeterminantStaticUncreated
 {
     private static $instance;
@@ -13,7 +16,7 @@ trait DeterminantStaticUncreated
 
     }
 
-    static public function instance()
+    public static function instance()
     {
 
         if (self::$instance === null) {
@@ -30,3 +33,4 @@ trait DeterminantStaticUncreated
 
 
 }
+

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hleb\Main;
 
 use Hleb\Scheme\Home\Main\Connector;
@@ -75,7 +77,6 @@ class HomeConnector implements Connector
             'Hleb\Constructor\Routes\LoadRoutes'=>$vendor."/phphleb/framework/Constructor/Routes/LoadRoutes.php",
             'Hleb\Main\Functions'=>$vendor."/phphleb/framework/Main/Functions.php",
             'Hleb\Main\TryClass'=>$vendor."/phphleb/framework/Main/TryClass.php",
-
         ];
     }
 }

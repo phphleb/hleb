@@ -46,3 +46,4 @@ if (is_dir(dirname(__FILE__, 3) . '/phphleb/radjax/')) {
 }
 
 require dirname(__DIR__, 2) . '/phphleb/framework/init.php';
+

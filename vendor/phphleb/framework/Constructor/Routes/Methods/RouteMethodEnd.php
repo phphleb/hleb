@@ -53,6 +53,10 @@ class RouteMethodEnd extends MainRouteMethod
 
     }
 
+    public function data()
+    {
+        return $this->result;
+    }
 
     private function search_domains()
     {
@@ -71,7 +75,6 @@ class RouteMethodEnd extends MainRouteMethod
         return false;
 
     }
-
 
     private function create_groups()
     {
@@ -348,7 +351,6 @@ class RouteMethodEnd extends MainRouteMethod
         return $blocks;
     }
 
-
     private function global_methods_add($blocks)
     {
 
@@ -361,7 +363,6 @@ class RouteMethodEnd extends MainRouteMethod
 
         return $blocks;
     }
-
 
     private function global_method_type($blocks)
     {
@@ -426,7 +427,6 @@ class RouteMethodEnd extends MainRouteMethod
 
         return $blocks;
     }
-
 
     private function check_all_methods($blocks)
     {
@@ -700,12 +700,5 @@ class RouteMethodEnd extends MainRouteMethod
         }
     }
 
-
-    public function data()
-    {
-
-        return $this->result;
-
-    }
-
 }
+

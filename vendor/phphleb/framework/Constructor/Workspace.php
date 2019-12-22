@@ -40,6 +40,13 @@ class Workspace
         $this->create($block);
     }
 
+
+    public function calculate_time($name)
+    {
+        $num = count($this->hl_debug_info['time']) + 1;
+        $this->hl_debug_info['time'][$num . ' ' . $name] = round((microtime(true) - HLEB_START), 4);
+    }
+
     private function create($block)
     {
         $this->calculate_time('Loading HLEB');
@@ -311,12 +318,6 @@ class Workspace
 
         return $controller;
       }
-
-    function calculate_time($name)
-    {
-        $num = count($this->hl_debug_info['time']) + 1;
-        $this->hl_debug_info['time'][$num . ' ' . $name] = round((microtime(true) - HLEB_START), 4);
-    }
 
 }
 

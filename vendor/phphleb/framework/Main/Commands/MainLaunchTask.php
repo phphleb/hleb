@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hleb\Main\Commands;
 
 class MainLaunchTask  extends \MainTask
@@ -163,6 +165,9 @@ class MainLaunchTask  extends \MainTask
         return $this->byPattern('m-d', '10-31');
     }
 
+    protected function setDate(\DateTime $date){
+        $this->date = $date;
+    }
 
     private function searchData($values, string $format, $cms = [])
     {
@@ -200,10 +205,6 @@ class MainLaunchTask  extends \MainTask
         exec($cmd, $output, $var);
         echo implode("\n", $output);
         return $var;
-    }
-
-    protected function setDate(\DateTime $date){
-        $this->date = $date;
     }
 
     private function getDate()

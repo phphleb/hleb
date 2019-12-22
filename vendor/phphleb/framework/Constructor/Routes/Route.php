@@ -154,6 +154,19 @@ class Route extends MainRoute implements StandardRoute
 
     ///////////////CREATE///////////////
 
+
+    public static function data()
+    {
+
+        return self::$data_methods;
+    }
+
+    public static function delete()
+    {
+
+        self::$instance = null;
+    }
+
     /**
      * @param RouteMethodStandard $method
      * @return null|static
@@ -189,16 +202,5 @@ class Route extends MainRoute implements StandardRoute
 
     }
 
-
-    public static function data()
-    {
-
-        return self::$data_methods;
-    }
-
-    public static function delete()
-    {
-
-        self::$instance = null;
-    }
 }
+

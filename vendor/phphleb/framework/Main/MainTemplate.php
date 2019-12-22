@@ -8,7 +8,7 @@ use Hleb\Constructor\TCreator;
 
 class MainTemplate
 {
-    function __construct(string $path, array $template = [])
+    public function __construct(string $path, array $template = [])
     {
         if(HLEB_PROJECT_DEBUG){
             $time = microtime(true);
@@ -23,7 +23,7 @@ class MainTemplate
         }
     }
 
-    function hl_debug_backtrace()
+    public function hl_debug_backtrace()
     {
         $trace = debug_backtrace(2,4);
         if(isset($trace[3])){

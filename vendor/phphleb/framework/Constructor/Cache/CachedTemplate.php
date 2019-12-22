@@ -12,9 +12,9 @@ use Hleb\Main\Info;
 
 class CachedTemplate
 {
-    private $cacheTime = 0;
-
     protected $templateParams = [];
+
+    private $cacheTime = 0;
 
     private $content = null;
 

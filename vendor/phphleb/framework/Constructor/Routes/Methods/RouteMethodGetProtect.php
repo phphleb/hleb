@@ -38,5 +38,5 @@ class RouteMethodGetProtect extends MainRouteMethod
 
     }
 
-
 }
+

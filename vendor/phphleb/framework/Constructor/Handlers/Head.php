@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hleb\Constructor\Handlers;
 
 use Hleb\Scheme\Home\Constructor\Handlers\ResourceStandard;
@@ -19,34 +21,34 @@ class Head extends ResourceStandard
 
     // add in controller
 
-    function addStyles(string $url)
+    public function addStyles(string $url)
     {
        $this->styles[$url]= $url;
     }
 
-    function addScript(string $url, string $attr = 'defer', string $charset = 'utf-8')
+    public function addScript(string $url, string $attr = 'defer', string $charset = 'utf-8')
     {
         $this->scripts[$url] = ['url' => $url, 'charset' => $charset, 'attribute' => $attr];
     }
 
-    function setTitle(string $value)
+    public function setTitle(string $value)
     {
         $this->title = $value;
     }
 
-    function addMeta(string $name, $content)
+    public function addMeta(string $name, $content)
     {
         $this->meta[$name] = $content;
     }
 
-    function setDescription(string $value)
+    public function setDescription(string $value)
     {
         $this->description = $value;
     }
 
     // add in <head>...</head> HTML tags
 
-    function output(bool $print = true, int $indents = 2)
+    public function output(bool $print = true, int $indents = 2)
     {
         $result = "\n";
 

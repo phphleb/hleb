@@ -43,17 +43,6 @@ class ErrorOutput
         }
     }
 
-    private static function content(string $message)
-    {
-        return "<div style='color:#c17840; margin: 5px; padding: 10px; border: 1px solid #f5f8c9; background-color: #f5f8c9;'><h4>$message</h4></div>";
-    }
-
-    private static function first_content(string $message)
-    {
-        return "<div style='color:#d24116; margin: 5px; padding: 10px; border: 1px solid #f28454; background-color: seashell;'><h4>$message</h4></div>";
-    }
-
-
     public static function run()
     {
         $errors = self::$messages;
@@ -89,6 +78,17 @@ class ErrorOutput
     {
         self::add($message);
         self::run();
+    }
+
+
+    private static function content(string $message)
+    {
+        return "<div style='color:#c17840; margin: 5px; padding: 10px; border: 1px solid #f5f8c9; background-color: #f5f8c9;'><h4>$message</h4></div>";
+    }
+
+    private static function first_content(string $message)
+    {
+        return "<div style='color:#d24116; margin: 5px; padding: 10px; border: 1px solid #f28454; background-color: seashell;'><h4>$message</h4></div>";
     }
 
 }

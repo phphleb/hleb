@@ -4,3 +4,4 @@ class MainModel
 {
     use \DeterminantStaticUncreated;
 }
+

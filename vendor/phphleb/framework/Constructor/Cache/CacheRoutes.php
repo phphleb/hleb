@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hleb\Constructor\Cache;
 
 use Hleb\Main\Info;

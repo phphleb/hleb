@@ -1,7 +1,8 @@
 <?php
 
-namespace Hleb\Main\Console;
+declare(strict_types=1);
 
+namespace Hleb\Main\Console;
 
 class ConsoleColorOutput
 {

@@ -2,7 +2,6 @@
 
 namespace Hleb\Scheme\Home\Constructor\Routes;
 
-
 abstract class DataRoute
 {
     protected $data_name;
@@ -29,3 +28,4 @@ abstract class DataRoute
 
 
 }
+

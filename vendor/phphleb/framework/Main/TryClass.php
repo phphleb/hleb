@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hleb\Main;
 
 use App\Optional\MainConnector;
@@ -24,3 +26,4 @@ class TryClass
     }
 
 }
+

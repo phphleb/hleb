@@ -43,11 +43,6 @@ class DataDebug
         return preg_replace($pattern, '<span style="color: #a5432d">$1</span>', $part);
     }
 
-    private static function time_about($sql): string
-    {
-        return stripos(trim($sql), 'select') == 0 ? '&asymp;' : '';
-    }
-
     public static function create_html_param($param): string
     {
         if ($param == null) return "";
@@ -63,6 +58,11 @@ class DataDebug
             default:
                 return "<span style='color: #4c8442'>" . htmlentities($param) . "</span>";
          }
+    }
+
+    private static function time_about($sql): string
+    {
+        return stripos(trim($sql), 'select') == 0 ? '&asymp;' : '';
     }
 }
 

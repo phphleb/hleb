@@ -4,7 +4,6 @@ namespace Hleb\Scheme\Home\Constructor\Routes;
 
 interface StandardRoute
 {
-
     public static function get($route);
 
     public static function getGroup();
@@ -44,3 +43,4 @@ interface StandardRoute
     public static function data();
 
 }
+
