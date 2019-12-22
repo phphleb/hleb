@@ -6,7 +6,7 @@ class MainTask
 
     public function create_task($arguments)
     {
-        $this->execute($arguments);
+        $this->execute(...$arguments);
     }
 
 }

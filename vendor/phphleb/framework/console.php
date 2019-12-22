@@ -12,7 +12,7 @@ define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'opti
 
 $arguments = $argv[1] ?? null;
 
-$set_arguments = $argv[2] ?? null;
+$set_arguments = array_splice($argv, 2);
 
 include_once HLEB_PROJECT_DIRECTORY . '/Main/Console/MainConsole.php';
 
@@ -78,7 +78,7 @@ if ($arguments) {
 
                 hl_upload_all();
 
-                hl_create_users_task(HLEB_GLOBAL_DIRECTORY, $file, $set_arguments ?? null, HLEB_VENDOR_DIR_NAME ?? null, $fn);
+                hl_create_users_task(HLEB_GLOBAL_DIRECTORY, $file, $set_arguments, HLEB_VENDOR_DIR_NAME ?? null, $fn);
 
             } else {
                 echo "Missing required arguments after `console`. Add --help to display more options." . "\n";
