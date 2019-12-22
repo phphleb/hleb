@@ -41,11 +41,11 @@ class Key
 
             $randstr = bin2hex(random_bytes(30));
 
-            $keygen = str_shuffle(md5(random_int(100, 100000)) . $randstr);
+            $keygen = str_shuffle(md5(strval(random_int(100, 100000))) . $randstr);
 
         } catch (\Exception $ex) {
 
-            $keygen = str_shuffle(md5(rand()));
+            $keygen = str_shuffle(md5(strval(rand())));
         }
 
 
