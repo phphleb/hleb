@@ -42,17 +42,22 @@ class MainConsole
 
         $handle = fopen($file, "r");
 
-        while (!feof($handle)) {
-            $buffer = trim(fgets($handle));
-            $search = preg_match_all("|^define\(\s*\'([A-Z0-9\_]+)\'\s*\,\s*([^\)]+)\)|u", $buffer, $def, PREG_PATTERN_ORDER);
-            if ($search == 1) {
-                if (in_array($def[1][0], $info_array)) {
-                    echo " " . $def[1][0] . " = " . str_replace(["\"", "'"], "", trim($def[2][0])) . "\n";
+        if($handle) {
+            while (!feof($handle)) {
+                $buffer = fgets($handle);
+                if($buffer === false) continue;
+                $buffer = trim($buffer);
+
+                $search = preg_match_all("|^define\(\s*\'([A-Z0-9\_]+)\'\s*\,\s*([^\)]+)\)|u", $buffer, $def, PREG_PATTERN_ORDER);
+                if ($search == 1) {
+                    if (in_array($def[1][0], $info_array)) {
+                        echo " " . $def[1][0] . " = " . str_replace(["\"", "'"], "", trim($def[2][0])) . "\n";
+                    }
                 }
-            }
-            $search_errors = preg_match_all('|^error_reporting\(\s*([^)]+)\)|u', $buffer, $def, PREG_PATTERN_ORDER);
-            if ($search_errors == 1) {
-                echo " error_reporting = " . str_replace("  ", " ", trim($def[1][0])) . "\n";
+                $search_errors = preg_match_all('|^error_reporting\(\s*([^)]+)\)|u', $buffer, $def, PREG_PATTERN_ORDER);
+                if ($search_errors == 1) {
+                    echo " error_reporting = " . str_replace("  ", " ", trim($def[1][0])) . "\n";
+                }
             }
         }
         fclose($handle);
@@ -248,13 +253,16 @@ class MainConsole
         );
         $result = [];
         foreach ($items as $item) {
-            if (is_file($item)) {
-
-                if (isset($item)) {
+            if(isset($item)) {
+                if (is_object($item)) {
+                    $result[] = $item->getPathName();
+                } else if(is_file($item)){
                     $result[] = $item;
                 }
             }
+
         }
+
         return $result;
     }
 
