@@ -64,11 +64,14 @@ class RouteMethodEnd extends MainRouteMethod
 
         foreach ($blocks as $key => $block) {
 
-            $actions = $block["actions"];
+            if(isset($block["actions"])) {
 
-            foreach ($actions as $action) {
+                $actions = $block["actions"];
 
-                if (isset($action["domain"]) && count($action["domain"])) return true;
+                foreach ($actions as $action) {
+
+                    if (isset($action["domain"]) && count($action["domain"])) return true;
+                }
             }
 
         }
