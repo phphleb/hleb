@@ -229,7 +229,7 @@ class Workspace
 
                             if (file_exists($_hl_excluded_file)) {
 
-                                require "$_hl_excluded_file";
+                                (new VCreator($_hl_excluded_file))->view();
 
                             } else {
 
