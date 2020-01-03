@@ -43,6 +43,8 @@ class ProjectLoader
 
         } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
+            unset($block, $render_map);
+
             include HLEB_GLOBAL_DIRECTORY . '/app/Optional/404.php';
 
         } else {
