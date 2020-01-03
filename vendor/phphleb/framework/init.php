@@ -59,6 +59,7 @@ if($hl_address_object->redirect != null){
     exit();
 }
 
+unset($hl_address_object, $hl_actual_protocol, $hl_address);
 
 require_once HLEB_PROJECT_DIRECTORY. '/Main/Insert/DeterminantStaticUncreated.php';
 
