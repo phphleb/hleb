@@ -29,7 +29,7 @@ header("X-Frame-Options: SAMEORIGIN");
  | Изначально: true
  |
  */
-define( 'HLEB_PROJECT_DEBUG', $_SERVER['REMOTE_ADDR'] == '127.0.0.1' );
+define( 'HLEB_PROJECT_DEBUG', true );
 
 /*
  |-----------------------------------------------------------------------------
