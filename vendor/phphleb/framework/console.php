@@ -1,12 +1,16 @@
 <?php
 
+define('HLEB_GLOBAL_DIRECTORY', dirname(__DIR__, 3) );
+
 define('HLEB_VENDOR_DIRECTORY', dirname(__DIR__, 2) );
 
 define("HLEB_VENDOR_DIR_NAME", array_reverse(explode(DIRECTORY_SEPARATOR,HLEB_VENDOR_DIRECTORY))[0]);
 
 define('HLEB_PROJECT_DIRECTORY', HLEB_VENDOR_DIRECTORY .'/phphleb/framework');
 
-require HLEB_VENDOR_DIRECTORY . "/../" . (file_exists(HLEB_VENDOR_DIRECTORY   . '/../start.hleb.php') ? "" : "default.") . 'start.hleb.php';
+define('HLEB_PROJECT_DEBUG', false);
+
+define('HLEB_PROJECT_CLASSES_AUTOLOAD', true);
 
 define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'options']);
 
@@ -29,7 +33,7 @@ if ($arguments) {
                 " ╔═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╗ " . "\n" .
                 " ║ " . "HLEB frame". " project version " . $ver[0] . $bsp[0] . "  ║" . "\n" .
                 " ║ " . "phphleb/framework" . " version  " . $ver[1] . $bsp[1] . "  ║" . "\n" .
-                " ║ " . hl_console_copyright() . "                  ║" . "\n" .
+                " ║ " . hl_console_copyright() . "           ║" . "\n" .
                 " ╚═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╝ " . "\n";
             echo "\n";
             break;
