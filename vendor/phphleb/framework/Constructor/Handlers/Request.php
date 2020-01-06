@@ -106,7 +106,7 @@ class Request
     {
         self::$post = self::getPostData();
         self::$get = self::getGetData();
-        self::$request = self::getRequestData();
+        self::$req = self::getRequestData();
         self::$initial_cookie = self::clearData($_COOKIE ?? []);
         self::$initial_session = $_SESSION ?? [];
         self::$close = true;
