@@ -95,7 +95,7 @@ class URLHandler
                     if (!$action['domain'][2]) {
                         $valid_domain = 0;
                         foreach ($action['domain'][0] as $domain) {
-                            if ($domain_part === '*' || ($domain == null && $domain_part == null) ||
+                            if ($domain_part === '*' || (is_null($domain) && is_null($domain_part)) ||
                                 ($domain_part != null && strtolower($domain_part) == strtolower($domain))) {
                                 $valid_domain++;
                             }
@@ -104,7 +104,7 @@ class URLHandler
                     } else {
                         $valid_domain = 0;
                         foreach ($action['domain'][0] as $domain) {
-                            if ($domain_part === '*' || ($domain == null && $domain_part == null)) {
+                            if ($domain_part === '*' || (is_null($domain) && is_null($domain_part))) {
                                 $valid_domain++;
                             } else if ($domain_part != null) {
                                 preg_match('/^' . $domain . '$/', strtolower($domain_part), $matches);

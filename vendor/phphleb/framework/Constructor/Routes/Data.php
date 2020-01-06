@@ -10,16 +10,16 @@ class Data
 {
     use DeterminantStaticUncreated;
 
-    private static $data = [];
+    private static $data = null;
 
     public static function create_data(array $array)
     {
-        if(!count(self::$data)) self::$data = $array;
+        if(is_null(self::$data)) self::$data = $array;
     }
 
     public static function return_data()
     {
-        return self::$data;
+        return self::$data ?? [];
     }
 
 

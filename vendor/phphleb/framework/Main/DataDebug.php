@@ -45,7 +45,7 @@ class DataDebug
 
     public static function create_html_param($param): string
     {
-        if ($param == null) return "";
+        if (is_null($param)) return "";
 
         switch (gettype($param)){
             case 'double':

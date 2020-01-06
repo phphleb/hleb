@@ -10,9 +10,11 @@ define('HLEB_PROJECT_DIRECTORY', HLEB_VENDOR_DIRECTORY .'/phphleb/framework');
 
 define('HLEB_PROJECT_DEBUG', false);
 
-define('HLEB_PROJECT_CLASSES_AUTOLOAD', true);
-
 define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'options']);
+
+if(!defined('HLEB_PROJECT_CLASSES_AUTOLOAD')) {
+    define('HLEB_PROJECT_CLASSES_AUTOLOAD', true);
+}
 
 $arguments = $argv[1] ?? null;
 

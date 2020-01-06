@@ -61,22 +61,22 @@ class Request
 
     public static function getInitialSession($name = null)
     {
-        return $name == null ? self::$initial_session : (isset(self::$initial_session[$name]) ? self::$initial_session[$name] : null);
+        return is_null($name) ? self::$initial_session : (isset(self::$initial_session[$name]) ? self::$initial_session[$name] : null);
     }
 
     public static function getInitialCookie($name = null)
     {
-        return $name == null ? self::$initial_cookie : (isset(self::$initial_cookie[$name]) ? self::$initial_cookie[$name] : null);
+        return is_null($name) ? self::$initial_cookie : (isset(self::$initial_cookie[$name]) ? self::$initial_cookie[$name] : null);
     }
 
     public static function getSession($name = null)
     {
-        return $name == null ? $_COOKIE ?? [] : (isset($_COOKIE) && isset($_COOKIE[$name]) ? $_COOKIE[$name] : null);
+        return is_null($name) ? $_COOKIE ?? [] : (isset($_COOKIE) && isset($_COOKIE[$name]) ? $_COOKIE[$name] : null);
     }
 
     public static function getCookie($name = null)
     {
-        return $name == null ? self::clearData($_COOKIE ?? []) : (isset($_COOKIE) && isset($_COOKIE[$name]) ? self::clearData($_COOKIE[$name]) : null);
+        return is_null($name) ? self::clearData($_COOKIE ?? []) : (isset($_COOKIE) && isset($_COOKIE[$name]) ? self::clearData($_COOKIE[$name]) : null);
     }
 
     private static function clearData($value)

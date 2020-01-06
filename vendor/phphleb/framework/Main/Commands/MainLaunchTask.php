@@ -209,7 +209,7 @@ class MainLaunchTask  extends \MainTask
 
     private function getDate()
     {
-        if($this->date == null){
+        if(is_null($this->date)){
             $this->date = new \DateTime('NOW');
         }
         return $this->date;

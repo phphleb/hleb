@@ -161,22 +161,11 @@ class Workspace
             }
         }
 
-        // Создание data() v2
+        // Создание data() v2'
 
         if (is_array($_hl_excluded_params) && !empty($_hl_excluded_params[1])) {
 
             Data::create_data($_hl_excluded_params[1]);
-
-            $_hl_excluded_variables = $_hl_excluded_params[1];
-
-            foreach ($_hl_excluded_variables as $_hl_excluded_key => $_hl_excluded_variable) {
-
-                if (!is_numeric($_hl_excluded_key) && !is_numeric($_hl_excluded_key{0})) {
-
-                    ${$_hl_excluded_key} = $_hl_excluded_variable;
-                }
-            }
-
         }
 
 

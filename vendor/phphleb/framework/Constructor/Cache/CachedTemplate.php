@@ -37,7 +37,7 @@ class CachedTemplate
         $this->templateParams = $template_params;
         $path_to_file = $this->hl_search_cache_file($template);
         $this->tempfile = HLEB_GLOBAL_DIRECTORY . '/resources/views/' . trim($template, '/') . '.php';
-        if ($path_to_file == null) {
+        if (is_null($path_to_file)) {
             ob_start();
             $this->hl_create_content();
             $this->hl_cache_template(ob_get_contents());

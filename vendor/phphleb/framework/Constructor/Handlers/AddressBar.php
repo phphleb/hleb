@@ -108,7 +108,7 @@ class AddressBar
 
         $first_actual_params = count($array_actual_uri) > 0 ? '?' . implode('?', $array_actual_uri) : '';
 
-        $actual_host = $idn === null ? $this->INPUT_PARAMS['SERVER']['HTTP_HOST'] : $idn->decode($this->INPUT_PARAMS['SERVER']['HTTP_HOST']);
+        $actual_host = is_null($idn) ? $this->INPUT_PARAMS['SERVER']['HTTP_HOST'] : $idn->decode($this->INPUT_PARAMS['SERVER']['HTTP_HOST']);
 
         $actual_url = $actual_protocol . $actual_host . $first_actual_uri . $first_actual_params;
 
