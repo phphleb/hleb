@@ -22,9 +22,16 @@ $ composer create-project phphleb/hleb
 ```
 2. Assign the address of the resource to the "public" subdirectory.
 3. Establish the rights to allow changes for all users for the "storage" folder and all folders and files within it.
-
+```html
+$ cd hleb
+$ sudo chmod -R 777 storage || from Linux
+```
 Upon completion of these steps, you can verify installation by typing the resource address assigned earlier (locally or on a remote server) in the address bar of the browser. If installation is successful, a parked page with the framework logo will be displayed.
 
+Console operation:
+```html
+$ php console --help
+```
 
 Customization
 -----------------------------------
