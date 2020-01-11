@@ -71,7 +71,7 @@ class Request
 
     public static function getSession($name = null)
     {
-        return is_null($name) ? $_COOKIE ?? [] : (isset($_COOKIE) && isset($_COOKIE[$name]) ? $_COOKIE[$name] : null);
+        return is_null($name) ? $_SESSION ?? [] : (isset($_SESSION) && isset($_SESSION[$name]) ? $_SESSION[$name] : null);
     }
 
     public static function getCookie($name = null)
