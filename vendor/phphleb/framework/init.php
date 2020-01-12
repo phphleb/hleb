@@ -107,7 +107,7 @@ require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/URL.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/URLHandler.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Main/Functions.php';
+//require HLEB_PROJECT_DIRECTORY . '/Main/Functions.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/ProtectedCSRF.php';
 

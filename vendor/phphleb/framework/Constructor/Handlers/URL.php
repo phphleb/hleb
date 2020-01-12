@@ -3,12 +3,15 @@
 namespace Hleb\Constructor\Handlers;
 
 use DeterminantStaticUncreated;
-use Hleb\Main\Functions;
 
 class URL
 {
 
     use DeterminantStaticUncreated;
+
+    const NEEDED_TAGS = ['<', '>'];
+
+    const REPLACING_TAGS = ['&lt;', '&gt;'];
 
     protected static $addresses;
 
@@ -112,14 +115,14 @@ class URL
     public static function getMainUrl() // Получить текущий URL
     {
 
-        return Functions::mainUrl();
+        return Request::getMainConvertUrl();
 
     }
 
     public static function getMainClearUrl() // Получить текущий URL без параметров
     {
 
-        return Functions::mainClearUrl();
+        return Request::getMainClearUrl();
 
     }
 
@@ -136,7 +139,7 @@ class URL
 
         foreach ($new_url as $key => $param) {
             if ($key !== 0) {
-                $params .= '?' . $param;
+                $params .= '?' . str_replace(self::NEEDED_TAGS, self::REPLACING_TAGS, $param);
             }
 
         }
@@ -156,7 +159,7 @@ class URL
 
             if ($key !== 0) {
 
-                $params .= '?' . $all_url;
+                $params .= '?' .  str_replace(self::NEEDED_TAGS, self::REPLACING_TAGS, $all_url);
             }
         }
 
@@ -171,7 +174,7 @@ class URL
 
             $arr_url = array_slice(explode('/', $url), 3);
 
-            return Functions::mainFullHostUrl() . ($url{0} == '/' ? '' : '/') . (implode('/', $arr_url));
+            return HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN . ($url{0} == '/' ? '' : '/') . (implode('/', $arr_url));
 
         }
 
@@ -190,7 +193,7 @@ class URL
 
         if (!self::ifHttp($url)) {
 
-            return Functions::mainFullHostUrl() . ($url{0} == '/' ? '' : '/') . self::getStandardUrl($url);
+            return HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN . ($url{0} == '/' ? '' : '/') . self::getStandardUrl($url);
 
         }
 

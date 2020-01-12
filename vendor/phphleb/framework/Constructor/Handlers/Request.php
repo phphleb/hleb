@@ -36,6 +36,8 @@ class Request
 
     private static $resources = null;
 
+    private static $convert_uri= null;
+
     public static function getInitialSession($name = null)
     {
         return is_null($name) ? self::$initial_session : (isset(self::$initial_session[$name]) ? self::$initial_session[$name] : null);
@@ -167,6 +169,23 @@ class Request
         return self::$resources;
     }
 
+    public static function getMainConvertUrl()
+    {
+        if(is_null(self::$convert_uri)) self::$convert_uri = self::getConvertUrl($_SERVER['REQUEST_URI']);
+
+        return self::$convert_uri;
+    }
+
+    public static function getMainClearUrl()
+    {
+        return explode('?', $_SERVER['REQUEST_URI'])[0];
+    }
+
+
+    protected static function getConvertUrl($url)
+    {
+        return rawurldecode($url);
+    }
 
     private static function getPostData()
     {

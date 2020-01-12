@@ -2,10 +2,6 @@
 
 namespace Hleb\Constructor\Handlers;
 
-use Hleb\Main\Functions;
-
-use Hleb\Constructor\Handlers\Request;
-
 class URLHandler
 {
 
@@ -33,7 +29,7 @@ class URLHandler
 
         if (isset($blocks['domains'])) unset($blocks['domains']);
 
-        $url = Functions::clearMainUrl();
+        $url = Request::getMainClearUrl();
 
         $blocks = $search_domains ? $this->match_subdomains($blocks) : $blocks;
 
