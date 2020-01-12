@@ -93,7 +93,7 @@ class Request
 
     public static function getFullUrl()
     {
-        if(!isset(self::$url)) self::$url = self::clearData(HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN);
+        if(!isset(self::$url)) self::$url = HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN . self::getUri();
 
         return self::$url;
     }
