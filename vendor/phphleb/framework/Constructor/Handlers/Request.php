@@ -3,7 +3,6 @@
 namespace Hleb\Constructor\Handlers;
 
 use DeterminantStaticUncreated;
-use Hleb\Main\Functions;
 
 class Request
 {
@@ -37,28 +36,6 @@ class Request
 
     private static $resources = null;
 
-
-    private static function getPostData()
-    {
-        if(!isset(self::$post)) self::$post = self::clearData($_POST ?? []);
-
-        return self::$post;
-    }
-
-    private static function getGetData()
-    {
-        if(!isset(self::$get)) self::$get = self::clearData($_GET ?? []);
-
-        return self::$get;
-    }
-
-    private static function getRequestData()
-    {
-        if(!isset(self::$req)) self::$req = self::clearData($_REQUEST ?? []);
-
-        return self::$req;
-    }
-
     public static function getInitialSession($name = null)
     {
         return is_null($name) ? self::$initial_session : (isset(self::$initial_session[$name]) ? self::$initial_session[$name] : null);
@@ -79,18 +56,6 @@ class Request
         return is_null($name) ? self::clearData($_COOKIE ?? []) : (isset($_COOKIE) && isset($_COOKIE[$name]) ? self::clearData($_COOKIE[$name]) : null);
     }
 
-    private static function clearData($value)
-    {
-        if(is_numeric($value)) return $value;
-        if(is_array($value))   return array_map( [self::class, 'clearData'], $value);
-        if(is_string($value))  return  self::convertPrivateTags($value);
-        return null;
-    }
-
-    private static function checkValueInArray($value, $array)
-    {
-        return $value != null ? ((true === array_key_exists($value, $array) && strlen($array[$value]) > 0) ? $array[$value] : null) : $array;
-    }
 
     public static function get(string $name = '')
     {
@@ -126,7 +91,7 @@ class Request
 
     public static function getFullUrl()
     {
-        if(!isset(self::$url)) self::$url = self::clearData(Functions::mainFullHostUrl());
+        if(!isset(self::$url)) self::$url = self::clearData(HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN);
 
         return self::$url;
     }
@@ -183,11 +148,6 @@ class Request
         return self::checkValueInArray($value, self::getRequestData());
     }
 
-    private static function convertPrivateTags(string $value)
-    {
-        return  str_replace(self::NEEDED_TAGS, self::REPLACING_TAGS, $value);
-    }
-
     public static function returnPrivateTags(string $value)
     {
         return  str_replace(self::REPLACING_TAGS, self::NEEDED_TAGS, $value);
@@ -205,6 +165,47 @@ class Request
         if(!isset(self::$resources)) self::$resources = new Resources();
 
         return self::$resources;
+    }
+
+
+    private static function getPostData()
+    {
+        if(!isset(self::$post)) self::$post = self::clearData($_POST ?? []);
+
+        return self::$post;
+    }
+
+    private static function getGetData()
+    {
+        if(!isset(self::$get)) self::$get = self::clearData($_GET ?? []);
+
+        return self::$get;
+    }
+
+    private static function getRequestData()
+    {
+        if(!isset(self::$req)) self::$req = self::clearData($_REQUEST ?? []);
+
+        return self::$req;
+    }
+
+
+    private static function clearData($value)
+    {
+        if(is_numeric($value)) return $value;
+        if(is_array($value))   return array_map( [self::class, 'clearData'], $value);
+        if(is_string($value))  return  self::convertPrivateTags($value);
+        return null;
+    }
+
+    private static function checkValueInArray($value, $array)
+    {
+        return $value != null ? ((true === array_key_exists($value, $array) && strlen($array[$value]) > 0) ? $array[$value] : null) : $array;
+    }
+
+    private static function convertPrivateTags(string $value)
+    {
+        return  str_replace(self::NEEDED_TAGS, self::REPLACING_TAGS, $value);
     }
 
 }
