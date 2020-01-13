@@ -149,7 +149,6 @@ spl_autoload_register('hl_main_autoloader', true, true);
 
 function hleb_v5ds34hop4nm1d_page_view($view = null, $data = null)
 {
-
     if (func_num_args() === 0) {
         return [null, null, 'views'];
     }
@@ -160,7 +159,6 @@ function hleb_v5ds34hop4nm1d_page_view($view = null, $data = null)
 
 function hleb_gop0m3f4hpe10d_all($view = null, $data = null, $type = 'views')
 {
-
     if (func_num_args() === 0) {
         return [null, null, $type];
     }
@@ -170,30 +168,24 @@ function hleb_gop0m3f4hpe10d_all($view = null, $data = null, $type = 'views')
 
 function hleb_hol6h1d32sm0l1of_storage($view = null, $data = null)
 {
-
     return hleb_gop0m3f4hpe10d_all($view, $data, 'storage');
-
 }
 
 function hleb_to0me1cd6vo7gd_data()
 {
-
     return \Hleb\Constructor\Routes\Data::return_data();
-
 }
-
 
 function hleb_v10s20hdp8nm7c_render($render, $data = null)
 {
+
     if (is_string($render)) {
 
         $render = [$render];
     }
 
     return hleb_gop0m3f4hpe10d_all($render, $data, 'render');
-
 }
-
 
 function hleb_search_filenames($dir)
 {
@@ -222,7 +214,8 @@ function hleb_search_filenames($dir)
     return $files;
 }
 
-function hleb_get_host() {
+function hleb_get_host()
+{
 
     // Symfony origin function
     $possibleHostSources = array('HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR');
@@ -252,99 +245,82 @@ function hleb_get_host() {
 
 function hleb_c3dccfa0da1a3e_csrf_token()
 {
-
     return \Hleb\Constructor\Handlers\ProtectedCSRF::key();
 }
 
 function hleb_ds5bol10m0bep2_csrf_field()
 {
-
     return '<input type="hidden" name="_token" value="' . hleb_c3dccfa0da1a3e_csrf_token() . '">';
 }
 
-
 function hleb_ba5c9de48cba78c_redirectToSite($url)
 {
-
     \Hleb\Constructor\Handlers\URL::redirectToSite($url);
-
 }
 
 function hleb_ad7371873a6ad40_redirect(string $url, int $code = 303)
 {
-
     \Hleb\Constructor\Handlers\URL::redirect($url, $code);
-
 }
 
 function hleb_ba5c9de48cba78c_getProtectUrl($url)
 {
-
     return \Hleb\Constructor\Handlers\URL::getProtectUrl($url);
-
 }
 
 function hleb_e0b1036cd5b501_getFullUrl($url)
 {
-
     return \Hleb\Constructor\Handlers\URL::getFullUrl($url);
-
 }
 
 function hleb_e2d3aeb0253b7_getMainUrl()
 {
-
     return \Hleb\Constructor\Handlers\URL::getMainUrl();
-
 }
 
 function hleb_daa581cdd6323_getMainClearUrl()
 {
-
     return explode('?', hleb_e2d3aeb0253b7_getMainUrl())[0];
-
 }
 
 function hleb_i245eaa1a3b6d_getByName(string $name, array $perem = [])
 {
-
     return \Hleb\Constructor\Handlers\URL::getByName($name, $perem);
-
 }
 
 function hleb_a1a3b6di245ea_getStandardUrl(string $name)
 {
-
     return \Hleb\Constructor\Handlers\URL::getStandardUrl($name);
-
 }
 
 function hleb_e0b1036c1070101_template(string $template, array $params = [])
 {
-
     new \Hleb\Main\MainTemplate($template, $params);
-
 }
 
 function hleb_e0b1036c1070102_template(string $template, array $params = [])
 {
-
     new \Hleb\Constructor\Cache\CachedTemplate($template, $params);
-
 }
 
 function hleb_ade9e72e1018c6_template(string $template, array $params = [])
 {
-
     new \Hleb\Constructor\Cache\OwnCachedTemplate($template, $params);
-
 }
 
 function hleb_a581cdd66c107015_print_r2($data, $desc = null)
 {
-
     \Hleb\Main\WorkDebug::add($data, $desc);
+}
 
+function hleb_ra3le00te0m01n_request_resources()
+{
+    return \Hleb\Constructor\Handlers\Request::getResources();
+}
+
+function hleb_t0ulb902e69thp_request_head()
+{
+    return \Hleb\Constructor\Handlers\Request::getHead();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
