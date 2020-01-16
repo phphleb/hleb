@@ -128,7 +128,8 @@ if (file_exists(HLEB_VENDOR_DIRECTORY. '/autoload.php')) {
 //Own autoloader
 function hl_main_autoloader($class)
 {
-    $ignore_classes = ['Twig\Loader\FilesystemLoader'];
+    $ignore_classes = ['Twig\Loader\LoaderInterface'];
+
     if(HLEB_PROJECT_CLASSES_AUTOLOAD){
         \Hleb\Main\MainAutoloader::get($class);
     }
@@ -142,12 +143,12 @@ spl_autoload_register('hl_main_autoloader', true, true);
 
 ///////////////////////////////////////TWIG/////////////////////////////////////////////////////////////////////////////////
 
-define('HL_TWIG_CONNECTED', class_exists('\Twig\Loader\FilesystemLoader', true));
+define('HL_TWIG_CONNECTED', interface_exists('Twig\Loader\LoaderInterface', true));
 
 if(HL_TWIG_CONNECTED) {
 
     if(HLEB_PROJECT_DEBUG){
-        \Hleb\Main\Info::insert('Autoload', 'Twig\Loader\FilesystemLoader');
+        \Hleb\Main\Info::insert('Autoload', 'Twig\Loader\LoaderInterface');
     }
 
     if (!defined('HL_TWIG_LOADER_FILESYSTEM')) {

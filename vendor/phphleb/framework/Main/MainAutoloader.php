@@ -20,7 +20,7 @@ class MainAutoloader
     public static function get(string $class)
     {
         
-        if(class_exists($class, false)) return;
+        if(class_exists($class, false) || interface_exists($class, false) ) return;
 
         if (self::search_and_include($class, new HomeConnector())) {
 
