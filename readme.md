@@ -156,15 +156,14 @@ Route::renderMap('index page', ['/parts/header', 'index', '/parts/footer']);
 Route::get('/', render('index page'));
 ```
 
-Using the `Twig` templating engine
+Optional use of `Twig` template engine
 -----------------------------------
-Set Twig
 ```bash
 $ composer require "twig/twig:^3.0"
 ```
 
 ```php
-Route::get('/template/', view('template/map.twig', ['x' => 59.9, 'y' => 30.3]));
+Route::get('/template/', view('templates/map.twig', ['variable' => 'value']));
 ```
 
 Debug Panel
