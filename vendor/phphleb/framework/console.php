@@ -4,13 +4,17 @@ define('HLEB_GLOBAL_DIRECTORY', dirname(__DIR__, 3) );
 
 define('HLEB_VENDOR_DIRECTORY', dirname(__DIR__, 2) );
 
-define("HLEB_VENDOR_DIR_NAME", array_reverse(explode(DIRECTORY_SEPARATOR,HLEB_VENDOR_DIRECTORY))[0]);
+define('HLEB_VENDOR_DIR_NAME', array_reverse(explode(DIRECTORY_SEPARATOR,HLEB_VENDOR_DIRECTORY))[0]);
 
 define('HLEB_PROJECT_DIRECTORY', HLEB_VENDOR_DIRECTORY .'/phphleb/framework');
 
 define('HLEB_PROJECT_DEBUG', false);
 
 define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'options']);
+
+define('HL_TWIG_CACHED_PATH', '/storage/cache/twig/compilation');
+
+define('HL_TWIG_CONNECTED', file_exists(HLEB_VENDOR_DIRECTORY . "/twig/twig"));
 
 if(!defined('HLEB_PROJECT_CLASSES_AUTOLOAD')) {
     define('HLEB_PROJECT_CLASSES_AUTOLOAD', true);
@@ -55,11 +59,20 @@ if ($arguments) {
             }
             echo "\n" . "\n";
             break;
+        case '--clear-cache--twig':
+        case '-cc-twig':
+            if(HL_TWIG_CONNECTED){
+                $files = glob(HLEB_GLOBAL_DIRECTORY . HL_TWIG_CACHED_PATH . '/*/*.php', GLOB_NOSORT);
+                hl_clear_cache_files($files, HL_TWIG_CACHED_PATH, $fn);
+                echo "\n" . "\n";
+                break;
+            }
         case '--help':
         case '-h':
             echo "\n";
             echo " --version or -v" . "\n" . " --clear-cache or -cc" . "\n" . " --info or -i" .
-                "\n" . " --help or -h" . "\n" . " --routes or -r" . "\n" . " --list or -l";
+                "\n" . " --help or -h" . "\n" . " --routes or -r" . "\n" . " --list or -l" . "\n" .
+                (HL_TWIG_CONNECTED ? '--clear-cache--twig or -cc-twig' : '');
             echo "\n" . "\n";
             break;
         case '--routes':
@@ -69,7 +82,7 @@ if ($arguments) {
             break;
         case '--list':
         case '-l':
-             hl_upload_all();
+            hl_upload_all();
             echo $fn->listing();
             echo "\n" . "\n";
             break;
@@ -193,6 +206,36 @@ function hl_search_version($file, $const)
     return trim($def[1][0] ?? 'undefined', "' \"");
 }
 
+function hl_clear_cache_files($files, $path, $fn){
 
+    echo "\n" . "Clearing cache [          ] 0% ";
+
+    $all = count($files);
+
+    if (count($files)) {
+        $counter = 1;
+
+        foreach ($files as $k => $value) {
+            @unlink($value);
+            $fn->progressConsole(count($files), $k);
+            echo " (" . $counter . "/" . $all . ")";
+            $counter ++;
+        }
+        $directories = glob(HLEB_GLOBAL_DIRECTORY . $path . '/*', GLOB_NOSORT);
+        foreach($directories as $key => $directory) {
+            if ([] === (array_diff(scandir($directory), array('.', '..')))) {
+                rmdir($directory);
+            }
+        }
+        if(count($files) < 100){
+            fwrite(STDOUT, "\r");
+            fwrite(STDOUT, "Clearing cache [//////////] - 100% ($all/$all)");
+        }
+    } else {
+        fwrite(STDOUT, "\r");
+        fwrite(STDOUT, "No files in " . $path . ". Cache cleared.");
+    }
+
+}
 
 
