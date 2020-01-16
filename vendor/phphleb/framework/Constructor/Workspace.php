@@ -177,22 +177,7 @@ class Workspace
 
             //  view(...)
 
-            $_hl_excluded_file = str_replace('//', '/', HLEB_GLOBAL_DIRECTORY . '/resources/views/' . $_hl_excluded_params[0][0] . '.php');
-
-            //Отображение файла
-
-            if (file_exists($_hl_excluded_file)) {
-
-                (new VCreator($_hl_excluded_file))->view();
-
-            } else {
-                $_hl_excluded_errors = 'HL037-VIEW_ERROR: Error in function view() ! ' .
-                    'Missing file `/resources/views/' . $_hl_excluded_params[0][0] . '.php` . ~ ' .
-                    'Исключение в функции view() ! Отсутствует файл `/resources/views/' .  $_hl_excluded_params[0][0] . '.php`';
-
-                ErrorOutput::get($_hl_excluded_errors);
-
-            }
+            $this->selectable_view_file($_hl_excluded_params[0][0], 'view', 37);
 
         } else if (isset($_hl_excluded_params[2]) && $_hl_excluded_params[2] == 'render') {
 
@@ -214,20 +199,7 @@ class Workspace
 
                         foreach ($_hl_excluded_map_ as $hl_k => $_hl_excluded_map) {
 
-                            $_hl_excluded_file = str_replace('//', '/', HLEB_GLOBAL_DIRECTORY . '/resources/views/' . $_hl_excluded_map . '.php');
-
-                            if (file_exists($_hl_excluded_file)) {
-
-                                (new VCreator($_hl_excluded_file))->view();
-
-                            } else {
-
-                                $_hl_excluded_errors[] = 'HL027-RENDER_ERROR: Error in function render() ! ' .
-                                    "Missing file `/resources/views/$_hl_excluded_map.php` . ~ " .
-                                    "Исключение в функции render() ! Отсутствует файл `/resources/views/$_hl_excluded_map.php`";
-
-                                ErrorOutput::add($_hl_excluded_errors);
-                            }
+                            $this->selectable_view_file($_hl_excluded_map, 'render', 27);
                         }
                     }
                 }
@@ -240,6 +212,39 @@ class Workspace
         if(!empty($this->adm_footer)) echo $this->adm_footer;
     }
 
+    private function selectable_view_file(string $file, string $method_type, int $error_num)
+    {
+        $extension = false;
+        $hl_file = trim($file, '\/ ');
+        $_hl_excluded_file = str_replace(['\\', '//'], '/', HLEB_GLOBAL_DIRECTORY . '/resources/views/' . $hl_file);
+
+        // twig file
+        if (!file_exists($_hl_excluded_file . ".php")) {
+            $extension = true;
+        } else $_hl_excluded_file .= '.php';
+
+        if (file_exists($_hl_excluded_file)) {
+
+            if (!HL_TWIG_CONNECTED && $extension) {
+                $hl_ext = strip_tags(array_reverse(explode(".", $hl_file))[0]);
+                $_hl_excluded_errors = 'HL041-VIEW_ERROR: The file has the `.' . $hl_ext . '` extension and is not processed.' .
+                    ' Probably the TWIG template engine is not connected.' . '~' .
+                    ' Файл имеет расширение `.' . $hl_ext . '`. и не обработан. Вероятно не подключён шаблонизатор TWIG.';
+
+                ErrorOutput::get($_hl_excluded_errors);
+
+            } else {
+                // view file
+                $extension ? (new TwigCreator())->view($hl_file) : (new VCreator($_hl_excluded_file))->view();
+            }
+        } else {
+            $_hl_excluded_errors = 'HL0' . $error_num . '-VIEW_ERROR: Error in function ' . $method_type . '() ! ' .
+                'Missing file `/resources/views/' . $hl_file . '` . ~ ' .
+                'Исключение в функции ' . $method_type . '() ! Отсутствует файл `/resources/views/' . $hl_file . '`';
+
+            ErrorOutput::get($_hl_excluded_errors);
+        }
+    }
 
     private function all_action(array $action, string $type)
     {

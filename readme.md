@@ -30,7 +30,7 @@ $ chmod -R 777 storage || from Linux
 ```
 Upon completion of these steps, you can verify installation by typing the resource address assigned earlier (locally or on a remote server) in the address bar of the browser. If installation is successful, a parked page with the framework logo will be displayed.
 
-Console operation:
+List of standard console commands:
 ```bash
 $ php console --help
 ```
@@ -154,6 +154,17 @@ Page Builder
 ```php
 Route::renderMap('index page', ['/parts/header', 'index', '/parts/footer']);
 Route::get('/', render('index page'));
+```
+
+Using the `Twig` templating engine
+-----------------------------------
+Set Twig
+```bash
+$ composer require "twig/twig:^3.0"
+```
+
+```php
+Route::get('/template/', view('template/map.twig', ['x' => 59.9, 'y' => 30.3]));
 ```
 
 Debug Panel

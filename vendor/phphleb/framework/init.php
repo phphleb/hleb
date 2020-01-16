@@ -69,9 +69,9 @@ require HLEB_PROJECT_DIRECTORY . '/Scheme/Home/Main/Connector.php';
 
 require HLEB_GLOBAL_DIRECTORY . '/app/Optional/MainConnector.php';
 
-// Чтобы установить другое название каталога 'vendor' добавить в константы HLEB_VENDOR_DIR_NAME
+//To set a different directory name 'vendor' add HLEB_VENDOR_DIR_NAME to the constants
 if(!defined('HLEB_VENDOR_DIR_NAME')){
-    // Автоопределение текущего каталога с библиотеками
+    //Auto detect current library directory
     define('HLEB_VENDOR_DIR_NAME', array_reverse(explode(DIRECTORY_SEPARATOR, dirname(__DIR__, 2)))[0] );
 }
 
@@ -107,8 +107,6 @@ require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/URL.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/URLHandler.php';
 
-//require HLEB_PROJECT_DIRECTORY . '/Main/Functions.php';
-
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/ProtectedCSRF.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Workspace.php';
@@ -122,21 +120,19 @@ require HLEB_PROJECT_DIRECTORY . '/Constructor/VCreator.php';
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/Data.php';
 
 
-// Сторонний автозагрузчик классов
-
+// External autoloader
 if (file_exists(HLEB_VENDOR_DIRECTORY. '/autoload.php')) {
     require_once HLEB_VENDOR_DIRECTORY . '/autoload.php';
 }
 
-
-// Собственный автозагрузчик классов
-
+//Own autoloader
 function hl_main_autoloader($class)
 {
+    $ignore_classes = ['Twig\Loader\FilesystemLoader'];
     if(HLEB_PROJECT_CLASSES_AUTOLOAD){
         \Hleb\Main\MainAutoloader::get($class);
     }
-    if(HLEB_PROJECT_DEBUG){
+    if(HLEB_PROJECT_DEBUG && !in_array($class, $ignore_classes)){
         \Hleb\Main\Info::insert('Autoload', $class);
     }
 }
@@ -144,7 +140,61 @@ function hl_main_autoloader($class)
 spl_autoload_register('hl_main_autoloader', true, true);
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////TWIG/////////////////////////////////////////////////////////////////////////////////
+
+define('HL_TWIG_CONNECTED', class_exists('\Twig\Loader\FilesystemLoader', true));
+
+if(HL_TWIG_CONNECTED) {
+
+    if(HLEB_PROJECT_DEBUG){
+        \Hleb\Main\Info::insert('Autoload', 'Twig\Loader\FilesystemLoader');
+    }
+
+    if (!defined('HL_TWIG_LOADER_FILESYSTEM')) {
+        //Folder with .twig files
+        define('HL_TWIG_LOADER_FILESYSTEM', HLEB_GLOBAL_DIRECTORY . '/resources/views');
+    }
+
+    if (!defined('HL_TWIG_CHARSET')) {
+        //Twig template encoding
+        define('HL_TWIG_CHARSET', 'utf-8');
+    }
+
+    if (!defined('HL_TWIG_LOADER_FILESYSTEM')) {
+        //Twig cache folder
+        define('HL_TWIG_COMPILATION_FILESYSTEM', HLEB_GLOBAL_DIRECTORY . "/storage/cache/twig/compilation");
+    }
+
+    if (!defined('HL_TWIG_CACHED_ON')) {
+        //Deny caching
+        define('HL_TWIG_CACHED', false);
+    } else {
+        //Turn on / off Twig caching
+        define('HL_TWIG_CACHED', HL_TWIG_CACHED_ON ? HL_TWIG_LOADER_FILESYSTEM : false);
+    }
+
+    if (!defined('HL_TWIG_AUTO_RELOAD')) {
+        //Recompilation of Twig templates
+        define('HL_TWIG_AUTO_RELOAD', HLEB_PROJECT_DEBUG);
+    }
+
+    if (!defined('HL_TWIG_STRICT_VARIABLES')) {
+        //Ignoring non-existent Twig variables
+        define('HL_TWIG_STRICT_VARIABLES', false);
+    }
+
+    if (!defined('HL_TWIG_AUTOESCAPE')) {
+        // Automatic screening of Twig data
+        define('HL_TWIG_AUTOESCAPE', false);
+    }
+
+    if (!defined('HL_TWIG_OPTIMIZATIONS')) {
+        // Optimize data with Twig
+        define('HL_TWIG_OPTIMIZATIONS', -1);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 function hleb_v5ds34hop4nm1d_page_view($view = null, $data = null)

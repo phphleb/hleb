@@ -1,11 +1,9 @@
 /.idea/*
-/storage/logs/*
+/storage/*
 !/storage/logs/.gitkeep
 /storage/cache/routes/routes.txt
 !/storage/cache/routes/.gitkeep
-/storage/cache/key/*
 !/storage/cache/key/.gitkeep
-/storage/cache/templates/*
 !/storage/cache/templates/.gitkeep
 /database/dbase.config.php
 /start.hleb.php

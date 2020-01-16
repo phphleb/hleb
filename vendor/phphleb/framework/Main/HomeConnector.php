@@ -33,6 +33,7 @@ class HomeConnector implements Connector
             'Hleb\Constructor\Handlers\Resources'=> $vendor.'/phphleb/framework/Constructor/Handlers/Resources.php',
             'Hleb\Scheme\Home\Constructor\Handlers\ResourceStandard'=> $vendor.'/phphleb/framework/Scheme/Home/Constructor/Handlers/ResourceStandard.php',
             'Hleb\Constructor\TCreator'=> $vendor.'/phphleb/framework/Constructor/TCreator.php',
+            'Hleb\Constructor\TwigCreator'=> $vendor.'/phphleb/framework/Constructor/TwigCreator.php',
             'Hleb\Constructor\VCreator'=> $vendor.'/phphleb/framework/Constructor/VCreator.php',
             'Hleb\Main\MainTemplate'=> $vendor.'/phphleb/framework/Main/MainTemplate.php',
             'MainTask'=> $vendor.'/phphleb/framework/Scheme/App/Commands/MainTask.php',
