@@ -83,7 +83,7 @@ class CachedTemplate
 
         $template_name = $this->acollmd5($template . Key::get() . $this->hl_template_area_key() . $hash_params);
 
-        $dir =  substr($template_name, 0, 2);
+        $this->dir =  substr($template_name, 0, 2);
 
         $this->hashfile = $path . $this->dir . "/" . $template_name;
 
