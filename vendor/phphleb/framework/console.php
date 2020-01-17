@@ -45,25 +45,15 @@ if ($arguments) {
             break;
         case '--clear-cache':
         case '-cc':
-            array_map('unlink', glob(HLEB_GLOBAL_DIRECTORY . '/storage/cache/routes/*.txt'));
-            echo "\n" . "Clearing cache [          ] 0% ";
-            $files = glob(HLEB_GLOBAL_DIRECTORY . '/storage/cache/templates/*', GLOB_NOSORT);
-            if (count($files)) {
-                foreach ($files as $k => $value) {
-                    @unlink($value);
-                    $fn->progressConsole(count($files), $k);
-                }
-            } else {
-                fwrite(STDOUT, "\r");
-                fwrite(STDOUT, "No files in /storage/cache/templates/. Cache cleared.");
-            }
+            $files = glob(HLEB_GLOBAL_DIRECTORY . '/storage/cache/templates/*/*.txt', GLOB_NOSORT);
+            hl_clear_cache_files($files, '/storage/cache/templates/', $fn, '/storage/cache/templates/*/*.txt');
             echo "\n" . "\n";
             break;
         case '--clear-cache--twig':
         case '-cc-twig':
             if(HL_TWIG_CONNECTED){
                 $files = glob(HLEB_GLOBAL_DIRECTORY . HL_TWIG_CACHED_PATH . '/*/*.php', GLOB_NOSORT);
-                hl_clear_cache_files($files, HL_TWIG_CACHED_PATH, $fn);
+                hl_clear_cache_files($files, HL_TWIG_CACHED_PATH, $fn, HL_TWIG_CACHED_PATH . '/*/*.php');
                 echo "\n" . "\n";
                 break;
             }
@@ -206,7 +196,7 @@ function hl_search_version($file, $const)
     return trim($def[1][0] ?? 'undefined', "' \"");
 }
 
-function hl_clear_cache_files($files, $path, $fn){
+function hl_clear_cache_files($files, $path, $fn, $scan_path){
 
     echo "\n" . "Clearing cache [          ] 0% ";
 
@@ -221,6 +211,7 @@ function hl_clear_cache_files($files, $path, $fn){
             echo " (" . $counter . "/" . $all . ")";
             $counter ++;
         }
+        array_map('unlink', glob(HLEB_GLOBAL_DIRECTORY . $scan_path));
         $directories = glob(HLEB_GLOBAL_DIRECTORY . $path . '/*', GLOB_NOSORT);
         foreach($directories as $key => $directory) {
             if ([] === (array_diff(scandir($directory), array('.', '..')))) {

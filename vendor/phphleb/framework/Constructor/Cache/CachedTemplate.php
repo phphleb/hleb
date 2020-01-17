@@ -81,7 +81,11 @@ class CachedTemplate
 
         $template_name = $this->acollmd5($template . Key::get() . $this->hl_template_area_key() . $hash_params);
 
-        $this->hashfile = $path . $template_name;
+        $dir =  substr($template_name, 0, 2);
+
+        if(!file_exists($path . $dir)) mkdir($path . $dir);
+
+        $this->hashfile = $path . $dir . "/" . $template_name;
 
         $search_all = glob($this->hashfile . '_*.txt');
 
@@ -130,12 +134,18 @@ class CachedTemplate
     {
         if (!isset($GLOBALS['HLEB_CACHED_TEMPLATES_CLEARED'])) {
             $path = HLEB_GLOBAL_DIRECTORY . '/storage/cache/templates/';
-            $files = glob($path . '*.txt');
+            $files = glob($path . '/*/*.txt');
             if ($files && count($files)) {
                 foreach ($files as $key => $file) {
                     if (filemtime($file) < strtotime('-' . $this->getFileTime($file) . ' seconds')) {
                         unlink("$file");
                     }
+                }
+            }
+            $directories = glob($path . '/*', GLOB_NOSORT);
+            foreach($directories as $key => $directory) {
+                if ([] === (array_diff(scandir($directory), array('.', '..')))) {
+                    rmdir($directory);
                 }
             }
             $GLOBALS['HLEB_CACHED_TEMPLATES_CLEARED'] = true;
