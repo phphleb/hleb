@@ -8,6 +8,8 @@ define('HLEB_PROJECT_FULL_VERSION', '1.3.2');
 
 $GLOBALS['HLEB_PROJECT_UPDATES'] = ['phphleb/hleb' => HLEB_FRAME_VERSION, 'phphleb/framework' => HLEB_PROJECT_FULL_VERSION ];
 
+define('HLEB_TEMPLATE_CACHED_PATH', '/storage/cache/templates');
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Demo redirection from "http" to "https"
