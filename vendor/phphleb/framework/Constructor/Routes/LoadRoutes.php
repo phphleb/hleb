@@ -17,7 +17,7 @@ class LoadRoutes
 
     public function update($data)
     {
-        file_put_contents($this->cache_routes, json_encode($data), LOCK_EX);
+        @file_put_contents($this->cache_routes, json_encode($data), LOCK_EX);
 
         return $data;
 
@@ -26,7 +26,7 @@ class LoadRoutes
     public function load_cache()
     {
 
-        $content = file_get_contents($this->cache_routes);
+        $content = is_writable($this->cache_routes) ? file_get_contents($this->cache_routes) : null;
 
         if (empty($content)) {
 

@@ -93,7 +93,7 @@ class CachedTemplate
 
             if (count($search_all) > 1) {
                 foreach ($search_all as $key => $search_file) {
-                    if ($key > 0) unlink("$search_file");
+                    if ($key > 0) @unlink("$search_file");
                 }
             }
 
@@ -103,7 +103,7 @@ class CachedTemplate
                 return $s_file;
             }
 
-            unlink("$s_file");
+            @unlink("$s_file");
         }
         return null;
     }
@@ -140,7 +140,7 @@ class CachedTemplate
             if ($files && count($files)) {
                 foreach ($files as $key => $file) {
                     if (filemtime($file) < strtotime('-' . $this->getFileTime($file) . ' seconds')) {
-                        unlink("$file");
+                        @unlink("$file");
                     }
                 }
             }
@@ -148,7 +148,7 @@ class CachedTemplate
             foreach($directories as $key => $directory) {
                 if(!file_exists($directory)) break;
                 if ([] === (array_diff(scandir($directory), array('.', '..')))) {
-                    rmdir($directory);
+                    @rmdir($directory);
                 }
             }
             $GLOBALS['HLEB_CACHED_TEMPLATES_CLEARED'] = true;

@@ -213,12 +213,12 @@ function hl_clear_cache_files($files, $path, $fn, $scan_path){
             echo " (" . $counter . "/" . $all . ")";
             $counter ++;
         }
-        array_map('unlink', glob(HLEB_GLOBAL_DIRECTORY . $scan_path));
+        @array_map('unlink', glob(HLEB_GLOBAL_DIRECTORY . $scan_path));
         $directories = glob(HLEB_GLOBAL_DIRECTORY . $path . '/*', GLOB_NOSORT);
         foreach($directories as $key => $directory) {
             if(!file_exists($directory)) break;
             if ([] === (array_diff(scandir($directory), array('.', '..')))) {
-                rmdir($directory);
+                @rmdir($directory);
             }
         }
         if(count($files) < 100){
