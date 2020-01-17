@@ -12,6 +12,8 @@ define('HLEB_PROJECT_DEBUG', false);
 
 define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'options']);
 
+define('HLEB_TEMPLATE_CACHED_PATH', '/storage/cache/templates');
+
 define('HL_TWIG_CACHED_PATH', '/storage/cache/twig/compilation');
 
 define('HL_TWIG_CONNECTED', file_exists(HLEB_VENDOR_DIRECTORY . "/twig/twig"));
@@ -45,8 +47,8 @@ if ($arguments) {
             break;
         case '--clear-cache':
         case '-cc':
-            $files = glob(HLEB_GLOBAL_DIRECTORY . '/storage/cache/templates/*/*.txt', GLOB_NOSORT);
-            hl_clear_cache_files($files, '/storage/cache/templates', $fn, '/storage/cache/templates/*/*.txt');
+            $files = glob(HLEB_GLOBAL_DIRECTORY . HLEB_TEMPLATE_CACHED_PATH . '/*/*.txt', GLOB_NOSORT);
+            hl_clear_cache_files($files, HLEB_TEMPLATE_CACHED_PATH, $fn, HLEB_TEMPLATE_CACHED_PATH . '/*/*.txt');
             echo "\n" . "\n";
             break;
         case '--clear-cache--twig':

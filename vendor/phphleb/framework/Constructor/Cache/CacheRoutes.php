@@ -15,12 +15,6 @@ class CacheRoutes
      * @var null|LoadRoutes
      */
     private $opt = null;
-
-    function __construct()
-    {
-
-    }
-
     /**
      * @return array
      */
@@ -29,42 +23,28 @@ class CacheRoutes
 
         $this->opt = new LoadRoutes();
 
-
             if ($this->opt->comparison()) {
-
                 $cache = $this->opt->load_cache();
 
                 if ($cache === false) {
-
                     $this->create_routes();
-
                     Info::add('CacheRoutes', true);
-
                     return $this->check($this->opt->update(Route::data()));
-
                 }
 
                 Info::add('CacheRoutes', false);
-
                 return $cache;
-
             }
-       
 
         $this->create_routes();
-
         Info::add('CacheRoutes', true);
-
         return $this->check($this->opt->update(Route::data()));
-
     }
 
 
     private function check($data)
     {
-
         $cache = $this->opt->load_cache();
-
         if (json_encode($cache) !== json_encode($data)) {
 
             $errors = 'HL021-CACHE_ERROR: No write permission ! ' .
@@ -80,11 +60,8 @@ class CacheRoutes
 
     private function create_routes()
     {
-
         require HLEB_GLOBAL_DIRECTORY . '/routes/main.php';
-
         Route::end();
-
     }
 
 }

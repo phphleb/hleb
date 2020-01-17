@@ -6,11 +6,11 @@ namespace Hleb\Constructor\Cache;
 
 class OwnCachedTemplate extends CachedTemplate
 {
-    function hl_info_template_name(){
+    function infoTemplateName(){
        return  'include<b>Own</b>CachedTemplate';
     }
 
-    function hl_template_area_key(){
+    function templateAreaKey(){
         return  session_id();
     }
 }
