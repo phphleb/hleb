@@ -62,7 +62,7 @@ if ($arguments) {
             echo "\n";
             echo " --version or -v" . "\n" . " --clear-cache or -cc" . "\n" . " --info or -i" .
                 "\n" . " --help or -h" . "\n" . " --routes or -r" . "\n" . " --list or -l" . "\n" .
-                (HL_TWIG_CONNECTED ? '--clear-cache--twig or -cc-twig' : '');
+                (HL_TWIG_CONNECTED ? ' --clear-cache--twig or -cc-twig' : '');
             echo "\n" . "\n";
             break;
         case '--routes':
@@ -212,8 +212,9 @@ function hl_clear_cache_files($files, $path, $fn, $scan_path){
             $counter ++;
         }
         array_map('unlink', glob(HLEB_GLOBAL_DIRECTORY . $scan_path));
-        $directories = glob(HLEB_GLOBAL_DIRECTORY . $path . '/*', GLOB_NOSORT);
+        $directories = glob(HLEB_GLOBAL_DIRECTORY . $path . '*', GLOB_NOSORT);
         foreach($directories as $key => $directory) {
+            if(!file_exists($directory)) break;
             if ([] === (array_diff(scandir($directory), array('.', '..')))) {
                 rmdir($directory);
             }

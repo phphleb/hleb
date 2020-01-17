@@ -161,17 +161,12 @@ if(HL_TWIG_CONNECTED) {
         define('HL_TWIG_CHARSET', 'utf-8');
     }
 
-    if (!defined('HL_TWIG_LOADER_FILESYSTEM')) {
-        //Twig cache folder
-        define('HL_TWIG_COMPILATION_FILESYSTEM', HLEB_GLOBAL_DIRECTORY . "/storage/cache/twig/compilation");
-    }
-
     if (!defined('HL_TWIG_CACHED_ON')) {
         //Deny caching
         define('HL_TWIG_CACHED', false);
     } else {
-        //Turn on / off Twig caching
-        define('HL_TWIG_CACHED', HL_TWIG_CACHED_ON ? HL_TWIG_LOADER_FILESYSTEM : false);
+        //Turn on / off Twig caching. Set HL_TWIG_CACHED_ON
+        define('HL_TWIG_CACHED', HL_TWIG_CACHED_ON ? HLEB_GLOBAL_DIRECTORY . "/storage/cache/twig/compilation" : false);
     }
 
     if (!defined('HL_TWIG_AUTO_RELOAD')) {

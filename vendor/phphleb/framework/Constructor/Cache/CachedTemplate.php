@@ -21,6 +21,8 @@ class CachedTemplate
     private $hashfile = null;
 
     private $tempfile = null;
+    
+    private $dir = null;
 
     /**
      * CachedTemplate constructor.
@@ -40,7 +42,7 @@ class CachedTemplate
         if (is_null($path_to_file)) {
             ob_start();
             $this->hl_create_content();
-            $this->hl_cache_template(ob_get_contents());
+            $this->hl_cache_template($this->cacheTime, ob_get_contents());
             ob_end_clean();
         } else {
             $this->content = file_get_contents($path_to_file, true);
@@ -83,9 +85,7 @@ class CachedTemplate
 
         $dir =  substr($template_name, 0, 2);
 
-        if(!file_exists($path . $dir)) mkdir($path . $dir);
-
-        $this->hashfile = $path . $dir . "/" . $template_name;
+        $this->hashfile = $path . $this->dir . "/" . $template_name;
 
         $search_all = glob($this->hashfile . '_*.txt');
 
@@ -112,19 +112,19 @@ class CachedTemplate
         return  empty($str) ? '' : md5($str) .  substr(md5(strrev($str)),0,5);
     }
 
-    private function hl_cache_template($content)
-    {
-        if ($this->cacheTime === 0) {
+    private function hl_cache_template($time, $content)
+    {          
+        if ($time === 0) {
             // Without caching.
-
+            
             $this->content = $content;
             $this->hl_add_content();
         } else {
 
             $this->delOldFile();
-            $this->content = $content;
-
-            $file = $this->hashfile . '_' . $this->cacheTime . '.txt';
+            var_dump(mkdir(HLEB_GLOBAL_DIRECTORY . '/storage/cache/templates/' . $this->dir, 0777, true)); 
+            $this->content = $content;                        
+            $file = $this-> hashfile . '_' . $this->cacheTime . '.txt';
             file_put_contents($file, $content, LOCK_EX);
         }
         if (rand(0, 1000) === 0) $this->delOldFile();
@@ -133,7 +133,7 @@ class CachedTemplate
     private function delOldFile()
     {
         if (!isset($GLOBALS['HLEB_CACHED_TEMPLATES_CLEARED'])) {
-            $path = HLEB_GLOBAL_DIRECTORY . '/storage/cache/templates/';
+            $path = HLEB_GLOBAL_DIRECTORY . '/storage/cache/templates';
             $files = glob($path . '/*/*.txt');
             if ($files && count($files)) {
                 foreach ($files as $key => $file) {
