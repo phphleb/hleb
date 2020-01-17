@@ -46,7 +46,7 @@ if ($arguments) {
         case '--clear-cache':
         case '-cc':
             $files = glob(HLEB_GLOBAL_DIRECTORY . '/storage/cache/templates/*/*.txt', GLOB_NOSORT);
-            hl_clear_cache_files($files, '/storage/cache/templates/', $fn, '/storage/cache/templates/*/*.txt');
+            hl_clear_cache_files($files, '/storage/cache/templates', $fn, '/storage/cache/templates/*/*.txt');
             echo "\n" . "\n";
             break;
         case '--clear-cache--twig':
@@ -212,7 +212,7 @@ function hl_clear_cache_files($files, $path, $fn, $scan_path){
             $counter ++;
         }
         array_map('unlink', glob(HLEB_GLOBAL_DIRECTORY . $scan_path));
-        $directories = glob(HLEB_GLOBAL_DIRECTORY . $path . '*', GLOB_NOSORT);
+        $directories = glob(HLEB_GLOBAL_DIRECTORY . $path . '/*', GLOB_NOSORT);
         foreach($directories as $key => $directory) {
             if(!file_exists($directory)) break;
             if ([] === (array_diff(scandir($directory), array('.', '..')))) {
