@@ -58,10 +58,24 @@ class Request
         return is_null($name) ? self::clearData($_COOKIE ?? []) : (isset($_COOKIE) && isset($_COOKIE[$name]) ? self::clearData($_COOKIE[$name]) : null);
     }
 
-
     public static function get(string $name = '')
     {
         return empty($name) ? self::$request : (self::$request[$name] ?? null);
+    }
+
+    public static function getString(string $name, $default = null)
+    {
+        return self::getTypeRequest($name, "strval", "request", $default);
+    }
+
+    public static function getInt(string $name, $default = 0)
+    {
+        return self::getTypeRequest($name, "intval", "request", $default);
+    }
+
+    public static function getFloat(string $name, $default = 0.0)
+    {
+        return self::getTypeRequest($name, "floatval", "request", $default);
     }
 
     public static function add(string $name, string $value)
@@ -86,7 +100,7 @@ class Request
 
     public static function getUri()
     {
-        if(!isset(self::$uri)) self::$uri = self::clearData($_SERVER['REQUEST_URI'] ?? null);
+        if(!isset(self::$uri)) self::$uri = self::clearData(urldecode($_SERVER['REQUEST_URI']) ?? null);
 
         return self::$uri;
     }
@@ -140,14 +154,59 @@ class Request
         return self::checkValueInArray($value, self::getGetData());
     }
 
+    public static function getGetString(string $name, $default = null)
+    {
+        return self::getTypeRequest($name, "strval", "get", $default);
+    }
+
+    public static function getGetInt(string $name, $default = 0)
+    {
+        return self::getTypeRequest($name, "intval", "get", $default);
+    }
+
+    public static function getGetFloat(string $name, $default = 0.0)
+    {
+        return self::getTypeRequest($name, "floatval", "get", $default);
+    }
+
     public static function getPost($value = null)
     {
         return self::checkValueInArray($value, self::getPostData());
     }
 
+    public static function getPostString(string $name, $default = null)
+    {
+        return self::getTypeRequest($name, "strval", "post", $default);
+    }
+
+    public static function getPostInt(string $name, $default = 0)
+    {
+        return self::getTypeRequest($name, "intval", "post", $default);
+    }
+
+    public static function getPostFloat(string $name, $default = 0.0)
+    {
+        return self::getTypeRequest($name, "floatval", "post", $default);
+    }
+
     public static function getRequest($value = null)
     {
         return self::checkValueInArray($value, self::getRequestData());
+    }
+
+    public static function getRequestString(string $name, $default = null)
+    {
+        return self::getTypeRequest($name, "strval", "req", $default);
+    }
+
+    public static function getRequestInt(string $name, $default = 0)
+    {
+        return self::getTypeRequest($name, "intval", "req", $default);
+    }
+
+    public static function getRequestFloat(string $name, $default = 0.0)
+    {
+        return self::getTypeRequest($name, "floatval", "req", $default);
     }
 
     public static function returnPrivateTags(string $value)
@@ -171,20 +230,26 @@ class Request
 
     public static function getMainConvertUrl()
     {
-        if(is_null(self::$convert_uri)) self::$convert_uri = self::getConvertUrl($_SERVER['REQUEST_URI']);
+        if(is_null(self::$convert_uri)) self::$convert_uri = self::getConvertUrl(urldecode($_SERVER['REQUEST_URI']));
 
         return self::$convert_uri;
     }
 
     public static function getMainClearUrl()
     {
-        return explode('?', $_SERVER['REQUEST_URI'])[0];
+        return explode('?', urldecode($_SERVER['REQUEST_URI']))[0];
     }
-
 
     protected static function getConvertUrl($url)
     {
         return rawurldecode($url);
+    }
+
+    private static function getTypeRequest(string $name,  string $function, string $param, $default)
+    {
+        return isset(self::$$param[$name]) ? (!is_null(self::$$param[$name]) ?
+            $function(self::clearData(!is_array(self::$$param[$name]) ? self::$$param[$name] : null)) : $default) :
+            $default;
     }
 
     private static function getPostData()
@@ -212,9 +277,18 @@ class Request
     private static function clearData($value)
     {
         if(is_numeric($value)) return $value;
-        if(is_array($value))   return array_map( [self::class, 'clearData'], $value);
-        if(is_string($value))  return  self::convertPrivateTags($value);
+        if(is_array($value))   return self::clearDataInArray($value);
+        if(is_string($value))  return self::convertPrivateTags($value);
         return null;
+    }
+
+    private static function clearDataInArray( array $data)
+    {
+        $result = [];
+        foreach($data as $key => $value){
+            $result[strip_tags($key)] = self::clearData($value);
+        }
+        return $result;
     }
 
     private static function checkValueInArray($value, $array)

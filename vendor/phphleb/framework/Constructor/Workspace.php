@@ -238,9 +238,12 @@ class Workspace
                 $extension ? (new TwigCreator())->view($hl_file) : (new VCreator($_hl_excluded_file))->view();
             }
         } else {
+            $error_file = str_replace(str_replace(['\\', '//'], '/',HLEB_GLOBAL_DIRECTORY), "", $_hl_excluded_file) . ($extension ? ".php" : "");
+
+            // Search to HL027-VIEW_ERROR or Search to HL037-VIEW_ERROR
             $_hl_excluded_errors = 'HL0' . $error_num . '-VIEW_ERROR: Error in function ' . $method_type . '() ! ' .
-                'Missing file `/resources/views/' . $hl_file . '` . ~ ' .
-                'Исключение в функции ' . $method_type . '() ! Отсутствует файл `/resources/views/' . $hl_file . '`';
+                'Missing file `' . $error_file . '` . ~ ' .
+                'Исключение в функции ' . $method_type . '() ! Отсутствует файл `' . $error_file . '`';
 
             ErrorOutput::get($_hl_excluded_errors);
         }
@@ -297,7 +300,9 @@ class Workspace
         if(!class_exists('Phphleb\Adminpan\MainAdminPanel')){
 
             ErrorOutput::get('HL030-ADMIN_PANEL_ERROR: Error in method adminPanController() ! ' .
-                'Library <a href="https://github.com/phphleb/adminpan">phphleb/adminpan</a> not connected ! ~');
+                'Library <a href="https://github.com/phphleb/adminpan">phphleb/adminpan</a> not connected ! ~' .
+                'Библиотека <a href="https://github.com/phphleb/adminpan">phphleb/adminpan</a> не подключена !'
+            );
 
             return null;
         }

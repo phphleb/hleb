@@ -103,7 +103,7 @@ class URLHandler
                             if ($domain_part === '*' || (is_null($domain) && is_null($domain_part))) {
                                 $valid_domain++;
                             } else if ($domain_part != null) {
-                                preg_match('/^' . $domain . '$/', strtolower($domain_part), $matches);
+                                preg_match('/^' . $domain . '$/u', strtolower($domain_part), $matches);
                                 if (count($matches) && $matches[0] == strtolower($domain_part)) {
                                     $valid_domain++;
                                 }
@@ -297,7 +297,7 @@ class URLHandler
 
                                 if (!(empty($generate_real_urls[$q]) && $generate_url{strlen($generate_url) - 2} === '?')) {
 
-                                    preg_match('/^' . $mat[$exp] . '$/', $generate_real_urls[$q], $matches);
+                                    preg_match('/^' . $mat[$exp] . '$/u', $generate_real_urls[$q], $matches);
 
                                     if (!isset($matches[0]) || $matches[0] != $generate_real_urls[$q]) {
 
