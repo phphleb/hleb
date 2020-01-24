@@ -17,8 +17,6 @@ define('HLEB_PROJECT_DIRECTORY', __DIR__);
 
 define('HLEB_PROJECT_VERSION', '1');
 
-define('HLEB_PROJECT_FULL_VERSION', '1.3.3');
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Demo redirection from "http" to "https"

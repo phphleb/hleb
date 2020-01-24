@@ -1,5 +1,7 @@
 <?php
 
+define('HLEB_PROJECT_FULL_VERSION', '1.3.3');
+
 require_once HLEB_PROJECT_DIRECTORY. '/Main/Insert/DeterminantStaticUncreated.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Main/Info.php';
