@@ -1,68 +1,5 @@
 <?php
 
-define('HLEB_PROJECT_DIRECTORY', __DIR__);
-
-define('HLEB_PROJECT_VERSION', '1');
-
-define('HLEB_PROJECT_FULL_VERSION', '1.3.2');
-
-$GLOBALS['HLEB_PROJECT_UPDATES'] = ['phphleb/hleb' => HLEB_FRAME_VERSION, 'phphleb/framework' => HLEB_PROJECT_FULL_VERSION ];
-
-define('HLEB_TEMPLATE_CACHED_PATH', '/storage/cache/templates');
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Demo redirection from "http" to "https"
-if(!defined('HLEB_PROJECT_ONLY_HTTPS')) {
-    define('HLEB_PROJECT_ONLY_HTTPS', false);
-}
-
-// Demo URL redirection from "www" to without "www" and back 0/1/2
-if(!defined('HLEB_PROJECT_GLUE_WITH_WWW')) {
-    define('HLEB_PROJECT_GLUE_WITH_WWW', 0);
-}
-
-define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'options']);
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-if (HLEB_PROJECT_LOG_ON) {
-
-    ini_set('log_errors', 'On');
-
-    ini_set('error_log', HLEB_GLOBAL_DIRECTORY . '/storage/logs/' . date('Y_m_d_') . 'errors.log');
-}
-
-ini_set('display_errors', HLEB_PROJECT_DEBUG ? '1' : '0');
-
-
-require HLEB_PROJECT_DIRECTORY. '/Constructor/Handlers/AddressBar.php';
-
-$hl_actual_protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
-
-$hl_address_object =(new \Hleb\Constructor\Handlers\AddressBar(
-    [
-        'SERVER' => $_SERVER,
-        'HTTPS' => $hl_actual_protocol,
-        'HLEB_PROJECT_ONLY_HTTPS' => HLEB_PROJECT_ONLY_HTTPS,
-        'HLEB_PROJECT_ENDING_URL' => HLEB_PROJECT_ENDING_URL,
-        'HLEB_PROJECT_DIRECTORY' => HLEB_PROJECT_DIRECTORY,
-        'HLEB_PROJECT_GLUE_WITH_WWW' => HLEB_PROJECT_GLUE_WITH_WWW,
-        'HLEB_PROJECT_VALIDITY_URL' => HLEB_PROJECT_VALIDITY_URL
-    ]
-));
-
-$hl_address = $hl_address_object->get_state();
-
-if($hl_address_object->redirect != null){
-    if (!headers_sent()) {
-        header('Location: ' . $hl_address_object->redirect, true, 301);
-    }
-    exit();
-}
-
-unset($hl_address_object, $hl_actual_protocol, $hl_address);
-
 require_once HLEB_PROJECT_DIRECTORY. '/Main/Insert/DeterminantStaticUncreated.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Main/Info.php';
@@ -70,14 +7,6 @@ require HLEB_PROJECT_DIRECTORY . '/Main/Info.php';
 require HLEB_PROJECT_DIRECTORY . '/Scheme/Home/Main/Connector.php';
 
 require HLEB_GLOBAL_DIRECTORY . '/app/Optional/MainConnector.php';
-
-//To set a different directory name 'vendor' add HLEB_VENDOR_DIR_NAME to the constants
-if(!defined('HLEB_VENDOR_DIR_NAME')){
-    //Auto detect current library directory
-    define('HLEB_VENDOR_DIR_NAME', array_reverse(explode(DIRECTORY_SEPARATOR, dirname(__DIR__, 2)))[0] );
-}
-
-define('HLEB_VENDOR_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME );
 
 if(HLEB_PROJECT_CLASSES_AUTOLOAD) {
 
@@ -373,6 +302,8 @@ function hleb_t0ulb902e69thp_request_head()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+$GLOBALS['HLEB_PROJECT_UPDATES'] = ['phphleb/hleb' => HLEB_FRAME_VERSION, 'phphleb/framework' => HLEB_PROJECT_FULL_VERSION ];
+
 if (HLEB_PROJECT_DEBUG && (new Hleb\Main\TryClass('XdORM\XD'))->is_connect() &&
     file_exists(HLEB_VENDOR_DIRECTORY . '/phphleb/xdorm')){
 
@@ -382,9 +313,4 @@ if(HLEB_PROJECT_DEBUG &&(file_exists(HLEB_VENDOR_DIRECTORY . '/phphleb/adminpan'
     $GLOBALS['HLEB_PROJECT_UPDATES']['phphleb/adminpan'] = 'dev';
 }
 
-
-
-require HLEB_GLOBAL_DIRECTORY . '/app/Optional/shell.php';
-
-\Hleb\Main\ProjectLoader::start();
 

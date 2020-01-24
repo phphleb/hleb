@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hleb\Main;
 
 use Hleb\Constructor\Cache\CacheRoutes;
+use Hleb\Main\Errors\ErrorOutput;
 use Hleb\Constructor\Handlers\{
     ProtectedCSRF, URL, URLHandler, Request
 };
@@ -35,7 +36,9 @@ class ProjectLoader
 
         if ($block) {
 
-           if(!isset($_SESSION)) session_start();
+           if(!isset($_SESSION)) @session_start();
+
+           if(!isset($_SESSION)) ErrorOutput::get("HL050-ERROR: SESSION not initialized !");
 
             ProtectedCSRF::testPage($block);
 

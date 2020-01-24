@@ -5,6 +5,7 @@
  */
 
 define('HLEB_PUBLIC_DIR', "public");
+define('HLEB_GLOBAL_DIRECTORY', __DIR__);
 
 require(__DIR__ . "/vendor/phphleb/framework/console.php");
 

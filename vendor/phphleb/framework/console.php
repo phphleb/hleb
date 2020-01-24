@@ -1,6 +1,6 @@
 <?php
 
-define('HLEB_GLOBAL_DIRECTORY', dirname(__DIR__, 3) );
+if(!defined('HLEB_GLOBAL_DIRECTORY')) define('HLEB_GLOBAL_DIRECTORY', dirname(__DIR__, 3) );
 
 define('HLEB_VENDOR_DIRECTORY', dirname(__DIR__, 2) );
 
