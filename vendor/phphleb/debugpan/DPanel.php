@@ -102,7 +102,7 @@ class DPanel
             "route_path" => self::create_path($block["data_path"]),
             "autoload" => is_array(Info::get("Autoload")) ? Info::get("Autoload") : [],
             "templates" => is_array(Info::get("Templates")) ? Info::get("Templates") : [],
-            "cache" => date(DATE_ATOM, filemtime(HLEB_GLOBAL_DIRECTORY . "/storage/cache/routes/routes.txt")),
+            "cache" => date(DATE_ATOM, filemtime(HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt')),
             "orm_report" => $orm_report[0],
             "orm_time_report" => $orm_report[1],
             "orm_report_active" => self::$queries,

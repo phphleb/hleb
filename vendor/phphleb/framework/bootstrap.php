@@ -43,23 +43,27 @@ if(!defined('HLEB_VENDOR_DIR_NAME')){
 
 define('HLEB_VENDOR_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME );
 
+define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/routes/');
+
+define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/storage/cache/routes');
+
 if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 
     $GLOBALS['HLEB_MAIN_DEBUG_RADJAX'] = [];
 
-    if ((file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/ajax.php') ||
-        file_exists(HLEB_GLOBAL_DIRECTORY. '/routes/api.php'))
+    if ((file_exists(HLEB_LOAD_ROUTES_DIRECTORY . 'ajax.php') ||
+        file_exists(HLEB_LOAD_ROUTES_DIRECTORY . 'api.php'))
     ){
 
         require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Route.php';
 
         require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Src/App.php';
 
-        if (file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/api.php'))
-            include_once HLEB_GLOBAL_DIRECTORY. '/routes/api.php';
+        if (file_exists(HLEB_LOAD_ROUTES_DIRECTORY . 'api.php'))
+            include_once HLEB_LOAD_ROUTES_DIRECTORY . 'api.php';
 
-        if (file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/ajax.php'))
-            include_once HLEB_GLOBAL_DIRECTORY . '/routes/ajax.php';
+        if (file_exists(HLEB_LOAD_ROUTES_DIRECTORY . 'ajax.php'))
+            include_once HLEB_LOAD_ROUTES_DIRECTORY . 'ajax.php';
 
         function radjax_main_autoloader(string $class)
         {
@@ -72,7 +76,6 @@ if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 define('HLEB_TEMPLATE_CACHED_PATH', '/storage/cache/templates');
 

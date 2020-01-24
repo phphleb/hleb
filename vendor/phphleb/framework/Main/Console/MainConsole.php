@@ -66,7 +66,7 @@ class MainConsole
 
     public function getRoutes()
     {
-        $file = HLEB_GLOBAL_DIRECTORY . '/storage/cache/routes/routes.txt';
+        $file = HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt';
 
         $data = [['SDOMAIN', 'PREFIX', 'ROUTE', 'TYPE', 'PROTECTED', 'CONTROLLER', 'NAME']];
 

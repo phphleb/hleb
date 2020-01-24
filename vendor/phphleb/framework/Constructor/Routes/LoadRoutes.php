@@ -6,9 +6,9 @@ namespace Hleb\Constructor\Routes;
 
 class LoadRoutes
 {
-    private $cache_routes = HLEB_GLOBAL_DIRECTORY . "/storage/cache/routes/routes.txt";
+    private $cache_routes = HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt';
 
-    private $routes_directory = HLEB_GLOBAL_DIRECTORY . "/routes/";
+    private $routes_directory = HLEB_LOAD_ROUTES_DIRECTORY;
 
     function __construct()
     {
