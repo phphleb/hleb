@@ -60,7 +60,7 @@ class CacheRoutes
 
     private function create_routes()
     {
-        require HLEB_LOAD_ROUTES_DIRECTORY . 'main.php';
+        require HLEB_LOAD_ROUTES_DIRECTORY . '/main.php';
         Route::end();
     }
 

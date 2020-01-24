@@ -8,7 +8,7 @@ class LoadRoutes
 {
     private $cache_routes = HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt';
 
-    private $routes_directory = HLEB_LOAD_ROUTES_DIRECTORY;
+    private $routes_directory = HLEB_LOAD_ROUTES_DIRECTORY . '/';
 
     function __construct()
     {
