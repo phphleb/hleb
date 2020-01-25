@@ -1,8 +1,10 @@
 <?php
 
-if(!defined('HLEB_GLOBAL_DIRECTORY')) define('HLEB_GLOBAL_DIRECTORY', dirname(__DIR__, 3) );
+if(!defined('HLEB_GLOBAL_DIRECTORY')) define('HLEB_GLOBAL_DIRECTORY', dirname(__DIR__, 3));
 
-define('HLEB_VENDOR_DIRECTORY', dirname(__DIR__, 2) );
+define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . "/storage/cache/routes");
+
+define('HLEB_VENDOR_DIRECTORY', dirname(__DIR__, 2));
 
 define('HLEB_VENDOR_DIR_NAME', array_reverse(explode(DIRECTORY_SEPARATOR,HLEB_VENDOR_DIRECTORY))[0]);
 
