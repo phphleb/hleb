@@ -47,32 +47,49 @@ define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/routes');
 
 define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/storage/cache/routes');
 
+
+require_once HLEB_PROJECT_DIRECTORY. '/Main/Insert/DeterminantStaticUncreated.php';
+
+require HLEB_PROJECT_DIRECTORY . '/Main/Info.php';
+
+require HLEB_PROJECT_DIRECTORY . '/Scheme/Home/Main/Connector.php';
+
+require HLEB_GLOBAL_DIRECTORY . '/app/Optional/MainConnector.php';
+
+if(HLEB_PROJECT_CLASSES_AUTOLOAD) {
+
+    require HLEB_PROJECT_DIRECTORY . '/Main/MainAutoloader.php';
+
+    require HLEB_PROJECT_DIRECTORY . '/Main/HomeConnector.php';
+}
+
 if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 
     $GLOBALS['HLEB_MAIN_DEBUG_RADJAX'] = [];
 
-    if ((file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/ajax.php') ||
-        file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/api.php'))
-    ){
+    if (file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/api.php') ||
+        file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/ajax.php')) {
 
-        require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Route.php';
+    if (!defined("HLEB_RADJAX_PATHS_TO_ROUTE_PATHS")) {
+        define("HLEB_RADJAX_PATHS_TO_ROUTE_PATHS", [
+            HLEB_LOAD_ROUTES_DIRECTORY . '/api.php',
+            HLEB_LOAD_ROUTES_DIRECTORY . '/ajax.php'
+        ]);
+    }
+    require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Route.php';
 
-        require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Src/App.php';
+    require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Src/RCreator.php';
 
-        if (file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/api.php'))
-            include_once HLEB_LOAD_ROUTES_DIRECTORY . '/api.php';
-
-        if (file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/ajax.php'))
-            include_once HLEB_LOAD_ROUTES_DIRECTORY . '/ajax.php';
+    require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Src/App.php';
 
         function radjax_main_autoloader(string $class)
         {
             \Hleb\Main\MainAutoloader::get($class);
         }
 
-        (new Radjax\Src\App(Radjax\Route::getParams()))->get();
-
+        (new Radjax\Src\App(HLEB_RADJAX_PATHS_TO_ROUTE_PATHS))->get();
     }
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

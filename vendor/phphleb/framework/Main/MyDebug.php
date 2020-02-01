@@ -65,7 +65,7 @@ class MyDebug
      * @param string $name
      * @param string $data
      */
-    public static function insert_to_string(string $name, string $data): void
+    public static function insert_to_string(string $name, string $data)
     {
         if (self::check()) {
 

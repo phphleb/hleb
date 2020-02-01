@@ -21,12 +21,12 @@ class DPanel
 
     public static function add($info)
     {
-        $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/debugpan"] = "1.0.4";
+        $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/debugpan"] = "1.1";
 
         if(isset($GLOBALS["HLEB_MAIN_DEBUG_RADJAX"])){
             $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/radjax"] = "dev";
             if(count($GLOBALS["HLEB_MAIN_DEBUG_RADJAX"]))
-                MyDebug::add("RADJAX routes", $GLOBALS["HLEB_MAIN_DEBUG_RADJAX"] );
+                MyDebug::add("RADJAX routes", self::create_ajax_debug_info($GLOBALS["HLEB_MAIN_DEBUG_RADJAX"]) );
         }
 
         $hl_block_name = "__hl_debug_panel";
@@ -138,7 +138,7 @@ class DPanel
                 $rows .= "<div style='padding: 4px; margin-bottom: 4px; background-color: whitesmoke; line-height: 2'>" .
                     "<div style='display: inline-block; min-width: 16px; color:gray; padding: 0 5px;" .
                     "' align = 'center'>" . ($key+1) . "</div> <span style='color:gray'>[" .
-                    "<div style='display: inline-block; color:black; min-width: 26px' align='right'>" . $value[3] . ($ms * 1000) .
+                    "<div style='display: inline-block; color:black; min-width: 26px; width:max-content' align='right'>" . $value[3] . ($ms * 1000) .
                     "</div> ms] " . htmlentities($value[2]) . "</span>&#8195;" . trim($value[0], ";") . ";</div>";
             }
         }
@@ -202,6 +202,19 @@ class DPanel
     {
         self::add($info);
         self::print_work_info();
+    }
+
+    private static function create_ajax_debug_info(array $param)
+    {
+        $result = [];
+        foreach ($param as $data) {
+            foreach ($data as $key => $value) {
+                $result[] = "<span style='color:yellowgreen'> " . $key . "</span>: <span style='color:whitesmoke'>" .
+                    (is_string($value) ? htmlentities($value) : htmlentities(json_encode($value))) . "</span>";
+            }
+        }
+
+        return "[ " . implode(", ", $result) . " ]";
     }
 
 }
