@@ -36,28 +36,6 @@ require HLEB_PROJECT_DIRECTORY . '/Constructor/VCreator.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/Data.php';
 
-
-// External autoloader
-if (file_exists(HLEB_VENDOR_DIRECTORY. '/autoload.php')) {
-    require_once HLEB_VENDOR_DIRECTORY . '/autoload.php';
-}
-
-//Own autoloader
-function hl_main_autoloader($class)
-{
-    $ignore_classes = ['Twig\Loader\LoaderInterface'];
-
-    if(HLEB_PROJECT_CLASSES_AUTOLOAD){
-        \Hleb\Main\MainAutoloader::get($class);
-    }
-    if(HLEB_PROJECT_DEBUG && !in_array($class, $ignore_classes)){
-        \Hleb\Main\Info::insert('Autoload', $class);
-    }
-}
-
-spl_autoload_register('hl_main_autoloader', true, true);
-
-
 ///////////////////////////////////////TWIG/////////////////////////////////////////////////////////////////////////////////
 
 define('HL_TWIG_CONNECTED', interface_exists('Twig\Loader\LoaderInterface', true));

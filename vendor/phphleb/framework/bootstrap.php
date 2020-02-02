@@ -63,6 +63,35 @@ if(HLEB_PROJECT_CLASSES_AUTOLOAD) {
     require HLEB_PROJECT_DIRECTORY . '/Main/HomeConnector.php';
 }
 
+if (HLEB_PROJECT_LOG_ON) {
+
+    ini_set('log_errors', 'On');
+
+    ini_set('error_log', HLEB_GLOBAL_DIRECTORY . '/storage/logs/' . date('Y_m_d_') . 'errors.log');
+}
+
+ini_set('display_errors', HLEB_PROJECT_DEBUG ? '1' : '0');
+
+// External autoloader
+if (file_exists(HLEB_VENDOR_DIRECTORY. '/autoload.php')) {
+    require_once HLEB_VENDOR_DIRECTORY . '/autoload.php';
+}
+
+//Own autoloader
+function hl_main_autoloader($class)
+{
+    $ignore_classes = ['Twig\Loader\LoaderInterface'];
+
+    if(HLEB_PROJECT_CLASSES_AUTOLOAD){
+        \Hleb\Main\MainAutoloader::get($class);
+    }
+    if(HLEB_PROJECT_DEBUG && !in_array($class, $ignore_classes)){
+        \Hleb\Main\Info::insert('Autoload', $class);
+    }
+}
+
+spl_autoload_register('hl_main_autoloader', true, true);
+
 if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 
     $GLOBALS['HLEB_MAIN_DEBUG_RADJAX'] = [];
@@ -82,12 +111,10 @@ if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 
     require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Src/App.php';
 
-        function radjax_main_autoloader(string $class)
-        {
-            \Hleb\Main\MainAutoloader::get($class);
-        }
-
-        (new Radjax\Src\App(HLEB_RADJAX_PATHS_TO_ROUTE_PATHS))->get();
+        (new Radjax\Src\App(
+            HLEB_RADJAX_PATHS_TO_ROUTE_PATHS,
+            HLEB_GLOBAL_DIRECTORY . '/app/Controllers'
+        ))->get();
     }
 
 }
@@ -95,16 +122,6 @@ if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 define('HLEB_TEMPLATE_CACHED_PATH', '/storage/cache/templates');
-
-if (HLEB_PROJECT_LOG_ON) {
-
-    ini_set('log_errors', 'On');
-
-    ini_set('error_log', HLEB_GLOBAL_DIRECTORY . '/storage/logs/' . date('Y_m_d_') . 'errors.log');
-}
-
-ini_set('display_errors', HLEB_PROJECT_DEBUG ? '1' : '0');
-
 
 require HLEB_PROJECT_DIRECTORY. '/Constructor/Handlers/AddressBar.php';
 
