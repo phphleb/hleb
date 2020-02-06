@@ -289,7 +289,7 @@ class URLHandler
 
                     if (!empty($generate_url)) {
 
-                        if ($generate_url{0} === '{' && $generate_url{strlen($generate_url) - 1} === '}') {
+                        if ($generate_url[0] === '{' && $generate_url{strlen($generate_url) - 1} === '}') {
 
                             $exp = trim($generate_url, '{?}');
 

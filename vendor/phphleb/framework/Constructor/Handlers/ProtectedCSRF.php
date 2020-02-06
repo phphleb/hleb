@@ -71,7 +71,7 @@ class ProtectedCSRF
 
         for ($i = 0; $i < strlen($secret_key); $i++) {
 
-            if ($secret_key{$i} !== $key{$i}) $identical = false;
+            if ($secret_key[$i] !== $key[$i]) $identical = false;
 
         }
 

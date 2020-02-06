@@ -30,14 +30,14 @@ class MainLaunchTask  extends \MainTask
     protected function every5Minutes($cmds = [])
     {
         $date = $this->getDate()->format('i');
-        if ($date{1} == '0' || $date{1} === '5')  $this->run($cmds);
+        if ($date[1] == '0' || $date[1] === '5')  $this->run($cmds);
     }
 
 
     protected function every10Minutes($cmds = [])
     {
         $date = $this->getDate()->format('i');
-        if ($date{1} == '0') $this->run($cmds);
+        if ($date[1] == '0') $this->run($cmds);
     }
 
 

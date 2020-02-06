@@ -48,7 +48,7 @@ class URL
         $address_parts = explode('/', self::$addresses[$name]);
 
         foreach ($address_parts as $key => $part) {
-            if (strlen($part)>2 && $part{0} == '{') {
+            if (strlen($part)>2 && $part[0] == '{') {
                 if(count($perem)) {
 
                     foreach ($perem as $k => $p) {
@@ -174,7 +174,7 @@ class URL
 
             $arr_url = array_slice(explode('/', $url), 3);
 
-            return HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN . ($url{0} == '/' ? '' : '/') . (implode('/', $arr_url));
+            return HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN . ($url[0] == '/' ? '' : '/') . (implode('/', $arr_url));
 
         }
 
@@ -193,7 +193,7 @@ class URL
 
         if (!self::ifHttp($url)) {
 
-            return HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN . ($url{0} == '/' ? '' : '/') . self::getStandardUrl($url);
+            return HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN . ($url[0] == '/' ? '' : '/') . self::getStandardUrl($url);
 
         }
 
