@@ -61,7 +61,7 @@ class URLHandler
 
     private function trim_end(string $stroke): string
     {
-        if ($stroke{strlen($stroke) - 1} === '/') {
+        if ($stroke[strlen($stroke) - 1] === '/') {
             return substr($stroke, 0, -1);
         }
 
@@ -261,7 +261,7 @@ class URLHandler
         // /.../.../ или /.../...?/
 
         if ($result_url == trim($url, '?') ||
-            (strlen($result_shift) && $result_shift{strlen($result_shift) - 1} === '?' && implode($result_url_parts) === implode($url_parts))) {
+            (strlen($result_shift) && $result_shift[strlen($result_shift) - 1] === '?' && implode($result_url_parts) === implode($url_parts))) {
             // Прямое совпадение
             return $block;
 
@@ -275,7 +275,7 @@ class URLHandler
                 $generate_urls = explode("/", $url);
 
                 if (count($generate_real_urls) !== count($generate_urls) &&
-                    !(($result_shift{strlen($result_shift) - 2} == '?' || $result_shift{strlen($result_shift) - 1} == '?') &&
+                    !(($result_shift[strlen($result_shift) - 2] == '?' || $result_shift[strlen($result_shift) - 1] == '?') &&
                         count($generate_real_urls) + 1 == count($generate_urls))) {
                     // Не совпадает длина маршрута с url
 
@@ -289,13 +289,13 @@ class URLHandler
 
                     if (!empty($generate_url)) {
 
-                        if ($generate_url[0] === '{' && $generate_url{strlen($generate_url) - 1} === '}') {
+                        if ($generate_url[0] === '{' && $generate_url[strlen($generate_url) - 1] === '}') {
 
                             $exp = trim($generate_url, '{?}');
 
                             if (isset($mat[$exp])) {
 
-                                if (!(empty($generate_real_urls[$q]) && $generate_url{strlen($generate_url) - 2} === '?')) {
+                                if (!(empty($generate_real_urls[$q]) && $generate_url[strlen($generate_url) - 2] === '?')) {
 
                                     preg_match('/^' . $mat[$exp] . '$/u', $generate_real_urls[$q], $matches);
 
@@ -309,7 +309,7 @@ class URLHandler
 
                         } else {
                             // Есть вариативность, но и есть прямые совпадения:
-                            if (!(empty($generate_real_urls[$q]) && $generate_url{strlen($generate_url) - 1} === '?')) {
+                            if (!(empty($generate_real_urls[$q]) && $generate_url[strlen($generate_url) - 1] === '?')) {
                                 if (trim($generate_url, "?") !== $generate_real_urls[$q]) {
 
                                     return false;

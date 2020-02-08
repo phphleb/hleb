@@ -46,7 +46,7 @@ class AddressBar
 
             $var_second = $this->INPUT_PARAMS['HLEB_PROJECT_ENDING_URL'] ? $address . '/' : $address;
 
-            $var_all = $address{strlen($address) - 1} == '/' ? $var_first : $var_second;
+            $var_all = $address[strlen($address) - 1] == '/' ? $var_first : $var_second;
 
             $rel_address = $file_url ? $address : $var_all; // address
         }
