@@ -16,7 +16,7 @@ class RouteMethodPrefix extends MainRouteMethod
     protected $instance;
 
     /**
-     * RouteMethodName constructor.
+     * RouteMethodPrefix constructor.
      * @param StandardRoute $instance
      * @param string $prefix
      */

@@ -9,7 +9,7 @@ use Hleb\Constructor\Routes\Methods\{
     RouteMethodGet, RouteMethodType, RouteMethodName, RouteMethodController,
     RouteMethodGetGroup, RouteMethodEndGroup, RouteMethodBefore, RouteMethodAfter, RouteMethodWhere, RouteMethodGetType,
     RouteMethodEndType, RouteMethodEnd, RouteMethodPrefix, RouteMethodProtect, RouteMethodGetProtect, RouteMethodEndProtect,
-    RouteMethodRenderMap, RouteMethodDomain, RouteMethodAdminPanController
+    RouteMethodRenderMap, RouteMethodDomain, RouteMethodAdminPanController, RouteMethodModule
 };
 use Hleb\Constructor\Routes\MainRoute;
 
@@ -126,6 +126,13 @@ class Route extends MainRoute implements StandardRoute
     {
 
         return self::add(new RouteMethodController(self::instance(), $class_name, $params));
+
+    }
+
+    public static function module($module_name, $class_name = "Controller", array $params = [])
+    {
+
+        return self::add(new RouteMethodModule(self::instance(), $module_name, $class_name, $params));
 
     }
 

@@ -392,8 +392,6 @@ class RouteMethodEnd extends MainRouteMethod
             } else if ($block['method_type_name'] == "get") {
 
                 $blocks[$key]['type'] = $this->main_params;
-
-
             }
 
         }

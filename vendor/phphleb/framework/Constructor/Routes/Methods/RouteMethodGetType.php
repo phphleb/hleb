@@ -16,7 +16,7 @@ class RouteMethodGetType extends MainRouteMethod
     protected $instance;
 
     /**
-     * RouteMethodType constructor.
+     * RouteMethodGetType constructor.
      * @param StandardRoute $instance
      * @param string|array $type
      */

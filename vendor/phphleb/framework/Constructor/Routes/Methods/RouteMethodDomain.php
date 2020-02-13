@@ -16,7 +16,7 @@ class RouteMethodDomain extends MainRouteMethod
     protected $instance;
 
     /**
-     * RouteMethodName constructor.
+     * RouteMethodDomain constructor.
      * @param StandardRoute $instance
      * @param array|string $name
      * @param int $level

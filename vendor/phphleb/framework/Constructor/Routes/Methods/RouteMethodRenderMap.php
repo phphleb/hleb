@@ -16,7 +16,7 @@ class RouteMethodRenderMap extends MainRouteMethod
     protected $instance;
 
     /**
-     * RouteMethodName constructor.
+     * RouteMethodRenderMap constructor.
      * @param StandardRoute $instance
      * @param string $name
      * @param string|array $map

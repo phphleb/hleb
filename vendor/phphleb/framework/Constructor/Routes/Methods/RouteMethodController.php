@@ -35,7 +35,7 @@ class RouteMethodController extends MainRouteMethod
     private function calc($controller_name, $params)
     {
 
-        $this->actions = [$controller_name, $params];
+        $this->actions = [$controller_name, $params, "controller"];
 
         $file_name = explode("@", $controller_name)[0];
 

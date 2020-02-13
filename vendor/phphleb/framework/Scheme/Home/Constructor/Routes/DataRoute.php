@@ -24,6 +24,8 @@ abstract class DataRoute
 
     protected $errors;
 
+    protected $controller_path;
+
     protected function  create_method_data(){}
 
 

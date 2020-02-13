@@ -19,6 +19,7 @@ class MainConnector implements Connector
             "Models\*" => "app/Models/",
             "App\Middleware\Before\*" => "app/Middleware/Before/",
             "App\Middleware\After\*" => "app/Middleware/After/",
+            "Modules\*'" => "modules",
             "App\Commands\*"=>"app/Commands/",
             // ...или, если добавляется конкретный класс,
             "DB" => "database/DB.php",

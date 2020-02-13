@@ -92,6 +92,7 @@ Controllers
 -----------------------------------
 Creating a simple controller with such content:
 ```php
+<?php
 // File /app/Controllers/TestController.php
 namespace App\Controllers;
 use App\Models\UserModel;
@@ -116,10 +117,36 @@ or
 Route::get('/profile/{id}/')->controller('TestController@index',['friends'])->where(['id' => '[0-9]+']);
 ``` 
 
+Modules
+-----------------------------------
+For modular development, you need to create the folder 'modules'.
+
++ /modules
+  + /name
+    + /**DefaultModuleController**.php (or 'Controller.php' without specifying the controller in the route)
+    + /**page**.php
+     
+```php
+Route::get('/part/{num}/')->module('name', 'DefaultModuleController')->where(['num' => '[0-9]+']);
+``` 
+
+```php
+<?php
+// File /modules/name/DefaultModuleController.php (similar to standard controller)
+namespace Modules\Name;
+class DefaultModuleController extends \MainController
+{
+   function index()
+   {
+      return view("page");
+   }
+}
+```
 
 Models
 -----------------------------------
  ```php
+<?php
 // File /app/Models/UserModel.php
 namespace App\Models;
 class UserModel extends \MainModel

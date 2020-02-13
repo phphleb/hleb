@@ -16,7 +16,7 @@ class RouteMethodBefore extends MainRouteMethod
     protected $instance;
 
     /**
-     * RouteMethodController constructor.
+     * RouteMethodBefore constructor.
      * @param StandardRoute $instance
      * @param string $controller_name
      * @param array $params

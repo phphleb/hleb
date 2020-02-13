@@ -16,7 +16,7 @@ class RouteMethodAfter extends MainRouteMethod
     protected $instance;
 
     /**
-     * RouteMethodController constructor.
+     * RouteMethodAfter constructor.
      * @param StandardRoute $instance
      * @param string $controller_name
      * @param array $params
