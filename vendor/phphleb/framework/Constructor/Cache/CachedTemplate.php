@@ -24,35 +24,40 @@ class CachedTemplate
     
     private $dir = null;
 
+    private $data = null;
+
     /**
      * CachedTemplate constructor.
-     * @param string $template
-     * @param array $template_params
+     * @param string $path
+     * @param array $templateParams
      */
-    function __construct(string $template, array $template_params = [])
+    function __construct(string $path, array $templateParams = [])
     {
         if (HLEB_PROJECT_DEBUG) {
             $backtrace = $this->debugBacktrace();
             $time = microtime(true);
         }
+        $templateName = trim($path, '/') . '.php';
 
-        $this->templateParams = $template_params;
-        $path_to_file = $this->searcCacheFile($template);
-        $this->tempfile = HLEB_GLOBAL_DIRECTORY . '/resources/views/' . trim($template, '/') . '.php';
-        if (is_null($path_to_file)) {
+        $templateDirectory = $this->getTemplateDirectory($templateName);
+
+        $this->templateParams = $templateParams;
+        $pathToFile = $this->searcCacheFile($path);
+        $this->tempfile = $templateDirectory;
+        if (is_null($pathToFile)) {
             ob_start();
             $this->createContent();
             $this->cacheTemplate(ob_get_contents());
             ob_end_clean();
         } else {
-            $this->content = file_get_contents($path_to_file, true);
+            $this->content = file_get_contents($pathToFile, true);
         }
-        $this->tempfile = $this->content;
+        $this->data = $this->content;
         $this->addContent();
 
         if (HLEB_PROJECT_DEBUG) {
             $time = microtime(true) - $time;
-            Info::insert('Templates', trim($template, '/') . $backtrace . $this->infoCache() . ' load: ' .
+            Info::insert('Templates', trim($path, '/') . $backtrace . $this->infoCache() . ' load: ' .
                 (round($time, 4) * 1000) . ' ms , ' . $this->infoTemplateName() . '(...)');
         }
     }
@@ -117,7 +122,7 @@ class CachedTemplate
         if ($this->cacheTime === 0) {
 
             // Without caching.
-            $this->content = $content;
+            $this->data = $content;
             $this->addContent();
 
         } else {
@@ -167,12 +172,20 @@ class CachedTemplate
 
     private function addContent()
     {
-        (new TCreator($this->tempfile, $this->templateParams))->print();
+        (new TCreator($this->data, $this->templateParams))->print();
     }
 
     private function createContent()
     {
         $this->cacheTime = (new TCreator($this->tempfile, $this->templateParams))->include();
+    }
+
+    private function getTemplateDirectory($templateName)
+    {
+        if(file_exists(HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName)){
+            return HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName;
+        }
+        return HLEB_GLOBAL_DIRECTORY . '/resources/views/' . $templateName;
     }
 
 }

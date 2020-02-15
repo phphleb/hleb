@@ -12,10 +12,15 @@ class MainTemplate
     {
         if(HLEB_PROJECT_DEBUG){
             $time = microtime(true);
-            $backtrace = $this->hl_debug_backtrace();
+            $backtrace = $this->debugBacktrace();
         }
+        $templateName = trim($path, '/') . '.php';
 
-        (new TCreator(HLEB_GLOBAL_DIRECTORY . '/resources/views/' . trim($path, '/') . '.php', $template))->include();
+        $templateDirectory = $this->getTemplateDirectory($templateName);
+
+        print $templateName;
+
+        (new TCreator($templateDirectory, $template))->include();
 
         if(HLEB_PROJECT_DEBUG) {
             $time = microtime(true) - $time;
@@ -23,7 +28,7 @@ class MainTemplate
         }
     }
 
-    public function hl_debug_backtrace()
+    public function debugBacktrace()
     {
         $trace = debug_backtrace(2,4);
         if(isset($trace[3])){
@@ -31,6 +36,14 @@ class MainTemplate
             return  ' (' . end($path) . " : " . ($trace[3]['line'] ?? '') . ')';
         }
         return '';
+    }
+
+    private function getTemplateDirectory($templateName)
+    {
+        if(file_exists(HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName)){
+            return HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName;
+        }
+        return HLEB_GLOBAL_DIRECTORY . '/resources/views/' . $templateName;
     }
 
 }

@@ -259,6 +259,13 @@ class Workspace
 
         $method = $call[1] ?? 'index';
 
+        if(!class_exists($initiator)){
+            $hlExcludedErrors = 'HL043-ROUTE_ERROR: Сlass `' . $initiator . '` not exists. ~' .
+                ' Класс `' . $initiator . '` не обнаружен.';
+
+            ErrorOutput::get($hlExcludedErrors);
+        }
+
         (new $initiator())->{$method}(...$arguments);
 
     }
@@ -276,6 +283,13 @@ class Workspace
 
         if(isset($action[2]) && $action[2] == 'module'){
 
+            if(!file_exists(HLEB_GLOBAL_DIRECTORY . "/modules/")){
+                $hlExcludedErrors = 'HL044-ROUTE_ERROR: Error in method ->module() ! ' . 'The `/modules` directory is not found, you must create it. ~' .
+                    ' Директория `/modules` не обнаружена, необходимо её создать.';
+
+                ErrorOutput::get($hlExcludedErrors);
+            }
+
             $this->controllerForepart = 'Modules\\';
 
             $searchToModule = explode("/", $className);
@@ -288,6 +302,15 @@ class Workspace
         $initiator = $this->controllerForepart . $className;
 
         $method = $call[1] ?? 'index';
+
+        if(!class_exists($initiator)){
+           $hlExcludedErrors = 'HL042-ROUTE_ERROR: Class `' . $initiator . '` not exists. ~' .
+                ' Класс  `' . $initiator . '` не обнаружен.';
+
+            ErrorOutput::get($hlExcludedErrors);
+
+            return null;
+        }
 
         return (new $initiator())->{$method}(...$arguments);
     }

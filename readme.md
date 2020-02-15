@@ -122,25 +122,32 @@ Modules
 For modular development, you need to create the folder 'modules'.
 
 + /modules
-  + /name
+  + /example    
     + /**DefaultModuleController**.php (or 'Controller.php' without specifying the controller in the route)
-    + /**page**.php
-     
+    + /**content**.php
+    + /templates
+       + /**origin**.php
 ```php
-Route::get('/part/{num}/')->module('name', 'DefaultModuleController')->where(['num' => '[0-9]+']);
+Route::get('/test/module/default/')->module('example', 'DefaultModuleController');
 ``` 
 
 ```php
 <?php
-// File /modules/name/DefaultModuleController.php (similar to standard controller)
-namespace Modules\Name;
+// File /modules/example/DefaultModuleController.php (similar to standard controller)
+namespace Modules\Example;
 class DefaultModuleController extends \MainController
 {
    function index()
    {
-      return view("page");
+      return view("content");
    }
 }
+```
+```php
+<?php
+// File /modules/example/content.php
+includeTemplate("/example/templates/origin");
+
 ```
 
 Models
@@ -167,12 +174,12 @@ Templates
 -----------------------------------
 ```php
 // File /resources/views/content.php
-includeTemplate('templates/name', ['p1'=>'data1', 'p2'=>'data2']);
+includeTemplate('templates/origin', ['variable1' => 'value1', 'variable2' => 'value2']);
 ```
 ```php
-// File /resources/views/templates/name.php
-echo $p1; // data1
-echo $p2; // data2
+// File /resources/views/templates/origin.php
+echo $variable1; // value1
+echo $variable2; // value2
 ```
 
 
