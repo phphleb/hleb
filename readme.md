@@ -128,7 +128,7 @@ For modular development, you need to create the folder 'modules'.
     + /templates
        + /**origin**.php
 ```php
-Route::get('/test/module/default/')->module('example', 'DefaultModuleController');
+Route::get('/test/module/example/')->module('example', 'DefaultModuleController');
 ``` 
 
 ```php
