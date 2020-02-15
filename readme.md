@@ -92,7 +92,6 @@ Controllers
 -----------------------------------
 Creating a simple controller with such content:
 ```php
-<?php
 // File /app/Controllers/TestController.php
 namespace App\Controllers;
 use App\Models\UserModel;
@@ -132,7 +131,6 @@ Route::get('/test/module/example/')->module('example', 'DefaultModuleController'
 ``` 
 
 ```php
-<?php
 // File /modules/example/DefaultModuleController.php (similar to standard controller)
 namespace Modules\Example;
 class DefaultModuleController extends \MainController
@@ -144,7 +142,6 @@ class DefaultModuleController extends \MainController
 }
 ```
 ```php
-<?php
 // File /modules/example/content.php
 includeTemplate('/example/templates/origin');
 
@@ -153,7 +150,6 @@ includeTemplate('/example/templates/origin');
 Models
 -----------------------------------
  ```php
-<?php
 // File /app/Models/UserModel.php
 namespace App\Models;
 class UserModel extends \MainModel
