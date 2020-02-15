@@ -139,14 +139,14 @@ class DefaultModuleController extends \MainController
 {
    function index()
    {
-      return view("content");
+      return view('content');
    }
 }
 ```
 ```php
 <?php
 // File /modules/example/content.php
-includeTemplate("/example/templates/origin");
+includeTemplate('/example/templates/origin');
 
 ```
 
