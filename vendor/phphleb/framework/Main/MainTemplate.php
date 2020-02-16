@@ -40,7 +40,7 @@ class MainTemplate
 
     private function getTemplateDirectory($templateName)
     {
-        if(file_exists(HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName)){
+        if(defined('HLEB_OPTIONAL_MODULE_SELECTION') && HLEB_OPTIONAL_MODULE_SELECTION){
             return HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName;
         }
         return HLEB_GLOBAL_DIRECTORY . '/resources/views/' . $templateName;
