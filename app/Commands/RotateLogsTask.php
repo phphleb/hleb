@@ -2,7 +2,7 @@
 
 namespace App\Commands;
 
-class RotateLogsTask extends \MainTask
+class RotateLogsTask extends \Hleb\Scheme\App\Commands\MainTask
 {
     // php console rotate-logs-task
 

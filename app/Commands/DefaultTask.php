@@ -2,7 +2,7 @@
 
 namespace App\Commands;
 
-class DefaultTask extends \MainTask
+class DefaultTask extends \Hleb\Scheme\App\Commands\MainTask
 {
     // php console default-task [arg]
 

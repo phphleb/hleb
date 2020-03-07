@@ -6,8 +6,6 @@ declare(strict_types=1);
 
 class_alias('Hleb\Constructor\Handlers\Request', 'Request');
 
-class_alias('Hleb\Scheme\App\Commands\MainTask', 'MainTask');
-
 class_alias('Hleb\Scheme\App\Controllers\MainController', 'MainController');
 
 class_alias('Hleb\Scheme\App\Middleware\MainMiddleware', 'MainMiddleware');
