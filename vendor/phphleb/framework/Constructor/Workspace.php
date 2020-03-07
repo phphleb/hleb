@@ -287,7 +287,7 @@ class Workspace
                 define('HLEB_OPTIONAL_MODULE_SELECTION', file_exists(HLEB_GLOBAL_DIRECTORY . "/modules/"));
             }
 
-            if(HLEB_OPTIONAL_MODULE_SELECTION){
+            if(!HLEB_OPTIONAL_MODULE_SELECTION){
                 $hlExcludedErrors = 'HL044-ROUTE_ERROR: Error in method ->module() ! ' . 'The `/modules` directory is not found, you must create it. ~' .
                     ' Директория `/modules` не обнаружена, необходимо её создать.';
 

@@ -4,17 +4,17 @@ namespace Hleb\Scheme\Home\Constructor\Routes;
 
 interface StandardRoute
 {
-    public static function get($route);
+    public static function get(string $route);
 
     public static function getGroup();
 
     public static function endGroup();
 
-    public static function before($class_name);
+    public static function before(string $class_name);
 
-    public static function after($class_name);
+    public static function after(string $class_name);
 
-    public static function where($params);
+    public static function where(array $params);
 
     public static function type($types);
 
@@ -22,9 +22,9 @@ interface StandardRoute
 
     public static function endType();
 
-    public static function name($name);
+    public static function name(string $name);
 
-    public static function prefix($add);
+    public static function prefix(string $add);
 
     public static function protect();
 
@@ -32,13 +32,19 @@ interface StandardRoute
 
     public static function domainPattern($name);
 
+    public static function domainTemplate($name);
+
     public static function getProtect();
 
     public static function endProtect();
 
-    public static function renderMap($name, $map);
+    public static function renderMap(string $name, $map);
 
-    public static function controller($class_name);
+    public static function controller(string $class_name);
+
+    public static function module(string $module_name);
+
+    public static function adminPanController(string $class_name, string $block_name);
 
     public static function data();
 

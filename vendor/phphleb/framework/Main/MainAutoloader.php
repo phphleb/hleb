@@ -10,31 +10,30 @@ use Hleb\Scheme\Home\Main\Connector;
 
 class MainAutoloader
 {
-    function __construct()
-    {
-    }
-
     /**
      * @param $class string
      */
     public static function get(string $class)
     {
-        
+
         if(class_exists($class, false) || interface_exists($class, false) ) return;
 
         if (self::search_and_include($class, new HomeConnector())) {
 
-            // Проверка внутренних классов
+            /* Checking inner classes. */
+            /* Проверка внутренних классов. */
 
         } else if (self::search_and_include($class, new MainConnector())) {
 
-            // Проверка пользовательских классов
+            /* Checking custom classes. */
+            /* Проверка пользовательских классов. */
 
         } else {
 
             $clarification = '/';
 
-            // Сокращение внутреннего перенаправления
+            /* Reduce internal redirection. */
+            /* Сокращение внутреннего перенаправления */
 
             $path = explode('\\', $class);
 
@@ -53,28 +52,30 @@ class MainAutoloader
                     $clarification = '/' . HLEB_VENDOR_DIR_NAME . '/';
                 }
 
-                // По имени библиотеки
+                /* By the name of the library. */
+                /* По имени библиотеки. */
 
                 if(isset($path[2])) {
 
-                    // Имя производителя
-                    $path_to_vendor_name = HLEB_VENDOR_DIRECTORY . '/' . $path[0];
+                    $pathToVendorName = HLEB_VENDOR_DIRECTORY . '/' . $path[0];
 
-                    if (is_dir($path_to_vendor_name)) {
+                    if (is_dir($pathToVendorName)) {
 
                         $clarification = '/' . HLEB_VENDOR_DIR_NAME. '/';
 
-                        if (is_dir($path_to_vendor_name . '/' . strtolower($path[1]))) {
+                        if (is_dir($pathToVendorName . '/' . strtolower($path[1]))) {
 
                             $path[1] = strtolower($path[1]);
 
                         } else {
-                            // Составные классы с дефисами в названии файла
-                            $hyphenated_name = trim(strtolower(preg_replace('/([A-Z])/', '-$1', $path[1])), '-');
 
-                            if (is_dir( $path_to_vendor_name . "/" . $hyphenated_name)) {
+                            /* Compound classes with hyphens in the file name. */
+                            /* Составные классы с дефисами в названии файла.  */
+                            $hyphenatedName = trim(strtolower(preg_replace('/([A-Z])/', '-$1', $path[1])), '-');
 
-                                $path[1] = $hyphenated_name;
+                            if (is_dir( $pathToVendorName . "/" . $hyphenatedName)) {
+
+                                $path[1] = $hyphenatedName;
                             }
                         }
                     }
@@ -84,8 +85,8 @@ class MainAutoloader
 
             }
 
-            // Namespace класса соответствует файловому расположению в проекте
-
+            /* The class namespace corresponds to the file location in the project. */
+            /* Namespace класса соответствует файловому расположению в проекте. */
 
             self::init(HLEB_GLOBAL_DIRECTORY . $clarification . str_replace('\\', "/", $class) . '.php');
 
@@ -97,7 +98,8 @@ class MainAutoloader
     {
         $responding = $connector->add();
 
-        //Если найден класс с прямой ссылкой
+        /* If a class with a direct link is found. */
+        /* Если найден класс с прямой ссылкой. */
 
         if (isset($responding[$class])) {
 
@@ -107,18 +109,44 @@ class MainAutoloader
 
         }
 
-        //Если для класса указано только соответствие папки, в которой искать класс по названию
+        /* If only the correspondence of the folder. */
+        /* Если указано только соответствие папки. */
 
         foreach ($responding as $key => $value) {
-            if (strpos($key, '/*') !== false) {
 
-                $cleared_str = str_replace('*', '', $key);
+            if (strpos($key, '\\*') !== false) {
 
-                if (strpos($cleared_str, $class) === 0) {
+                $clearedStr = str_replace('\*', '', $key);
 
-                    self::init(HLEB_GLOBAL_DIRECTORY . '/' . $value . $class . '.php');
+                if (strpos($class, $clearedStr) === 0) {
 
-                    return true;
+                    $searchFileName = str_replace("\\", "/" , '/' . $class . '.php');
+
+                    if(file_exists(HLEB_GLOBAL_DIRECTORY . $searchFileName)){
+
+                        self::init(HLEB_GLOBAL_DIRECTORY . $searchFileName, false);
+
+                        return true;
+
+                    } else {
+
+                        $fileParts = explode("/", $searchFileName);
+
+                        foreach($fileParts as $key => &$part){
+                            if(strlen($part)) {
+
+                                $part = strtolower($part);
+                                $searchFile = HLEB_GLOBAL_DIRECTORY . implode(DIRECTORY_SEPARATOR, $fileParts);
+
+                                if (file_exists($searchFile)) {
+
+                                    self::init($searchFile, false);
+
+                                    return true;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -127,12 +155,12 @@ class MainAutoloader
     }
 
 
-    private static function init(string $path)
+    private static function init(string $path, $test = true)
     {
-        if (is_readable($path) !== false) {
+        if ($test && is_readable($path) === false) return;
 
-            include_once "$path";
-        }
+        include_once "$path";
+
     }
 
 

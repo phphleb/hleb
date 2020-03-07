@@ -19,7 +19,7 @@ class RouteMethodGet extends MainRouteMethod
     /**
      * RouteMethodGet constructor.
      * @param StandardRoute $instance
-     * @param string|array $route_path
+     * @param string $route_path
      * @param string|object|Closure|array $params
      */
     function __construct(StandardRoute $instance, string $route_path, $params = [])

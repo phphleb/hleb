@@ -2,6 +2,20 @@
 
 declare(strict_types=1);
 
+// Facades
+
+class_alias('Hleb\Constructor\Handlers\Request', 'Request');
+
+class_alias('Hleb\Scheme\App\Commands\MainTask', 'MainTask');
+
+class_alias('Hleb\Scheme\App\Controllers\MainController', 'MainController');
+
+class_alias('Hleb\Scheme\App\Middleware\MainMiddleware', 'MainMiddleware');
+
+class_alias('Hleb\Scheme\App\Models\MainModel', 'MainModel');
+
+class_alias('Hleb\Constructor\Routes\Route', 'Route');
+
 
 function view($to, $data = null)
 {
@@ -101,6 +115,11 @@ function getRequestResources()
 function getRequestHead()
 {
     return hleb_t0ulb902e69thp_request_head();
+}
+
+function getRequest()
+{
+    return hleb_e70c10c1057hn11cc8il2_get_request();
 }
 
 
