@@ -6,3 +6,4 @@ class DefaultModel extends \MainModel
 {
 
 }
+

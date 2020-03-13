@@ -95,12 +95,11 @@ Creating a simple controller with such content:
 // File /app/Controllers/TestController.php
 namespace App\Controllers;
 use App\Models\UserModel;
-use Hleb\Constructor\Handlers\Request;
 class TestController extends \MainController
 {
     function index($value) // $value = 'friends'
     {
-     $data = UserModel::getData(['id' => Request::get('id'), 'join' => $value]);
+     $data = UserModel::getData(['id' => \Request::get('id'), 'join' => $value]);
      return view('/user/profile', ['data' => $data]);
     }
 }
@@ -199,7 +198,7 @@ Route::get('/template/', view('templates/map.twig', ['variable' => 'value']));
 Debug Panel
 -----------------------------------
 ```php
-\Hleb\Main\WorkDebug::add($debug_data, 'description');
+WorkDebug::add($debug_data, 'description');
 ```
 
 License

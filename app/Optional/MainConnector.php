@@ -6,13 +6,13 @@ use Hleb\Scheme\Home\Main\Connector;
 
 class MainConnector implements Connector
 {
-    function __construct(){}
     /**
+     *  Mapping to autoload classes: namespace => realpath
+     *
      *  Сопоставление для автозагрузки классов: namespace => realpath
      */
     public function add()
     {
-
         return [
 
             "App\Controllers\*" => "app/Controllers/",
@@ -28,9 +28,9 @@ class MainConnector implements Connector
             'Phphleb\Adminpan\MainAdminPanel'=>'vendor/phphleb/adminpan/MainAdminPanel.php',
             // ... //
 
-
         ];
 
     }
 
 }
+

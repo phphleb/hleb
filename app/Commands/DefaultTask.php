@@ -9,12 +9,12 @@ class DefaultTask extends \Hleb\Scheme\App\Commands\MainTask
     const DESCRIPTION = "Default task";
 
     protected function execute($arg = null)
-    {
+     {
 
         // Your code here
 
         echo "\n" .__CLASS__ . " done." . "\n";
-    }
+     }
 
 }
 

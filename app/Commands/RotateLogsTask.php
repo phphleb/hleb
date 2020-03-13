@@ -10,6 +10,7 @@ class RotateLogsTask extends \Hleb\Scheme\App\Commands\MainTask
 
     protected function execute($arg = null)
     {
+
         // Task for cron (~ daily) or a separate run for log rotation
         // Задание для cron (~ ежедневно) или запуск вручную для ротирования логов
 
