@@ -61,6 +61,7 @@ class HomeConnector implements Connector
             'Phphleb\Debugpan\DPanel' => $vendor . '/phphleb/debugpan/DPanel.php',
             'XdORM\Shell\XdHelper' => $vendor . '/phphleb/xdorm/Shell/XdHelper.php',
             'XdORM\XD' => $vendor . '/phphleb/xdorm/XD.php',
+            'Hleb\Main\DB' => $vendor . '/phphleb/framework/Main/DB.php',
             'XdORM\Shell\XdDB' => $vendor . '/phphleb/xdorm/Shell/XdDB.php',
             'Radjax\Src\RCreator' => $vendor . '/phphleb/radjax/Src/RCreator.php',
             'Phphleb\Adminpan\MainAdminPanel' => $vendor . '/phphleb/adminpan/MainAdminPanel.php',

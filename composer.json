@@ -22,12 +22,14 @@
   "require": {
     "php": "^7.0.0",
     "ext-json": "*",
-    "phphleb/framework": "1.*",
+    "ext-pdo": "*",
+    "phphleb/framework": ">=1.5.0",
     "phphleb/debugpan": "1.*"
   },
   "autoload": {
     "psr-4": {
       "App\\": "app/",
+      "Modules\\": "modules/",
       "Phphleb\\": "vendor/phphleb/",
       "Hleb\\": "vendor/phphleb/framework/"
     }
@@ -38,6 +40,11 @@
   },
   "config": {
     "optimize-autoloader": true
+  },
+  "scripts": {
+    "post-create-project-cmd": [
+      "@php -r \"file_exists('./database/dbase.config.php') || copy('./database/default.dbase.config.php', './database/dbase.config.php');\""
+    ]
   },
   "minimum-stability": "dev",
   "prefer-stable": true

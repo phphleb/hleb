@@ -15,9 +15,6 @@ class_alias('Hleb\Constructor\Routes\Route', 'Route');
 
 class_alias('Hleb\Main\WorkDebug', 'WorkDebug');
 
-class_alias('XdORM\XD', 'XD');
-
-
 function view($to, $data = null)
 {
     return hleb_v5ds34hop4nm1d_page_view($to, $data);

@@ -1,12 +1,28 @@
 <?php
 
-class DB extends \Hleb\Main\DB
+namespace Hleb\Main;
+
+class DB
 {
+     use \DeterminantStaticUncreated;
+
+    public static function instance()
+    {
+        if (is_null(self::$instance)) {
+
+            require_once HLEB_GLOBAL_DIRECTORY . "/database/dbase.config.php";
+
+            self::$instance = self::init();
+        }
+        return self::$instance;
+    }
+
     /*
      |--------------------------------------------------------------------------------------
      | Examples of appeals.
      |--------------------------------------------------------------------------------------
-     | \DB::run() -  secure connection to the database of the form
+     | use Hleb\Main\DB;
+     | DB::run() -  secure connection to the database of the form
      | ("SELECT name_ru,icon,link_ru FROM `catalogs` WHERE `show`=? AND `type`=?", $args)
      | where $args is an enumeration of the values (show and type) in the array.
      |
@@ -45,7 +61,8 @@ class DB extends \Hleb\Main\DB
      |--------------------------------------------------------------------------------------
      |  Примеры обращения
      |--------------------------------------------------------------------------------------
-     | \DB::run() -  безопасное подключение к базе вида
+     | use Hleb\Main\DB;
+     | DB::run() -  безопасное подключение к базе вида
      | ("SELECT name_ru,icon,link_ru FROM `catalogs` WHERE `show`=? AND `type`=?", $args)
      | где $args - перечисление значений (show и type) в массиве
      |
@@ -85,7 +102,14 @@ class DB extends \Hleb\Main\DB
     */
     public static function run($sql, $args = array())
     {
-        return parent::run($sql, $args);
+        $time = microtime(true);
+
+        $stmt = self::instance()->prepare($sql);
+        $stmt->execute($args);
+
+        \Hleb\Main\DataDebug::add($sql, microtime(true) - $time, HLEB_TYPE_DB, true);
+
+        return $stmt;
     }
 
 
@@ -112,8 +136,45 @@ class DB extends \Hleb\Main\DB
     */
     public static function db_query($sql)
     {
-        return parent::db_query($sql);
+        $time = microtime(true);
+
+        $stmt = self::query($sql);
+
+        $data = $stmt->fetchAll();
+
+        \Hleb\Main\DataDebug::add(htmlentities($sql), microtime(true) - $time, HLEB_TYPE_DB, true);
+
+        return $data;
     }
+
+    protected static function init()
+    {
+        $prms = HLEB_PARAMETERS_FOR_DB[HLEB_TYPE_DB];
+
+        $opt = array(
+            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+            \PDO::ATTR_EMULATE_PREPARES =>
+                $prms["emulate_prepares"] ?? false
+        );
+
+        $user = $prms["user"];
+
+        $pass = $prms["pass"];
+
+        $condition = [];
+
+        foreach($prms as $key => $prm){
+            if(is_numeric($key)) {
+                $condition [] = preg_replace('/\s+/', '', $prm);
+            }
+        }
+
+        $connection = implode(";", $condition );
+
+        return new \PDO($connection, $user, $pass, $opt);
+    }
+
 }
 
 
