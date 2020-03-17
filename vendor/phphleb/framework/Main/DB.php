@@ -2,6 +2,8 @@
 
 namespace Hleb\Main;
 
+use Hleb\Main\Errors\ErrorOutput;
+
 class DB
 {
      use \DeterminantStaticUncreated;
@@ -152,10 +154,9 @@ class DB
         $prms = HLEB_PARAMETERS_FOR_DB[HLEB_TYPE_DB];
 
         $opt = array(
-            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-            \PDO::ATTR_EMULATE_PREPARES =>
-                $prms["emulate_prepares"] ?? false
+            \PDO::ATTR_ERRMODE => $prms["errmode"] ?? \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_DEFAULT_FETCH_MODE => $prms["default_fetch_mode"] ?? \PDO::FETCH_ASSOC,
+            \PDO::ATTR_EMULATE_PREPARES => $prms["emulate_prepares"] ?? false
         );
 
         $user = $prms["user"];

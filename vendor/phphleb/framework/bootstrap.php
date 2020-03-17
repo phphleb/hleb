@@ -33,7 +33,7 @@ define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'opti
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-require HLEB_PUBLIC_DIR . '/../' . (file_exists(__DIR__ . '/../start.hleb.php') ? '' : 'default.') . 'start.hleb.php';
+require HLEB_PUBLIC_DIR . '/../' . (file_exists(HLEB_PUBLIC_DIR . '/../start.hleb.php') ? '' : 'default.') . 'start.hleb.php';
 
 //To set a different directory name 'vendor' add HLEB_VENDOR_DIR_NAME to the constants
 if(!defined('HLEB_VENDOR_DIR_NAME')){
