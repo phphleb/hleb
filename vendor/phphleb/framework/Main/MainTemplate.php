@@ -18,8 +18,6 @@ class MainTemplate
 
         $templateDirectory = $this->getTemplateDirectory($templateName);
 
-        print $templateName;
-
         (new TCreator($templateDirectory, $template))->include();
 
         if(HLEB_PROJECT_DEBUG) {
