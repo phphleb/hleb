@@ -296,7 +296,11 @@ class Workspace
 
             $this->controllerForepart = 'Modules\\';
 
-            $searchToModule = explode("/", $className);
+            $searchToModule = explode("/", trim($className, '/\\'));
+
+            if(count($searchToModule) && !defined('HLEB_MODULE_NAME') ){
+                define('HLEB_MODULE_NAME', $searchToModule[0]);
+            }
 
             $this->viewPath = "/modules/" . implode("/", array_slice($searchToModule, 0, count($searchToModule) - 1)) . "/";
 

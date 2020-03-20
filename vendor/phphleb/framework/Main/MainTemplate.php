@@ -38,9 +38,15 @@ class MainTemplate
 
     private function getTemplateDirectory($templateName)
     {
-        if(defined('HLEB_OPTIONAL_MODULE_SELECTION') && HLEB_OPTIONAL_MODULE_SELECTION){
+        if(defined('HLEB_OPTIONAL_MODULE_SELECTION') && HLEB_OPTIONAL_MODULE_SELECTION &&
+            file_exists(HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName)){
             return HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName;
         }
+        if(defined('HLEB_OPTIONAL_MODULE_SELECTION') && HLEB_OPTIONAL_MODULE_SELECTION &&
+            defined('HLEB_MODULE_NAME') && HLEB_MODULE_NAME){
+            return HLEB_GLOBAL_DIRECTORY . '/modules/' . HLEB_MODULE_NAME . "/" . $templateName;
+        }
+
         return HLEB_GLOBAL_DIRECTORY . '/resources/views/' . $templateName;
     }
 
