@@ -37,7 +37,7 @@ class CachedTemplate
             $backtrace = $this->debugBacktrace();
             $time = microtime(true);
         }
-        $templateName = trim($path, '/') . '.php';
+        $templateName = trim($path, '/\\') . '.php';
 
         $templateDirectory = $this->getTemplateDirectory($templateName);
 
@@ -127,17 +127,17 @@ class CachedTemplate
 
         } else {
 
-            $this->deleteOldFile();
+            $this->deleteOldFiles();
             mkdir(HLEB_GLOBAL_DIRECTORY . HLEB_TEMPLATE_CACHED_PATH . '/' . $this->dir, 0777, true);
             $this->content = $content;                        
             $file = $this-> hashfile . '_' . $this->cacheTime . '.txt';
             file_put_contents($file, $content, LOCK_EX);
 
         }
-        if (rand(0, 1000) === 0) $this->deleteOldFile();
+        if (rand(0, 1000) === 0) $this->deleteOldFiles();
     }
 
-    private function deleteOldFile()
+    private function deleteOldFiles()
     {
         if (!isset($GLOBALS['HLEB_CACHED_TEMPLATES_CLEARED'])) {
             $path = HLEB_GLOBAL_DIRECTORY . HLEB_TEMPLATE_CACHED_PATH;
@@ -182,9 +182,13 @@ class CachedTemplate
 
     private function getTemplateDirectory($templateName)
     {
-        if(defined('HLEB_OPTIONAL_MODULE_SELECTION') && HLEB_OPTIONAL_MODULE_SELECTION){
-            return HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName;
+        if (defined('HLEB_OPTIONAL_MODULE_SELECTION') && HLEB_OPTIONAL_MODULE_SELECTION) {
+            if (file_exists(HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName)) {
+                return HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName;
+            }
+            return HLEB_GLOBAL_DIRECTORY . '/modules/' . HLEB_MODULE_NAME . "/" . $templateName;
         }
+
         return HLEB_GLOBAL_DIRECTORY . '/resources/views/' . $templateName;
     }
 

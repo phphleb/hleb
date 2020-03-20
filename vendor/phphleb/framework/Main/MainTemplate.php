@@ -14,7 +14,7 @@ class MainTemplate
             $time = microtime(true);
             $backtrace = $this->debugBacktrace();
         }
-        $templateName = trim($path, '/') . '.php';
+        $templateName = trim($path, '/\\') . '.php';
 
         $templateDirectory = $this->getTemplateDirectory($templateName);
 
@@ -38,12 +38,10 @@ class MainTemplate
 
     private function getTemplateDirectory($templateName)
     {
-        if(defined('HLEB_OPTIONAL_MODULE_SELECTION') && HLEB_OPTIONAL_MODULE_SELECTION &&
-            file_exists(HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName)){
-            return HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName;
-        }
-        if(defined('HLEB_OPTIONAL_MODULE_SELECTION') && HLEB_OPTIONAL_MODULE_SELECTION &&
-            defined('HLEB_MODULE_NAME') && HLEB_MODULE_NAME){
+        if (defined('HLEB_OPTIONAL_MODULE_SELECTION') && HLEB_OPTIONAL_MODULE_SELECTION) {
+            if (file_exists(HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName)) {
+                return HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName;
+            }
             return HLEB_GLOBAL_DIRECTORY . '/modules/' . HLEB_MODULE_NAME . "/" . $templateName;
         }
 
