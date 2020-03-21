@@ -6,38 +6,43 @@ namespace Hleb\Constructor;
 
 class TCreator
 {
-    private $HLEBTCreatorContentData = '';
+    private $hlTemplateContent = '';
 
-    private $HLEBTCreatorTemplateData = [];
+    private $hlTemplateData = [];
 
-    private $HLEBTCreatorCacheTime = 0;
+    private $hlCacheTime = 0;
 
     function __construct($content, $data = [])
     {
-        $this->HLEBTCreatorContentData = $content;
+        $this->hlTemplateContent = $content;
 
-        $this->HLEBTCreatorTemplateData = $data;
+        $this->hlTemplateData = $data;
     }
 
     public function include()
     {
-        extract($this->HLEBTCreatorTemplateData);
+        extract($this->hlTemplateData);
 
-        foreach($this->HLEBTCreatorTemplateData as $key => $value){
-            if(!in_array($key ,['HLEBTCreatorContentData','HLEBTCreatorCacheTime', 'HLEBTCreatorTemplateData'])) {
+        foreach($this->hlTemplateData as $key => $value){
+            if(!in_array($key ,['hlTemplateContent', 'hlTemplateData', 'hlCacheTime'])) {
                 $this->$key = $value;
             }
         }
 
-        require $this->HLEBTCreatorContentData;
+        require $this->includeTemplateName();;
 
-        return $this->HLEBTCreatorCacheTime;
+        return $this->hlCacheTime;
 
+    }
+
+    public function includeTemplateName()
+    {
+        return $this->hlTemplateContent;
     }
 
     public function print()
     {
-        echo $this->HLEBTCreatorContentData;
+        echo $this->hlTemplateContent;
 
         return null;
     }
@@ -49,7 +54,7 @@ class TCreator
      */
     public function setCacheTime(int $seconds)
     {
-        $this->HLEBTCreatorCacheTime = $seconds;
+        $this->hlCacheTime = $seconds;
     }
 }
 

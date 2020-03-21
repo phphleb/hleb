@@ -6,19 +6,30 @@ namespace Hleb\Constructor;
 
 class VCreator
 {
-    function __construct()
+    private $hlTemplateContent = '';
+
+    function __construct(string $include)
     {
+        $this->hlTemplateContent = $include;
+
         $data = hleb_to0me1cd6vo7gd_data();
         foreach ($data as $key => $value) {
-            $this->$key = $value;
+            if(!in_array($key ,['hlTemplateContent', 'hlTemplateData', 'hlCacheTime'])) {
+                $this->$key = $value;
+            }
         }
     }
 
-    public function view(string $include)
+    public function includeTemplateName()
+    {
+        return $this->hlTemplateContent;
+    }
+
+    public function view()
     {
         extract(hleb_to0me1cd6vo7gd_data());
 
-        require $include;
+        require $this->includeTemplateName();
 
     }
 }
