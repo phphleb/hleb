@@ -233,7 +233,7 @@ class Workspace
 
             } else {
                 // view file
-                $extension ? (new TwigCreator())->view($hlFile) : (new VCreator($hlExcludedFile))->view();
+                $extension ? (new TwigCreator())->view($hlFile) : (new VCreator())->view($hlExcludedFile);
             }
         } else {
             $errorFile = str_replace(str_replace(['\\', '//'], '/',HLEB_GLOBAL_DIRECTORY), "", $hlExcludedFile) . ($extension ? "" : ".php");

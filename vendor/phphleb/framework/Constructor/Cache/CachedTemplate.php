@@ -52,7 +52,9 @@ class CachedTemplate
         } else {
             $this->content = file_get_contents($pathToFile, true);
         }
-        $this->data = $this->content;
+        if($this->cacheTime !== 0){
+            $this->data = $this->content;
+        }
         $this->addContent();
 
         if (HLEB_PROJECT_DEBUG) {

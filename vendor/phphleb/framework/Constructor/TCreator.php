@@ -6,34 +6,38 @@ namespace Hleb\Constructor;
 
 class TCreator
 {
-    private $contentData = '';
+    private $HLEBTCreatorContentData = '';
 
-    private $teplateData = [];
+    private $HLEBTCreatorTemplateData = [];
 
-    private $cacheTime = 0;
+    private $HLEBTCreatorCacheTime = 0;
 
-    function __construct( $content, $data = [])
+    function __construct($content, $data = [])
     {
-        $this->contentData = $content;
+        $this->HLEBTCreatorContentData = $content;
 
-        $this->teplateData = $data;
+        $this->HLEBTCreatorTemplateData = $data;
     }
 
     public function include()
     {
-        extract($this->teplateData);
+        extract($this->HLEBTCreatorTemplateData);
 
-        require $this->contentData;
+        foreach($this->HLEBTCreatorTemplateData as $key => $value){
+            if(!in_array($key ,['HLEBTCreatorContentData','HLEBTCreatorCacheTime', 'HLEBTCreatorTemplateData'])) {
+                $this->$key = $value;
+            }
+        }
 
-        return $this->cacheTime;
+        require $this->HLEBTCreatorContentData;
+
+        return $this->HLEBTCreatorCacheTime;
 
     }
 
     public function print()
     {
-        extract($this->teplateData);
-
-        echo $this->contentData;
+        echo $this->HLEBTCreatorContentData;
 
         return null;
     }
@@ -45,7 +49,7 @@ class TCreator
      */
     public function setCacheTime(int $seconds)
     {
-        $this->cacheTime = $seconds;
+        $this->HLEBTCreatorCacheTime = $seconds;
     }
 }
 

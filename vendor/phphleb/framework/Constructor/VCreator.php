@@ -6,19 +6,20 @@ namespace Hleb\Constructor;
 
 class VCreator
 {
-    private $includeFile = '';
+    function __construct()
+    {
+        $data = hleb_to0me1cd6vo7gd_data();
+        foreach ($data as $key => $value) {
+            $this->$key = $value;
+        }
+    }
 
-    function __construct(string $include)
-   {
-       $this->includeFile = $include;
-   }
+    public function view(string $include)
+    {
+        extract(hleb_to0me1cd6vo7gd_data());
 
-   public function view()
-   {
-       extract (hleb_to0me1cd6vo7gd_data());
+        require $include;
 
-      require $this->includeFile;
-
-   }
+    }
 }
 
