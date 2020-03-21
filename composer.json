@@ -23,10 +23,15 @@
     "php": "^7.0.0",
     "ext-json": "*",
     "ext-pdo": "*",
-    "phphleb/framework": ">=1.5.0",
+    "phphleb/framework": ">=1.5.1",
     "phphleb/debugpan": "1.*"
   },
   "autoload": {
+    "classmap": [
+      "app/",
+      "database/",
+      "vendor/phphleb"
+    ],
     "psr-4": {
       "App\\": "app/",
       "Modules\\": "modules/",
