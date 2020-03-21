@@ -26,7 +26,7 @@ $ composer create-project phphleb/hleb
 $ cd hleb
 ```
 ```bash
-$ chmod -R 777 storage || from Linux
+$ chmod -R 777 storage # from Linux
 ```
 Upon completion of these steps, you can verify installation by typing the resource address assigned earlier (locally or on a remote server) in the address bar of the browser. If installation is successful, a parked page with the framework logo will be displayed.
 
