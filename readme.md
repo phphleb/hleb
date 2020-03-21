@@ -175,6 +175,9 @@ includeTemplate('templates/origin', ['variable1' => 'value1', 'variable2' => 'va
 // File /resources/views/templates/origin.php
 echo $variable1; // value1
 echo $variable2; // value2
+// or
+echo $this->variable1; // value1
+echo $this->variable2; // value2
 ```
 
 
