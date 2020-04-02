@@ -49,7 +49,7 @@ class CacheRoutes
 
             $errors = 'HL021-CACHE_ERROR: No write permission ! ' .
                 'Failed to save file to folder `/storage/*`.  You need to change permissions on this folder. ~ ' .
-                'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права для этой папки и вложений всем пользователям.';
+                'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права для этой папки и вложений.';
 
             ErrorOutput::get($errors);
         }

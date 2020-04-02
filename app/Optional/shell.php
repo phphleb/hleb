@@ -40,11 +40,6 @@ function csrf_token()
     return hleb_c3dccfa0da1a3e_csrf_token();
 }
 
-function storage($to, $data = null)
-{
-    return hleb_hol6h1d32sm0l1of_storage($to, $data);
-}
-
 function redirectToSite($url)
 {
     hleb_ba5c9de48cba78c_redirectToSite($url);

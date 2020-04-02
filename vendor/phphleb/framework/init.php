@@ -111,18 +111,6 @@ function hleb_gop0m3f4hpe10d_all($view = null, $data = null, $type = 'views')
 }
 
 /*
- * The storage( ... ) function is used as an alternative for view( ... ), using the /storage/ directory for data receiving.
- * Using this function, the user files from the /storage/public/ folder can be displayed. For example, storage('/public/file.jpg').
- *
- * Функция storage( ... ) используется как альтернатива view( ... ), используя директорию /storage/ для получения данных.
- * С помощью этой функции можно отображать пользовательские файлы из папки /storage/public/. Например, storage('/public/file.jpg').
- */
-function hleb_hol6h1d32sm0l1of_storage($view = null, $data = null)
-{
-    return hleb_gop0m3f4hpe10d_all($view, $data, 'storage');
-}
-
-/*
  * The data() function returns the $data parameters from the view( ..., $data ) function into the content.
  *
  * Функция data() возвращает в шаблон контента параметры $data из функции view( ..., $data ).
