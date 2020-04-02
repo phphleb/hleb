@@ -28,7 +28,7 @@ Upon completion of these steps, you can verify installation by typing the resour
 List of standard console commands:
 ```bash
 $ cd hleb
-```л
+```
 ```bash
 $ php console --help
 ```
