@@ -52,7 +52,9 @@ class ProjectLoader
 
         } else {
 
-            header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
+            if (!headers_sent()) {
+                header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
+            }
         }
 
     }

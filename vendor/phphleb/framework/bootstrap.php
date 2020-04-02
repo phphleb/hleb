@@ -19,6 +19,40 @@ define('HLEB_PROJECT_VERSION', '1');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'options']);
+
+// Project root directory
+if(!defined('HLEB_GLOBAL_DIRECTORY')) {
+    define('HLEB_GLOBAL_DIRECTORY', realpath(HLEB_PUBLIC_DIR . '/../'));
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+require HLEB_GLOBAL_DIRECTORY . '/' . (file_exists(HLEB_GLOBAL_DIRECTORY . '/start.hleb.php') ? '' : 'default.') . 'start.hleb.php';
+
+
+if(!defined('HLEB_PROJECT_DEBUG') || !is_bool(HLEB_PROJECT_DEBUG)) {
+    die("Incorrectly defined setting: ...DEBUG");
+}
+
+if(!defined('HLEB_PROJECT_CLASSES_AUTOLOAD') || !is_bool(HLEB_PROJECT_CLASSES_AUTOLOAD)) {
+    die("Incorrectly defined setting: ...CLASSES_AUTOLOAD");
+}
+
+if(!defined('HLEB_PROJECT_ENDING_URL') || !is_bool(HLEB_PROJECT_ENDING_URL)) {
+    die("Incorrectly defined setting: ...ENDING_URL");
+}
+
+if(!defined('HLEB_PROJECT_LOG_ON') || !is_bool(HLEB_PROJECT_LOG_ON)) {
+    die("Incorrectly defined setting: ...LOG_ON");
+}
+
+if(!defined('HLEB_PROJECT_VALIDITY_URL') || !is_string(HLEB_PROJECT_VALIDITY_URL)) {
+    die("Incorrectly defined setting: ...VALIDITY_URL");
+}
+
+
 // Demo redirection from "http" to "https"
 if(!defined('HLEB_PROJECT_ONLY_HTTPS')) {
     define('HLEB_PROJECT_ONLY_HTTPS', false);
@@ -29,11 +63,9 @@ if(!defined('HLEB_PROJECT_GLUE_WITH_WWW')) {
     define('HLEB_PROJECT_GLUE_WITH_WWW', 0);
 }
 
-define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'options']);
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-require HLEB_PUBLIC_DIR . '/../' . (file_exists(HLEB_PUBLIC_DIR . '/../start.hleb.php') ? '' : 'default.') . 'start.hleb.php';
+if (isset($_GET["_token"])) {
+    header("Referrer-Policy: origin-when-cross-origin");
+}
 
 //To set a different directory name 'vendor' add HLEB_VENDOR_DIR_NAME to the constants
 if(!defined('HLEB_VENDOR_DIR_NAME')){

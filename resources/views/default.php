@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width" />
@@ -43,7 +43,7 @@
 <body>
     <div id="hl-cont" align="center">
         <img src="/svg/logo.svg" width="200" height="200" class="hl-block" alt="HL">
-        <a href="https://github.com/phphleb/hleb/blob/master/readme.md"  target="_blank" class="hl-block">Instruction for use</a>
+        <a href="https://github.com/phphleb/hleb/blob/master/readme.md"  target="_blank" rel="noreferrer" class="hl-block">Instruction for use</a>
     </div>
     <br>
     <div class="hl-block">v<?= HLEB_PROJECT_VERSION ?></div>
