@@ -38,13 +38,9 @@ require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/Data.php';
 
 ///////////////////////////////////////TWIG/////////////////////////////////////////////////////////////////////////////////
 
-define('HL_TWIG_CONNECTED', interface_exists('Twig\Loader\LoaderInterface', true));
+define('HL_TWIG_CONNECTED', file_exists(HLEB_VENDOR_DIRECTORY . '/twig'));
 
 if(HL_TWIG_CONNECTED) {
-
-    if(HLEB_PROJECT_DEBUG){
-        \Hleb\Main\Info::insert('Autoload', 'Twig\Loader\LoaderInterface');
-    }
 
     if (!defined('HL_TWIG_LOADER_FILESYSTEM')) {
         //Folder with .twig files
