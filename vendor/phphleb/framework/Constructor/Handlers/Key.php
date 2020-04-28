@@ -57,9 +57,9 @@ class Key
 
             if (!file_exists(self::$path)) {
 
-                ErrorOutput::add("HL028-KEY_ERROR: No write permission '/storage/cashe/key/' ! " .
-                    "Failed to save file to folder `/storage/*`.  You need to change permissions on this folder. ~ " .
-                    "Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права для этой папки и вложений.");
+                ErrorOutput::add("HL028-KEY_ERROR: No write permission '/storage/cache/key/' ! " .
+                    "Failed to save file to folder `/storage/*`.  You need to change permissions for the web server in this folder. ~ " .
+                    "Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права веб-сервера для этой папки и вложений.");
 
                 ErrorOutput::run();
 

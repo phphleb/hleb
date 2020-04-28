@@ -48,8 +48,8 @@ class CacheRoutes
         if (json_encode($cache) !== json_encode($data)) {
 
             $errors = 'HL021-CACHE_ERROR: No write permission ! ' .
-                'Failed to save file to folder `/storage/*`.  You need to change permissions on this folder. ~ ' .
-                'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права для этой папки и вложений.';
+                'Failed to save file to folder `/storage/*`.  You need to change permissions for the web server in this folder. ~ ' .
+                'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права веб-сервера для этой папки и вложений.';
 
             ErrorOutput::get($errors);
         }
