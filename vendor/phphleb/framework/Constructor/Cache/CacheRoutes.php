@@ -27,7 +27,7 @@ class CacheRoutes
                 $cache = $this->opt->load_cache();
 
                 if ($cache === false) {
-                    $this->create_routes();
+                    $this->createRoutes();
                     Info::add('CacheRoutes', true);
                     return $this->check($this->opt->update(Route::data()));
                 }
@@ -36,33 +36,41 @@ class CacheRoutes
                 return $cache;
             }
 
-        $this->create_routes();
+        $this->createRoutes();
         Info::add('CacheRoutes', true);
         return $this->check($this->opt->update(Route::data()));
     }
 
-
     private function check($data)
     {
         $cache = $this->opt->load_cache();
-        if (json_encode($cache) !== json_encode($data) || true) {
+        if (json_encode($cache) !== json_encode($data)) {
+
+            $userAndGroup = $this->getFpmUserName();
 
             $errors = 'HL021-CACHE_ERROR: No write permission ! ' .
                 'Failed to save file to folder `/storage/*`.  You need to change permissions for the web server in this folder. ~ ' .
-                'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права веб-сервера для этой папки и вложений.<br>' .
-                'Например, выполнить в терминале <code>sudo chown -R www-data storage</code> из корневой директории проекта, здесь <code>www-data</code> - это предполагаемый пользователь, под которым работает Apache.';
+                'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права веб-сервера для этой папки и вложений. <br>Например, выполнить в терминале ';
 
+            if (!empty($userAndGroup) && substr_count($userAndGroup, ':') === 1) {
+                $errors .= '<code>sudo chown -R ' . $userAndGroup . ' storage</code> из корневой директории проекта, здесь <code>' . $userAndGroup . '</code> - это предполагаемый пользователь и группа, под которыми работает веб-сервер.';
+            } else {
+                $errors .= '<code>sudo chown -R www-data storage</code> из корневой директории проекта, здесь <code>www-data</code> - это предполагаемый пользователь, под которым работает Apache.';
+            }
             ErrorOutput::get($errors);
         }
-
         return $data;
     }
 
-
-    private function create_routes()
+    private function createRoutes()
     {
         require HLEB_LOAD_ROUTES_DIRECTORY . '/main.php';
         Route::end();
+    }
+
+    private function getFpmUserName()
+    {
+        return str_replace(' ', ':', exec('ps -p ' . getmypid() . ' -o user,group'));
     }
 
 }
