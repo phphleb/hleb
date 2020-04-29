@@ -43,7 +43,7 @@ class CacheRoutes
     private function check($data)
     {
         $cache = $this->opt->load_cache();
-        if (json_encode($cache) !== json_encode($data) || true) {
+        if (json_encode($cache) !== json_encode($data)) {
 
             $userAndGroup = $this->getFpmUserName();
             $user = explode(':', $userAndGroup)[0];
