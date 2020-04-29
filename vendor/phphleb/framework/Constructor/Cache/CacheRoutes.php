@@ -20,7 +20,6 @@ class CacheRoutes
      */
     public function load()
     {
-
         $this->opt = new LoadRoutes();
 
             if ($this->opt->comparison()) {
@@ -44,16 +43,17 @@ class CacheRoutes
     private function check($data)
     {
         $cache = $this->opt->load_cache();
-        if (json_encode($cache) !== json_encode($data)) {
+        if (json_encode($cache) !== json_encode($data) || true) {
 
             $userAndGroup = $this->getFpmUserName();
+            $user = explode(':', $userAndGroup)[0];
 
             $errors = 'HL021-CACHE_ERROR: No write permission ! ' .
                 'Failed to save file to folder `/storage/*`.  You need to change permissions for the web server in this folder. ~ ' .
                 'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права веб-сервера для этой папки и вложений. <br>Например, выполнить в терминале ';
 
-            if (!empty($userAndGroup) && substr_count($userAndGroup, ':') === 1) {
-                $errors .= '<span style="color:grey;background-color:#f4f7e4"><code>sudo chown -R ' . $userAndGroup . ' ./storage</code></span> из корневой директории проекта, здесь <code>' . $userAndGroup . '</code> - это предполагаемый пользователь и группа, под которыми работает веб-сервер.';
+            if (!empty($user) && !empty($userAndGroup) && substr_count($userAndGroup, ':') === 1) {
+                $errors .= '<span style="color:grey;background-color:#f4f7e4"><code>sudo chown -R ' . $user . ' ./storage</code></span> из корневой директории проекта, здесь <code>' . $userAndGroup . '</code> - это предполагаемый пользователь и группа, под которыми работает веб-сервер.';
             } else {
                 $errors .= '<span style="color:grey;background-color:#f4f7e4"><code>sudo chown -R www-data ./storage</code></span> из корневой директории проекта, здесь <code>www-data</code> - это предполагаемый пользователь, под которым работает Apache.';
             }
@@ -70,7 +70,7 @@ class CacheRoutes
 
     private function getFpmUserName()
     {
-        return str_replace(' ', ':', preg_replace('|[\s]+|s', ' ', exec('ps -p ' . getmypid() . ' -o user,group')));
+        return preg_replace('|[\s]+|s', ':', strval(exec('ps -p ' . getmypid() . ' -o user,group')));
     }
 
 }
