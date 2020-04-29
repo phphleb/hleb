@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" href= "//<?= HLEB_MAIN_DOMAIN;  ?>/favicon.ico" type="image/x-icon">
+    <link rel="icon" href= "//<?= Request::getDomain();  ?>/favicon.ico" type="image/x-icon">
     <style>
         html, body{
             padding:0;
@@ -13,14 +13,12 @@
             background-color: white;
             font-family: "PT Sans", "Arial", serif;
         }
-
         div#hl-cont{
             position:fixed;
             left:0;
             top: 20%;
             width: 100%;
         }
-
         .hl-block{
             display:block;
             margin-bottom: 30px;
@@ -36,7 +34,6 @@
         div.hl-block{
             margin-left: 10px;
         }
-
     </style>
     <title>HLEB Start Page</title>
 </head>

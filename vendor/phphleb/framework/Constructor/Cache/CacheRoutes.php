@@ -45,11 +45,12 @@ class CacheRoutes
     private function check($data)
     {
         $cache = $this->opt->load_cache();
-        if (json_encode($cache) !== json_encode($data)) {
+        if (json_encode($cache) !== json_encode($data) || true) {
 
             $errors = 'HL021-CACHE_ERROR: No write permission ! ' .
                 'Failed to save file to folder `/storage/*`.  You need to change permissions for the web server in this folder. ~ ' .
-                'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права веб-сервера для этой папки и вложений.';
+                'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права веб-сервера для этой папки и вложений.<br>' .
+                'Например, выполнить в терминале <code>sudo chown -R www-data storage</code> из корневой директории проекта, здесь <code>www-data</code> - это предполагаемый пользователь, под которым работает Apache.';
 
             ErrorOutput::get($errors);
         }

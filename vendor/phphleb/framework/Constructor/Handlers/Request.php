@@ -119,6 +119,11 @@ class Request
         return self::$referer;
     }
 
+    public static function getDomain()
+    {
+        return HLEB_MAIN_DOMAIN;
+    }
+
     public static function getHost()
     {
         return $_SERVER['HTTP_HOST'];
