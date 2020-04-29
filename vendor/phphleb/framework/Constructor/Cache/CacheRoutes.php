@@ -53,9 +53,9 @@ class CacheRoutes
                 'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права веб-сервера для этой папки и вложений. <br>Например, выполнить в терминале ';
 
             if (!empty($userAndGroup) && substr_count($userAndGroup, ':') === 1) {
-                $errors .= '<code>sudo chown -R ' . $userAndGroup . ' storage</code> из корневой директории проекта, здесь <code>' . $userAndGroup . '</code> - это предполагаемый пользователь и группа, под которыми работает веб-сервер.';
+                $errors .= '<span style="color:grey;background-color:#f4f7e4"><code>sudo chown -R ' . $userAndGroup . ' ./storage</code></span> из корневой директории проекта, здесь <code>' . $userAndGroup . '</code> - это предполагаемый пользователь и группа, под которыми работает веб-сервер.';
             } else {
-                $errors .= '<code>sudo chown -R www-data storage</code> из корневой директории проекта, здесь <code>www-data</code> - это предполагаемый пользователь, под которым работает Apache.';
+                $errors .= '<span style="color:grey;background-color:#f4f7e4"><code>sudo chown -R www-data ./storage</code></span> из корневой директории проекта, здесь <code>www-data</code> - это предполагаемый пользователь, под которым работает Apache.';
             }
             ErrorOutput::get($errors);
         }
@@ -70,7 +70,7 @@ class CacheRoutes
 
     private function getFpmUserName()
     {
-        return str_replace(' ', ':', exec('ps -p ' . getmypid() . ' -o user,group'));
+        return str_replace(' ', ':', preg_replace('|[\s]+|s', ' ', exec('ps -p ' . getmypid() . ' -o user,group')));
     }
 
 }
