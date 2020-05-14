@@ -115,4 +115,19 @@ function getRequest()
     return hleb_e70c10c1057hn11cc8il2_get_request();
 }
 
+function storage_path()
+{
+    return hleb_6iopl942e103te6i10600l_storage_path();
+}
+
+function public_path()
+{
+    return hleb_10p134l66o0il0e0t92e6i_public_path();
+}
+
+function view_path()
+{
+    return hleb_601e30l60p2ii1e0o469tl_view_path();
+}
+
 

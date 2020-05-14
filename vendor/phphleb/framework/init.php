@@ -1,6 +1,6 @@
 <?php
 
-define('HLEB_PROJECT_FULL_VERSION', '1.5.12');
+define('HLEB_PROJECT_FULL_VERSION', '1.5.13');
 
 require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Controllers/MainController.php';
 
@@ -362,6 +362,36 @@ function hleb_t0ulb902e69thp_request_head()
 function hleb_e70c10c1057hn11cc8il2_get_request()
 {
     return \Hleb\Constructor\Handlers\Request::class;
+}
+
+/*
+ * Full path to folder '/storage/public'
+ *
+ * Полный путь к папке '/storage/public'
+ */
+function hleb_6iopl942e103te6i10600l_storage_path()
+{
+    return HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'public';
+}
+
+/*
+ * Full path to folder '/public'
+ *
+ * Полный путь к папке '/public'
+ */
+function hleb_10p134l66o0il0e0t92e6i_public_path()
+{
+    return HLEB_PUBLIC_DIR;
+}
+
+/*
+ * Full path to folder '/view'
+ *
+ * Полный путь к папке '/view'
+ */
+function hleb_601e30l60p2ii1e0o469tl_view_path()
+{
+    return HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'view';
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

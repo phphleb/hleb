@@ -23,7 +23,7 @@
     "php": "^7.0.0",
     "ext-json": "*",
     "ext-pdo": "*",
-    "phphleb/framework": ">=1.5.1",
+    "phphleb/framework": ">=1.5.13",
     "phphleb/debugpan": "1.*"
   },
   "autoload": {
