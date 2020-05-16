@@ -38,7 +38,9 @@ class DataDebug
 
     public static function create_html_part($part, $driver = 'mysql'): string
     {
-        $pattern = $driver == "mysql" ? '/(`[^`]+`)/' : '/`([^`]+)`/';
+        $reverse_quotes = defined('HLEB_DB_DISABLE_REVERSE_QUOTES') && HLEB_DB_DISABLE_REVERSE_QUOTES === true;
+
+        $pattern = $driver !== "mysql" || $reverse_quotes ? '/`([^`]+)`/' : '/(`[^`]+`)/';
 
         return preg_replace($pattern, '<span style="color: #a5432d">$1</span>', $part);
     }
