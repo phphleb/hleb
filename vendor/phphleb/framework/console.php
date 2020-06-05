@@ -1,5 +1,13 @@
 <?php
 
+$arguments = $argv[1] ?? null;
+
+// Auto update packages
+if(!empty($arguments) && strpos($arguments, 'phphleb/') !== false && file_exists(dirname(__DIR__, 2) . '/' . $arguments . '/' . 'start.php')){
+    require  dirname(__DIR__, 2) . '/' . $arguments . '/' . 'start.php';
+    exit();
+}
+
 if(!defined('HLEB_GLOBAL_DIRECTORY')) define('HLEB_GLOBAL_DIRECTORY', dirname(__DIR__, 3));
 
 define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . "/storage/cache/routes");
@@ -24,7 +32,7 @@ if(!defined('HLEB_PROJECT_CLASSES_AUTOLOAD')) {
     define('HLEB_PROJECT_CLASSES_AUTOLOAD', true);
 }
 
-$arguments = $argv[1] ?? null;
+
 
 $set_arguments = array_splice($argv, 2);
 

@@ -6,7 +6,6 @@ namespace Hleb\Main\Console;
 
 class MainConsole
 {
-
     public function searchVersion($file, $const)
     {
         $content = file_get_contents($file, true);

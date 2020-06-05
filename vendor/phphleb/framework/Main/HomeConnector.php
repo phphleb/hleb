@@ -78,6 +78,8 @@ class HomeConnector implements Connector
             'Hleb\Main\Route\ProjectLoader' => $vendor . "/phphleb/framework/Main/ProjectLoader.php",
             'Hleb\Constructor\Routes\LoadRoutes' => $vendor . "/phphleb/framework/Constructor/Routes/LoadRoutes.php",
             'Hleb\Main\TryClass' => $vendor . "/phphleb/framework/Main/TryClass.php",
+            'Phphleb\Updater\FileRemover' => $vendor . '/phphleb/updater/FileRemover.php',
+            'Phphleb\Updater\FileUploader' => $vendor . '/phphleb/updater/FileUploader.php',
         ];
     }
 }

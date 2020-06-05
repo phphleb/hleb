@@ -23,7 +23,7 @@
     "php": "^7.0.0",
     "ext-json": "*",
     "ext-pdo": "*",
-    "phphleb/framework": ">=1.5.13",
+    "phphleb/framework": ">=1.5.15",
     "phphleb/debugpan": "1.*"
   },
   "autoload": {
@@ -45,11 +45,6 @@
   },
   "config": {
     "optimize-autoloader": true
-  },
-  "scripts": {
-    "post-create-project-cmd": [
-      "@php -r \"file_exists('./database/dbase.config.php') || copy('./database/default.dbase.config.php', './database/dbase.config.php');\""
-    ]
   },
   "minimum-stability": "dev",
   "prefer-stable": true
