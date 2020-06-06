@@ -1,3 +1,4 @@
+ ![version](https://img.shields.io/badge/version-1.5.15-blue) [![License: MIT](https://img.shields.io/badge/License-MIT-darkgreen.svg)](https://opensource.org/licenses/MIT)
 # HLEB
 ### ![HLEB LOGO](https://raw.githubusercontent.com/phphleb/hleb/f95d0092692c082c1b2b0d96c75dcaf68600b73b/public/images/logo.png)
 # PHP Micro-Framework
@@ -202,8 +203,8 @@ Debug Panel
 WorkDebug::add($debug_data, 'description');
 ```
 
-License
+
 -----------------------------------
-Free ([MIT](https://github.com/phphleb/hleb/blob/master/LICENSE) License) 
 
 
+ ![version](https://img.shields.io/badge/version-1.5.15-blue) [![License: MIT](https://img.shields.io/badge/License-MIT-darkgreen.svg)](https://github.com/phphleb/hleb/blob/master/LICENSE)
