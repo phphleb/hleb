@@ -126,13 +126,11 @@ if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 
     $GLOBALS['HLEB_MAIN_DEBUG_RADJAX'] = [];
 
-    if (file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/api.php') ||
-        file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/ajax.php')) {
+    if (file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/radjax.php')) {
 
     if (!defined("HLEB_RADJAX_PATHS_TO_ROUTE_PATHS")) {
         define("HLEB_RADJAX_PATHS_TO_ROUTE_PATHS", [
-            HLEB_LOAD_ROUTES_DIRECTORY . '/api.php',
-            HLEB_LOAD_ROUTES_DIRECTORY . '/ajax.php'
+            HLEB_LOAD_ROUTES_DIRECTORY . '/radjax.php'
         ]);
     }
     require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Route.php';
@@ -182,6 +180,9 @@ unset($hl_address_object, $hl_actual_protocol, $hl_address);
 
 require HLEB_VENDOR_DIRECTORY . '/phphleb/framework/init.php';
 
+if(file_exists(HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php')){
+    require HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php';
+}
 require HLEB_GLOBAL_DIRECTORY . '/app/Optional/shell.php';
 
 \Hleb\Main\ProjectLoader::start();
