@@ -79,6 +79,19 @@ define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/routes');
 
 define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/storage/cache/routes');
 
+// Monitors the execution of unnecessary output
+function hl_print_fulfillment_inspector(string $path)
+{
+    ob_start();
+    include "$path";
+    $content = ob_get_contents();
+    ob_end_flush();
+    if($content !== ''){
+        die(" HL_LOAD_ERROR! The file $path is not intended to display content. ");
+    }
+    return $content;
+}
+
 
 require_once HLEB_PROJECT_DIRECTORY. '/Main/Insert/DeterminantStaticUncreated.php';
 
@@ -181,9 +194,9 @@ unset($hl_address_object, $hl_actual_protocol, $hl_address);
 require HLEB_VENDOR_DIRECTORY . '/phphleb/framework/init.php';
 
 if(file_exists(HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php')){
-    require HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php';
+    print hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php');
 }
-require HLEB_GLOBAL_DIRECTORY . '/app/Optional/shell.php';
+print hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY . '/app/Optional/shell.php');
 
 \Hleb\Main\ProjectLoader::start();
 

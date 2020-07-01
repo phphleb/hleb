@@ -65,10 +65,10 @@ class CacheRoutes
     private function createRoutes()
     {
         // Reserved Name
-        if(file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/system-login/reg.php')){
-            require HLEB_LOAD_ROUTES_DIRECTORY . '/system-login/reg.php';
+        if(file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/hlogin/reg.php')){
+            print hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY . '/hlogin/reg.php');
         }
-        require HLEB_LOAD_ROUTES_DIRECTORY . '/main.php';
+        print hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY . '/main.php');
         Route::end();
     }
 
