@@ -13,9 +13,9 @@ class DB
         if (is_null(self::$instance)) {
 
             if(file_exists(HLEB_GLOBAL_DIRECTORY . "/database/dbase.config.php")) {
-                require_once HLEB_GLOBAL_DIRECTORY . "/database/dbase.config.php";
+                hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY, "/database/dbase.config.php");
             } else {
-                require_once HLEB_GLOBAL_DIRECTORY . "/database/default.dbase.config.php";
+                hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY, "/database/default.dbase.config.php");
             }
 
             self::$instance = self::init();

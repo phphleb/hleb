@@ -29,7 +29,29 @@ if(!defined('HLEB_GLOBAL_DIRECTORY')) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-require HLEB_GLOBAL_DIRECTORY . '/' . (file_exists(HLEB_GLOBAL_DIRECTORY . '/start.hleb.php') ? '' : 'default.') . 'start.hleb.php';
+// Monitors the execution of unnecessary output
+function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondPartOfPath)
+{
+    $log = defined('HLEB_PROJECT_LOG_ON') && HLEB_PROJECT_LOG_ON;
+    $debug = defined('HLEB_PROJECT_DEBUG') && HLEB_PROJECT_DEBUG;
+    $fullPath = realpath($firstPartOfPath . $secondPartOfPath);
+    $error = " ERROR! The file " . (!$debug && $log ? $fullPath : $secondPartOfPath);
+    if(!file_exists($fullPath)){
+        $error .= " not found. " . "\n";
+        die(!$debug && $log ?  error_log($error) : $error);
+    }
+    ob_start();
+    require_once "$fullPath";
+    $content = ob_get_contents();
+    ob_end_flush();
+    if ($content !== '') {
+        $error .= " is not intended to display content. " . "\n";
+        die(!$debug && $log ?  error_log($error) : $error);
+    }
+    return $content;
+}
+
+hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY,  '/' . (file_exists(HLEB_GLOBAL_DIRECTORY . '/start.hleb.php') ? '' : 'default.') . 'start.hleb.php');
 
 
 if(!defined('HLEB_PROJECT_DEBUG') || !is_bool(HLEB_PROJECT_DEBUG)) {
@@ -78,20 +100,6 @@ define('HLEB_VENDOR_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NA
 define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/routes');
 
 define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/storage/cache/routes');
-
-// Monitors the execution of unnecessary output
-function hl_print_fulfillment_inspector(string $path)
-{
-    ob_start();
-    include "$path";
-    $content = ob_get_contents();
-    ob_end_flush();
-    if($content !== ''){
-        die(" HL_LOAD_ERROR! The file $path is not intended to display content. ");
-    }
-    return $content;
-}
-
 
 require_once HLEB_PROJECT_DIRECTORY. '/Main/Insert/DeterminantStaticUncreated.php';
 
@@ -194,9 +202,9 @@ unset($hl_address_object, $hl_actual_protocol, $hl_address);
 require HLEB_VENDOR_DIRECTORY . '/phphleb/framework/init.php';
 
 if(file_exists(HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php')){
-    print hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php');
+    print hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY , '/app/Optional/aliases.php');
 }
-print hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY . '/app/Optional/shell.php');
+print hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY , '/app/Optional/shell.php');
 
 \Hleb\Main\ProjectLoader::start();
 
