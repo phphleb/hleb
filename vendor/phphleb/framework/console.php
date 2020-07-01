@@ -49,9 +49,9 @@ if ($arguments) {
             $bsp = $fn->addBsp($ver);
             echo "\n" .
                 " ╔═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╗ " . "\n" .
-                " ║  " . "HLEB frame". " project version " . $ver[0] . $bsp[0] . " ║" . "\n" .
-                " ║  " . "phphleb/framework" . " version  " . $ver[1] . $bsp[1] . " ║" . "\n" .
-                " ║  " . hl_console_copyright() . "          k║" . "\n" .
+                " ║   " . "HLEB frame". " project version " . $ver[0] . $bsp[0] . "║" . "\n" .
+                " ║   " . "phphleb/framework" . " version  " . $ver[1] . $bsp[1] . "║" . "\n" .
+                " ║     " . hl_console_copyright() . "       ║" . "\n" .
                 " ╚═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╝ " . "\n";
             echo "\n";
             break;
