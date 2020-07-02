@@ -6,6 +6,7 @@ namespace Hleb\Main;
 
 use Hleb\Constructor\Cache\CacheRoutes;
 use Hleb\Main\Errors\ErrorOutput;
+use Hleb\Main\Insert\PageFinisher;
 use Hleb\Constructor\Handlers\{
     ProtectedCSRF, URL, URLHandler, Request
 };
@@ -43,6 +44,8 @@ class ProjectLoader
             ProtectedCSRF::testPage($block);
 
             new Workspace($block, $render_map);
+
+            print PageFinisher::getContent();
 
         } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 

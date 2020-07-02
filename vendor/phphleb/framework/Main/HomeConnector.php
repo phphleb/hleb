@@ -42,6 +42,7 @@ class HomeConnector implements Connector
             'Hleb\Scheme\App\Middleware\MainMiddleware' => $vendor . '/phphleb/framework/Scheme/App/Middleware/MainMiddleware.php',
             'Hleb\Main\WorkDebug' => $vendor . '/phphleb/framework/Main/WorkDebug.php',
             'Hleb\Main\MyDebug' => $vendor . '/phphleb/framework/Main/MyDebug.php',
+            'Hleb\Main\Insert\PageFinisher' => $vendor . '/phphleb/framework/Main/Insert/PageFinisher.php',
             'Hleb\Constructor\Routes\Methods\RouteMethodPrefix' => $vendor . '/phphleb/framework/Constructor/Routes/Methods/RouteMethodPrefix.php',
             'Hleb\Constructor\Routes\Methods\RouteMethodGetGroup' => $vendor . '/phphleb/framework/Constructor/Routes/Methods/RouteMethodGetGroup.php',
             'Hleb\Constructor\Routes\Methods\RouteMethodGetProtect' => $vendor . '/phphleb/framework/Constructor/Routes/Methods/RouteMethodGetProtect.php',
@@ -80,6 +81,7 @@ class HomeConnector implements Connector
             'Hleb\Main\TryClass' => $vendor . "/phphleb/framework/Main/TryClass.php",
             'Phphleb\Updater\FileRemover' => $vendor . '/phphleb/updater/FileRemover.php',
             'Phphleb\Updater\FileUploader' => $vendor . '/phphleb/updater/FileUploader.php',
+
         ];
     }
 }

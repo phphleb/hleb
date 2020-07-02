@@ -21,7 +21,5 @@ class Data
     {
         return self::$data ?? [];
     }
-
-
 }
 
