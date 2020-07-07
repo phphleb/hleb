@@ -19,6 +19,7 @@ class RouteMethodAdminPanController extends MainRouteMethod
      * RouteMethodAdminPanController constructor.
      * @param StandardRoute $instance
      * @param string $controller_name
+     * @param string|array $block_name
      * @param array $params
      */
     function __construct(StandardRoute $instance, string $controller_name, $block_name, $params = [])

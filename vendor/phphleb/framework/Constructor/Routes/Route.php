@@ -329,11 +329,11 @@ class Route extends MainRoute implements StandardRoute
      * Вариация подключения контроллера для включения контента в административную панель.
      *
      * @param string $class_name
-     * @param string $block_name
+     * @param string|array $block_name
      * @param array $params
      * @return static|null
      */
-    public static function adminPanController(string $class_name, string $block_name, array $params = [])
+    public static function adminPanController(string $class_name, $block_name, array $params = [])
     {
         return self::add(new RouteMethodAdminPanController(self::instance(), $class_name, $block_name, $params));
     }
