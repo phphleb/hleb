@@ -44,7 +44,7 @@ interface StandardRoute
 
     public static function module(string $module_name);
 
-    public static function adminPanController(string $class_name, string $block_name);
+    public static function adminPanController(string $class_name, $block_name);
 
     public static function data();
 
