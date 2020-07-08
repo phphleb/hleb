@@ -48,7 +48,6 @@ function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondP
         $error .= " is not intended to display content. " . "\n";
         die(!$debug && $log ?  error_log($error) : $error);
     }
-    return $content;
 }
 
 hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY,  '/' . (file_exists(HLEB_GLOBAL_DIRECTORY . '/start.hleb.php') ? '' : 'default.') . 'start.hleb.php');
@@ -202,9 +201,9 @@ unset($hl_address_object, $hl_actual_protocol, $hl_address);
 require HLEB_VENDOR_DIRECTORY . '/phphleb/framework/init.php';
 
 if(file_exists(HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php')){
-    print hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY , '/app/Optional/aliases.php');
+    hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY , '/app/Optional/aliases.php');
 }
-print hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY , '/app/Optional/shell.php');
+hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY , '/app/Optional/shell.php');
 
 \Hleb\Main\ProjectLoader::start();
 
