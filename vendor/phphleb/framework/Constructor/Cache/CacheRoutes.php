@@ -65,12 +65,11 @@ class CacheRoutes
     private function createRoutes()
     {
         print hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY , '/main.php');
-        Route::end();
-
         // Reserved Name
         if(file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/hlogin/reg.php')){
             print hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY , '/hlogin/reg.php');
         }
+        Route::end();
     }
 
     private function getFpmUserName()
