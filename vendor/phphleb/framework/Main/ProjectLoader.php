@@ -11,7 +11,7 @@ use Hleb\Constructor\Handlers\{
     ProtectedCSRF, URL, URLHandler, Request
 };
 use Hleb\Constructor\Workspace;
-use \Route;
+use Hleb\Constructor\Routes\Route;
 use DeterminantStaticUncreated;
 
 class ProjectLoader
