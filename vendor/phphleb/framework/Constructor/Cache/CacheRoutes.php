@@ -6,7 +6,7 @@ namespace Hleb\Constructor\Cache;
 
 use Hleb\Main\Info;
 use Hleb\Constructor\Routes\LoadRoutes;
-use Route;
+use Hleb\Constructor\Routes\Route;
 use Hleb\Main\Errors\ErrorOutput;
 
 class CacheRoutes
