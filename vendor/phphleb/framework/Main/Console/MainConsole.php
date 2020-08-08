@@ -224,7 +224,7 @@ class MainConsole
             $result .= $part;
         }
 
-        return strtolower($path . $result);
+        return strtolower(str_replace(["-\\-", "-/-"], "/", $path . $result));
     }
 
     public function convertCommandToTask($name)

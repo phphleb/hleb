@@ -32,7 +32,9 @@ if(!defined('HLEB_PROJECT_CLASSES_AUTOLOAD')) {
     define('HLEB_PROJECT_CLASSES_AUTOLOAD', true);
 }
 
-
+function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondPartOfPath){
+    require_once $firstPartOfPath . $secondPartOfPath;
+}
 
 $set_arguments = array_splice($argv, 2);
 
