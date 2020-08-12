@@ -1,9 +1,9 @@
 <?php
 
 /*
- * Task for cron (~ daily) or a separate run for log rotation.
+ * Task for cron (~ daily) or a separate run for log rotation (deleting).
  *
- * Задание для cron (~ ежедневно) или запуск вручную для ротирования логов.
+ * Задание для cron (~ ежедневно) или запуск вручную для ротации (удаления) логов.
  */
 
 namespace App\Commands;
