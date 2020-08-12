@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Demo page / Демонстрационная страница -->
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" href= "//<?= Request::getDomain();  ?>/favicon.ico" type="image/x-icon">

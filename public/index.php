@@ -11,8 +11,8 @@ define('HLEB_FRAME_VERSION', "1.5.18");
 define('HLEB_PUBLIC_DIR', __DIR__);
 
 
-// General headers
-// Общие заголовки
+// General headers.
+// Общие заголовки.
 
 header("Referrer-Policy: no-referrer-when-downgrade");
 header("X-XSS-Protection: 1; mode=block");

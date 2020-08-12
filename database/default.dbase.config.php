@@ -1,12 +1,13 @@
 <?php
-/**
+/*
+ * A configuration file to set a default connection and multiple database connections.
  * This file must be hidden when copying the project, as it contains important information.
  *
+ * Конфигурационный файл для задания подключения по умолчанию и нескольких вариантов подключений к базе данных.
  * Этот файл необходимо скрывать при копировании проекта, так как он содержит важную информацию.
- *
  */
 
-define ("HLEB_TYPE_DB", "mysql.myname");
+define("HLEB_TYPE_DB", "mysql.myname");
 
 define("HLEB_PARAMETERS_FOR_DB", [
 
@@ -17,13 +18,13 @@ define("HLEB_PARAMETERS_FOR_DB", [
         "charset=utf8",
         "user" => "username",
         "pass" => "password"
-    ] ,
+    ],
 
     "sqlite.myname" => [
         "sqlite:c:/main.db",
         "user" => "username",
         "pass" => "password"
-    ] ,
+    ],
 
     "postgresql.myname" => [
         "pgsql:host=127.0.0.1",
@@ -31,6 +32,6 @@ define("HLEB_PARAMETERS_FOR_DB", [
         "dbname=databasename",
         "user" => "username",
         "pass" => "password"
-    ] ,
+    ],
 
 ]);

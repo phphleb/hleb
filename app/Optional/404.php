@@ -1,5 +1,7 @@
 <?php
-header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+/* Actual 404 error page */
+/* Актуальная страница 404 ошибки */
+header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
 ?><!DOCTYPE html>
 <html>
 <head>
