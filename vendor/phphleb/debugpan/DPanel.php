@@ -21,7 +21,7 @@ class DPanel
 
     public static function add($info)
     {
-        $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/debugpan"] = "1.1";
+        $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/debugpan"] = "1.2";
 
         if(isset($GLOBALS["HLEB_MAIN_DEBUG_RADJAX"])){
             $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/radjax"] = "dev";
