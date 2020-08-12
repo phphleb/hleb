@@ -1,6 +1,7 @@
 
 <!-- HLEB DEBUG PANEL -->
 
+<noindex>
 <div id="<?= $hl_block_name; ?>_main"
      style='position:fixed; z-index: 2147483647; font-family: "PT Sans", "Arial", serif; font-size: 13px!important; right:0; top:0; display: inline-block; background-color: darkgray; border: 2px solid white; padding: 5px; opacity: 0.75; color: white; cursor:default'>
     <span style="display: <?= $hl_this_route['workpan']; ?>">
@@ -52,8 +53,7 @@
             <div style='padding: 3px'>Route path: <?= $hl_this_route['route_path']; ?></div>
             <div style='padding: 3px'>Full path: <?= $hl_this_route['path']; ?></div>
             <div style='padding: 3px'>Render: <?= $hl_this_route['render_map']; ?></div>
-            <div style='padding: 3px'>Actions:</div><br><div
-                        style='background-color: black;'><?= $hl_this_route['actions']; ?></div>
+            <div style='padding: 3px'>Actions:</div><br><div><?= $hl_this_route['actions']; ?></div>
             <div style='padding: 3px'>Last cache: <span style='color:<?= $hl_this_route['cache_routes_color']; ?>;'>
             <?= $hl_this_route['cache'] ?> <?= $hl_this_route['cache_routes_text']; ?></span></div>
         </div>
@@ -98,6 +98,7 @@
 
     </div>
 </div>
+</noindex>
 
 <!-- /HLEB DEBUG PANEL -->
 
@@ -105,6 +106,7 @@
 
 <!-- SQL QUERIES DEBUG PANEL -->
 
+<noindex>
 <div id="<?= $hl_block_name; ?>_orm"
      style='position:fixed; z-index: 2147483647; display: none; width: 100%; font-family: "PT Sans", "Arial", serif; font-size: 13px!important; left:0; top:0; background-color: white; border-bottom: 5px solid #aaa; max-height: 100%; overflow-y: auto'>
     <div style="position: fixed; right: 80px; top: 6px; background-color: white">
@@ -115,6 +117,7 @@
     <div style="padding: 6px; color: grey; font-size: 16px"><span style="color: darkorange; font-weight: bold">SQL queries</span> [<?= $hl_this_route['orm_time_report']; ?> sec]</div>
     <?php print $hl_this_route['orm_report']; ?>
 </div>
+</noindex>
 
 <!-- /SQL QUERIES DEBUG PANEL -->
 
