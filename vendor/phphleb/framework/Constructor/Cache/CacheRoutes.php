@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/*
+ * Caching routemap to file.
+ *
+ * Кеширование карты маршрутов в файл.
+ */
+
 namespace Hleb\Constructor\Cache;
 
 use Hleb\Main\Info;
@@ -11,40 +17,34 @@ use Hleb\Main\Errors\ErrorOutput;
 
 class CacheRoutes
 {
-    /**
-     * @var null|LoadRoutes
-     */
+    /** @var LoadRoutes|null */
     private $opt = null;
-    /**
-     * @return array
-     */
-    public function load()
-    {
+
+    // Returns an array with data about routes.
+    // Возвращает массив с данными о роутах.
+    /** @return array */
+    public function load() {
         $this->opt = new LoadRoutes();
-
-            if ($this->opt->comparison()) {
-                $cache = $this->opt->load_cache();
-
-                if ($cache === false) {
-                    $this->createRoutes();
-                    Info::add('CacheRoutes', true);
-                    return $this->check($this->opt->update(Route::data()));
-                }
-
-                Info::add('CacheRoutes', false);
-                return $cache;
+        if ($this->opt->comparison()) {
+            $cache = $this->opt->loadCache();
+            if ($cache === false) {
+                $this->createRoutes();
+                Info::add('CacheRoutes', true);
+                return $this->check($this->opt->update(Route::data()));
             }
-
+            Info::add('CacheRoutes', false);
+            return $cache;
+        }
         $this->createRoutes();
         Info::add('CacheRoutes', true);
         return $this->check($this->opt->update(Route::data()));
     }
 
-    private function check($data)
-    {
-        $cache = $this->opt->load_cache();
+    // Check the availability of the file with the cache of routes. The contents of the file are returned or an error is displayed.
+    // Проверка доступнсти файла с кешем роутов. Возвращается содержимое файла или выводится ошибка.
+    private function check($data) {
+        $cache = $this->opt->loadCache();
         if (json_encode($cache) !== json_encode($data)) {
-
             $userAndGroup = $this->getFpmUserName();
             $user = explode(':', $userAndGroup)[0];
 
@@ -62,18 +62,22 @@ class CacheRoutes
         return $data;
     }
 
-    private function createRoutes()
-    {
-        hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY , '/main.php');
-        // Reserved Name
-        if(file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/hlogin/reg.php')){
-            hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY , '/hlogin/reg.php');
+    // Output and compile the route map.
+    // Вывод и компиляция карты роутов.
+    private function createRoutes() {
+        hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY, '/main.php');
+
+        // Reserved name from directory.
+        // Используется зарезервированное название директории.
+        if (file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/hlogin/reg.php')) {
+            hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY, '/hlogin/reg.php');
         }
         Route::end();
     }
 
-    private function getFpmUserName()
-    {
+    // Returns the result of trying to determine the username on Linux-like systems.
+    // Возвращает результат попытки определения имени пользователя в Linux-подобных системах.
+    private function getFpmUserName() {
         return preg_replace('|[\s]+|s', ':', strval(exec('ps -p ' . getmypid() . ' -o user,group')));
     }
 

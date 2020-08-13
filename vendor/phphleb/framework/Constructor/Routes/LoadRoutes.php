@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Routes;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
 class LoadRoutes
 {
     private $cache_routes = HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt';
@@ -23,7 +26,7 @@ class LoadRoutes
 
     }
 
-    public function load_cache()
+    public function loadCache()
     {
 
         $content = is_writable($this->cache_routes) ? file_get_contents($this->cache_routes) : null;
@@ -44,8 +47,8 @@ class LoadRoutes
 
             $time = filemtime($this->cache_routes);
 
-            $fileinfos = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($this->routes_directory)
+            $fileinfos = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($this->routes_directory)
             );
             foreach ($fileinfos as $pathname => $fileinfo) {
                 if (!$fileinfo->isFile()) continue;
