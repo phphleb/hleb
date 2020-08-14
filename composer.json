@@ -23,6 +23,7 @@
     "php": "^7.0.0",
     "ext-json": "*",
     "ext-pdo": "*",
+    "ext-mbstring": "*",
     "phphleb/framework": ">=1.5.15",
     "phphleb/debugpan": "1.*"
   },

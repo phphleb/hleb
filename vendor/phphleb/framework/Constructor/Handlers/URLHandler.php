@@ -1,330 +1,228 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * Processing route map data with finding a suitable route.
+ *
+ * Обработка данных карты маршрутов с поиском подходящего роута.
+ */
+
 namespace Hleb\Constructor\Handlers;
 
 class URLHandler
 {
-
-    function __construct()
-    {
-
-    }
-
-    protected $adm_blocks = [];
-
-    /**
-     * @param array $blocks
-     * @return mixed
-     */
-    public function page(array $blocks)
-    {
-
+    // Parse the array with routes.
+    // Разбор массива с маршрутами.
+    public function page(array $blocks) {
+        // Clearing global data.
+        // Очистка глобальных данных.
         if (isset($blocks['update'])) unset($blocks['update']);
-
         if (isset($blocks['render'])) unset($blocks['render']);
-
         if (isset($blocks['addresses'])) unset($blocks['addresses']);
-
-        $search_domains = $blocks['domains'] ?? false;
-
+        $searchDomains = $blocks['domains'] ?? false;
         if (isset($blocks['domains'])) unset($blocks['domains']);
 
         $url = Request::getMainClearUrl();
-
-        $blocks = $search_domains ? $this->match_subdomains($blocks) : $blocks;
-
+        $blocks = $searchDomains ? $this->matchSubdomains($blocks) : $blocks;
         if (empty(count($blocks))) {
-
-            /// Подходящего роута по текущему поддомену не найдено
+            // No suitable route was found for the current subdomain.
+            // Подходящего роута по текущему поддомену не найдено.
             return false;
         }
 
-        $blocks = $this->match_search_type($blocks);
-
+        $blocks = $this->matchSearchType($blocks);
         if (empty(count($blocks))) {
-
-            /// Подходящего роута по типу REQUEST_METHOD не найдено
+            // No suitable route of type REQUEST_METHOD found.
+            // Подходящего роута по типу REQUEST_METHOD не найдено.
             return false;
         }
-
-        return self::match_search_all_path($blocks, $url);
-
-
+        return self::matchSearchAllPath($blocks, $url);
     }
 
-    private function compound_url($strokes)
-    {
-
+    // Remove extra slashes.
+    // Удаление лишних слешей.
+    private function compoundUrl($strokes) {
         return preg_replace('#(/){2,}#', '/', implode('/', $strokes));
-
     }
 
-    private function trim_end(string $stroke): string
-    {
-        if ($stroke[strlen($stroke) - 1] === '/') {
-            return substr($stroke, 0, -1);
-        }
-
-        return $stroke;
+    // Clears the trailing slash.
+    // Очищает конечный слеш.
+    private function trimEndSlash(string $stroke): string {
+        return rtrim($stroke, '/');
     }
 
-    private function match_subdomains($blocks)
-    {
-
+    // Find a method for subdomains.
+    // Поиск метода для субдоменов.
+    private function matchSubdomains($blocks) {
         $host = array_reverse(explode('.', hleb_get_host()));
-
         if ($host[0] === 'localhost') {
             array_unshift($host, '*');
         }
-
-        $result_blocks = [];
-
+        $resultBlocks = [];
         foreach ($blocks as $key => $block) {
-
             $search = [];
-
             $actions = !empty($block['actions']) ? $block['actions'] : [];
-
             foreach ($actions as $k => $action) {
                 if (!empty($action['domain'])) {
-                    $domain_part = $host[intval($action['domain'][1]) - 1] ?? null;
+                    $domainPart = $host[intval($action['domain'][1]) - 1] ?? null;
                     if (!$action['domain'][2]) {
-                        $valid_domain = 0;
+                        $validDomain = 0;
                         foreach ($action['domain'][0] as $domain) {
-                            if ($domain_part === '*' || (is_null($domain) && is_null($domain_part)) ||
-                                ($domain_part != null && strtolower($domain_part) == strtolower($domain))) {
-                                $valid_domain++;
+                            if ($domainPart === '*' || (is_null($domain) && is_null($domainPart)) ||
+                                ($domainPart != null && strtolower($domainPart) == strtolower($domain))) {
+                                $validDomain++;
                             }
                         }
-                        $search[] = $valid_domain > 0;
+                        $search[] = $validDomain > 0;
                     } else {
-                        $valid_domain = 0;
+                        $validDomain = 0;
                         foreach ($action['domain'][0] as $domain) {
-                            if ($domain_part === '*' || (is_null($domain) && is_null($domain_part))) {
-                                $valid_domain++;
-                            } else if ($domain_part != null) {
-                                preg_match('/^' . $domain . '$/u', strtolower($domain_part), $matches);
-                                if (count($matches) && $matches[0] == strtolower($domain_part)) {
-                                    $valid_domain++;
+                            if ($domainPart === '*' || (is_null($domain) && is_null($domainPart))) {
+                                $validDomain++;
+                            } else if ($domainPart != null) {
+                                preg_match('/^' . $domain . '$/u', strtolower($domainPart), $matches);
+                                if (count($matches) && $matches[0] == strtolower($domainPart)) {
+                                    $validDomain++;
                                 }
                             }
                         }
-                        $search[] = $valid_domain > 0;
+                        $search[] = $validDomain > 0;
                     }
                 }
                 if (!in_array(false, $search)) break;
             }
-
-            if (count($search) == 0 || !in_array(false, $search)) $result_blocks[] = $block;
+            if (count($search) == 0 || !in_array(false, $search)) $resultBlocks[] = $block;
         }
-
-        return $result_blocks;
+        return $resultBlocks;
     }
 
-
-    private function match_search_type($blocks)
-    {
-
-        $real_type = strtolower($_SERVER['REQUEST_METHOD']);
-
-        if(!in_array($real_type, HLEB_HTTP_TYPE_SUPPORT)){
-
+    // Sort the list of routes and filter by the appropriate type.
+    // Сортировка списка роутов и отбор по подходящему типу.
+    private function matchSearchType($blocks) {
+        $realType = strtolower($_SERVER['REQUEST_METHOD']);
+        if (!in_array($realType, HLEB_HTTP_TYPE_SUPPORT)) {
             if (!headers_sent()) {
                 header($_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed');
-                header('Allow: ' . strtoupper(implode(',',HLEB_HTTP_TYPE_SUPPORT)));
+                header('Allow: ' . strtoupper(implode(',', HLEB_HTTP_TYPE_SUPPORT)));
                 header('Content-length: 0');
             }
             exit();
         }
-
-
-        $result_blocks = [];
-
-        $admin_pan_data = [];
-
+        $resultBlocks = [];
+        $adminPanData = [];
         foreach ($blocks as $key => $block) {
-
             $type = [];
-
             $actions = !empty($block['actions']) ? $block['actions'] : [];
-
             foreach ($actions as $kt => $action) {
-
-                if (!empty($action['type'])) { // Определяется тип действия
-
+                // Determine the type of action.
+                // Определяется тип действия.
+                if (!empty($action['type'])) {
                     $action_types = $action['type'];
-
                     foreach ($action_types as $k => $action_type) {
-
                         $type[] = $action_type;
                     }
-
                 }
-
                 if (isset($action['adminPanController'])) {
-
-                    $admin_pan_data[] = $block;
+                    $adminPanData[] = $block;
                 }
-
             }
-
             if (count($type) === 0) {
-
                 $type = !empty($block['type']) ? $block['type'] : [];
-
             }
-
-
             if (count($type) === 0) {
-
                 $type = ['get'];
             }
-
-            if (in_array($real_type, $type) || $real_type == 'options') {
-
-                $result_blocks[] = $block;
-
+            if (in_array($realType, $type) || $realType == 'options') {
+                $resultBlocks[] = $block;
             }
         }
-
-        foreach($result_blocks as &$result_block){
-
-            $result_block['_AdminPanelData'] = $admin_pan_data;
+        foreach ($resultBlocks as &$resultBlock) {
+            $resultBlock['_AdminPanelData'] = $adminPanData;
         }
-
-        return $result_blocks;
+        return $resultBlocks;
     }
 
-    /**
-     * @param array $blocks
-     * @param string $result_url
-     * @return bool|array
-     */
-    private function match_search_all_path($blocks, $result_url)
-    {
-        $result_url_parts = array_reverse(explode('/', $result_url));
-
-        $url = self::trim_end($result_url);
-
+    // Returns the matching route, or `false` if not found.
+    // Возвращает совпавший роут или `false` если не найден.
+    private function matchSearchAllPath(array $blocks, string $resultUrl) {
+        $resultUrlParts = array_reverse(explode('/', $resultUrl));
+        $url = self::trimEndSlash($resultUrl);
         foreach ($blocks as $key => $block) {
-
-            $result = self::match_search_path($block, $url, $result_url_parts);
-
+            $result = self::matchSearchPath($block, $url, $resultUrlParts);
             if ($result !== false) return $result;
-
         }
-
         return false;
     }
 
-    /**
-     * @param array $block
-     * @param string $result_url
-     * @param array $result_url_parts
-     * @return bool|array
-     */
-    private function match_search_path($block, $result_url, $result_url_parts)
-    {
-
+    // Returns data if the route matches the URL, otherwise `false`.
+    // Возвращает данные, если роут подходит под URL, иначе `false`.
+    private function matchSearchPath(array $block, string $resultUrl, array $resultUrlParts) {
         $url = '';
-
         $actions = $block['actions'] ?? [];
-
         $mat = [];
-
         foreach ($actions as $k => $action) {
-
             if (isset($action['prefix'])) {
-
-                $url = self::compound_url([$url, $action['prefix']]);
-
+                $url = self::compoundUrl([$url, $action['prefix']]);
             } else if (isset($action['where']) && count($action['where'][0]) > 0) {
-
                 foreach ($action['where'][0] as $key => $value) {
-
                     $mat[$key] = $value;
                 }
-
             }
-
         }
+        $originUrl = self::compoundUrl([$url, $block['data_path'] ?? '']);
+        $url = self::trimEndSlash($originUrl);
+        $urlParts = array_reverse(explode('/', $url));
+        $resultShift = array_shift($urlParts);
 
-        $origin_url = self::compound_url([$url, $block['data_path'] ?? '']);
-
-        $url = self::trim_end($origin_url);
-
-
-        $url_parts = array_reverse(explode('/', $url));
-
-        $result_shift = array_shift($url_parts);
-
-        // /.../.../ или /.../...?/
-
-        if ($result_url == trim($url, '?') ||
-            (strlen($result_shift) && $result_shift[strlen($result_shift) - 1] === '?' && implode($result_url_parts) === implode($url_parts))) {
-            // Прямое совпадение
+        // /.../.../ or /.../...?/
+        if ($resultUrl == trim($url, '?') ||
+            (strlen($resultShift) && $resultShift[strlen($resultShift) - 1] === '?' && implode($resultUrlParts) === implode($urlParts))) {
+            // Direct match.
+            // Прямое совпадение.
             return $block;
-
         } else {
-            // Если есть вариативность в маршруте /{...}/, /{...?}/ или where(...)
-
+            // If there is variability in the route /{...}/, /{...?}/ or where(...).
+            // Если есть вариативность в маршруте /{...}/, /{...?}/ или where(...).
             if (count($mat) > 0 || strpos($url, '{') !== false) {
-
-                $generate_real_urls = explode('/', $result_url);
-
-                $generate_urls = explode("/", $url);
-
-                if (count($generate_real_urls) !== count($generate_urls) &&
-                    !(($result_shift[strlen($result_shift) - 2] == '?' || $result_shift[strlen($result_shift) - 1] == '?') &&
-                        count($generate_real_urls) + 1 == count($generate_urls))) {
-                    // Не совпадает длина маршрута с url
-
+                $generateRealUrls = explode('/', $resultUrl);
+                $generateUrls = explode("/", $url);
+                if (count($generateRealUrls) !== count($generateUrls) &&
+                    !(($resultShift[strlen($resultShift) - 2] == '?' || $resultShift[strlen($resultShift) - 1] == '?') &&
+                        count($generateRealUrls) + 1 == count($generateUrls))) {
+                    // The length of the route does not match with the url.
+                    // Не совпадает длина маршрута с url.
                     return false;
-
                 }
-
-                foreach ($generate_urls as $q => $generate_url) {
-
-                    $generate_real_urls[$q] = $generate_real_urls[$q] ?? '';
-
-                    if (!empty($generate_url)) {
-
-                        if ($generate_url[0] === '{' && $generate_url[strlen($generate_url) - 1] === '}') {
-
-                            $exp = trim($generate_url, '{?}');
-
+                foreach ($generateUrls as $q => $generateUrl) {
+                    $generateRealUrls[$q] = $generateRealUrls[$q] ?? '';
+                    if (!empty($generateUrl)) {
+                        if ($generateUrl[0] === '{' && $generateUrl[strlen($generateUrl) - 1] === '}') {
+                            $exp = trim($generateUrl, '{?}');
                             if (isset($mat[$exp])) {
-
-                                if (!(empty($generate_real_urls[$q]) && $generate_url[strlen($generate_url) - 2] === '?')) {
-
-                                    preg_match('/^' . $mat[$exp] . '$/u', $generate_real_urls[$q], $matches);
-
-                                    if (!isset($matches[0]) || $matches[0] != $generate_real_urls[$q]) {
-
+                                if (!(empty($generateRealUrls[$q]) && $generateUrl[strlen($generateUrl) - 2] === '?')) {
+                                    preg_match('/^' . $mat[$exp] . '$/u', $generateRealUrls[$q], $matches);
+                                    if (!isset($matches[0]) || $matches[0] != $generateRealUrls[$q]) {
                                         return false;
                                     }
                                 }
                             }
-                            Request::add($exp, $generate_real_urls[$q]);
-
+                            Request::add($exp, $generateRealUrls[$q]);
                         } else {
+                            // There is variation, but there are direct matches:
                             // Есть вариативность, но и есть прямые совпадения:
-                            if (!(empty($generate_real_urls[$q]) && $generate_url[strlen($generate_url) - 1] === '?')) {
-                                if (trim($generate_url, "?") !== $generate_real_urls[$q]) {
-
+                            if (!(empty($generateRealUrls[$q]) && $generateUrl[strlen($generateUrl) - 1] === '?')) {
+                                if (trim($generateUrl, "?") !== $generateRealUrls[$q]) {
                                     return false;
                                 }
                             }
                         }
                     }
                 } // foreach
-
                 return $block;
             }
-
         }
         return false;
     }
-
-
 }
+

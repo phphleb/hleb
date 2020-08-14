@@ -2,127 +2,98 @@
 
 declare(strict_types=1);
 
+/*
+ * URL validation and parsing.
+ *
+ * Действия по валидации и разбору URL.
+ */
+
 namespace Hleb\Constructor\Handlers;
 
 class AddressBar
 {
     const IDNACONV_PATH = '/idnaconv/idna_convert.class.php';
 
-    private $INPUT_PARAMS;
+    private $inputParameters;
 
     public $redirect = null;
 
-    public $rel_url = null;
+    public $realUrl = null;
 
-    public function __construct($params)
-    {
-        $this->INPUT_PARAMS = $params;
 
+    // Initialization with input parameters.
+    // Инициализация с вводными параметрами.
+    public function __construct(array $params) {
+        $this->inputParameters = $params;
     }
 
-    public function get_state(){
-
-        $array_address = explode('?', $this->INPUT_PARAMS['SERVER']['REQUEST_URI']);
-
-        $address = rawurldecode(array_shift($array_address));
-
-        $rel_params = count($array_address) > 0 ? '?' . implode('?', $array_address) : '';// params
-
-        $actual_protocol = $this->INPUT_PARAMS['HTTPS'];
-
-        $rel_protocol = $this->INPUT_PARAMS['HLEB_PROJECT_ONLY_HTTPS'] ? 'https://' : $actual_protocol; // protocol
-
-        define('HLEB_PROJECT_PROTOCOL', $rel_protocol);
-
-        $end_element = explode('/', $address);
-
-        $file_url = stripos(end($end_element), '.') === false ? false : true;
-
-        $rel_address = "";
+    // Parses data to check the current URL, otherwise marks it as a redirect to the correct one.
+    // Выполняет разбор данных для проверки текущего URL, в противном случае отмечается как редирект на правильный.
+    public function get() {
+        $partsOfAddress = explode('?', $this->inputParameters['SERVER']['REQUEST_URI']);
+        $address = rawurldecode(array_shift($partsOfAddress));
+        $realParameters = count($partsOfAddress) > 0 ? '?' . implode('?', $partsOfAddress) : ''; // params
+        $actualProtocol = $this->inputParameters['HTTPS'];
+        $realProtocol = $this->inputParameters['HLEB_PROJECT_ONLY_HTTPS'] ? 'https://' : $actualProtocol; // protocol
+        define('HLEB_PROJECT_PROTOCOL', $realProtocol);
+        $endElement = explode('/', $address);
+        $fileUrl = stripos(end($endElement), '.') !== false;
+        $relAddress = "";
 
         if (!empty($address)) {
-
-            $var_first = $this->INPUT_PARAMS['HLEB_PROJECT_ENDING_URL'] ? $address : mb_substr($address, 0, -1);
-
-            $var_second = $this->INPUT_PARAMS['HLEB_PROJECT_ENDING_URL'] ? $address . '/' : $address;
-
-            $var_all = $address[strlen($address) - 1] == '/' ? $var_first : $var_second;
-
-            $rel_address = $file_url ? $address : $var_all; // address
+            $endFirst = $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? $address : mb_substr($address, 0, -1);
+            $endSecond = $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? $address . '/' : $address;
+            $var_all = $address[strlen($address) - 1] == '/' ? $endFirst : $endSecond;
+            $relAddress = $fileUrl ? $address : $var_all; // address
         }
 
-        $host = $this->INPUT_PARAMS['SERVER']['HTTP_HOST'];
-
+        // Processing domains with Cyrillic letters.
+        // Обработка доменов с кириллицей.
+        $host = $this->inputParameters['SERVER']['HTTP_HOST'];
         $idn = null;
-
         define('HLEB_MAIN_DOMAIN_ORIGIN', $host);
-
         if (stripos($host, 'xn--') !== false) {
-
-            $idn_path = $this->INPUT_PARAMS['HLEB_PROJECT_DIRECTORY'] . self::IDNACONV_PATH;
-
-            require("$idn_path");
-
+            $idnPath = $this->inputParameters['HLEB_PROJECT_DIRECTORY'] . self::IDNACONV_PATH;
+            require("$idnPath");
             $idn = new \idna_convert(array('idn_version' => 2008));
-
             $host = $idn->decode($host);
-
         }
 
-        $array_host = explode('.', $host);
-
-        if ($this->INPUT_PARAMS['HLEB_PROJECT_GLUE_WITH_WWW'] == 1) {
-
-            if ($array_host[0] == 'www') array_shift($array_host);
-
-        } else if ($this->INPUT_PARAMS['HLEB_PROJECT_GLUE_WITH_WWW'] == 2) {
-
-            if ($array_host[0] != 'www') $array_host = array_merge(['www'], $array_host);
-
+        $partsOfHost = explode('.', $host);
+        if ($this->inputParameters['HLEB_PROJECT_GLUE_WITH_WWW'] == 1) {
+            if ($partsOfHost[0] == 'www') array_shift($partsOfHost);
+        } else if ($this->inputParameters['HLEB_PROJECT_GLUE_WITH_WWW'] == 2) {
+            if ($partsOfHost[0] != 'www') $partsOfHost = array_merge(['www'], $partsOfHost);
         }
-
-
-        $rel_host_www = implode('.', $array_host); // host
-
+        $realHostWww = implode('.', $partsOfHost); // host
         define("HLEB_MAIN_DOMAIN", $host);
 
-        //Проверка на валидность адреса
-
-        if (!preg_match($this->INPUT_PARAMS['HLEB_PROJECT_VALIDITY_URL'], $address)) {
-
-            $rel_url_main = $rel_protocol . $rel_host_www;
-            self::redirect($rel_url_main);
-            return $rel_url_main;
-
+        // Check if the address is valid.
+        // Проверка на валидность адреса.
+        if (!preg_match($this->inputParameters['HLEB_PROJECT_VALIDITY_URL'], $address)) {
+            $realUrlMain = $realProtocol . $realHostWww;
+            self::redirect($realUrlMain);
+            return $realUrlMain;
         }
 
-        //Проверка на корректность URL
-
-        $rel_host_www = empty($rel_address) ? $rel_host_www . $this->INPUT_PARAMS['HLEB_PROJECT_ENDING_URL'] ? '/' : "" : $rel_host_www;
-
-        $rel_url = $rel_protocol . (preg_replace('/\/{2,}/', '/', $rel_host_www . $rel_address)) . $rel_params;
-
-        $array_actual_uri = explode('?', $this->INPUT_PARAMS['SERVER']['REQUEST_URI']);
-
-        $first_actual_uri = rawurldecode(array_shift($array_actual_uri));
-
-        $first_actual_params = count($array_actual_uri) > 0 ? '?' . implode('?', $array_actual_uri) : '';
-
-        $actual_host = is_null($idn) ? $this->INPUT_PARAMS['SERVER']['HTTP_HOST'] : $idn->decode($this->INPUT_PARAMS['SERVER']['HTTP_HOST']);
-
-        $actual_url = $actual_protocol . $actual_host . $first_actual_uri . $first_actual_params;
-
-        if ($rel_url !== $actual_url) {
-            self::redirect($rel_url);
+        // Check if the URL is correct.
+        // Проверка на корректность URL.
+        $realHostWww = empty($relAddress) ? $realHostWww . $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? '/' : "" : $realHostWww;
+        $realUrl = $realProtocol . (preg_replace('/\/{2,}/', '/', $realHostWww . $relAddress)) . $realParameters;
+        $partsOfActualUri = explode('?', $this->inputParameters['SERVER']['REQUEST_URI']);
+        $firstActualUri = rawurldecode(array_shift($partsOfActualUri));
+        $firstActualParams = count($partsOfActualUri) > 0 ? '?' . implode('?', $partsOfActualUri) : '';
+        $actualHost = is_null($idn) ? $this->inputParameters['SERVER']['HTTP_HOST'] : $idn->decode($this->inputParameters['SERVER']['HTTP_HOST']);
+        $actualUrl = $actualProtocol . $actualHost . $firstActualUri . $firstActualParams;
+        if ($realUrl !== $actualUrl) {
+            self::redirect($realUrl);
         }
-
-        return $rel_url;
-
+        return $realUrl;
     }
 
-    private function redirect($rel_url){
-
-        $this->redirect = $rel_url;
-
+    // Sets the address to which the redirect is needed.
+    // Устанавливает адрес на который необходим редирект.
+    private function redirect($realUrl) {
+        $this->redirect = $realUrl;
     }
 }

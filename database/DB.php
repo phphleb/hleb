@@ -83,8 +83,7 @@ class DB extends \Hleb\Main\DB
      |
      |--------------------------------------------------------------------------------------
     */
-    public static function run($sql, $args = array())
-    {
+    public static function run($sql, $args = array()) {
         return parent::run($sql, $args);
     }
 
@@ -110,8 +109,7 @@ class DB extends \Hleb\Main\DB
      |
      |--------------------------------------------------------------------------------------
     */
-    public static function db_query($sql)
-    {
+    public static function db_query($sql) {
         return parent::db_query($sql);
     }
 }

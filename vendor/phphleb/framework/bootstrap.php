@@ -187,7 +187,7 @@ $hl_address_object =(new \Hleb\Constructor\Handlers\AddressBar(
     ]
 ));
 
-$hl_address = $hl_address_object->get_state();
+$hl_address = $hl_address_object->get();
 
 if($hl_address_object->redirect != null){
     if (!headers_sent()) {

@@ -1,12 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * Systemic interaction with URLs.
+ *
+ * Системное взаимодействие с адресами URL.
+ */
+
 namespace Hleb\Constructor\Handlers;
 
 use DeterminantStaticUncreated;
 
 class URL
 {
-
     use DeterminantStaticUncreated;
 
     const NEEDED_TAGS = ['<', '>'];
@@ -15,201 +22,163 @@ class URL
 
     protected static $addresses;
 
-
-    public static function create($address)
-    {
+    // Create a list of used URLs.
+    // Создание списка используемых адресов URL
+    public static function create(array $address) {
         self::$addresses = $address;
     }
 
-    public static function add($new_address)
-    {
-        self::$addresses = array_merge(self::$addresses, $new_address);
+    // Adds a separate URL
+    // Добавляет отдельный адрес URL
+    public static function add($newAddress) {
+        $newAddress = is_array($newAddress) ? $newAddress : [$newAddress];
+        self::$addresses = array_merge(self::$addresses, $newAddress);
     }
 
-    public static function getAll()
-    {
+    // Returns all URLs.
+    // Возвращает все адреса URL.
+    public static function getAll() {
         return self::$addresses;
     }
 
-    public static function getRouteByName(string $name, array $perem = []) // Название и замена переменных
-    {
+    // Returns the address of the route by name with the replacement of variable values ​​in it with the required values.
+    // Возвращает адрес роута по имени с заменой переменных значений в нём на необходимые значения.
+    public static function getRouteByName(string $name, array $perem = []) {
         return self::getByName($name, $perem);
     }
 
-    public static function getByName(string $name, array $perem = []) // Название и замена переменных
-    {
+    // Returns the address of the route by name with the replacement of variable values ​​in it with the required values.
+    // Возвращает адрес роута по имени с заменой переменных значений в нём на необходимые значения.
+    public static function getByName(string $name, array $perem = []) {
         // Получение пути с префиксами по существующему имени роута
-        if(!isset(self::$addresses[$name])) return false;
-
+        if (!isset(self::$addresses[$name])) return false;
         if (count($perem) === 0 && (strpos(self::$addresses[$name], '?}') === false)) {
             return self::endingUrl(self::$addresses[$name]);
         }
-
-        $address_parts = explode('/', self::$addresses[$name]);
-
-        foreach ($address_parts as $key => $part) {
-            if (strlen($part)>2 && $part[0] == '{') {
-                if(count($perem)) {
-
+        $addressParts = explode('/', self::$addresses[$name]);
+        foreach ($addressParts as $key => $part) {
+            if (strlen($part) > 2 && $part[0] == '{') {
+                if (count($perem)) {
                     foreach ($perem as $k => $p) {
-                        if (($part[strlen($part) - 2] == '?' && $address_parts[$key] == '{' . $k . '?}') ||
-                            $address_parts[$key] == '{' . $k . '}') {
-                            $address_parts[$key] = $p;
+                        if (($part[strlen($part) - 2] == '?' && $addressParts[$key] == '{' . $k . '?}') ||
+                            $addressParts[$key] == '{' . $k . '}') {
+                            $addressParts[$key] = $p;
                         } else if ($part[strlen($part) - 2] == '?') {
-                            $address_parts[$key] = '';
+                            $addressParts[$key] = '';
                         }
                     }
                 } else {
                     if ($part[strlen($part) - 2] == '?') {
-                        $address_parts[$key] = '';
+                        $addressParts[$key] = '';
                     }
                 }
             }
         }
-
-        return self::endingUrl(preg_replace('|([/]+)|s', '/', '/' . implode('/', $address_parts) . '/'));
-
+        return self::endingUrl(preg_replace('|([/]+)|s', '/', '/' . implode('/', $addressParts) . '/'));
     }
 
-    protected static function endingUrl($url)
-    {
-
+    // Returns the ending from the URL after the `?`, If any.
+    // Возвращает окончание из URL после `?`, если оно есть.
+    protected static function endingUrl(string $url) {
         $ending = $url[strlen($url) - 1];
-
         $element = explode('/', $ending);
-
-        $end_element = end($element);
-
-        if (strpos($end_element, '.') !== false) return $url;
-
+        $endElement = end($element);
+        if (strpos($endElement, '.') !== false) return $url;
 
         if (HLEB_PROJECT_ENDING_URL && $ending !== '/') {
-
             return $url . '/';
-
         } else if (!HLEB_PROJECT_ENDING_URL && $ending == '/') {
-
             return substr($url, 0, -1);
-
         }
-
-        return str_replace('?', '', $url);
-
+        return ltrim($url, '?');
     }
 
-
-    public static function redirectToSite($url) // Полное url с https:// стороннего сайта
-    {
-
+    // Redirect to URL from https:// third party site.
+    // Редиректит на URL с https:// стороннего сайта.
+    public static function redirectToSite(string $url) {
         self::universalRedirect($url, 301);
-
     }
 
-    public static function redirect(string $url, int $code = 303) // На внутренний адрес URL
-    {
-
+    // Redirect to internal URL.
+    // Редиректит на внутренний адрес URL.
+    public static function redirect(string $url, int $code = 303) {
         self::universalRedirect($url, $code);
-
     }
 
-    public static function getMainUrl() // Получить текущий URL
-    {
-
+    // Returns the current URL.
+    // Возвращает текущий URL.
+    public static function getMainUrl() {
         return Request::getMainConvertUrl();
-
     }
 
-    public static function getMainClearUrl() // Получить текущий URL без параметров
-    {
-
+    // Returns the current URL without parameters.
+    // Возвращает текущий URL без параметров.
+    public static function getMainClearUrl() {
         return Request::getMainClearUrl();
-
     }
 
-    public static function getProtectUrl($url) // Защита URL
-    {
-
-        $new_url = explode('?', $url);
-
-        if (count($new_url) === 1) {
-
-            return self::getStandard(self::endingUrl($new_url[0])) . '?_token=' . ProtectedCSRF::key();
+    // Returns a secure URL with a GET parameter containing a token. Not recommended for use!
+    // Возвращает защищённый URL с GET-параметром, который содержит токен. Не рекомендуется к использованию!
+    public static function getProtectUrl(string $url) {
+        $newUrl = explode('?', $url);
+        if (count($newUrl) === 1) {
+            return self::getStandard(self::endingUrl($newUrl[0])) . '?_token=' . ProtectedCSRF::key();
         }
         $params = '';
-
-        foreach ($new_url as $key => $param) {
+        foreach ($newUrl as $key => $param) {
             if ($key !== 0) {
                 $params .= '?' . str_replace(self::NEEDED_TAGS, self::REPLACING_TAGS, $param);
             }
-
         }
-
-        return self::getStandard(self::endingUrl($new_url[0])) . $params . '&_token=' . ProtectedCSRF::key();
-
+        return self::getStandard(self::endingUrl($newUrl[0])) . $params . '&_token=' . ProtectedCSRF::key();
     }
 
-    public static function getStandardUrl($url)
-    {
-
-        $all_urls = explode('?', $url);
-
+    // Returns a standardized URL.
+    // Возвращает стандартизированный URL.
+    public static function getStandardUrl(string $url) {
+        $allUrls = explode('?', $url);
         $params = '';
-
-        foreach ($all_urls as $key => $all_url) {
-
+        foreach ($allUrls as $key => $allUrl) {
             if ($key !== 0) {
-
-                $params .= '?' .  str_replace(self::NEEDED_TAGS, self::REPLACING_TAGS, $all_url);
+                $params .= '?' . str_replace(self::NEEDED_TAGS, self::REPLACING_TAGS, $allUrl);
             }
         }
-
-        return self::getStandard(self::endingUrl($all_urls[0])) . $params;
-
+        return self::getStandard(self::endingUrl($allUrls[0])) . $params;
     }
 
-    private static function getStandard($url)
-    {
-
+    // Returns a standardized string.
+    // Возвращает стандартизированную строку.
+    private static function getStandard(string $url) {
         if (self::ifHttp($url)) {
-
             $arr_url = array_slice(explode('/', $url), 3);
-
             return HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN . ($url[0] == '/' ? '' : '/') . (implode('/', $arr_url));
-
         }
-
         return rawurldecode($url);
     }
 
-    private static function ifHttp($url)
-    {
 
+    // Returns the result of checking the contents of the http(s) protocol.
+    // Возвращает результат проверки на содержание протокола http(s).
+    private static function ifHttp(string $url) {
         return preg_match('/http(s?)\:\/\//i', $url) == 1;
     }
 
-
-    public static function getFullUrl($url) // Полный адрес url
-    {
-
+    // Returns the full url.
+    // Возвращает полный адрес url.
+    public static function getFullUrl(string $url) {
         if (!self::ifHttp($url)) {
-
             return HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN . ($url[0] == '/' ? '' : '/') . self::getStandardUrl($url);
-
         }
-
         return self::getStandardUrl($url);
     }
 
-    protected static function universalRedirect(string $url, int $code = 302)
-    {
+    // Implements a redirect.
+    // Реализует редирект.
+    protected static function universalRedirect(string $url, int $code = 302) {
         if (!headers_sent()) {
-
             header('Location: ' . self::getStandardUrl($url), true, $code);
         }
         exit();
-
-
     }
-
 }
 
