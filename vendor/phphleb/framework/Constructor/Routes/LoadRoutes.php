@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/*
+ * Working with a cached routes file.
+ *
+ * Работа с закешированным файлом маршрутов.
+ */
+
 namespace Hleb\Constructor\Routes;
 
 use RecursiveDirectoryIterator;
@@ -9,64 +15,44 @@ use RecursiveIteratorIterator;
 
 class LoadRoutes
 {
-    private $cache_routes = HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt';
+    private $cacheRoutes = HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt';
 
-    private $routes_directory = HLEB_LOAD_ROUTES_DIRECTORY . '/';
+    private $routesDirectory = HLEB_LOAD_ROUTES_DIRECTORY . '/';
 
-    function __construct()
-    {
-
-    }
-
-    public function update($data)
-    {
-        @file_put_contents($this->cache_routes, json_encode($data), LOCK_EX);
-
+    // Save the route cache to a file.
+    // Сохраняет кеш маршрутов в файл.
+    public function update($data) {
+        @file_put_contents($this->cacheRoutes, json_encode($data), LOCK_EX);
         return $data;
-
     }
 
-    public function loadCache()
-    {
-
-        $content = is_writable($this->cache_routes) ? file_get_contents($this->cache_routes) : null;
-
+    // Loads the route cache from a file, converting it to an array.
+    // Загружает кеш маршрутов из файла с преобразованием в массив.
+    public function loadCache() {
+        $content = is_writable($this->cacheRoutes) ? file_get_contents($this->cacheRoutes) : null;
         if (empty($content)) {
-
             return false;
         }
-
         return json_decode($content, true);
-
     }
 
-    public function comparison()
-    {
-
-        if (file_exists($this->cache_routes)) {
-
-            $time = filemtime($this->cache_routes);
-
-            $fileinfos = new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($this->routes_directory)
+    // Returns the result of checking for changes in route data.
+    // Возвращает результат проверки на изменения в данных роутов.
+    public function comparison() {
+        if (file_exists($this->cacheRoutes)) {
+            $time = filemtime($this->cacheRoutes);
+            $fileInfo = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($this->routesDirectory)
             );
-            foreach ($fileinfos as $pathname => $fileinfo) {
-                if (!$fileinfo->isFile()) continue;
-
-                if (filemtime($fileinfo->getRealPath()) > $time) {
-
+            foreach ($fileInfo as $pathname => $info) {
+                if (!$info->isFile()) continue;
+                if (filemtime($info->getRealPath()) > $time) {
                     return false;
                 }
             }
-
             return true;
         }
-
         return false;
-
-
     }
-
-
 }
 

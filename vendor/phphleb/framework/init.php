@@ -113,7 +113,7 @@ function hleb_gop0m3f4hpe10d_all($view = null, $data = null, $type = 'views')
  */
 function hleb_to0me1cd6vo7gd_data()
 {
-    return \Hleb\Constructor\Routes\Data::return_data();
+    return \Hleb\Constructor\Routes\Data::returnData();
 }
 
 /*

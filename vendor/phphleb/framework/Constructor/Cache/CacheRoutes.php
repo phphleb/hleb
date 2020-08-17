@@ -30,14 +30,14 @@ class CacheRoutes
             if ($cache === false) {
                 $this->createRoutes();
                 Info::add('CacheRoutes', true);
-                return $this->check($this->opt->update(Route::data()));
+                return $this->check($this->opt->update(Route::instance()->data()));
             }
             Info::add('CacheRoutes', false);
             return $cache;
         }
         $this->createRoutes();
         Info::add('CacheRoutes', true);
-        return $this->check($this->opt->update(Route::data()));
+        return $this->check($this->opt->update(Route::instance()->data()));
     }
 
     // Check the availability of the file with the cache of routes. The contents of the file are returned or an error is displayed.
@@ -72,7 +72,7 @@ class CacheRoutes
         if (file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/hlogin/reg.php')) {
             hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY, '/hlogin/reg.php');
         }
-        Route::end();
+        Route::instance()->end();
     }
 
     // Returns the result of trying to determine the username on Linux-like systems.

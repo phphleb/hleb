@@ -33,7 +33,7 @@ class ProjectLoader
 
         Request::close();
 
-        Route::delete();
+        Route::instance()->delete();
 
         if ($block) {
 

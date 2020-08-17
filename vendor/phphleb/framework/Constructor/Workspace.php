@@ -167,7 +167,7 @@ class Workspace
 
         if (is_array($hlExcludedParams) && !empty($hlExcludedParams[1])) {
 
-            Data::create_data($hlExcludedParams[1]);
+            Data::createData($hlExcludedParams[1]);
         }
 
 

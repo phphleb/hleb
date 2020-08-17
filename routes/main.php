@@ -8,4 +8,3 @@
 
 Route::get("/", view("default"));
 
-
