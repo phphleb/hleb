@@ -4,11 +4,11 @@ namespace Hleb\Scheme\Home\Constructor\Routes;
 
 abstract class DataRoute
 {
-    protected $data_name;
+    protected $dataName;
 
-    protected $data_path;
+    protected $dataPath;
 
-    protected $data_params;
+    protected $dataParams;
 
     protected $type;
 
@@ -16,17 +16,17 @@ abstract class DataRoute
 
     protected $actions;
 
-    protected $method_name;
+    protected $methodName;
 
-    protected  $method_type_name;
+    protected $methodTypeName;
 
-    protected $method_data;
+    protected $methodData;
 
     protected $errors;
 
-    protected $controller_path;
+    protected $controllerPath;
 
-    protected function  createMethodData(){}
+    protected function createMethodData(){}
 
 
 }

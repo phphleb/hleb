@@ -70,13 +70,13 @@ class MainRouteMethod extends DataRoute implements RouteMethodStandard
      */
     public function data() {
         $this->createMethodData();
-        $this->method_data['number']++;
-        return $this->method_data;
+        $this->methodData['number']++;
+        return $this->methodData;
     }
 
     // Возвращает сформированные данные метода.
     protected function createMethodData() {
-        $this->method_data =
+        $this->methodData =
             [
                 'number' => 1000,
                 'data_name' => $this->dataName,
