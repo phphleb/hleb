@@ -46,6 +46,8 @@ class MainRoute
         return null;
     }
 
+    // Adds a route to the others.
+    // Добавляет маршрут к остальным.
     /**
      * @param RouteMethodStandard $method
      * @return null|static
@@ -58,8 +60,8 @@ class MainRoute
         return null;
     }
 
-    // Adds a route to the others.
-    // Добавляет маршрут к остальным.
+    // Returns the collected and prepared routes.
+    // Возвращает собранные и подготовленные маршруты.
     protected static function add(RouteMethodStandard $method) {
         $data = $method->data();
         self::$number++;
