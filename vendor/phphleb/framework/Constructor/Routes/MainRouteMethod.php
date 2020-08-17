@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/*
+ * General class for routes.
+ *
+ * Общий класс для роутов.
+ */
+
 namespace Hleb\Constructor\Routes;
 
 use \Closure;
@@ -13,14 +19,11 @@ use Hleb\Scheme\Home\Constructor\Routes\{
 class MainRouteMethod extends DataRoute implements RouteMethodStandard
 {
 
-//======= DEFAULT METHOD ========//
+    protected $dataName = null;
 
+    protected $dataPath = null;
 
-    protected $data_name = null;
-
-    protected $data_path = null;
-
-    protected $data_params = [];
+    protected $dataParams = [];
 
     protected $type = [];
 
@@ -30,89 +33,61 @@ class MainRouteMethod extends DataRoute implements RouteMethodStandard
 
     protected $protect = [];
 
-    protected $method_type_name = null;
+    protected $methodTypeName = null;
 
     protected $errors = [];
 
     protected $domain = [];
 
-
-//================================//
-
     /**
      * @param object|Closure|string $obj
      * @return array|string
      */
-    public function calculate_incoming_object($obj)
-    {
-
+    public function calculateIncomingObject($obj) {
         if (is_object($obj)) {
-
             return $obj();
         }
-
         return $obj;
-
     }
 
-    public function error()
-    {
-
+    // Formation of information about the error.
+    // Формирование информации об ошибке.
+    public function error() {
         return implode(', ', $this->errors);
     }
 
-
-    public function approved()
-    {
-
+    // Check for detected errors.
+    // Проверка на обнаруженные ошибки.
+    public function approved() {
         if (count($this->errors) > 0) {
             return false;
         }
-
         return true;
     }
 
     /**
      * @return array
      */
-    public function data()
-    {
-
-        $this->create_method_data();
-
+    public function data() {
+        $this->createMethodData();
         $this->method_data['number']++;
-
         return $this->method_data;
     }
 
-
-
-    protected function create_method_data()
-    {
+    // Возвращает сформированные данные метода.
+    protected function createMethodData() {
         $this->method_data =
             [
                 'number' => 1000,
-
-                'data_name' => $this->data_name,
-
-                'data_path' => $this->data_path,
-
-                'data_params' => $this->data_params,
-
+                'data_name' => $this->dataName,
+                'data_path' => $this->dataPath,
+                'data_params' => $this->dataParams,
                 'type' => $this->type,
-
                 'actions' => $this->actions,
-
                 'protect' => array_unique($this->protect),
-
-                'method_type_name' => $this->method_type_name,
-
+                'method_type_name' => $this->methodTypeName,
                 'domain' => $this->domain,
-
             ];
-
     }
-
-
 }
 

@@ -2,44 +2,33 @@
 
 declare(strict_types=1);
 
+/*
+ * Processing route data to configure domain and subdomains.
+ *
+ * Обработка данных роута для настройки домена и субдоменов.
+ */
+
 namespace Hleb\Constructor\Routes\Methods;
 
 use Hleb\Scheme\Home\Constructor\Routes\{
     StandardRoute
 };
 use Hleb\Constructor\Routes\MainRouteMethod;
-use Hleb\Main\Errors\ErrorOutput;
 
 class RouteMethodDomain extends MainRouteMethod
 {
-
     protected $instance;
 
     /**
-     * RouteMethodDomain constructor.
      * @param StandardRoute $instance
      * @param array|string $name
      * @param int $level
      * @param bool $pattern
      */
-    function __construct(StandardRoute $instance, $name, $level, $pattern)
-    {
-        $this->method_type_name = "domain";
-
+    function __construct(StandardRoute $instance, $name, $level, $pattern) {
+        $this->methodTypeName = "domain";
         $this->instance = $instance;
-
-        $this->calc([is_array($name) ? $name : [$name], $level, $pattern]);
-
+        $this->domain = [is_array($name) ? $name : [$name], $level, $pattern];
     }
-
-
-    private function calc($params)
-    {
-
-        $this->domain = $params;
-
-    }
-
-
 }
 

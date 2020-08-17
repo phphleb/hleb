@@ -26,7 +26,7 @@ abstract class DataRoute
 
     protected $controller_path;
 
-    protected function  create_method_data(){}
+    protected function  createMethodData(){}
 
 
 }

@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/*
+ * Handling the method for creating a list of routes for the page constructor.
+ *
+ * Обработка метода создания списка роутов для конструктора страниц.
+ */
+
 namespace Hleb\Constructor\Routes\Methods;
 
 use Hleb\Scheme\Home\Constructor\Routes\{
@@ -12,52 +18,35 @@ use Hleb\Main\Errors\ErrorOutput;
 
 class RouteMethodRenderMap extends MainRouteMethod
 {
-
     protected $instance;
 
     /**
-     * RouteMethodRenderMap constructor.
      * @param StandardRoute $instance
      * @param string $name
      * @param string|array $map
      */
-    function __construct(StandardRoute $instance, string $name, $map)
-    {
-        $this->method_type_name = "renderMap";
-
+    function __construct(StandardRoute $instance, string $name, $map) {
+        $this->methodTypeName = "renderMap";
         $this->instance = $instance;
-
         $this->calc($name, $map);
-
     }
 
-
-    private function calc($name, $map)
-    {
-
-        $this->data_name = $name;
-
+    // Parsing and initial data validation.
+    // Разбор и первоначальная проверка данных.
+    private function calc($name, $map) {
+        $this->dataName = $name;
         if (is_string($map)) $map = [$map];
-
-        $this->data_params = $map;
-
-        $instance_data = $this->instance->data();
-
-        foreach ($instance_data as $key =>$inst) {
-
+        $this->dataParams = $map;
+        $instanceData = $this->instance->data();
+        foreach ($instanceData as $key => $inst) {
             if ($inst["data_name"] === $name) {
-
                 $this->errors[] = "HL020-ROUTE_ERROR: Wrong argument to method ->renderMap() ! " .
                     "Name duplication: `" . $name . "` ~ " .
                     "Неправильный аргумент у метода ->renderMap() !  Такое название (`" . $name . "`) уже используется.";
-
                 ErrorOutput::add($this->errors);
             }
-
         }
-
     }
-
 
 }
 

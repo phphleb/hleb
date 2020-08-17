@@ -2,30 +2,26 @@
 
 declare(strict_types=1);
 
+/*
+ * Processing a terminating secure route.
+ *
+ * Обработка завершающего защищенного роута.
+ */
+
 namespace Hleb\Constructor\Routes\Methods;
 
 use Hleb\Scheme\Home\Constructor\Routes\{
     StandardRoute
 };
 use Hleb\Constructor\Routes\MainRouteMethod;
-use Hleb\Main\Errors\ErrorOutput;
 
 class RouteMethodEndProtect extends MainRouteMethod
 {
-
     protected $instance;
 
-    /**
-     * RouteMethodGetProtect constructor.
-     * @param StandardRoute $instance
-     */
-    function __construct(StandardRoute $instance)
-    {
-        $this->method_type_name = "endProtect";
-
+    function __construct(StandardRoute $instance) {
+        $this->methodTypeName = "endProtect";
         $this->instance = $instance;
-
     }
-
 }
 
