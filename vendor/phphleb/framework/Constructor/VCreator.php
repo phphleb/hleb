@@ -2,35 +2,40 @@
 
 declare(strict_types=1);
 
+/*
+ * Displaying content from a file.
+ *
+ * Отображение контента из файла.
+ */
+
 namespace Hleb\Constructor;
 
 class VCreator
 {
-    private $hlTemplateContent = '';
+    private $hlTemplatePath = '';
 
-    function __construct(string $include)
-    {
-        $this->hlTemplateContent = $include;
-
+    function __construct(string $includePath) {
+        $this->hlTemplatePath = $includePath;
         $data = hleb_to0me1cd6vo7gd_data();
         foreach ($data as $key => $value) {
-            if(!in_array($key ,['hlTemplateContent', 'hlTemplateData', 'hlCacheTime'])) {
+            if (!in_array($key, ['hlTemplatePath', 'hlTemplateData', 'hlCacheTime'])) {
                 $this->$key = $value;
             }
         }
     }
 
-    public function includeTemplateName()
-    {
-        return $this->hlTemplateContent;
+    // Returns the path to the content file.
+    // Возвращает путь до файла с контентом.
+    /** @return string */
+    public function templatePath() {
+        return $this->hlTemplatePath;
     }
 
-    public function view()
-    {
+    // Display content.
+    // Отображение контента.
+    public function view() {
         extract(hleb_to0me1cd6vo7gd_data());
-
-        require $this->includeTemplateName();
-
+        require $this->templatePath();
     }
 }
 

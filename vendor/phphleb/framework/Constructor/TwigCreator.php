@@ -2,12 +2,17 @@
 
 declare(strict_types=1);
 
+/*
+ * Outputting content by reference from a file using the `Twig` template engine.
+ *
+ * Вывод контента по ссылке из файла при помощи шаблонизатора `Twig`.
+ */
+
 namespace Hleb\Constructor;
 
 class TwigCreator
 {
-    public function view(string $path)
-    {
+    public function view(string $path) {
         $loader = new \Twig\Loader\FilesystemLoader(HL_TWIG_LOADER_FILESYSTEM);
         $twig = new \Twig\Environment($loader, array(
             'cache' => HL_TWIG_CACHED,

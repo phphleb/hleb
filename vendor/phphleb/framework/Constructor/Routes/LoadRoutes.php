@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * Working with a cached routes file.
+ * Working with cached routes file.
  *
- * Работа с закешированным файлом маршрутов.
+ * Работа с кешируемым файлом маршрутов.
  */
 
 namespace Hleb\Constructor\Routes;
