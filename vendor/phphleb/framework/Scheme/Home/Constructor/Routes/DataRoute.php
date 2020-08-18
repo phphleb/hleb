@@ -28,6 +28,5 @@ abstract class DataRoute
 
     protected function createMethodData(){}
 
-
 }
 

@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/*
+ * Adding temporary debug data for output to the debug panel.
+ *
+ * Добавление временных отладочных данных для вывода в панель отладки.
+ */
+
 namespace Hleb\Main;
 
 class WorkDebug
@@ -10,30 +16,23 @@ class WorkDebug
 
     protected static $data = [];
 
-    //Adding data for debug output
-
     /**
-     * Добавление данных для вывода в панель отладки
-     * @param $data
+     * Adds data for any type of display on top of content as structure and value information.
+     *
+     * Добавляет данные для вывода любого типа поверх контента в виде информации о структуре и значениях.
+     *
+     * @param mixed $data
      * @param string|null $desc
      */
-    public static function add($data, string $desc = null)
-    {   
-        if(HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] == 'GET') {
-
+    public static function add($data, string $desc = null) {
+        if (HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] == 'GET') {
             self::$data[] = [$data, $desc];
-
         }
     }
 
-    /**
-     * @return array
-     */
-    public static function get(): array
-    {
+    public static function get(): array {
         return self::$data;
     }
-
 
 }
 

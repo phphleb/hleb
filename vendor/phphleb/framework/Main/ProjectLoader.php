@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/*
+ * Global coordinator of action execution.
+ *
+ * Глобальный координатор выполнения действий.
+ */
+
 namespace Hleb\Main;
 
 use Hleb\Constructor\Cache\CacheRoutes;
@@ -18,8 +24,7 @@ class ProjectLoader
 {
     use DeterminantStaticUncreated;
 
-    public static function start()
-    {
+    public static function start() {
 
         $routes_array = (new CacheRoutes())->load();
 
@@ -36,30 +41,21 @@ class ProjectLoader
         Route::instance()->delete();
 
         if ($block) {
-
-           if(!isset($_SESSION)) @session_start();
-
-           if(!isset($_SESSION)) ErrorOutput::get("HL050-ERROR: SESSION not initialized !");
-
+            if (!isset($_SESSION)) @session_start();
+            if (!isset($_SESSION)) ErrorOutput::get("HL050-ERROR: SESSION not initialized !");
             ProtectedCSRF::testPage($block);
-
             new Workspace($block, $render_map);
-
             print PageFinisher::getContent();
 
         } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-
             unset($block, $render_map);
-
             include HLEB_GLOBAL_DIRECTORY . '/app/Optional/404.php';
 
         } else {
-
             if (!headers_sent()) {
                 header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
             }
         }
-
     }
 }
 

@@ -3,17 +3,15 @@
 declare(strict_types=1);
 
 /*
- * Creation of a cached template with a set caching time in the connected content.
+ * Using a cached template with caching times in the pasted content.
  *
- * Создание кешируемого шаблона с заданем времени кеширования в подключаемом контенте.
+ * Использование кешируемого шаблона с заданем времени кеширования в подключаемом контенте.
  */
 
 namespace Hleb\Constructor\Cache;
 
 use Hleb\Constructor\Handlers\Key;
-
 use Hleb\Constructor\TCreator;
-
 use Hleb\Main\Info;
 
 class CachedTemplate

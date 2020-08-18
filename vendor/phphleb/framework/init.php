@@ -1,6 +1,6 @@
 <?php
 
-define('HLEB_PROJECT_FULL_VERSION', '1.5.18');
+define('HLEB_PROJECT_FULL_VERSION', '1.5.2');
 
 require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Controllers/MainController.php';
 
@@ -40,7 +40,7 @@ require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/Data.php';
 
 define('HL_TWIG_CONNECTED', file_exists(HLEB_VENDOR_DIRECTORY . '/twig'));
 
-if(HL_TWIG_CONNECTED) {
+if (HL_TWIG_CONNECTED) {
 
     if (!defined('HL_TWIG_LOADER_FILESYSTEM')) {
         //Folder with .twig files
@@ -88,8 +88,7 @@ if(HL_TWIG_CONNECTED) {
  *
  * Функция view( ... ) позволяет назначить шаблон контента в функции get( ... ) маршрутизатора или при возвращении из контроллера.
  */
-function hleb_v5ds34hop4nm1d_page_view($view = null, $data = null)
-{
+function hleb_v5ds34hop4nm1d_page_view($view = null, $data = null) {
     if (func_num_args() === 0) {
         return [null, null, 'views'];
     }
@@ -97,8 +96,7 @@ function hleb_v5ds34hop4nm1d_page_view($view = null, $data = null)
     return [$view, $data, 'views'];
 }
 
-function hleb_gop0m3f4hpe10d_all($view = null, $data = null, $type = 'views')
-{
+function hleb_gop0m3f4hpe10d_all($view = null, $data = null, $type = 'views') {
     if (func_num_args() === 0) {
         return [null, null, $type];
     }
@@ -111,8 +109,7 @@ function hleb_gop0m3f4hpe10d_all($view = null, $data = null, $type = 'views')
  *
  * Функция data() возвращает в шаблон контента параметры $data из функции view( ..., $data ).
  */
-function hleb_to0me1cd6vo7gd_data()
-{
+function hleb_to0me1cd6vo7gd_data() {
     return \Hleb\Constructor\Routes\Data::returnData();
 }
 
@@ -121,8 +118,7 @@ function hleb_to0me1cd6vo7gd_data()
  *
  * Функция render( ... ) используется как аналог view( ... ) для конструктора страниц, указывая на название для комплекта шаблонов.
  */
-function hleb_v10s20hdp8nm7c_render($render, $data = null)
-{
+function hleb_v10s20hdp8nm7c_render($render, $data = null) {
 
     if (is_string($render)) {
 
@@ -132,8 +128,7 @@ function hleb_v10s20hdp8nm7c_render($render, $data = null)
     return hleb_gop0m3f4hpe10d_all($render, $data, 'render');
 }
 
-function hleb_search_filenames($dir)
-{
+function hleb_search_filenames($dir) {
 
     $handle = opendir($dir) or die("Can't open directory $dir");
 
@@ -159,25 +154,22 @@ function hleb_search_filenames($dir)
     return $files;
 }
 
-function hleb_get_host()
-{
+function hleb_get_host() {
 
     // Symfony origin function
     $possibleHostSources = array('HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR');
     $sourceTransformations = array(
-        "HTTP_X_FORWARDED_HOST" => function($value) {
+        "HTTP_X_FORWARDED_HOST" => function ($value) {
             $elements = explode(',', $value);
             return trim(end($elements));
         }
     );
     $host = '';
-    foreach ($possibleHostSources as $key => $source)
-    {
+    foreach ($possibleHostSources as $key => $source) {
         if (!empty($host)) break;
         if (empty($_SERVER[$source])) continue;
         $host = $_SERVER[$source];
-        if (array_key_exists($source, $sourceTransformations))
-        {
+        if (array_key_exists($source, $sourceTransformations)) {
             $host = $sourceTransformations[$source]($host);
         }
     }
@@ -193,8 +185,7 @@ function hleb_get_host()
  *
  * Функция csrf_token() возвращает защищённый токен для защиты от CSRF-атак.
  */
-function hleb_c3dccfa0da1a3e_csrf_token()
-{
+function hleb_c3dccfa0da1a3e_csrf_token() {
     return \Hleb\Constructor\Handlers\ProtectedCSRF::key();
 }
 
@@ -203,8 +194,7 @@ function hleb_c3dccfa0da1a3e_csrf_token()
  *
  * Функция csrf_field() возвращает HTML-контент для вставки в форму для защиты от CSRF-атак.
  */
-function hleb_ds5bol10m0bep2_csrf_field()
-{
+function hleb_ds5bol10m0bep2_csrf_field() {
     return '<input type="hidden" name="_token" value="' . hleb_c3dccfa0da1a3e_csrf_token() . '">';
 }
 
@@ -213,8 +203,7 @@ function hleb_ds5bol10m0bep2_csrf_field()
  *
  * Функция redirectToSite( ... ) осуществляет перенаправление на сторонний сайт.
  */
-function hleb_ba5c9de48cba78c_redirectToSite($url)
-{
+function hleb_ba5c9de48cba78c_redirectToSite($url) {
     \Hleb\Constructor\Handlers\URL::redirectToSite($url);
 }
 
@@ -223,8 +212,7 @@ function hleb_ba5c9de48cba78c_redirectToSite($url)
  *
  * Функция redirect( ... ) производит внутренний редирект с возможным указанием кода перенаправления.
  */
-function hleb_ad7371873a6ad40_redirect(string $url, int $code = 303)
-{
+function hleb_ad7371873a6ad40_redirect(string $url, int $code = 303) {
     \Hleb\Constructor\Handlers\URL::redirect($url, $code);
 }
 
@@ -235,8 +223,7 @@ function hleb_ad7371873a6ad40_redirect(string $url, int $code = 303)
  * Функция getProtectUrl( ... ) возвращает указанный URL-адрес c добавлением токена для защиты от CSRF-атак.
  * Для полноценной защиты маршрута, на который указывает URL-адрес, к нему должен быть применён один из методов protect().
  */
-function hleb_ba5c9de48cba78c_getProtectUrl($url)
-{
+function hleb_ba5c9de48cba78c_getProtectUrl($url) {
     return \Hleb\Constructor\Handlers\URL::getProtectUrl($url);
 }
 
@@ -245,8 +232,7 @@ function hleb_ba5c9de48cba78c_getProtectUrl($url)
  *
  * Функция getFullUrl( ... ) преобразует относительный URL-адрес в полный.
  */
-function hleb_e0b1036cd5b501_getFullUrl($url)
-{
+function hleb_e0b1036cd5b501_getFullUrl($url) {
     return \Hleb\Constructor\Handlers\URL::getFullUrl($url);
 }
 
@@ -255,8 +241,7 @@ function hleb_e0b1036cd5b501_getFullUrl($url)
  *
  * При помощи функции getMainUrl() можно получить текущий URL-адрес.
  */
-function hleb_e2d3aeb0253b7_getMainUrl()
-{
+function hleb_e2d3aeb0253b7_getMainUrl() {
     return \Hleb\Constructor\Handlers\URL::getMainUrl();
 }
 
@@ -265,8 +250,7 @@ function hleb_e2d3aeb0253b7_getMainUrl()
  *
  * Функция getMainClearUrl() возвращает текущий URL-адрес без GET-параметров.
  */
-function hleb_daa581cdd6323_getMainClearUrl()
-{
+function hleb_daa581cdd6323_getMainClearUrl() {
     return explode('?', hleb_e2d3aeb0253b7_getMainUrl())[0];
 }
 
@@ -275,8 +259,7 @@ function hleb_daa581cdd6323_getMainClearUrl()
  *
  * Функция getByName( ... ) позволяет обратиться к адресу маршрута по имени маршрута (если оно было присвоено).
  */
-function hleb_i245eaa1a3b6d_getByName(string $name, array $params = [])
-{
+function hleb_i245eaa1a3b6d_getByName(string $name, array $params = []) {
     return \Hleb\Constructor\Handlers\URL::getByName($name, $params);
 }
 
@@ -285,8 +268,7 @@ function hleb_i245eaa1a3b6d_getByName(string $name, array $params = [])
  *
  * Функция getStandardUrl() приводит URL-адрес к стандартному виду.
  */
-function hleb_a1a3b6di245ea_getStandardUrl(string $name)
-{
+function hleb_a1a3b6di245ea_getStandardUrl(string $name) {
     return \Hleb\Constructor\Handlers\URL::getStandardUrl($name);
 }
 
@@ -295,8 +277,7 @@ function hleb_a1a3b6di245ea_getStandardUrl(string $name)
  *
  * Функция includeTemplate( ... ) позволяет включить в шаблон контент из другого шаблона с передачей параметров (переменных).
  */
-function hleb_e0b1036c1070101_template(string $template, array $params = [])
-{
+function hleb_e0b1036c1070101_template(string $template, array $params = []) {
     new \Hleb\Main\MainTemplate($template, $params);
 }
 
@@ -307,8 +288,7 @@ function hleb_e0b1036c1070101_template(string $template, array $params = [])
  * Функция includeCachedTemplate( ... ) позволяет включить в шаблон кешируемый контент из другого шаблона
  * с передачей параметров (переменных).
  */
-function hleb_e0b1036c1070102_template(string $template, array $params = [])
-{
+function hleb_e0b1036c1070102_template(string $template, array $params = []) {
     new \Hleb\Constructor\Cache\CachedTemplate($template, $params);
 }
 
@@ -319,8 +299,7 @@ function hleb_e0b1036c1070102_template(string $template, array $params = [])
  * Функция includeOwnCachedTemplate( ... ) позволяет включить в шаблон кешируемый контент из другого шаблона
  * с передачей кешируемых параметров (переменных).
  */
-function hleb_ade9e72e1018c6_template(string $template, array $params = [])
-{
+function hleb_ade9e72e1018c6_template(string $template, array $params = []) {
     new \Hleb\Constructor\Cache\OwnCachedTemplate($template, $params);
 }
 
@@ -329,8 +308,7 @@ function hleb_ade9e72e1018c6_template(string $template, array $params = [])
  *
  * Функция print_r2( ... ) в DEBUG-режиме выводит отладочные данные поверх контента.
  */
-function hleb_a581cdd66c107015_print_r2($data, $desc = null)
-{
+function hleb_a581cdd66c107015_print_r2($data, $desc = null) {
     \Hleb\Main\WorkDebug::add($data, $desc);
 }
 
@@ -339,8 +317,7 @@ function hleb_a581cdd66c107015_print_r2($data, $desc = null)
  *
  * Функция getRequestResources() для получения данных стилей для вывода на странице (в нижней её части).
  */
-function hleb_ra3le00te0m01n_request_resources()
-{
+function hleb_ra3le00te0m01n_request_resources() {
     return \Hleb\Constructor\Handlers\Request::getResources();
 }
 
@@ -349,8 +326,7 @@ function hleb_ra3le00te0m01n_request_resources()
  *
  * <head><?php getRequestHead()->output(); ?></head> отображает все предыдущие установленные данные Request::getHead().
  */
-function hleb_t0ulb902e69thp_request_head()
-{
+function hleb_t0ulb902e69thp_request_head() {
     return \Hleb\Constructor\Handlers\Request::getHead();
 }
 
@@ -359,8 +335,7 @@ function hleb_t0ulb902e69thp_request_head()
  *
  *  Через функцию getRequest( ... ) можно обращаться к классу Request. Например, getRequest()::getGet();
  */
-function hleb_e70c10c1057hn11cc8il2_get_request()
-{
+function hleb_e70c10c1057hn11cc8il2_get_request() {
     return \Hleb\Constructor\Handlers\Request::class;
 }
 
@@ -369,8 +344,7 @@ function hleb_e70c10c1057hn11cc8il2_get_request()
  *
  * Полный путь к папке '/storage/public'
  */
-function hleb_6iopl942e103te6i10600l_storage_path()
-{
+function hleb_6iopl942e103te6i10600l_storage_path() {
     return HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'public';
 }
 
@@ -379,8 +353,7 @@ function hleb_6iopl942e103te6i10600l_storage_path()
  *
  * Полный путь к папке '/public'
  */
-function hleb_10p134l66o0il0e0t92e6i_public_path()
-{
+function hleb_10p134l66o0il0e0t92e6i_public_path() {
     return HLEB_PUBLIC_DIR;
 }
 
@@ -389,21 +362,20 @@ function hleb_10p134l66o0il0e0t92e6i_public_path()
  *
  * Полный путь к папке '/view'
  */
-function hleb_601e30l60p2ii1e0o469tl_view_path()
-{
+function hleb_601e30l60p2ii1e0o469tl_view_path() {
     return HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'view';
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-$GLOBALS['HLEB_PROJECT_UPDATES'] = ['phphleb/hleb' => HLEB_FRAME_VERSION, 'phphleb/framework' => HLEB_PROJECT_FULL_VERSION ];
+$GLOBALS['HLEB_PROJECT_UPDATES'] = ['phphleb/hleb' => HLEB_FRAME_VERSION, 'phphleb/framework' => HLEB_PROJECT_FULL_VERSION];
 
 if (HLEB_PROJECT_DEBUG && (new Hleb\Main\TryClass('XdORM\XD'))->is_connect() &&
-    file_exists(HLEB_VENDOR_DIRECTORY . '/phphleb/xdorm')){
+    file_exists(HLEB_VENDOR_DIRECTORY . '/phphleb/xdorm')) {
 
     $GLOBALS['HLEB_PROJECT_UPDATES']['phphleb/xdorm'] = 'dev';
 }
-if(HLEB_PROJECT_DEBUG &&(file_exists(HLEB_VENDOR_DIRECTORY . '/phphleb/adminpan'))){
+if (HLEB_PROJECT_DEBUG && (file_exists(HLEB_VENDOR_DIRECTORY . '/phphleb/adminpan'))) {
     $GLOBALS['HLEB_PROJECT_UPDATES']['phphleb/adminpan'] = 'dev';
 }
 

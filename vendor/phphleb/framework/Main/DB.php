@@ -1,23 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * A wrapper for working with PDO.
+ *
+ * Оболочка для работы с PDO.
+ */
+
 namespace Hleb\Main;
 
 use Hleb\Main\Errors\ErrorOutput;
 
 class DB
 {
-     use \DeterminantStaticUncreated;
+    use \DeterminantStaticUncreated;
 
-    public static function instance()
-    {
+    public static function instance() {
         if (is_null(self::$instance)) {
-
-            if(file_exists(HLEB_GLOBAL_DIRECTORY . "/database/dbase.config.php")) {
+            if (file_exists(HLEB_GLOBAL_DIRECTORY . "/database/dbase.config.php")) {
                 hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY, "/database/dbase.config.php");
             } else {
                 hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY, "/database/default.dbase.config.php");
             }
-
             self::$instance = self::init();
         }
         return self::$instance;
@@ -106,15 +111,11 @@ class DB
      |
      |--------------------------------------------------------------------------------------
     */
-    public static function run($sql, $args = array())
-    {
+    public static function run($sql, $args = array()) {
         $time = microtime(true);
-
         $stmt = self::instance()->prepare($sql);
         $stmt->execute($args);
-
         \Hleb\Main\DataDebug::add($sql, microtime(true) - $time, HLEB_TYPE_DB, true);
-
         return $stmt;
     }
 
@@ -140,21 +141,15 @@ class DB
      |
      |--------------------------------------------------------------------------------------
     */
-    public static function db_query($sql)
-    {
+    public static function db_query($sql) {
         $time = microtime(true);
-
         $stmt = self::query($sql);
-
         $data = $stmt->fetchAll();
-
         \Hleb\Main\DataDebug::add(htmlentities($sql), microtime(true) - $time, HLEB_TYPE_DB, true);
-
         return $data;
     }
 
-    protected static function init()
-    {
+    protected static function init() {
         $prms = HLEB_PARAMETERS_FOR_DB[HLEB_TYPE_DB];
 
         $opt = array(
@@ -164,19 +159,15 @@ class DB
         );
 
         $user = $prms["user"];
-
         $pass = $prms["pass"];
-
         $condition = [];
 
-        foreach($prms as $key => $prm){
-            if(is_numeric($key)) {
+        foreach ($prms as $key => $prm) {
+            if (is_numeric($key)) {
                 $condition [] = preg_replace('/\s+/', '', $prm);
             }
         }
-
-        $connection = implode(";", $condition );
-
+        $connection = implode(";", $condition);
         return new \PDO($connection, $user, $pass, $opt);
     }
 

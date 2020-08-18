@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/*
+ * Adding data from ORM for output to the debug panel.
+ * 
+ * Добавление данных из ORM для вывода в панель отладки.
+ */
+
 namespace Hleb\Main;
 
 class DataDebug
@@ -10,46 +16,34 @@ class DataDebug
 
     protected static $data = [];
 
-    //Adding SQL Query data for debug
-
-    /**
-     * Добавление данных из ORM для вывода в панель отладки
-     * @param $sql
-     * @param string $time
-     * @param string $dbname
-     */
-    public static function add(string $sql, $time, string $dbname, $exec = false)
-    {   
-        if(HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] === 'GET') {
-
-            $time_about = $exec ? self::time_about($sql) : '';
-
-            self::$data[] = [$sql, $time, $dbname, $time_about];
+    public static function add(string $sql, $time, string $dbname, bool $exec = false) {
+        if (HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] === 'GET') {
+            $timeAbout = $exec ? self::time_about($sql) : '';
+            self::$data[] = [$sql, $time, $dbname, $timeAbout];
         }
     }
 
-    /**
-     * @return array
-     */
-    public static function get(): array
-    {
+    public static function get(): array {
         return self::$data;
     }
 
-    public static function create_html_part($part, $driver = 'mysql'): string
-    {
-        $reverse_quotes = defined('HLEB_DB_DISABLE_REVERSE_QUOTES') && HLEB_DB_DISABLE_REVERSE_QUOTES === true;
+    public static function createHtmlPart($part, $driver = 'mysql'): string {
+        return self::create_html_part($part, $driver = 'mysql');
+    }
 
-        $pattern = $driver !== "mysql" || $reverse_quotes ? '/`([^`]+)`/' : '/(`[^`]+`)/';
-
+    public static function create_html_part($part, $driver = 'mysql'): string {
+        $reverseQuotes = defined('HLEB_DB_DISABLE_REVERSE_QUOTES') && HLEB_DB_DISABLE_REVERSE_QUOTES === true;
+        $pattern = $driver !== "mysql" || $reverseQuotes ? '/`([^`]+)`/' : '/(`[^`]+`)/';
         return preg_replace($pattern, '<span style="color: #a5432d">$1</span>', $part);
     }
 
-    public static function create_html_param($param): string
-    {
-        if (is_null($param)) return "";
+    public static function createHtmlParam($param): string {
+        return self::create_html_param($param);
+    }
 
-        switch (gettype($param)){
+    public static function create_html_param($param): string {
+        if (is_null($param)) return "";
+        switch (gettype($param)) {
             case 'double':
                 return "<span style='color: #4e759d'>" . strval($param) . "</span>";
                 break;
@@ -59,11 +53,10 @@ class DataDebug
             case 'string':
             default:
                 return "<span style='color: #4c8442'>" . htmlentities($param) . "</span>";
-         }
+        }
     }
 
-    private static function time_about($sql): string
-    {
+    private static function time_about($sql): string {
         return stripos(trim($sql), 'select') == 0 ? '&asymp;' : '';
     }
 }

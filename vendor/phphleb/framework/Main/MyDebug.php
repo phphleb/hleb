@@ -2,93 +2,114 @@
 
 declare(strict_types=1);
 
+/*
+ * Adding your own data to the debug panel (title, value).
+ * The name of the section being created can consist of an array or a string.
+ *
+ * Добавление собственных данных на отладочную панель (заголовок, значение).
+ * Наименование создаваемого раздела может состоять из массива или строки.
+ *
+ **/
+
 namespace Hleb\Main;
 
 class MyDebug
 {
     use \DeterminantStaticUncreated;
 
-    // Add your own data to the debug panel
-    /**
-     *  Добавление собственных данных на отладочную панель ( заголовок, значение )
-     *  Наименование создаваемого раздела может состоять из массива или строки
-     *
-     **/
-
     protected static $data = [];
 
     protected static $error = [];
 
     /**
+     * Adding your own data to the debug panel (title, value).
+     * The name of the section being created can consist of an array or a string.
+     *
+     * Добавление собственных данных на отладочную панель (заголовок, значение).
+     * Наименование создаваемого раздела может состоять из массива или строки.
+     *
      * @param string $name
      * @param $data
      */
-    public static function add(string $name, $data)
-    {
+    public static function add(string $name, $data) {
         if (!in_array($name, self::$error)) self::$data[$name] = $data;
     }
 
     /**
-     * @param string $name
-     * @return array
-     */
-    public static function get(string $name)
-    {
-        return isset(self::$data[$name]) ? self::$data[$name] : [];
-    }
-
-    public static function all()
-    {
-        return self::$data;
-    }
-
-    /**
+     * Adds custom <data> to the <name> value in the debug panel.
+     *
+     * Добавляет к значению <name> в отладночной панели собственные данные <data>.
+     *
      * @param string $name
      * @param $data
      */
-    public static function insert_to_array(string $name, $data)
-    {
+    public static function insertToListing(string $name, $data) {
+        self::insert_to_array($name, $data);
+    }
+
+    /**
+     * Adds its own <data> string to the <name> value in the debug panel, which is appended to the current value.
+     *
+     * Добавляет к значению <name> в отладночной панели собственную строку <data>, которая добавляется к текущему значению.
+     *
+     * @param string $name
+     * @param string $data
+     */
+    public static function insertToString(string $name, string $data) {
+        self::insert_to_string($name, $data);
+    }
+
+    /**
+     * Adds custom <data> to the <name> value in the debug panel.
+     *
+     * Добавляет к значению <name> в отладночной панели собственные данные <data>.
+     *
+     * @param string $name
+     * @param $data
+     */
+    public static function insert_to_array(string $name, $data) {
         if (self::check()) {
-
             if (isset(self::$data[$name]) && !is_array(self::$data[$name])) {
-                self::error_type($name, 'array');
+                self::errorType($name, 'array');
             }
-
             if (!in_array($name, self::$error)) {
                 isset(self::$data[$name]) ? self::$data[$name][] = $data : self::$data[$name] = [1 => $data];
             }
         }
-
     }
 
     /**
+     * Adds its own <data> string to the <name> value in the debug panel, which is appended to the current value.
+     * 
+     * Добавляет к значению <name> в отладночной панели собственную строку <data>, которая добавляется к текущему значению.
+     * 
      * @param string $name
      * @param string $data
      */
-    public static function insert_to_string(string $name, string $data)
-    {
+    public static function insert_to_string(string $name, string $data) {
         if (self::check()) {
-
             if (!in_array($name, self::$error)) {
-
                 if (!isset(self::$data[$name]))
                     self::$data[$name] = '';
-
-                is_string(self::$data[$name]) ? self::$data[$name] .= $data : self::error_type($name, 'string');
+                is_string(self::$data[$name]) ? self::$data[$name] .= $data : self::errorType($name, 'string');
             }
         }
-
     }
 
-    private static function error_type(string $name, string $type)
-    {
-        self::$data[$name] = "Invalid source value format ( insert_to_$type for $name: " . gettype(self::$data[$name]) . ' ) !';
+    public static function get(string $name) {
+        return isset(self::$data[$name]) ? self::$data[$name] : [];
+    }
 
+    public static function all() {
+        return self::$data;
+    }
+
+    private static function errorType(string $name, string $type) {
+        self::$data[$name] = "Invalid source value format ( insert_to_$type for $name: " . gettype(self::$data[$name]) . ' ) !';
         self::$error[$name] = $name;
     }
 
-    private static function check()
-    {
+    private static function check() {
         return HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] == 'GET';
     }
 

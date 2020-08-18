@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+/*
+ * Global collection and output of errors.
+ * Глобальный сбор и вывод ошибок.
+ */
+
 namespace Hleb\Main\Errors;
 
 use DeterminantStaticUncreated;
@@ -12,82 +17,64 @@ class ErrorOutput
 
     protected static $messages = [];
 
+    // Add a message to the queue.
+    // Добавление сообщения в очередь.
     /**
      * @param string|array $messages
      */
-    public static function add($messages)
-    {
+    public static function add($messages) {
         if (is_string($messages)) $messages = [$messages];
-
         if (!headers_sent()) {
             header($_SERVER["SERVER_PROTOCOL"] . ' 500 Internal Server Error');
         }
-
         foreach ($messages as $key => $message) {
-
             if (isset($message)) {
-
                 self::$messages[] = $message;
-
                 error_log(" " . explode('~', $message)[0] . PHP_EOL);
-
                 if (!HLEB_PROJECT_DEBUG) exit();
-
             } else {
-
                 self::$messages[] = 'ErrorOutput:: Indefinite error.';
-
                 error_log(' ' . explode('~', $message)[0] . PHP_EOL);
-
             }
         }
     }
 
-    public static function run()
-    {
+    // Display the collected messages and exit the script.
+    // Вывод собранных сообщений и выход из скрипта.
+    public static function run() {
         $errors = self::$messages;
-
         $content = '';
-
         if (count(self::$messages) > 0) {
-
             foreach ($errors as $key => $value) {
-
                 if (HLEB_PROJECT_DEBUG) $value = str_replace('~', '<br><br>', $value);
-
                 if ($key == 0) {
-
                     $content .= self::first_content($value);
-
                 } else {
-
                     $content .= self::content($value);
                 }
             }
-
             if (HLEB_PROJECT_DEBUG) {
-
                 die($content);
             }
-
         }
-
     }
 
-    public static function get($message)
-    {
+    // Simultaneous display of the message with the exit from the script.
+    // Одновременный вывод сообщения с выходом из скрипта.
+    public static function get($message) {
         self::add($message);
         self::run();
     }
 
-
-    private static function content(string $message)
-    {
+    // Output the standard message.
+    // Вывод стандартного сообщения.
+    private static function content(string $message) {
         return "<div style='color:#c17840; margin: 5px; padding: 10px; border: 1px solid #f5f8c9; background-color: #f5f8c9;'><h4>$message</h4></div>";
     }
 
-    private static function first_content(string $message)
-    {
+    // Display the main message.
+    // Вывод основного сообщения.
+    private static function first_content(string $message) {
         return "<div style='color:#d24116; margin: 5px; padding: 10px; border: 1px solid #f28454; background-color: seashell;'><h4>$message</h4></div>";
     }
 

@@ -206,4 +206,4 @@ WorkDebug::add($debug_data, 'description');
 -----------------------------------
 
 
- ![version](https://img.shields.io/badge/version-1.5.18-blue) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/phphleb/hleb/blob/master/LICENSE)
+ ![version](https://img.shields.io/badge/version-1.5.2-blue) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/phphleb/hleb/blob/master/LICENSE)

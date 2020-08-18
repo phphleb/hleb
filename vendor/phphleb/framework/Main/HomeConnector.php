@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/*
+ * Adding a path for class autoloading: namespace => realpath.
+ *
+ * Добавление пути для автозагрузки класса: namespace => realpath.
+ */
+
 namespace Hleb\Main;
 
 use Hleb\Scheme\Home\Main\Connector;
@@ -9,11 +15,8 @@ use Hleb\Scheme\Home\Main\Connector;
 class HomeConnector implements Connector
 {
     function __construct(){}
-    /**
-     *  Добавление пути для автозагрузки класса: namespace => realpath
-     */
-    public function add()
-    {
+
+    public function add() {
         $vendor = HLEB_VENDOR_DIR_NAME;
         return [
             'Hleb\Constructor\Routes\Methods\RouteMethodBefore' => $vendor . '/phphleb/framework/Constructor/Routes/Methods/RouteMethodBefore.php',
