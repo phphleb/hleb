@@ -2,7 +2,7 @@
 <!-- HLEB DEBUG PANEL -->
 
 <noindex>
-<div id="<?= $debugBlockName; ?>_main"
+<div id="<?= $debugBlockName; ?>_main" class="skiptranslate notranslate"
      style='position:fixed; z-index: 2147483647; font-family: "PT Sans", "Arial", serif; font-size: 13px!important; right:0; top:0; display: inline-block; background-color: darkgray; border: 2px solid white; padding: 5px; opacity: 0.75; color: white; cursor:default'>
     <span style="display: <?= $debugActualRoute['workpan']; ?>">
     <span style="background-color: #EA1F61; color: white;">
@@ -27,7 +27,7 @@
                    } <?php if($debugActualRoute['orm_report_active']): ?>document.getElementById('<?= $debugBlockName; ?>_orm').parentNode.removeChild(document.getElementById('<?= $debugBlockName; ?>_orm')); <?php endif; ?>">X
     </span>
 </div>
-<div id="<?= $debugBlockName; ?>_over"
+<div id="<?= $debugBlockName; ?>_over" class="skiptranslate notranslate"
      style='position: fixed; font-family: "PT Sans", "Arial", serif; z-index: 2147483647; left: 0; top: 0; display:none; font-size: 14px!important; background-color: #1a044d; width: 100%; max-height: 100%; overflow-y: auto; box-sizing:border-box; padding: 0!important; margin: 0!important; color: white; cursor: default; border-bottom: 15px solid #ea1f61'>
     <div style="padding: 15px 35px 50px 15px; opacity: 0.9">
         <div style="position: fixed; right: 35px; top: 6px; background-color: #1a044d">
@@ -107,7 +107,7 @@
 <!-- SQL QUERIES DEBUG PANEL -->
 
 <noindex>
-<div id="<?= $debugBlockName; ?>_orm"
+<div id="<?= $debugBlockName; ?>_orm" class="skiptranslate notranslate"
      style='position:fixed; z-index: 2147483647; display: none; width: 100%; font-family: "PT Sans", "Arial", serif; font-size: 13px!important; left:0; top:0; background-color: white; border-bottom: 5px solid #aaa; max-height: 100%; overflow-y: auto'>
     <div style="position: fixed; right: 80px; top: 6px; background-color: white">
         <div style="color:#999; cursor: pointer; display: inline-block;"
