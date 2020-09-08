@@ -98,7 +98,8 @@ class RouteMethodEnd extends MainRouteMethod
         $compilationBlocks = [];
         foreach ($sampleBlocks as $key => $sample_block) {
             $position = 1;
-            for ($i = $key + 1; $i < count($blocks); $i++) {
+            $allBlocksCount = count($blocks);
+            for ($i = $key + 1; $i < $allBlocksCount; $i++) {
                 if ($blocks[$i]['method_type_name'] === "endGroup" && (!empty($blocks[$i]['data_name']) &&
                         $sample_block['data_name'] == $blocks[$i]['data_name'])) {
                     $compilationBlocks[$key]["actions"] = $this->calcEnvironment($blocks, $key, $i);
@@ -136,7 +137,7 @@ class RouteMethodEnd extends MainRouteMethod
             }
             $finalList[] = $originBlock;
         }
-        return self::allBlocksNormalizer($finalList);
+        return $this->allBlocksNormalizer($finalList);
     }
 
     // Sequential data change.
@@ -357,7 +358,8 @@ class RouteMethodEnd extends MainRouteMethod
                     }
                 }
                 $this->mainParams = [];
-                for ($i = $key + 1; $i < count($blocks); $i++) {
+                $allBlocksCount = count($blocks);
+                for ($i = $key + 1; $i < $allBlocksCount; $i++) {
                     if (in_array($blocks[$i]['method_type_name'], ["before", "type", "prefix", "protect", "domain"])) {
                         $this->mainParams[] = $blocks[$i]['method_type_name'];
                     } else if (in_array($blocks[$i]['method_type_name'], ["endGroup"])) {

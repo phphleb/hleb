@@ -41,7 +41,9 @@ class Workspace
     // Расчёт времени выполнения для панели отладки.
     private function calculateTime($name) {
         $num = count($this->hlDebugInfo['time']) + 1;
-        $this->hlDebugInfo['time'][$num . ' ' . $name] = round((microtime(true) - HLEB_START), 4);
+        if(defined('HLEB_START')) {
+            $this->hlDebugInfo['time'][$num . ' ' . $name] = round((microtime(true) - HLEB_START), 4);
+        }
     }
 
     // Parse the accompanying actions for the route and display them.
@@ -99,8 +101,8 @@ class Workspace
             $hlExcludedActions = $hlExcludedBlock['actions'];
             foreach ($hlExcludedActions as $k => $hlExc) {
                 if (isset($hlExc['controller']) || isset($hlExc['adminPanController'])) {
-                    $hlExcludedParams = isset($hlExc['controller']) ? self::getController($hlExc['controller']) :
-                        self::getAdminPanController($hlExc['adminPanController'], $hlExcludedBlock);
+                    $hlExcludedParams = isset($hlExc['controller']) ? $this->getController($hlExc['controller']) :
+                        $this->getAdminPanController($hlExc['adminPanController'], $hlExcludedBlock);
                     if (is_array($hlExcludedParams)) {
                         if (isset($hlExcludedParams[2]) && $hlExcludedParams[2] == 'render') {
                             // render

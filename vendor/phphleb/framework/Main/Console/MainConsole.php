@@ -16,7 +16,7 @@ class MainConsole
     // Поиск версии из файла по php-коду.
     public function searchVersion($file, $const) {
         $content = file_get_contents($file, true);
-        $search = preg_match_all("|define\(\s*\'" . $const . "\'\s*\,\s*([^\)]+)\)|u", $content, $def);
+        preg_match_all("|define\(\s*\'" . $const . "\'\s*\,\s*([^\)]+)\)|u", $content, $def);
         return trim($def[1][0] ?? 'undefined', "' \"");
     }
 
@@ -38,11 +38,11 @@ class MainConsole
         ];
         if (!file_exists($file)) {
             echo "Missing file " . $file;
-            exit();
+            die();
         }
         echo "\n" . "File: " . $file . "\n" . "\n";
         $handle = fopen($file, "r");
-        if ($handle) {
+        if (!empty($handle)) {
             while (!feof($handle)) {
                 $buffer = fgets($handle);
                 if ($buffer === false) continue;
@@ -59,8 +59,8 @@ class MainConsole
                     echo " error_reporting = " . str_replace("  ", " ", trim($def[1][0])) . "\n";
                 }
             }
+            fclose($handle);
         }
-        fclose($handle);
         echo "\n";
     }
 
@@ -280,7 +280,7 @@ class MainConsole
             require_once HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Route.php';
             if (file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/api.php')) include_once HLEB_GLOBAL_DIRECTORY . '/routes/api.php';
             if (file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/ajax.php')) include_once HLEB_GLOBAL_DIRECTORY . '/routes/ajax.php';
-            $nano = \Radjax\Route::getParams();
+            $nano = class_exists('Radjax\Route', false) ? \Radjax\Route::getParams() : [];
             $parameters = [['RADJAX:ROUTE', 'TYPE', 'PROTECTED', 'CONTROLLER']];
             foreach ($nano as $params) {
                 $parameters [] = [

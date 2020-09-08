@@ -173,7 +173,7 @@ class idna_convert
      * Decode a given ACE domain name
      * @param    string   Domain name (ACE string)
      * [@param    string   Desired output encoding, see {@link set_parameter}]
-     * @return   string   Decoded Domain name (UTF-8 or UCS-4)
+     * @return   string|false   Decoded Domain name (UTF-8 or UCS-4)
      */
     public function decode($input, $one_time_encoding = false)
     {
@@ -257,13 +257,13 @@ class idna_convert
         switch (($one_time_encoding) ? $one_time_encoding : $this->_api_encoding) {
         case 'utf8':
             return $return;
-            break;
+            //break;
         case 'ucs4_string':
            return $this->_ucs4_to_ucs4_string($this->_utf8_to_ucs4($return));
-           break;
+           //break;
         case 'ucs4_array':
             return $this->_utf8_to_ucs4($return);
-            break;
+            //break;
         default:
             $this->_error('Unsupported output format');
             return false;
@@ -358,7 +358,7 @@ class idna_convert
      * Removes a weakness of encode(), which cannot properly handle URIs but instead encodes their
      * path or query components, too.
      * @param string  $uri  Expects the URI as a UTF-8 (or ASCII) string
-     * @return  string  The URI encoded to Punycode, everything but the host component is left alone
+     * @return  string|bool  The URI encoded to Punycode, everything but the host component is left alone
      * @since 0.6.4
      */
     public function encode_uri($uri)
@@ -439,7 +439,7 @@ class idna_convert
                 if ($digit < $t) break;
                 $w = (int) ($w * ($this->_base - $t));
             }
-            $bias = $this->_adapt($idx - $old_idx, $deco_len + 1, $is_first);
+            $bias = $this->_adapt($idx - $old_idx, $deco_len + 1, intval($is_first));
             $is_first = false;
             $char += (int) ($idx / ($deco_len + 1));
             $idx %= ($deco_len + 1);
@@ -449,7 +449,7 @@ class idna_convert
             }
             $decoded[$idx++] = $char;
         }
-        return $this->_ucs4_to_utf8($decoded);
+        return $this->_ucs4_to_utf8(strval($decoded));
     }
 
     /**
@@ -594,7 +594,7 @@ class idna_convert
     /**
      * Do Nameprep according to RFC3491 and RFC3454
      * @param    array    Unicode Characters
-     * @return   string   Unicode Characters, Nameprep'd
+     * @return   string|bool   Unicode Characters, Nameprep'd
      */
     protected function _nameprep($input)
     {
@@ -813,7 +813,7 @@ class idna_convert
      * Each x represents a bit that can be used to store character data.
      * The five and six byte sequences are part of Annex D of ISO/IEC 10646-1:2000
      * @param string $input
-     * @return string
+     * @return array|bool
      */
     protected function _utf8_to_ucs4($input)
     {
@@ -890,7 +890,7 @@ class idna_convert
      * Convert UCS-4 string into UTF-8 string
      * See _utf8_to_ucs4() for details
      * @param string  $input
-     * @return string
+     * @return string|bool
      */
     protected function _ucs4_to_utf8($input)
     {
@@ -1602,4 +1602,4 @@ class idna_convert
                     )
             );
 }
-?>
+

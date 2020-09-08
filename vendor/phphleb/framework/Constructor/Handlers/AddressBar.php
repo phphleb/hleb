@@ -72,7 +72,7 @@ class AddressBar
         // Проверка на валидность адреса.
         if (!preg_match($this->inputParameters['HLEB_PROJECT_VALIDITY_URL'], $address)) {
             $realUrlMain = $realProtocol . $realHostWww;
-            self::redirect($realUrlMain);
+            $this->redirect($realUrlMain);
             return $realUrlMain;
         }
 
@@ -86,7 +86,7 @@ class AddressBar
         $actualHost = is_null($idn) ? $this->inputParameters['SERVER']['HTTP_HOST'] : $idn->decode($this->inputParameters['SERVER']['HTTP_HOST']);
         $actualUrl = $actualProtocol . $actualHost . $firstActualUri . $firstActualParams;
         if ($realUrl !== $actualUrl) {
-            self::redirect($realUrl);
+            $this->redirect($realUrl);
         }
         return $realUrl;
     }

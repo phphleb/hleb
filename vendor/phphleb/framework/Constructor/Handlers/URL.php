@@ -84,11 +84,12 @@ class URL
         $element = explode('/', $ending);
         $endElement = end($element);
         if (strpos($endElement, '.') !== false) return $url;
-
-        if (HLEB_PROJECT_ENDING_URL && $ending !== '/') {
-            return $url . '/';
-        } else if (!HLEB_PROJECT_ENDING_URL && $ending == '/') {
-            return substr($url, 0, -1);
+        if(defined('HLEB_PROJECT_ENDING_URL')) {
+            if (HLEB_PROJECT_ENDING_URL && $ending !== '/') {
+                return $url . '/';
+            } else if (!HLEB_PROJECT_ENDING_URL && $ending == '/') {
+                return substr($url, 0, -1);
+            }
         }
         return ltrim($url, '?');
     }

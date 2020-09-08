@@ -37,7 +37,7 @@ class URLHandler
             // Подходящего роута по типу REQUEST_METHOD не найдено.
             return false;
         }
-        return self::matchSearchAllPath($blocks, $url);
+        return $this->matchSearchAllPath($blocks, $url);
     }
 
     // Remove extra slashes.
@@ -147,9 +147,9 @@ class URLHandler
     // Возвращает совпавший роут или `false` если не найден.
     private function matchSearchAllPath(array $blocks, string $resultUrl) {
         $resultUrlParts = array_reverse(explode('/', $resultUrl));
-        $url = self::trimEndSlash($resultUrl);
+        $url = $this->trimEndSlash($resultUrl);
         foreach ($blocks as $key => $block) {
-            $result = self::matchSearchPath($block, $url, $resultUrlParts);
+            $result = $this->matchSearchPath($block, $url, $resultUrlParts);
             if ($result !== false) return $result;
         }
         return false;
@@ -163,15 +163,15 @@ class URLHandler
         $mat = [];
         foreach ($actions as $k => $action) {
             if (isset($action['prefix'])) {
-                $url = self::compoundUrl([$url, $action['prefix']]);
+                $url = $this->compoundUrl([$url, $action['prefix']]);
             } else if (isset($action['where']) && count($action['where'][0]) > 0) {
                 foreach ($action['where'][0] as $key => $value) {
                     $mat[$key] = $value;
                 }
             }
         }
-        $originUrl = self::compoundUrl([$url, $block['data_path'] ?? '']);
-        $url = self::trimEndSlash($originUrl);
+        $originUrl = $this->compoundUrl([$url, $block['data_path'] ?? '']);
+        $url = $this->trimEndSlash($originUrl);
         $urlParts = array_reverse(explode('/', $url));
         $resultShift = array_shift($urlParts);
 
