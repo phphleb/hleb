@@ -449,7 +449,7 @@ class idna_convert
             }
             $decoded[$idx++] = $char;
         }
-        return $this->_ucs4_to_utf8(strval($decoded));
+        return $this->_ucs4_to_utf8($decoded);
     }
 
     /**
@@ -889,7 +889,7 @@ class idna_convert
     /**
      * Convert UCS-4 string into UTF-8 string
      * See _utf8_to_ucs4() for details
-     * @param string  $input
+     * @param array  $input
      * @return string|bool
      */
     protected function _ucs4_to_utf8($input)
