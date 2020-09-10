@@ -101,9 +101,33 @@ class MainLaunchTask extends MainTask
         if (in_array($date, ['00', '20', '40'])) $this->run($commands);
     }
 
+    /** Selected time in hours 0-24
+     * @param array|int|string $h
+     * @return bool
+     *//** В выбранное время часа 0-24
+     * @param array|int|string $h
+     * @return bool
+     */
+    protected function givenHour($h = [0]) {
+        return $this->searchData($h, 'H');
+    }
+
+    /**
+     * In the selected month 1-12
+     * @param array|int|string $mn
+     * @return bool
+     *//**
+     * В выбранный месяц 1-12
+     * @param array|int|string $mn
+     * @return bool
+     */
+    protected function givenMonth($mn = [1]) {
+        return $this->searchData($mn, 'm');
+    }
+
     /**
      * Runs a console command or a list of them at the specified minute (0-60) of the hour or a list of them
-     * @param string|array $minutes
+     * @param array|int|string $minutes
      * @param string|array $commands
      * @return bool
      *//**
