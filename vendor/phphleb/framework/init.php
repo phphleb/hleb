@@ -277,8 +277,8 @@ function hleb_a1a3b6di245ea_getStandardUrl(string $name) {
  *
  * Функция includeTemplate( ... ) позволяет включить в шаблон контент из другого шаблона с передачей параметров (переменных).
  */
-function hleb_e0b1036c1070101_template(string $template, array $params = []) {
-    new \Hleb\Main\MainTemplate($template, $params);
+function hleb_e0b1036c1070101_template(string $template, array $params = [], bool $return = false) {
+    return (new \Hleb\Main\MainTemplate($template, $params, $return))->getContent();
 }
 
 /*

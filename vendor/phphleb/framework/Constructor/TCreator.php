@@ -65,5 +65,15 @@ class TCreator
         return print $this->hlTemplatePath;
     }
 
+    // Return result.
+    // Возвращает результат.
+    public function toString() {
+        ob_start();
+        $this->include();
+        $result = ob_get_contents();
+        ob_end_clean();
+        return $result;
+    }
+
 }
 

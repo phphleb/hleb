@@ -14,14 +14,20 @@ use Hleb\Constructor\TCreator;
 
 class MainTemplate
 {
-    public function __construct(string $path, array $template = []) {
+    private $content = null;
+
+    public function __construct(string $path, array $template = [], bool $return = false ) {
         if (HLEB_PROJECT_DEBUG) {
             $time = microtime(true);
             $backtrace = $this->debugBacktrace();
         }
         $templateName = trim($path, '/\\') . '.php';
         $templateDirectory = $this->getTemplateDirectory($templateName);
-        (new TCreator($templateDirectory, $template))->include();
+        if($return) {
+            $this->content = (new TCreator($templateDirectory, $template))->toString();
+        } else {
+            (new TCreator($templateDirectory, $template))->include();
+        }
         if (HLEB_PROJECT_DEBUG) {
             $time = microtime(true) - $time;
             Info::insert('Templates', trim($path, '/') . $backtrace . ' load: ' . (round($time, 4) * 1000) . ' ms');
@@ -37,6 +43,12 @@ class MainTemplate
             return ' (' . end($path) . " : " . ($trace[3]['line'] ?? '') . ')';
         }
         return '';
+    }
+
+    // Return content.
+    // Возвращает контент.
+    public function getContent() {
+        return $this->content;
     }
 
     // Finds and returns the directory of the content file. The search depends on the module matching the condition.

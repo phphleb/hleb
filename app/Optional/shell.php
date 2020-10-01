@@ -65,7 +65,11 @@ function print_r2($data, $desc = null) {
 }
 
 function includeTemplate(string $template, array $params = []) {
-    hleb_e0b1036c1070101_template($template, $params);
+    return hleb_e0b1036c1070101_template($template, $params);
+}
+
+function getContentFromTemplate(string $template, array $params = []) {
+    return hleb_e0b1036c1070101_template($template, $params, true);
 }
 
 function includeCachedTemplate(string $template, array $params = []) {
