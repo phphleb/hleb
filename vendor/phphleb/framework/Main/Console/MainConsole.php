@@ -23,9 +23,10 @@ class MainConsole
     // Get information from the configuration file.
     // Получение информации из конфигурационного файла.
     public function getInfo() {
-        $file = HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'default.start.hleb.php';
-        if (file_exists(HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'start.hleb.php')) {
-            $file = HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'start.hleb.php';
+        $pathFromSearchStartFile = defined('HLEB_SEARCH_START_CONFIG_FILE') ? HLEB_SEARCH_START_CONFIG_FILE : HLEB_GLOBAL_DIRECTORY;
+        $file = $pathFromSearchStartFile . DIRECTORY_SEPARATOR . 'default.start.hleb.php';
+        if (file_exists($pathFromSearchStartFile . DIRECTORY_SEPARATOR . 'start.hleb.php')) {
+            $file = $pathFromSearchStartFile . DIRECTORY_SEPARATOR . 'start.hleb.php';
         }
         $infoList = [
             'HLEB_PROJECT_DEBUG',

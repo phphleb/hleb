@@ -10,7 +10,7 @@ if (!empty($arguments) && strpos($arguments, 'phphleb/') !== false && file_exist
 
 if (!defined('HLEB_GLOBAL_DIRECTORY')) define('HLEB_GLOBAL_DIRECTORY', dirname(__DIR__, 3));
 
-define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . "/storage/cache/routes");
+define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', (defined('HLEB_STORAGE_DIRECTORY') ? HLEB_STORAGE_DIRECTORY : HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . "/storage") . "/cache/routes");
 
 define('HLEB_VENDOR_DIRECTORY', dirname(__DIR__, 2));
 
@@ -177,7 +177,7 @@ function hlCreateUsersTask($path, $class, $arg, Hleb\Main\Console\MainConsole $f
 
 
 function hlGetFrameVersion() {
-    return hlSearchVersion(HLEB_GLOBAL_DIRECTORY . "/" . HLEB_PUBLIC_DIR . '/index.php', 'HLEB_FRAME_VERSION');
+    return hlSearchVersion(HLEB_PUBLIC_DIR . '/index.php', 'HLEB_FRAME_VERSION');
 }
 
 function hlGetFrameworkVersion() {

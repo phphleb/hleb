@@ -18,10 +18,14 @@ class DB
 
     public static function instance() {
         if (is_null(self::$instance)) {
-            if (file_exists(HLEB_GLOBAL_DIRECTORY . "/database/dbase.config.php")) {
-                hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY, "/database/dbase.config.php");
+            $configSearchDir = defined('HLEB_SEARCH_DBASE_CONFIG_FILE') ?
+                HLEB_SEARCH_DBASE_CONFIG_FILE :
+                HLEB_GLOBAL_DIRECTORY . '/database';
+
+            if (file_exists($configSearchDir . "/dbase.config.php")) {
+                hl_print_fulfillment_inspector($configSearchDir, "/dbase.config.php");
             } else {
-                hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY, "/database/default.dbase.config.php");
+                hl_print_fulfillment_inspector($configSearchDir, "/default.dbase.config.php");
             }
             self::$instance = self::init();
         }

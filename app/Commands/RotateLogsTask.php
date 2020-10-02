@@ -21,7 +21,8 @@ class RotateLogsTask extends \Hleb\Scheme\App\Commands\MainTask
 
         $total = 0;
         $logs = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(HLEB_GLOBAL_DIRECTORY . "/storage/logs/")
+            new \RecursiveDirectoryIterator(
+                realpath(defined('HLEB_STORAGE_DIRECTORY') ? HLEB_STORAGE_DIRECTORY : HLEB_GLOBAL_DIRECTORY . "/storage") . "/logs/")
         );
         foreach ($logs as $log) {
             if ($log->isFile() && $log->getFileName() !== ".gitkeep" && filemtime($log->getRealPath()) < (time() - $prescriptionForRotation)) {

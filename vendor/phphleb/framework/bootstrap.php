@@ -48,9 +48,8 @@ function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondP
         die(!$debug && $log ? error_log($error) : $error);
     }
 }
-
-hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY, '/' . (file_exists(HLEB_GLOBAL_DIRECTORY . '/start.hleb.php') ? '' : 'default.') . 'start.hleb.php');
-
+$pathToStartFileDir = rtrim(defined('HLEB_SEARCH_START_CONFIG_FILE') ? HLEB_SEARCH_START_CONFIG_FILE : HLEB_GLOBAL_DIRECTORY, '\\/ ');
+hl_print_fulfillment_inspector( $pathToStartFileDir,  '/' . (file_exists($pathToStartFileDir . '/start.hleb.php') ? '' : 'default.') . 'start.hleb.php');
 
 if (!defined('HLEB_PROJECT_DEBUG') || !is_bool(HLEB_PROJECT_DEBUG)) {
     die("Incorrectly defined setting: ...DEBUG");
@@ -93,11 +92,17 @@ if (!defined('HLEB_VENDOR_DIR_NAME')) {
     define('HLEB_VENDOR_DIR_NAME', array_reverse(explode(DIRECTORY_SEPARATOR, dirname(__DIR__, 2)))[0]);
 }
 
+function hleb_01f0jpem0f_storage_directory() {
+    return (defined('HLEB_STORAGE_DIRECTORY') ?
+        rtrim(HLEB_STORAGE_DIRECTORY , '\\/ ') :
+        HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage');
+}
+
 define('HLEB_VENDOR_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME);
 
 define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/routes');
 
-define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/storage/cache/routes');
+define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', hleb_01f0jpem0f_storage_directory() . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'routes');
 
 require_once HLEB_PROJECT_DIRECTORY . '/Main/Insert/DeterminantStaticUncreated.php';
 
@@ -118,7 +123,7 @@ if (HLEB_PROJECT_LOG_ON) {
 
     ini_set('log_errors', 'On');
 
-    ini_set('error_log', HLEB_GLOBAL_DIRECTORY . '/storage/logs/' . date('Y_m_d_') . 'errors.log');
+    ini_set('error_log', hleb_01f0jpem0f_storage_directory()  . '/logs/' . date('Y_m_d_') . 'errors.log');
 }
 
 ini_set('display_errors', HLEB_PROJECT_DEBUG ? '1' : '0');
@@ -171,12 +176,12 @@ define('HLEB_TEMPLATE_CACHED_PATH', '/storage/cache/templates');
 
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/AddressBar.php';
 
-$hl_actual_protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
+$actualProtocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
 
-$hl_address_object = (new \Hleb\Constructor\Handlers\AddressBar(
+$addressBar = (new \Hleb\Constructor\Handlers\AddressBar(
     [
         'SERVER' => $_SERVER,
-        'HTTPS' => $hl_actual_protocol,
+        'HTTPS' => $actualProtocol,
         'HLEB_PROJECT_ONLY_HTTPS' => HLEB_PROJECT_ONLY_HTTPS,
         'HLEB_PROJECT_ENDING_URL' => HLEB_PROJECT_ENDING_URL,
         'HLEB_PROJECT_DIRECTORY' => HLEB_PROJECT_DIRECTORY,
@@ -185,16 +190,16 @@ $hl_address_object = (new \Hleb\Constructor\Handlers\AddressBar(
     ]
 ));
 
-$hl_address = $hl_address_object->get();
+$address = $addressBar->get();
 
-if ($hl_address_object->redirect != null) {
+if ($addressBar->redirect != null) {
     if (!headers_sent()) {
-        header('Location: ' . $hl_address_object->redirect, true, 301);
+        header('Location: ' . $addressBar->redirect, true, 301);
     }
     exit();
 }
 
-unset($hl_address_object, $hl_actual_protocol, $hl_address);
+unset($addressBar, $actualProtocol, $address, $pathToStartFileDir);
 
 require HLEB_VENDOR_DIRECTORY . '/phphleb/framework/init.php';
 

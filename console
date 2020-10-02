@@ -4,8 +4,15 @@
  * All service commands: php console --help
  */
 
-define('HLEB_PUBLIC_DIR', "public");
 define('HLEB_GLOBAL_DIRECTORY', __DIR__);
+define('HLEB_PUBLIC_DIR', HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . "public");
+
+// Additional structural paths
+/*
+ define('HLEB_SEARCH_START_CONFIG_FILE', HLEB_GLOBAL_DIRECTORY);
+ define('HLEB_SEARCH_DBASE_CONFIG_FILE', HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'database');
+ define('HLEB_STORAGE_DIRECTORY', HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage');
+*/
 
 require(__DIR__ . "/vendor/phphleb/framework/console.php");
 

@@ -345,7 +345,9 @@ function hleb_e70c10c1057hn11cc8il2_get_request() {
  * Полный путь к папке '/storage/public'
  */
 function hleb_6iopl942e103te6i10600l_storage_path() {
-    return HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'public';
+    return (defined('HLEB_STORAGE_DIRECTORY') ?
+        rtrim(HLEB_STORAGE_DIRECTORY , '\\/ ') :
+            HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage') . DIRECTORY_SEPARATOR . 'public';
 }
 
 /*

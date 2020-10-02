@@ -20,6 +20,15 @@ header("X-Content-Type-Options: nosniff");
 header("X-Frame-Options: SAMEORIGIN");
 // ...
 
+// Additional structural paths
+// Дополнительные структурные пути
+/*
+define('HLEB_GLOBAL_DIRECTORY', realpath(__DIR__ . '/../'));
+define('HLEB_SEARCH_START_CONFIG_FILE', HLEB_GLOBAL_DIRECTORY);
+define('HLEB_SEARCH_DBASE_CONFIG_FILE', HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'database');
+define('HLEB_STORAGE_DIRECTORY', HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage');
+*/
+
 // Initialization.
 // Инициализация.
 
