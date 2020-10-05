@@ -306,7 +306,7 @@ class MainConsole
             }
         }
         if (empty($lastLogFile) || empty($contentData = file($lastLogFile))) {
-            print "No logs found in the project";
+            print "No logs found in the project." . PHP_EOL;
             return;
         }
 
