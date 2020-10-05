@@ -25,7 +25,7 @@ class DefaultTask extends \Hleb\Scheme\App\Commands\MainTask
         // Your code here.
         // Разместите здесь свой код.
 
-        echo "\n" . __CLASS__ . " done." . "\n";
+        echo PHP_EOL . __CLASS__ . " done." . PHP_EOL;
     }
 
 }

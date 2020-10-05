@@ -49,50 +49,55 @@ if ($arguments) {
         case '-v':
             $ver = [hlGetFrameVersion(), hlGetFrameworkVersion()];
             $bsp = $fn->addBsp($ver);
-            echo "\n" .
-                " ╔═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╗ " . "\n" .
-                " ║   " . "HLEB frame" . " project version " . $ver[0] . $bsp[0] . "║" . "\n" .
-                " ║   " . "phphleb/framework" . " version  " . $ver[1] . $bsp[1] . "║" . "\n" .
-                " ║     " . hlConsoleCopyright() . "       ║" . "\n" .
-                " ╚═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╝ " . "\n";
-            echo "\n";
+            echo PHP_EOL .
+                " ╔═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╗ " . PHP_EOL .
+                " ║   " . "HLEB frame" . " project version " . $ver[0] . $bsp[0] . "║" . PHP_EOL .
+                " ║   " . "phphleb/framework" . " version  " . $ver[1] . $bsp[1] . "║" . PHP_EOL .
+                " ║     " . hlConsoleCopyright() . "       ║" . PHP_EOL .
+                " ╚═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╝ " . PHP_EOL;
+            echo PHP_EOL;
             break;
         case '--clear-cache':
         case '-cc':
             $files = glob(HLEB_GLOBAL_DIRECTORY . HLEB_TEMPLATE_CACHED_PATH . '/*/*.cache', GLOB_NOSORT);
             hlClearCacheFiles($files, HLEB_TEMPLATE_CACHED_PATH, $fn, HLEB_TEMPLATE_CACHED_PATH . '/*/*.cache');
-            echo "\n" . "\n";
+            echo PHP_EOL . PHP_EOL;
             break;
         case '--clear-cache--twig':
         case '-cc-twig':
             if (HL_TWIG_CONNECTED) {
                 $files = glob(HLEB_GLOBAL_DIRECTORY . HL_TWIG_CACHED_PATH . '/*/*.php', GLOB_NOSORT);
                 hlClearCacheFiles($files, HL_TWIG_CACHED_PATH, $fn, HL_TWIG_CACHED_PATH . '/*/*.php');
-                echo "\n" . "\n";
+                echo PHP_EOL . PHP_EOL;
                 break;
             }
         case '--help':
         case '-h':
-            echo "\n";
-            echo " --version or -v" . "\n" . " --clear-cache or -cc" . "\n" . " --info or -i" .
-                "\n" . " --help or -h" . "\n" . " --routes or -r" . "\n" . " --list or -l" . "\n" .
-                (HL_TWIG_CONNECTED ? ' --clear-cache--twig or -cc-twig' : '');
-            echo "\n" . "\n";
+            echo PHP_EOL;
+            echo " --version or -v" . PHP_EOL . " --clear-cache or -cc" . PHP_EOL . " --info or -i" .
+                PHP_EOL . " --help or -h" . PHP_EOL . " --routes or -r" . PHP_EOL . " --list or -l" . PHP_EOL .
+                " --logs or -lg" . PHP_EOL .
+                (HL_TWIG_CONNECTED ? ' --clear-cache--twig or -cc-twig'  . PHP_EOL : '');
+            echo PHP_EOL;
             break;
         case '--routes':
         case '-r':
             echo $fn->searchNanorouter() . $fn->getRoutes();
-            echo "\n";
+            echo PHP_EOL;
             break;
         case '--list':
         case '-l':
             hlUploadAll();
             echo $fn->listing();
-            echo "\n" . "\n";
+            echo PHP_EOL . PHP_EOL;
             break;
         case '--info':
         case '-i':
             $fn->getInfo();
+            break;
+        case '--logs':
+        case '-lg':
+            $fn->getLogs();
             break;
         default:
             $file = $fn->convertCommandToTask($arguments);
@@ -104,11 +109,11 @@ if ($arguments) {
                 hlCreateUsersTask(HLEB_GLOBAL_DIRECTORY, $file, $setArguments, $fn);
 
             } else {
-                echo "Missing required arguments after `console`. Add --help to display more options." . "\n";
+                echo "Missing required arguments after `console`. Add --help to display more options." . PHP_EOL;
             }
     }
 } else {
-    echo "Missing arguments after `console`. Add --help to display more options." . "\n";
+    echo "Missing arguments after `console`. Add --help to display more options." . PHP_EOL;
 }
 
 
@@ -191,7 +196,7 @@ function hlSearchVersion($file, $const) {
 }
 
 function hlClearCacheFiles($files, $path, $fn, $scan_path) {
-    echo "\n" . "Clearing cache [          ] 0% ";
+    echo PHP_EOL . "Clearing cache [          ] 0% ";
     $all = count($files);
     if (count($files)) {
         $counter = 1;

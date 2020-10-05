@@ -41,7 +41,7 @@ class MainConsole
             echo "Missing file " . $file;
             die();
         }
-        echo "\n" . "File: " . $file . "\n" . "\n";
+        echo PHP_EOL . "File: " . $file . PHP_EOL . PHP_EOL;
         $handle = fopen($file, "r");
         if (!empty($handle)) {
             while (!feof($handle)) {
@@ -52,17 +52,17 @@ class MainConsole
                 $search = preg_match_all("|^define\(\s*\'([A-Z0-9\_]+)\'\s*\,\s*([^\)]+)\)|u", $buffer, $def, PREG_PATTERN_ORDER);
                 if ($search == 1) {
                     if (in_array($def[1][0], $infoList)) {
-                        echo " " . $def[1][0] . " = " . str_replace(["\"", "'"], "", trim($def[2][0])) . "\n";
+                        echo " " . $def[1][0] . " = " . str_replace(["\"", "'"], "", trim($def[2][0])) . PHP_EOL;
                     }
                 }
                 $searchErrors = preg_match_all('|^error_reporting\(\s*([^)]+)\)|u', $buffer, $def, PREG_PATTERN_ORDER);
                 if ($searchErrors == 1) {
-                    echo " error_reporting = " . str_replace("  ", " ", trim($def[1][0])) . "\n";
+                    echo " error_reporting = " . str_replace("  ", " ", trim($def[1][0])) . PHP_EOL;
                 }
             }
             fclose($handle);
         }
-        echo "\n";
+        echo PHP_EOL;
     }
 
     // Get the route schema.
@@ -125,12 +125,12 @@ class MainConsole
                 }
             }
         }
-        if (count($data) === 1) return "No cached routes in project." . "\n";
+        if (count($data) === 1) return "No cached routes in project." . PHP_EOL;
         return $this->sortData($data);
     }
-    
+
     public function sortData($data) {
-        $r = "\n";
+        $r = PHP_EOL;
         $col = [];
         $maxColumn = [];
         foreach ($data as $key => $line) {
@@ -149,9 +149,9 @@ class MainConsole
                     $r .= " ";
                 }
                 if ($k + 1 == count($dt)) {
-                    $r .= "\n";
+                    $r .= PHP_EOL;
                     if ($key === 0) {
-                        $r .= "\n";
+                        $r .= PHP_EOL;
                     }
                 }
             }
@@ -169,34 +169,13 @@ class MainConsole
                     if (class_exists('App\Commands\\' . $name, true)) {
                         $cl_name = 'App\Commands\\' . $name;
                         $class = new $cl_name;
-                        $taskList[] = [$name, $this->convertTaskToCommand($name), $class::DESCRIPTION];
+                        $taskList[] = [$name, $this->convertTaskToCommand($name), $this->shortDescription($class::DESCRIPTION)];
                     }
                 }
             }
         }
-        if (count($taskList) === 1) return "No tasks in project." . "\n";
+        if (count($taskList) === 1) return "No tasks in project." . PHP_EOL;
         return $this->sortData($taskList);
-    }
-
-    public function convertTaskToCommand($name) {
-        $result = "";
-        $parts = explode("/", str_replace(HLEB_GLOBAL_DIRECTORY, "/", $name));
-        $endName = array_pop($parts);
-
-        if (!file_exists(str_replace("//", "/", HLEB_GLOBAL_DIRECTORY . "/app/Commands/" . (implode("/", $parts)) . "/" . $endName . ".php"))) {
-            return "undefined (wrong namespace)";
-        }
-        $className = str_split($endName);
-
-        $path = count($parts) ? implode("/", $parts) . "/" : "";
-        foreach ($className as $key => $part) {
-            if (isset($className[$key - 1]) && $className[$key - 1] == strtolower($className[$key - 1]) && $part == strtoupper($part)) {
-                $result .= "-";
-            }
-            $result .= $part;
-        }
-
-        return strtolower(str_replace(["-\\-", "-/-"], "/", $path . $result));
     }
 
     public function convertCommandToTask($name) {
@@ -292,7 +271,7 @@ class MainConsole
                 ];
             }
             if (count($parameters) > 1) {
-                return $this->sortData($parameters) . "\n";
+                return $this->sortData($parameters) . PHP_EOL;
             }
             return null;
         }
@@ -310,8 +289,79 @@ class MainConsole
         return $result;
     }
 
+    public function getLogs() {
+        $pathToLogsDir = (defined('HLEB_STORAGE_DIRECTORY') ?
+                rtrim(HLEB_STORAGE_DIRECTORY, '\\/ ') :
+                HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage') . DIRECTORY_SEPARATOR . "logs";
+
+        $time = 0;
+        $lastLogFile = null;
+        $fileLogs = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($pathToLogsDir)
+        );
+        foreach ($fileLogs as $pathname => $logs) {
+            if (!$logs->isFile()) continue;
+            if (filemtime($logs->getRealPath()) > $time) {
+                $lastLogFile = $logs->getRealPath();
+            }
+        }
+        if (empty($lastLogFile) || empty($contentData = file($lastLogFile))) {
+            print "No logs found in the project";
+            return;
+        }
+
+        if (count($contentData) < 3) {
+            print implode(PHP_EOL, $contentData);
+            return;
+        }
+
+        $contentData = array_reverse($contentData);
+        $result = ["..." . PHP_EOL];
+        $max = 0;
+        foreach ($contentData as $str) {
+            if ($str[0] === "[") {
+                $result[] = $str;
+                $max++;
+            }
+            if ($max > 2) {
+                break;
+            }
+        }
+
+        print implode($result);
+    }
+
     private function domainCalc($data) {
         return is_array($data) && count($data) > 1 && $data[1] > 2;
+    }
+
+    private function shortDescription($str) {
+        $max = 30;
+        if (strlen($str) < $max) {
+            return $str;
+        }
+        return substr($str, 0, $max - 1) . "...[" . (strlen($str) - $max + 1) . "]";
+    }
+
+    private function convertTaskToCommand($name) {
+        $result = "";
+        $parts = explode("/", str_replace(HLEB_GLOBAL_DIRECTORY, "/", $name));
+        $endName = array_pop($parts);
+
+        if (!file_exists(str_replace("//", "/", HLEB_GLOBAL_DIRECTORY . "/app/Commands/" . (implode("/", $parts)) . "/" . $endName . ".php"))) {
+            return "undefined (wrong namespace)";
+        }
+        $className = str_split($endName);
+
+        $path = count($parts) ? implode("/", $parts) . "/" : "";
+        foreach ($className as $key => $part) {
+            if (isset($className[$key - 1]) && $className[$key - 1] == strtolower($className[$key - 1]) && $part == strtoupper($part)) {
+                $result .= "-";
+            }
+            $result .= $part;
+        }
+
+        return strtolower(str_replace(["-\\-", "-/-"], "/", $path . $result));
     }
 
 }

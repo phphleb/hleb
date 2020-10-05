@@ -32,7 +32,7 @@ class RotateLogsTask extends \Hleb\Scheme\App\Commands\MainTask
         }
         echo "Deleted " . $total . " files";
 
-        echo "\n" . __CLASS__ . " done." . "\n";
+        echo PHP_EOL . __CLASS__ . " done." . PHP_EOL;
     }
 
 }

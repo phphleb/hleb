@@ -338,7 +338,7 @@ class MainLaunchTask extends MainTask
 
     private function executeCommand(string $commands) {
         exec($commands, $output, $var);
-        echo implode("\n", $output);
+        echo implode(PHP_EOL, $output);
         return $var;
     }
 

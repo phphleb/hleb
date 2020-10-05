@@ -36,7 +36,7 @@ function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondP
     $fullPath = realpath($firstPartOfPath . $secondPartOfPath);
     $error = " ERROR! The file " . (!$debug && $log ? $fullPath : $secondPartOfPath);
     if (!file_exists($fullPath)) {
-        $error .= " not found. " . "\n";
+        $error .= " not found. " . PHP_EOL;
         die(!$debug && $log ? error_log($error) : $error);
     }
     ob_start();
@@ -44,7 +44,7 @@ function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondP
     $content = ob_get_contents();
     ob_end_flush();
     if ($content !== '') {
-        $error .= " is not intended to display content. " . "\n";
+        $error .= " is not intended to display content. " . PHP_EOL;
         die(!$debug && $log ? error_log($error) : $error);
     }
 }

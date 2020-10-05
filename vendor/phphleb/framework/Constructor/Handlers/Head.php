@@ -103,28 +103,28 @@ class Head extends ResourceStandard
      * @return string
      */
     public function output(bool $print = true, int $indents = 2) {
-        $result = "\n";
+        $result = PHP_EOL;
         $ind = str_repeat(' ', $indents);
         if (!empty($this->title)) {
-            $result .= $ind . '<title>' . $this->convertPrivateTags($this->title) . '</title>' . "\n";
+            $result .= $ind . '<title>' . $this->convertPrivateTags($this->title) . '</title>' . PHP_EOL;
         }
         if (!empty($this->description)) {
-            $result .= $ind . '<meta name="description" content="' . $this->convertPrivateTags($this->description) . '" />' . "\n";
+            $result .= $ind . '<meta name="description" content="' . $this->convertPrivateTags($this->description) . '" />' . PHP_EOL;
         }
         if (count($this->meta)) {
             foreach ($this->meta as $key => $value) {
-                $result .= $ind . "<meta name=\"$key\" content=\"" . $this->convertPrivateTags($value) . "\">" . "\n";
+                $result .= $ind . "<meta name=\"$key\" content=\"" . $this->convertPrivateTags($value) . "\">" . PHP_EOL;
             }
         }
         if (count($this->styles)) {
             foreach ($this->styles as $style) {
-                $result .= $ind . '<link rel="stylesheet" href="' . $this->convertPrivateTags($style) . '" type="text/css" >' . "\n";
+                $result .= $ind . '<link rel="stylesheet" href="' . $this->convertPrivateTags($style) . '" type="text/css" >' . PHP_EOL;
             }
         }
         if (count($this->scripts)) {
             foreach ($this->scripts as $script) {
                 $script = $this->convertPrivateTagsInArray($script);
-                $result .= $ind . '<script ' . $script["attribute"] . ' src="' . $script["url"] . '" charset="' . $script["charset"] . '"></script>' . "\n";
+                $result .= $ind . '<script ' . $script["attribute"] . ' src="' . $script["url"] . '" charset="' . $script["charset"] . '"></script>' . PHP_EOL;
             }
         }
         if ($print) echo $result;

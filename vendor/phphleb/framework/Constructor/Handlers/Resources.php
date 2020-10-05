@@ -47,11 +47,11 @@ class Resources extends ResourceStandard
      * @return string
      */
     function getBottomScripts(int $indents = 2) {
-        $result = "\n";
+        $result = PHP_EOL;
         $this->bottomScriptsOnce = true;
         foreach ($this->bottomScripts as $script) {
             $script = $this->convertPrivateTagsInArray($script);
-            $result .= str_repeat(' ', $indents) . '<script src="' . $script["url"] . '" charset="' . $script["charset"] . '"></script>' . "\n";
+            $result .= str_repeat(' ', $indents) . '<script src="' . $script["url"] . '" charset="' . $script["charset"] . '"></script>' . PHP_EOL;
         }
         return $result;
     }
@@ -96,9 +96,9 @@ class Resources extends ResourceStandard
      * @return string
      */
     function getBottomStyles(int $indents = 2) {
-        $result = "\n";
+        $result = PHP_EOL;
         foreach ($this->bottomStyles as $style) {
-            $result .= str_repeat(' ', $indents) . '<link rel="stylesheet" href="' . $this->convertPrivateTags($style) . '" type="text/css" media="screen">' . "\n";
+            $result .= str_repeat(' ', $indents) . '<link rel="stylesheet" href="' . $this->convertPrivateTags($style) . '" type="text/css" media="screen">' . PHP_EOL;
         }
         return $result;
     }
