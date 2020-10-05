@@ -368,6 +368,16 @@ function hleb_601e30l60p2ii1e0o469tl_view_path() {
     return HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'view';
 }
 
+// 404
+function hleb_bt3e3gl60pg8h71e00jep901_error_404() {
+    if(file_exists(hleb_601e30l60p2ii1e0o469tl_view_path() . DIRECTORY_SEPARATOR . '404.php')) {
+        include hleb_601e30l60p2ii1e0o469tl_view_path() . DIRECTORY_SEPARATOR . '404.php';
+    } else {
+        include HLEB_GLOBAL_DIRECTORY . '/app/Optional/404.php';
+    }
+    exit();
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $GLOBALS['HLEB_PROJECT_UPDATES'] = ['phphleb/hleb' => HLEB_FRAME_VERSION, 'phphleb/framework' => HLEB_PROJECT_FULL_VERSION];

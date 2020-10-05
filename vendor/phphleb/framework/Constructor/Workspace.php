@@ -145,19 +145,11 @@ class Workspace
         if (!empty($this->admFooter)) echo $this->admFooter;
     }
 
-    private function getPage404() {
-        if(!file_exists(hleb_601e30l60p2ii1e0o469tl_view_path() . DIRECTORY_SEPARATOR . '404.php')) {
-            include HLEB_GLOBAL_DIRECTORY . '/app/Optional/404.php';
-            exit();
-        }
-        return false;
-    }
-
     // Implements the difference in the output of the standard and Twig template engines.
     // Реализует разницу в выводе стандартного и Twig шаблонизаторов.
     private function selectableViewFile(string $file, string $methodType, int $errorNum) {
         // View error 404
-        if ($methodType === 'view' && trim($file) === '404' && $this->getPage404()) return;
+        if ($methodType === 'view' && trim($file) === '404') hleb_bt3e3gl60pg8h71e00jep901_error_404();
 
         $extension = false;
         $hlFile = trim($file, '\/ ');
