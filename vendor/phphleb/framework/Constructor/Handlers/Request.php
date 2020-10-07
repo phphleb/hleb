@@ -582,7 +582,7 @@ class Request
     private static function clearDataInArray(array $data) {
         $result = [];
         foreach ($data as $key => $value) {
-            $result[strip_tags($key)] = self::clearData($value);
+            $result[strip_tags(strval($key))] = self::clearData($value);
         }
         return $result;
     }
