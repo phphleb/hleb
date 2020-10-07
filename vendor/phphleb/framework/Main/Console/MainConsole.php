@@ -93,8 +93,10 @@ class MainConsole
                                     $controller = $action["controller"][0];
                                 }
                                 if (isset($action["adminPanController"])) {
-                                    $controller = $action["adminPanController"][0] . " [AdmPan]";
-                                    $name .= " [" . $action["adminPanController"][2] . "]";
+                                    $admPan = $action["adminPanController"];
+                                    $controller = $admPan[0] . " [AP]";
+                                    $routeName = !is_array($admPan[2]) ? $admPan[2] : "x" . count($admPan[2]);
+                                    $name .= " [" . $routeName . "]";
                                 }
 
                                 if (isset($action["domain"])) {
