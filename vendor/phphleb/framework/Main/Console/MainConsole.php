@@ -255,13 +255,11 @@ class MainConsole
     }
 
     public function searchNanorouter() {
-        if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/') &&
-            (file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/ajax.php') ||
-                file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/api.php'))
-        ) {
+        if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/') && file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/radjax.php')) {
             require_once HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Route.php';
-            if (file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/api.php')) include_once HLEB_GLOBAL_DIRECTORY . '/routes/api.php';
-            if (file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/ajax.php')) include_once HLEB_GLOBAL_DIRECTORY . '/routes/ajax.php';
+            if (file_exists(HLEB_GLOBAL_DIRECTORY . '/routes/ajax.php')) {
+                include_once HLEB_GLOBAL_DIRECTORY . '/routes/radjax.php';
+            } else return null;
             $nano = class_exists('Radjax\Route', false) ? \Radjax\Route::getParams() : [];
             $parameters = [['RADJAX:ROUTE', 'TYPE', 'PROTECTED', 'CONTROLLER']];
             foreach ($nano as $params) {

@@ -5,7 +5,7 @@
  */
 
 define('HLEB_GLOBAL_DIRECTORY', __DIR__);
-define('HLEB_PUBLIC_DIR', realpath(HLEB_GLOBAL_DIRECTORY .  '/public'));
+define('HLEB_PUBLIC_DIR', realpath(HLEB_GLOBAL_DIRECTORY . '/public'));
 
 // Additional structural paths
 /*
