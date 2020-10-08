@@ -1,4 +1,7 @@
 AddDefaultCharset UTF-8
+<IfModule mod_headers.c>
+   Header always edit Set-Cookie ^(.*)$ $1;HttpOnly;Secure
+</IfModule>
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
           Options +FollowSymLinks -MultiViews -Indexes
