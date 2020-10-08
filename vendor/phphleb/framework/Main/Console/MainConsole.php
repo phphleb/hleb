@@ -273,8 +273,8 @@ class MainConsole
             if (count($parameters) > 1) {
                 return $this->sortData($parameters) . PHP_EOL;
             }
-            return null;
         }
+        return null;
     }
 
     public function addBsp($versions) {
