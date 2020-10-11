@@ -41,10 +41,15 @@ class AddressBar
         $relAddress = "";
 
         if (!empty($address)) {
-            $endFirst = $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? $address : mb_substr($address, 0, -1);
-            $endSecond = $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? $address . '/' : $address;
-            $var_all = $address[strlen($address) - 1] == '/' ? $endFirst : $endSecond;
-            $relAddress = $fileUrl ? $address : $var_all; // address
+            if (!$fileUrl) {
+                if ($address[strlen($address) - 1] == '/') {
+                    $relAddress = $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? $address : rtrim($address, "/");
+                } else {
+                    $relAddress = $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? $address . '/' : $address;
+                }
+            } else {
+                $relAddress = $address;
+            }
         }
 
         // Processing domains with Cyrillic letters.
@@ -78,7 +83,7 @@ class AddressBar
 
         // Check if the URL is correct.
         // Проверка на корректность URL.
-        $realHostWww = empty($relAddress) ? $realHostWww . $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? '/' : "" : $realHostWww;
+        $realHostWww = empty($relAddress) ? ($realHostWww . $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? '/' : "") : $realHostWww;
         $realUrl = $realProtocol . (preg_replace('/\/{2,}/', '/', $realHostWww . $relAddress)) . $realParameters;
         $partsOfActualUri = explode('?', $this->inputParameters['SERVER']['REQUEST_URI']);
         $firstActualUri = rawurldecode(array_shift($partsOfActualUri));
