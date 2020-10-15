@@ -144,7 +144,7 @@ class URL
                 $params .= '?' . str_replace(self::NEEDED_TAGS, self::REPLACING_TAGS, $allUrl);
             }
         }
-        return self::getStandard(self::endingUrl($allUrls[0])) . $params;
+        return preg_replace('|([/]+)|s', '/',self::getStandard(self::endingUrl($allUrls[0])) . $params);
     }
 
     // Returns a standardized string.
