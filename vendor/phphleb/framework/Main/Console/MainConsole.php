@@ -49,10 +49,10 @@ class MainConsole
                 if ($buffer === false) continue;
                 $buffer = trim($buffer);
 
-                $search = preg_match_all("|^define\(\s*\'([A-Z0-9\_]+)\'\s*\,\s*([^\)]+)\)|u", $buffer, $def, PREG_PATTERN_ORDER);
+                $search = preg_match_all("|^define\(\s*\'([A-Z0-9\_]+)\'\s*\,\s*([^\;]+)|u", $buffer, $def, PREG_PATTERN_ORDER);
                 if ($search == 1) {
                     if (in_array($def[1][0], $infoList)) {
-                        echo " " . $def[1][0] . " = " . str_replace(["\"", "'"], "", trim($def[2][0])) . PHP_EOL;
+                        echo " " . $def[1][0] . " = " . str_replace(["\"", "'"], "", trim($def[2][0], "\n\r) ")) . PHP_EOL;
                     }
                 }
                 $searchErrors = preg_match_all('|^error_reporting\(\s*([^)]+)\)|u', $buffer, $def, PREG_PATTERN_ORDER);
@@ -62,7 +62,6 @@ class MainConsole
             }
             fclose($handle);
         }
-        echo PHP_EOL;
     }
 
     // Get the route schema.
