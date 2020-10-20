@@ -20,8 +20,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Executes a console command or a list of them.
-     * @param string|array $commands
-     *//**
+     *
      * Выполняет консольную команду или их список.
      * @param string|array $commands
      */
@@ -31,8 +30,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Executes a console command or a list of them at the beginning of every hour.
-     * @param string|array $commands
-     *//**
+     *
      * Выполняет консольную команду или их список в начале каждого часа.
      * @param string|array $commands
      */
@@ -43,8 +41,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Executes a console command or a list of them at the beginning of each day.
-     * @param string|array $commands
-     *//**
+     *
      * Выполняет консольную команду или их список в начале каждого дня.
      * @param string|array $commands
      */
@@ -55,8 +52,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Executes a console command or a list of them every five minutes.
-     * @param string|array $commands
-     *//**
+     *
      * Выполняет консольную команду или их список каждые пять минут.
      * @param string|array $commands
      */
@@ -67,8 +63,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Executes a console command or a list of them every ten minutes.
-     * @param string|array $commands
-     *//**
+     *
      * Выполняет консольную команду или их список каждые десять минут.
      * @param string|array $commands
      */
@@ -79,8 +74,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Executes a console command or a list of them every fifteen minutes.
-     * @param string|array $commands
-     *//**
+     *
      * Выполняет консольную команду или их список каждые пятнадцать минут.
      * @param string|array $commands
      */
@@ -91,8 +85,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Executes a console command or a list of them every twenty minutes.
-     * @param string|array $commands
-     *//**
+     *
      * Выполняет консольную команду или их список каждые двадцать минут.
      * @param string|array $commands
      */
@@ -101,10 +94,10 @@ class MainLaunchTask extends MainTask
         if (in_array($date, ['00', '20', '40'])) $this->run($commands);
     }
 
-    /** Selected time in hours 0-24
-     * @param array|int|string $h
-     * @return bool
-     *//** В выбранное время часа 0-24
+    /**
+     * Selected time in hours 0-24
+     *
+     * В выбранное время часа 0-24
      * @param array|int|string $h
      * @return bool
      */
@@ -114,9 +107,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * In the selected month 1-12
-     * @param array|int|string $mn
-     * @return bool
-     *//**
+     *
      * В выбранный месяц 1-12
      * @param array|int|string $mn
      * @return bool
@@ -127,10 +118,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Runs a console command or a list of them at the specified minute (0-60) of the hour or a list of them
-     * @param array|int|string $minutes
-     * @param string|array $commands
-     * @return bool
-     *//**
+     *
      * Выполняет консольную команду или их список в указанную минуту (0-60) часа или их перечень.
      * @param string|array $minutes
      * @param string|array $commands
@@ -142,8 +130,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Checking the current year for a leap year.
-     * @return bool
-     *//**
+     *
      * Проверка текущего года на високосный.
      * @return bool
      */
@@ -153,8 +140,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Returns the check result for the time before noon.
-     * @return bool
-     *//**
+     *
      * Возвращает результат проверки на время до полудня.
      * @return bool
      */
@@ -164,8 +150,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Returns the check result for the afternoon time.
-     * @return bool
-     *//**
+     *
      * Возвращает результат проверки на время после полудня.
      * @return bool
      */
@@ -175,8 +160,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Returns the result of checking that the current date is Monday.
-     * @return bool
-     *//**
+     *
      * Возвращает результат проверки на то, что по текущей дате - понедельник.
      * @return bool
      */
@@ -186,8 +170,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Returns the result of checking that the current date is Tuesday.
-     * @return bool
-     *//**
+     *
      * Возвращает результат проверки на то, что по текущей дате - вторник.
      * @return bool
      */
@@ -197,8 +180,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Returns the result of checking that the current date is Wednesday.
-     * @return bool
-     *//**
+     *
      * Возвращает результат проверки на то, что по текущей дате - среда.
      * @return bool
      */
@@ -208,8 +190,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Returns the result of checking that the current date is Thursday.
-     * @return bool
-     *//**
+     *
      * Возвращает результат проверки на то, что по текущей дате - четверг.
      * @return bool
      */
@@ -219,8 +200,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Returns the result of checking that the current date is Friday.
-     * @return bool
-     *//**
+     *
      * Возвращает результат проверки на то, что по текущей дате - пятница.
      * @return bool
      */
@@ -230,8 +210,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Returns the result of checking that the current date is Saturday.
-     * @return bool
-     *//**
+     *
      * Возвращает результат проверки на то, что по текущей дате - суббота.
      * @return bool
      */
@@ -241,8 +220,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Returns the result of checking that the current date is Sunday.
-     * @return bool
-     *//**
+     *
      * Возвращает результат проверки на то, что по текущей дате - воскресенье.
      * @return bool
      */
@@ -269,8 +247,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Returns the result of comparing the current day to match the New Year.
-     * @return bool
-     *//**
+     *
      * Возвращает результат сравнения текущего дня на совпадение с Новым Годом.
      * @return bool
      */
@@ -280,8 +257,7 @@ class MainLaunchTask extends MainTask
 
     /**
      * Returns the result of comparing the current day to match Halloween.
-     * @return bool
-     *//**
+     *
      * Возвращает результат сравнения текущего дня на совпадение с Хэллоуином.
      * @return bool
      */
@@ -298,6 +274,28 @@ class MainLaunchTask extends MainTask
      */
     protected function givenWeeklyDay(int $number){
         return $this->getDate()->format('N') === $number;
+    }
+
+    /**
+     * Returns the result of comparing the current day with the specified day (or list of days) of the month (1-31).
+     *
+     * Возвращает результат сравнения текущего дня с указанным днём (или перечнем дней) месяца (1-31).
+     * @param int|array $md
+     * @return bool
+     */
+    protected function givenMonthlyDay($md = [1]) {
+        return $this->searchData($md, "j");
+    }
+
+    /**
+     * Returns the result of comparing the current day with the specified day (or list of days) of the year (1-365).
+     *
+     * Возвращает результат сравнения текущего дня с указанным днём (или перечнем дней) года (1-365).
+     * @param int|array $yd
+     * @return bool
+     */
+    protected function givenYearDay($yd = [1]) {
+        return $this->searchData($yd, "z");
     }
 
     // Set a constant value for the current date.
