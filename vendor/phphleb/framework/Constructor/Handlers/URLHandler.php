@@ -70,7 +70,7 @@ class URLHandler
                         $validDomain = 0;
                         foreach ($action['domain'][0] as $domain) {
                             if ($domainPart === '*' || (is_null($domain) && is_null($domainPart)) ||
-                                ($domainPart != null && strtolower($domainPart) == strtolower($domain))) {
+                                ($domainPart != null && $domain != null && strtolower($domainPart) == strtolower($domain))) {
                                 $validDomain++;
                             }
                         }
