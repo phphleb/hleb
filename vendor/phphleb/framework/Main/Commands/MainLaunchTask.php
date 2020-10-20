@@ -135,7 +135,7 @@ class MainLaunchTask extends MainTask
      * @return bool
      */
     protected function changeLeapYear() {
-        return $this->getDate()->format('L') === 1;
+        return intval($this->getDate()->format('L')) === 1;
     }
 
     /**
