@@ -155,7 +155,7 @@ class MainLaunchTask extends MainTask
      * @return bool
      */
     protected function changePm() {
-        return $this->getDate()->format('a') === 'ap';
+        return $this->getDate()->format('a') === 'pm';
     }
 
     /**
