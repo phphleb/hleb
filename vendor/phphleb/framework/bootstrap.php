@@ -2,14 +2,20 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-if (intval(explode('.', phpversion())[0]) < 7)
-    die("The application requires PHP version higher than 7.0 (Current version " . phpversion() . ")");
+if (intval(explode('.', phpversion())[0]) < 7) {
+    // End of script execution before starting the framework.
+    exit("The application requires PHP version higher than 7.0 (Current version " . phpversion() . ")");
+}
 
-if (empty($_SERVER['REQUEST_METHOD']))
-    die('Undefined $_SERVER[\'REQUEST_METHOD\']');
+if (empty($_SERVER['REQUEST_METHOD'])) {
+    // End of script execution before starting the framework.
+    exit('Undefined $_SERVER[\'REQUEST_METHOD\']');
+}
 
-if (empty($_SERVER['HTTP_HOST']))
-    die('Undefined $_SERVER[\'HTTP_HOST\']');
+if (empty($_SERVER['HTTP_HOST'])) {
+    // End of script execution before starting the framework.
+    exit('Undefined $_SERVER[\'HTTP_HOST\']');
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -37,7 +43,8 @@ function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondP
     $error = " ERROR! The file " . (!$debug && $log ? $fullPath : $secondPartOfPath);
     if (!file_exists($fullPath)) {
         $error .= " not found. " . PHP_EOL;
-        die(!$debug && $log ? error_log($error) : $error);
+        // End of script execution before starting the framework.
+        exit(!$debug && $log ? error_log($error) : $error);
     }
     ob_start();
     require_once "$fullPath";
@@ -45,30 +52,36 @@ function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondP
     ob_end_flush();
     if ($content !== '') {
         $error .= " is not intended to display content. " . PHP_EOL;
-        die(!$debug && $log ? error_log($error) : $error);
+        // End of script execution before starting the framework.
+        exit(!$debug && $log ? error_log($error) : $error);
     }
 }
 $pathToStartFileDir = rtrim(defined('HLEB_SEARCH_START_CONFIG_FILE') ? HLEB_SEARCH_START_CONFIG_FILE : HLEB_GLOBAL_DIRECTORY, '\\/ ');
 hl_print_fulfillment_inspector( $pathToStartFileDir,  '/' . (file_exists($pathToStartFileDir . '/start.hleb.php') ? '' : 'default.') . 'start.hleb.php');
 
 if (!defined('HLEB_PROJECT_DEBUG') || !is_bool(HLEB_PROJECT_DEBUG)) {
-    die("Incorrectly defined setting: ...DEBUG");
+    // End of script execution before starting the framework.
+    exit("Incorrectly defined setting: ...DEBUG");
 }
 
 if (!defined('HLEB_PROJECT_CLASSES_AUTOLOAD') || !is_bool(HLEB_PROJECT_CLASSES_AUTOLOAD)) {
-    die("Incorrectly defined setting: ...CLASSES_AUTOLOAD");
+    // End of script execution before starting the framework.
+    exit("Incorrectly defined setting: ...CLASSES_AUTOLOAD");
 }
 
 if (!defined('HLEB_PROJECT_ENDING_URL') || !is_bool(HLEB_PROJECT_ENDING_URL)) {
-    die("Incorrectly defined setting: ...ENDING_URL");
+    // End of script execution before starting the framework.
+    exit("Incorrectly defined setting: ...ENDING_URL");
 }
 
 if (!defined('HLEB_PROJECT_LOG_ON') || !is_bool(HLEB_PROJECT_LOG_ON)) {
-    die("Incorrectly defined setting: ...LOG_ON");
+    // End of script execution before starting the framework.
+    exit("Incorrectly defined setting: ...LOG_ON");
 }
 
 if (!defined('HLEB_PROJECT_VALIDITY_URL') || !is_string(HLEB_PROJECT_VALIDITY_URL)) {
-    die("Incorrectly defined setting: ...VALIDITY_URL");
+    // End of script execution before starting the framework.
+    exit("Incorrectly defined setting: ...VALIDITY_URL");
 }
 
 

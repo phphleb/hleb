@@ -78,6 +78,7 @@ class Workspace
                 header('Allow: ' . strtoupper(implode(',', array_unique($types))));
                 header('Content-length: 0');
             }
+            // End of script execution before starting the main project.
             exit();
         }
         $this->renderGetMethod($block);

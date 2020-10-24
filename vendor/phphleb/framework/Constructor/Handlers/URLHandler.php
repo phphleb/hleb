@@ -107,6 +107,7 @@ class URLHandler
                 header('Allow: ' . strtoupper(implode(',', HLEB_HTTP_TYPE_SUPPORT)));
                 header('Content-length: 0');
             }
+            // End of script execution before starting the main project.
             exit();
         }
         $resultBlocks = [];

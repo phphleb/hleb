@@ -31,6 +31,7 @@ class ErrorOutput
             if (isset($message)) {
                 self::$messages[] = $message;
                 error_log(" " . explode('~', $message)[0] . PHP_EOL);
+                // End of script execution before starting the main project.
                 if (!HLEB_PROJECT_DEBUG) exit();
             } else {
                 self::$messages[] = 'ErrorOutput:: Indefinite error.';
@@ -54,7 +55,8 @@ class ErrorOutput
                 }
             }
             if (HLEB_PROJECT_DEBUG) {
-                die($content);
+                // End of script execution before starting the main project.
+                exit($content);
             }
         }
     }

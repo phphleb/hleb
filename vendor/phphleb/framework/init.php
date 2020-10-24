@@ -129,21 +129,20 @@ function hleb_v10s20hdp8nm7c_render($render, $data = null) {
 }
 
 function hleb_search_filenames($dir) {
+    $handle = opendir($dir);
+    if(!$handle) {
+        error_log("Can't open directory $dir");
+        return false;
+    }
 
-    $handle = opendir($dir) or die("Can't open directory $dir");
-
-    $files = Array();
+    $files = [];
 
     while (false !== ($file = readdir($handle))) {
         if ($file != '.' && $file != '..') {
-
             if (is_dir($dir . '/' . $file)) {
                 $subfiles = hleb_search_filenames($dir . '/' . $file);
-
                 $files = array_merge($files, $subfiles);
-
             } else {
-
                 $files[] = $dir . '/' . $file;
             }
         }
@@ -346,7 +345,7 @@ function hleb_e70c10c1057hn11cc8il2_get_request() {
  */
 function hleb_6iopl942e103te6i10600l_storage_path() {
     return (defined('HLEB_STORAGE_DIRECTORY') ?
-        rtrim(HLEB_STORAGE_DIRECTORY , '\\/ ') :
+            rtrim(HLEB_STORAGE_DIRECTORY, '\\/ ') :
             HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage') . DIRECTORY_SEPARATOR . 'public';
 }
 
@@ -370,11 +369,12 @@ function hleb_601e30l60p2ii1e0o469tl_view_path() {
 
 // 404
 function hleb_bt3e3gl60pg8h71e00jep901_error_404() {
-    if(file_exists(hleb_601e30l60p2ii1e0o469tl_view_path() . DIRECTORY_SEPARATOR . '404.php')) {
+    if (file_exists(hleb_601e30l60p2ii1e0o469tl_view_path() . DIRECTORY_SEPARATOR . '404.php')) {
         include hleb_601e30l60p2ii1e0o469tl_view_path() . DIRECTORY_SEPARATOR . '404.php';
     } else {
         include HLEB_GLOBAL_DIRECTORY . '/app/Optional/404.php';
     }
+    // End of script execution before starting the main project.
     exit();
 }
 

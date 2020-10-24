@@ -53,7 +53,8 @@ class ProtectedCSRF
         $request = $_REQUEST['_token'] ?? '';
         if (!self::checkKey($request)) {
             header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
-            die('Protected from CSRF');
+            // End of script execution before starting the main project.
+            exit('Protected from CSRF');
         }
     }
 
