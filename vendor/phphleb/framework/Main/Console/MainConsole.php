@@ -41,7 +41,7 @@ class MainConsole
             echo "Missing file " . $file;
             exit();
         }
-        echo PHP_EOL . "File: " . $file . PHP_EOL . PHP_EOL;
+        echo PHP_EOL, "File: ", $file, PHP_EOL, PHP_EOL;
         $handle = fopen($file, "r");
         if (!empty($handle)) {
             while (!feof($handle)) {
@@ -52,12 +52,12 @@ class MainConsole
                 $search = preg_match_all("|^define\(\s*\'([A-Z0-9\_]+)\'\s*\,\s*([^\;]+)|u", $buffer, $def, PREG_PATTERN_ORDER);
                 if ($search == 1) {
                     if (in_array($def[1][0], $infoList)) {
-                        echo " " . $def[1][0] . " = " . str_replace(["\"", "'"], "", trim($def[2][0], "\n\r) ")) . PHP_EOL;
+                        echo " ", $def[1][0], " = ", str_replace(["\"", "'"], "", trim($def[2][0], "\n\r) ")), PHP_EOL;
                     }
                 }
                 $searchErrors = preg_match_all('|^error_reporting\(\s*([^)]+)\)|u', $buffer, $def, PREG_PATTERN_ORDER);
                 if ($searchErrors == 1) {
-                    echo " error_reporting = " . str_replace("  ", " ", trim($def[1][0])) . PHP_EOL;
+                    echo " error_reporting = ", str_replace("  ", " ", trim($def[1][0])), PHP_EOL;
                 }
             }
             fclose($handle);

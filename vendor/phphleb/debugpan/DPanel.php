@@ -48,6 +48,11 @@ class DPanel
                 MyDebug::add("RADJAX routes", self::createRajaxDebugInfo($GLOBALS["HLEB_MAIN_DEBUG_RADJAX"]));
         }
 
+        $blockingParameter = defined('HLEB_BLOCKED_DEBUG_FROM_GET_PARAMETER') ? HLEB_BLOCKED_DEBUG_FROM_GET_PARAMETER : "_debug";
+        if(isset($_REQUEST[$blockingParameter]) && $_REQUEST[$blockingParameter] === 'off') {
+            return;
+        }
+
         $debugBlockName = "__hl_debug_panel";
         $debugDataTime = "";
         $timing = $info["time"];

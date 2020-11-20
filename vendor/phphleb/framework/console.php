@@ -61,14 +61,14 @@ if ($arguments) {
         case '-cc':
             $files = glob(HLEB_GLOBAL_DIRECTORY . HLEB_TEMPLATE_CACHED_PATH . '/*/*.cache', GLOB_NOSORT);
             hlClearCacheFiles($files, HLEB_TEMPLATE_CACHED_PATH, $fn, HLEB_TEMPLATE_CACHED_PATH . '/*/*.cache');
-            echo PHP_EOL . PHP_EOL;
+            echo PHP_EOL, PHP_EOL;
             break;
         case '--clear-cache--twig':
         case '-cc-twig':
             if (HL_TWIG_CONNECTED) {
                 $files = glob(HLEB_GLOBAL_DIRECTORY . HL_TWIG_CACHED_PATH . '/*/*.php', GLOB_NOSORT);
                 hlClearCacheFiles($files, HL_TWIG_CACHED_PATH, $fn, HL_TWIG_CACHED_PATH . '/*/*.php');
-                echo PHP_EOL . PHP_EOL;
+                echo PHP_EOL, PHP_EOL;
                 break;
             }
         case '--help':
@@ -109,11 +109,11 @@ if ($arguments) {
                 hlCreateUsersTask(HLEB_GLOBAL_DIRECTORY, $file, $setArguments, $fn);
 
             } else {
-                echo "Missing required arguments after `console`. Add --help to display more options." . PHP_EOL;
+                echo "Missing required arguments after `console`. Add --help to display more options.", PHP_EOL;
             }
     }
 } else {
-    echo "Missing arguments after `console`. Add --help to display more options." . PHP_EOL;
+    echo "Missing arguments after `console`. Add --help to display more options.", PHP_EOL;
 }
 
 
@@ -196,14 +196,14 @@ function hlSearchVersion($file, $const) {
 }
 
 function hlClearCacheFiles($files, $path, $fn, $scan_path) {
-    echo PHP_EOL . "Clearing cache [          ] 0% ";
+    echo PHP_EOL, "Clearing cache [          ] 0% ";
     $all = count($files);
     if (count($files)) {
         $counter = 1;
         foreach ($files as $k => $value) {
             @unlink($value);
             $fn->progressConsole(count($files), $k);
-            echo " (" . $counter . "/" . $all . ")";
+            echo " (", $counter, "/", $all, ")";
             $counter++;
         }
         @array_map('unlink', glob(HLEB_GLOBAL_DIRECTORY . $scan_path));
