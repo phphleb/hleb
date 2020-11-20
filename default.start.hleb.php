@@ -6,6 +6,7 @@
  |
  | Allows you to enable (true) / disable (false) debug mode.
  | “False” value is compulsory on a public server!
+ | To hide the debug mode, add the '_debug=off' parameter to the url.
  | Default: true
  |
  |
@@ -15,6 +16,8 @@
  |
  | Позволяет включить (true) / выключить (false) режим отладки.
  | На публичном сервере обязательно значение false!
+ | Чтобы скрыть режим отладки для отдельного url необходимо добавить к нему
+ | GET-параметр '_debug=off'.
  | Изначально: true
  |
  */
