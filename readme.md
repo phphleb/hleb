@@ -2,7 +2,7 @@
 ### ![HLEB LOGO](https://raw.githubusercontent.com/phphleb/hleb/f95d0092692c082c1b2b0d96c75dcaf68600b73b/public/images/logo.png)
 # PHP Micro-Framework
 
-Requires PHP version 7.0 or higher.
+Requires PHP version 7 or higher (including version 8).
 
 [Link to instructions](https://phphleb.ru/ru/v1/) (RU)
 
@@ -206,4 +206,4 @@ WorkDebug::add($debug_data, 'description');
 -----------------------------------
 
 
- ![version](https://img.shields.io/badge/version-1.5.32-blue) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/phphleb/hleb/blob/master/LICENSE)
+ ![version](https://img.shields.io/badge/version-1.5.40-blue) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/phphleb/hleb/blob/master/LICENSE)
