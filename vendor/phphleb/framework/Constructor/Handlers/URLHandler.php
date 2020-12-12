@@ -90,9 +90,8 @@ class URLHandler
                         $search[] = $validDomain > 0;
                     }
                 }
-                if (!in_array(false, $search)) break;
             }
-            if (count($search) == 0 || !in_array(false, $search)) $resultBlocks[] = $block;
+            if (count($search) == 0 || in_array(true, $search)) $resultBlocks[] = $block;
         }
         return $resultBlocks;
     }
