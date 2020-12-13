@@ -91,7 +91,7 @@ class URLHandler
                     }
                 }
             }
-            if (count($search) == 0 || in_array(true, $search)) $resultBlocks[] = $block;
+            if (count($search) == 0 || !in_array(false, $search)) $resultBlocks[] = $block;
         }
         return $resultBlocks;
     }
