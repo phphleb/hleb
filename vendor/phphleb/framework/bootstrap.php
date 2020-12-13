@@ -105,7 +105,7 @@ if (!defined('HLEB_VENDOR_DIR_NAME')) {
     define('HLEB_VENDOR_DIR_NAME', array_reverse(explode(DIRECTORY_SEPARATOR, dirname(__DIR__, 2)))[0]);
 }
 
-function hleb_01f0jpem0f_storage_directory() {
+function hleb_dc64d27da09bab7_storage_directory() {
     return (defined('HLEB_STORAGE_DIRECTORY') ?
         rtrim(HLEB_STORAGE_DIRECTORY , '\\/ ') :
         HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage');
@@ -115,7 +115,7 @@ define('HLEB_VENDOR_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NA
 
 define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/routes');
 
-define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', hleb_01f0jpem0f_storage_directory() . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'routes');
+define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', hleb_dc64d27da09bab7_storage_directory() . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'routes');
 
 require_once HLEB_PROJECT_DIRECTORY . '/Main/Insert/DeterminantStaticUncreated.php';
 
@@ -136,7 +136,7 @@ if (HLEB_PROJECT_LOG_ON) {
 
     ini_set('log_errors', 'On');
 
-    ini_set('error_log', hleb_01f0jpem0f_storage_directory()  . '/logs/' . date('Y_m_d_') . 'errors.log');
+    ini_set('error_log', hleb_dc64d27da09bab7_storage_directory()  . '/logs/' . date('Y_m_d_') . 'errors.log');
 }
 
 ini_set('display_errors', HLEB_PROJECT_DEBUG ? '1' : '0');
