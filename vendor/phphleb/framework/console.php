@@ -198,9 +198,13 @@ function hlSearchVersion($file, $const) {
 function hlClearCacheFiles($files, $path, $fn, $scan_path) {
     echo PHP_EOL, "Clearing cache [          ] 0% ";
     $all = count($files);
+    $error = 0;
     if (count($files)) {
         $counter = 1;
         foreach ($files as $k => $value) {
+            if(file_exists($value) && !is_writable($value)) {
+                $error++;
+            }
             @unlink($value);
             $fn->progressConsole(count($files), $k);
             echo " (", $counter, "/", $all, ")";
@@ -221,6 +225,10 @@ function hlClearCacheFiles($files, $path, $fn, $scan_path) {
     } else {
         fwrite(STDOUT, "\r");
         fwrite(STDOUT, "No files in " . $path . ". Cache cleared.");
+    }
+    if($error) {
+        fwrite(STDOUT, "\r");
+        fwrite(STDOUT, "Permission denied! Try executing via 'sudo' before the command.");
     }
 
 }

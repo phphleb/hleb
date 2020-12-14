@@ -25,8 +25,13 @@ class RotateLogsTask extends \Hleb\Scheme\App\Commands\MainTask
                 realpath(defined('HLEB_STORAGE_DIRECTORY') ? HLEB_STORAGE_DIRECTORY : HLEB_GLOBAL_DIRECTORY . "/storage") . "/logs/")
         );
         foreach ($logs as $log) {
-            if ($log->isFile() && $log->getFileName() !== ".gitkeep" && filemtime($log->getRealPath()) < (time() - $prescriptionForRotation)) {
-                @unlink($log->getRealPath());
+            $logPath = $log->getRealPath();
+            if(!is_writable($logPath)) {
+                echo "Permission denied! Try executing via 'sudo' before the command." . PHP_EOL;
+                break;
+            }
+            if ($log->isFile() && $log->getFileName() !== ".gitkeep" && filemtime($logPath) < (time() - $prescriptionForRotation)) {
+                unlink($log->getRealPath());
                 $total++;
             }
         }
