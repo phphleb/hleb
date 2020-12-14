@@ -63,6 +63,14 @@ if ($arguments) {
             hlClearCacheFiles($files, HLEB_TEMPLATE_CACHED_PATH, $fn, HLEB_TEMPLATE_CACHED_PATH . '/*/*.cache');
             echo PHP_EOL, PHP_EOL;
             break;
+        case '--forced-cc':
+            hlForcedClearCacheFiles(HLEB_GLOBAL_DIRECTORY . HLEB_TEMPLATE_CACHED_PATH);
+            echo PHP_EOL;
+            break;
+        case '--forced-cc-twig':
+            hlForcedClearCacheFiles(HLEB_GLOBAL_DIRECTORY . HL_TWIG_CACHED_PATH);
+            echo PHP_EOL;
+            break;
         case '--clear-cache--twig':
         case '-cc-twig':
             if (HL_TWIG_CONNECTED) {
@@ -74,10 +82,10 @@ if ($arguments) {
         case '--help':
         case '-h':
             echo PHP_EOL;
-            echo " --version or -v" . PHP_EOL . " --clear-cache or -cc" . PHP_EOL . " --info or -i" .
-                PHP_EOL . " --help or -h" . PHP_EOL . " --routes or -r" . PHP_EOL . " --list or -l" . PHP_EOL .
-                " --logs or -lg" . PHP_EOL .
-                (HL_TWIG_CONNECTED ? ' --clear-cache--twig or -cc-twig'  . PHP_EOL : '');
+            echo " --version or -v" . PHP_EOL . " --clear-cache -- or -cc" . PHP_EOL . " --forced-cc" . PHP_EOL .
+                " --info or -i" . PHP_EOL . " --help or -h" . PHP_EOL . " --routes or -r" . PHP_EOL . " --list or -l" .
+                PHP_EOL . " --logs or -lg" . PHP_EOL .
+                (HL_TWIG_CONNECTED ? ' --clear-cache--twig or -cc-twig'  . PHP_EOL . ' --forced-cc-twig'  . PHP_EOL : '');
             echo PHP_EOL;
             break;
         case '--routes':
@@ -204,6 +212,8 @@ function hlClearCacheFiles($files, $path, $fn, $scan_path) {
         foreach ($files as $k => $value) {
             if(file_exists($value) && !is_writable($value)) {
                 $error++;
+            } else {
+                @chmod($value, 0777);
             }
             @unlink($value);
             $fn->progressConsole(count($files), $k);
@@ -233,4 +243,47 @@ function hlClearCacheFiles($files, $path, $fn, $scan_path) {
 
 }
 
+function hlForcedClearCacheFiles($path) {
+    $standardPath = str_replace('\\', '/', $path);
+    if (!file_exists($path)) {
+        exit("No files in " . $standardPath . ". Cache cleared." . PHP_EOL);
+    }
+    if (!is_writable($path)) {
+        exit("Permission denied! Try executing via 'sudo' before the command." . PHP_EOL);
+    }
+    $newPath = rtrim($path, "/") . "_" . md5(microtime() . rand());
+    rename($path, $newPath);
+    if (file_exists($newPath) && !is_writable($newPath)) {
+        exit("Permission denied! Try executing via 'sudo' before the command." . PHP_EOL);
+    }
+    if (!file_exists($newPath)) {
+        exit("Error! Couldn't move directory." . PHP_EOL);
+    }
+    echo "Moving files from a folder " . $standardPath . ". Cache cleared." . PHP_EOL;
+    fwrite(STDOUT, "Delete files...");
+    hlRemoveDir($newPath);
+    fwrite(STDOUT, "\r");
+    fwrite(STDOUT, "Delete files [//////////] 100% ");
+}
+
+function hlRemoveDir($path) {
+    if (file_exists($path) && is_dir($path)) {
+        $dir = opendir($path);
+        while (false !== ($element = readdir($dir))) {
+            if ($element != '.' && $element != '..') {
+                $tmp = $path . '/' . $element;
+                chmod($tmp, 0777);
+                if (is_dir($tmp)) {
+                    hlRemoveDir($tmp);
+                } else {
+                    unlink($tmp);
+                }
+            }
+        }
+        closedir($dir);
+        if (file_exists($path)) {
+            rmdir($path);
+        }
+    }
+}
 

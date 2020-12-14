@@ -143,7 +143,7 @@ class CachedTemplate
             $this->addContent();
         } else {
             $this->deleteOldFiles();
-            mkdir(HLEB_GLOBAL_DIRECTORY . HLEB_TEMPLATE_CACHED_PATH . '/' . $this->dir, 0775, true);
+            @mkdir(HLEB_GLOBAL_DIRECTORY . HLEB_TEMPLATE_CACHED_PATH . '/' . $this->dir, 0775, true);
             $this->content = $content;
             $file = $this->hashFile . '_' . $this->cacheTime . '.cache';
             file_put_contents($file, $content, LOCK_EX);
