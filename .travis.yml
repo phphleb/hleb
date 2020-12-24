@@ -1,3 +1,4 @@
+# Setting up automated tests for the framework
 language: php
 php:
   - '7.2'
