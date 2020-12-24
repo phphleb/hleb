@@ -1,3 +1,4 @@
+
 # HLEB
 ### ![HLEB LOGO](https://raw.githubusercontent.com/phphleb/hleb/f95d0092692c082c1b2b0d96c75dcaf68600b73b/public/images/logo.png)
 # PHP Micro-Framework
@@ -37,7 +38,7 @@ Customization
 -----------------------------------
 Command character constants in the micro-framework HLEB are set in the **start.hleb.php** file. Initially, a file with this name does not exist and must be copied from the **default.start.hleb.php** file in the same project root directory.
 
-Attention! Constant HLEB_PROJECT_DEBUG enables / disables debug mode. Do not use debug mode on a public server.
+Attention! Constant HLEB_PROJECT_DEBUG enables/disables debug mode. Do not use debug mode on a public server.
 
 
 Routing
@@ -69,7 +70,7 @@ Groups of routes
 
 Methods located before a route or group:
 
-**type()->**, **prefix()->**, **protect()->**, **before()->**
+**type()->**, **prefix()->**, **protect()->**, **before()->**, **domain()->**
 
 ```php
 Route::prefix('/lang/')->before('AuthClassBefore')->getGroup();
@@ -95,8 +96,7 @@ namespace App\Controllers;
 use App\Models\UserModel;
 class TestController extends \MainController
 {
-    function index($value) // $value = 'friends'
-    {
+    function index($value) {  // $value = 'friends'
      $data = UserModel::getData(['id' => \Request::get('id'), 'join' => $value]);
      return view('/user/profile', ['data' => $data]);
     }
@@ -132,8 +132,7 @@ Route::get('/test/module/example/')->module('example', 'DefaultModuleController'
 namespace Modules\Example;
 class DefaultModuleController extends \MainController
 {
-   function index()
-   {
+   function index() {
       return view('content');
    }
 }
@@ -151,8 +150,7 @@ Models
 namespace App\Models;
 class UserModel extends \MainModel
 {
-   static function getData($params)
-   {
+   static function getData($params) {
      $data = /* ... */ // A query to the database, returning an array of user data.
      return $data;
    }
@@ -206,4 +204,4 @@ WorkDebug::add($debug_data, 'description');
 -----------------------------------
 
 
- ![version](https://img.shields.io/badge/version-1.5.42-blue) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/phphleb/hleb/blob/master/LICENSE)
+ ![Version](https://img.shields.io/badge/Version-1.5.42-blue) [![License: MIT](https://img.shields.io/badge/License-MIT(Free)-brightgreen.svg)](https://github.com/phphleb/hleb/blob/master/LICENSE)  ![Size](https://img.shields.io/badge/Size-0,5%20MB-blue)   [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Use%20a%20fast%20and%20simple%20PHP%207-8%20microframework&url=https://github.com/phphleb/hleb&via=phphleb&hashtags=php7,php8,framework,developers)
