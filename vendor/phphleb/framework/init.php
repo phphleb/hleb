@@ -1,6 +1,6 @@
 <?php
 
-define('HLEB_PROJECT_FULL_VERSION', '1.5.42');
+define('HLEB_PROJECT_FULL_VERSION', '1.5.43');
 
 require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Controllers/MainController.php';
 
