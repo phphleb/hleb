@@ -25,11 +25,9 @@ class TCreator
 
     /**
      * To set the caching time inside the template.
-     *  ~ ... $this->setCacheTime(60); ...
-     * @param int $seconds
-     */
-    /**
+     *
      * Устанавливает время кеширования для контента шаблона.
+     *
      * ~ ... $this->setCacheTime(60); ...
      * @param int $seconds
      */
