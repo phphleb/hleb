@@ -46,6 +46,11 @@
   "config": {
     "optimize-autoloader": true
   },
+  "scripts": {
+    "post-root-package-install": [
+      "@php -r \"@unlink('.travis.yml');\""
+    ]
+  },
   "minimum-stability": "dev",
   "prefer-stable": true
 }
