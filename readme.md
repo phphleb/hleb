@@ -1,6 +1,6 @@
 
 # HLEB
-### ![HLEB LOGO](https://raw.githubusercontent.com/phphleb/hleb/f95d0092692c082c1b2b0d96c75dcaf68600b73b/public/images/logo.png)
+### [![HLEB LOGO](https://raw.githubusercontent.com/phphleb/hleb/f95d0092692c082c1b2b0d96c75dcaf68600b73b/public/images/logo.png)](https://github.com/phphleb/hleb/tree/master)
 # PHP Micro-Framework
 
 Requires PHP version 7 or higher (including version 8).
