@@ -39,7 +39,7 @@ class MainConsole
         ];
         if (!file_exists($file)) {
             echo "Missing file " . $file;
-            exit();
+            hl_preliminary_exit();
         }
         echo PHP_EOL, "File: ", $file, PHP_EOL, PHP_EOL;
         $handle = fopen($file, "r");
