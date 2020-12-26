@@ -261,7 +261,7 @@ class idna_convert
            return $this->_ucs4_to_ucs4_string($this->_utf8_to_ucs4($return) ?? []);
            //break;
         case 'ucs4_array':
-            return $this->_utf8_to_ucs4($return ?? []);
+            return $this->_utf8_to_ucs4($return ?? '');
             //break;
         default:
             $this->_error('Unsupported output format');
