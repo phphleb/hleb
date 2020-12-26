@@ -32,7 +32,7 @@ class ErrorOutput
                 self::$messages[] = $message;
                 error_log(" " . explode('~', $message)[0] . PHP_EOL);
                 // End of script execution before starting the main project.
-                if (!HLEB_PROJECT_DEBUG) exit();
+                if (!HLEB_PROJECT_DEBUG) hl_preliminary_exit();
             } else {
                 self::$messages[] = 'ErrorOutput:: Indefinite error.';
                 error_log(' ' . explode('~', $message)[0] . PHP_EOL);
