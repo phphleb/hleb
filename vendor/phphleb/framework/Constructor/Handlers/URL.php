@@ -179,7 +179,7 @@ class URL
         if (!headers_sent()) {
             header('Location: ' . self::getStandardUrl($url), true, $code);
         }
-        exit();
+        hl_preliminary_exit();
     }
 }
 
