@@ -35,6 +35,11 @@ if (!defined('HLEB_GLOBAL_DIRECTORY')) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// End of script execution (before starting the main project).
+function hl_preliminary_exit( $text = '') {
+    exit($text);
+}
+
 // Monitors the execution of unnecessary output
 function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondPartOfPath) {
     $log = defined('HLEB_PROJECT_LOG_ON') && HLEB_PROJECT_LOG_ON;
