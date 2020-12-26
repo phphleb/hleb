@@ -375,7 +375,7 @@ function hleb_bt3e3gl60pg8h71e00jep901_error_404() {
         include HLEB_GLOBAL_DIRECTORY . '/app/Optional/404.php';
     }
     // End of script execution before starting the main project.
-    exit();
+    hl_preliminary_exit();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
