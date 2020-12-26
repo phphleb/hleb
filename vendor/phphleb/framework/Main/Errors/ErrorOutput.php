@@ -56,7 +56,7 @@ class ErrorOutput
             }
             if (HLEB_PROJECT_DEBUG) {
                 // End of script execution before starting the main project.
-                exit($content);
+                hl_preliminary_exit($content);
             }
         }
     }
