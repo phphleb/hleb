@@ -5,7 +5,7 @@
 // End of script execution (before starting the main project).
 if (!function_exists('hl_preliminary_exit')) {
     function hl_preliminary_exit($text = '') {
-        exit($text);
+        exit(strval($text));
     }
 }
 

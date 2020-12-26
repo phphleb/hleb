@@ -112,7 +112,7 @@ class CachedTemplate
         $this->hashFile = $path . $this->dir . "/" . $templateName;
         $searchAll = glob($this->hashFile . '_*.cache');
 
-        if ($searchAll && count($searchAll)) {
+        if (is_array($searchAll) && count($searchAll)) {
             if (count($searchAll) > 1) {
                 foreach ($searchAll as $key => $search_file) {
                     if ($key > 0) @unlink("$search_file");
@@ -158,7 +158,7 @@ class CachedTemplate
         if (!isset($GLOBALS['HLEB_CACHED_TEMPLATES_CLEARED'])) {
             $path = HLEB_GLOBAL_DIRECTORY . HLEB_TEMPLATE_CACHED_PATH;
             $files = glob($path . '/*/*.cache');
-            if ($files && count($files)) {
+            if (is_array($files) && count($files)) {
                 foreach ($files as $key => $file) {
                     if (filemtime($file) < strtotime('-' . $this->getFileTime($file) . ' seconds')) {
                         @unlink("$file");
