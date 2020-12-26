@@ -12,7 +12,7 @@ namespace Hleb\Constructor\Handlers;
 
 use DeterminantStaticUncreated;
 
-class ProtectedCSRF
+final class ProtectedCSRF
 {
     use DeterminantStaticUncreated;
 
