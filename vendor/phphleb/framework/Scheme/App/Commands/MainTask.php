@@ -7,7 +7,12 @@ class MainTask
     public function __construct() {}
 
     public function createTask($arguments) {
-        $this->execute(...$arguments);
+        if(method_exists($this, 'execute')) {
+            $this->execute(...$arguments);
+        } else {
+            error_log(PHP_EOL . "Method 'execute' not exists in Task!" . PHP_EOL);
+        }
+
     }
 
 }

@@ -205,7 +205,7 @@ function hlGetFrameworkVersion() {
 
 function hlSearchVersion($file, $const) {
     $content = file_get_contents($file, true);
-    $search = preg_match_all("|define\(\s*\'" . $const . "\'\s*\,\s*([^\)]+)\)|u", $content, $def);
+    preg_match_all("|define\(\s*\'" . $const . "\'\s*\,\s*([^\)]+)\)|u", $content, $def);
     return trim($def[1][0] ?? 'undefined', "' \"");
 }
 
