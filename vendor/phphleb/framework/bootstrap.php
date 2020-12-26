@@ -49,7 +49,7 @@ function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondP
     if (!file_exists($fullPath)) {
         $error .= " not found. " . PHP_EOL;
         // End of script execution before starting the framework.
-        exit(!$debug && $log ? error_log($error) : $error);
+        hl_preliminary_exit(!$debug && $log ? error_log($error) : $error);
     }
     ob_start();
     require_once "$fullPath";
@@ -58,7 +58,7 @@ function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondP
     if ($content !== '') {
         $error .= " is not intended to display content. " . PHP_EOL;
         // End of script execution before starting the framework.
-        exit(!$debug && $log ? error_log($error) : $error);
+        hl_preliminary_exit(!$debug && $log ? error_log($error) : $error);
     }
 }
 $pathToStartFileDir = rtrim(defined('HLEB_SEARCH_START_CONFIG_FILE') ? HLEB_SEARCH_START_CONFIG_FILE : HLEB_GLOBAL_DIRECTORY, '\\/ ');
