@@ -54,7 +54,7 @@ final class ProtectedCSRF
         if (!self::checkKey($request)) {
             header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
             // End of script execution before starting the main project.
-            exit('Protected from CSRF');
+            hl_preliminary_exit('Protected from CSRF');
         }
     }
 
