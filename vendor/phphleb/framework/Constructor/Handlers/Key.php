@@ -13,7 +13,7 @@ namespace Hleb\Constructor\Handlers;
 use DeterminantStaticUncreated;
 use Hleb\Main\Errors\ErrorOutput;
 
-class Key
+final class Key
 {
     use DeterminantStaticUncreated;
 
