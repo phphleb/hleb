@@ -89,10 +89,9 @@ class idna_convert
      * the constructor
      *
      * @param array $options
-     * @return boolean
      * @since 0.5.2
      */
-    public function __construct($options = false)
+    public function __construct($options = [])
     {
         $this->slast = $this->_sbase + $this->_lcount * $this->_vcount * $this->_tcount;
         // If parameters are given, pass these to the respective method
@@ -205,7 +204,7 @@ class idna_convert
             foreach ($arr as $k => $v) {
                 if (preg_match('!^'.preg_quote($this->_punycode_prefix, '!').'!', $v)) {
                     $conv = $this->_decode($v);
-                    if ($conv) $arr[$k] = $conv;
+                    if (!empty($conv)) $arr[$k] = $conv;
                 }
             }
             $input = join('.', $arr);
@@ -213,7 +212,7 @@ class idna_convert
             foreach ($arr as $k => $v) {
                 if (preg_match('!^'.preg_quote($this->_punycode_prefix, '!').'!', $v)) {
                     $conv = $this->_decode($v);
-                    if ($conv) $arr[$k] = $conv;
+                    if (!empty($conv)) $arr[$k] = $conv;
                 }
             }
             $email_pref = join('.', $arr);
@@ -229,7 +228,7 @@ class idna_convert
                 $arr = explode('.', $parsed['host']);
                 foreach ($arr as $k => $v) {
                     $conv = $this->_decode($v);
-                    if ($conv) $arr[$k] = $conv;
+                    if (!empty($conv)) $arr[$k] = $conv;
                 }
                 $parsed['host'] = join('.', $arr);
                 $return =
@@ -250,7 +249,7 @@ class idna_convert
             }
         } else { // Otherwise we consider it being a pure domain name string
             $return = $this->_decode($input);
-            if (!$return) $return = $input;
+            if (empty($return)) $return = $input;
         }
         // The output is UTF-8 by default, other output formats need conversion here
         // If one time encoding is given, use this, else the objects property
@@ -259,10 +258,10 @@ class idna_convert
             return $return;
             //break;
         case 'ucs4_string':
-           return $this->_ucs4_to_ucs4_string($this->_utf8_to_ucs4($return));
+           return $this->_ucs4_to_ucs4_string($this->_utf8_to_ucs4($return) ?? []);
            //break;
         case 'ucs4_array':
-            return $this->_utf8_to_ucs4($return);
+            return $this->_utf8_to_ucs4($return ?? []);
             //break;
         default:
             $this->_error('Unsupported output format');
@@ -276,11 +275,11 @@ class idna_convert
      * [@param    string   Desired input encoding, see {@link set_parameter}]
      * @return   string   Encoded Domain name (ACE string)
      */
-    public function encode($decoded, $one_time_encoding = false)
+    public function encode($decoded, $one_time_encoding = '')
     {
         // Forcing conversion of input to UCS4 array
         // If one time encoding is given, use this, else the objects property
-        switch ($one_time_encoding ? $one_time_encoding : $this->_api_encoding) {
+        switch (!empty($one_time_encoding) ? $one_time_encoding : $this->_api_encoding) {
         case 'utf8':
             $decoded = $this->_utf8_to_ucs4($decoded);
             break;
@@ -321,9 +320,8 @@ class idna_convert
                 } else {
                     // Skip first char
                     if ($k) {
-                        $encoded = '';
                         $encoded = $this->_encode(array_slice($decoded, $last_begin, (($k)-$last_begin)));
-                        if ($encoded) {
+                        if (!empty($encoded)) {
                             $output .= $encoded;
                         } else {
                             $output .= $this->_ucs4_to_utf8(array_slice($decoded, $last_begin, (($k)-$last_begin)));
@@ -337,9 +335,8 @@ class idna_convert
         // Catch the rest of the string
         if ($last_begin) {
             $inp_len = sizeof($decoded);
-            $encoded = '';
             $encoded = $this->_encode(array_slice($decoded, $last_begin, (($inp_len)-$last_begin)));
-            if ($encoded) {
+            if (!empty($encoded)) {
                 $output .= $encoded;
             } else {
                 $output .= $this->_ucs4_to_utf8(array_slice($decoded, $last_begin, (($inp_len)-$last_begin)));
@@ -371,7 +368,7 @@ class idna_convert
         $arr = explode('.', $parsed['host']);
         foreach ($arr as $k => $v) {
             $conv = $this->encode($v, 'utf8');
-            if ($conv) $arr[$k] = $conv;
+            if (!empty($conv)) $arr[$k] = $conv;
         }
         $parsed['host'] = join('.', $arr);
         $return =
