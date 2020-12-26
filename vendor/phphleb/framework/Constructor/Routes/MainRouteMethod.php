@@ -74,7 +74,7 @@ class MainRouteMethod extends DataRoute implements RouteMethodStandard
         return $this->methodData;
     }
 
-    // Возвращает сформированные данные метода.
+    // Устанавливает сформированные данные метода.
     protected function createMethodData() {
         $this->methodData =
             [
