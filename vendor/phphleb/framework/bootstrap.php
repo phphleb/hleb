@@ -66,27 +66,27 @@ hl_print_fulfillment_inspector( $pathToStartFileDir,  '/' . (file_exists($pathTo
 
 if (!defined('HLEB_PROJECT_DEBUG') || !is_bool(HLEB_PROJECT_DEBUG)) {
     // End of script execution before starting the framework.
-    exit("Incorrectly defined setting: ...DEBUG");
+    hl_preliminary_exit("Incorrectly defined setting: ...DEBUG");
 }
 
 if (!defined('HLEB_PROJECT_CLASSES_AUTOLOAD') || !is_bool(HLEB_PROJECT_CLASSES_AUTOLOAD)) {
     // End of script execution before starting the framework.
-    exit("Incorrectly defined setting: ...CLASSES_AUTOLOAD");
+    hl_preliminary_exit("Incorrectly defined setting: ...CLASSES_AUTOLOAD");
 }
 
 if (!defined('HLEB_PROJECT_ENDING_URL') || !is_bool(HLEB_PROJECT_ENDING_URL)) {
     // End of script execution before starting the framework.
-    exit("Incorrectly defined setting: ...ENDING_URL");
+    hl_preliminary_exit("Incorrectly defined setting: ...ENDING_URL");
 }
 
 if (!defined('HLEB_PROJECT_LOG_ON') || !is_bool(HLEB_PROJECT_LOG_ON)) {
     // End of script execution before starting the framework.
-    exit("Incorrectly defined setting: ...LOG_ON");
+    hl_preliminary_exit("Incorrectly defined setting: ...LOG_ON");
 }
 
 if (!defined('HLEB_PROJECT_VALIDITY_URL') || !is_string(HLEB_PROJECT_VALIDITY_URL)) {
     // End of script execution before starting the framework.
-    exit("Incorrectly defined setting: ...VALIDITY_URL");
+    hl_preliminary_exit("Incorrectly defined setting: ...VALIDITY_URL");
 }
 
 
