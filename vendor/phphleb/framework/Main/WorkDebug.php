@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Hleb\Main;
 
-class WorkDebug
+final class WorkDebug
 {
     use \DeterminantStaticUncreated;
 
