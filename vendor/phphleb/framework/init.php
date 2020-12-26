@@ -36,7 +36,6 @@ require HLEB_PROJECT_DIRECTORY . '/Constructor/VCreator.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/Data.php';
 
-///////////////////////////////////////TWIG/////////////////////////////////////////////////////////////////////////////////
 
 define('HL_TWIG_CONNECTED', file_exists(HLEB_VENDOR_DIRECTORY . '/twig'));
 
@@ -80,8 +79,6 @@ if (HL_TWIG_CONNECTED) {
         define('HL_TWIG_OPTIMIZATIONS', -1);
     }
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
  * The view( ... ) function enables to specify a content template in the get( ... ) function of the router or when returning from the controller.
@@ -378,7 +375,6 @@ function hleb_bt3e3gl60pg8h71e00jep901_error_404() {
     hl_preliminary_exit();
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 $GLOBALS['HLEB_PROJECT_UPDATES'] = ['phphleb/hleb' => HLEB_FRAME_VERSION, 'phphleb/framework' => HLEB_PROJECT_FULL_VERSION];
 
