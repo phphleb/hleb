@@ -252,18 +252,18 @@ function hlClearCacheFiles($files, $path, $fn, $scan_path) {
 function hlForcedClearCacheFiles($path) {
     $standardPath = str_replace('\\', '/', $path);
     if (!file_exists($path)) {
-        exit("No files in " . $standardPath . ". Cache cleared." . PHP_EOL);
+        hl_preliminary_exit("No files in " . $standardPath . ". Cache cleared." . PHP_EOL);
     }
     if (!is_writable($path)) {
-        exit("Permission denied! Try executing via 'sudo' before the command." . PHP_EOL);
+        hl_preliminary_exit("Permission denied! Try executing via 'sudo' before the command." . PHP_EOL);
     }
     $newPath = rtrim($path, "/") . "_" . md5(microtime() . rand());
     rename($path, $newPath);
     if (file_exists($newPath) && !is_writable($newPath)) {
-        exit("Permission denied! Try executing via 'sudo' before the command." . PHP_EOL);
+        hl_preliminary_exit("Permission denied! Try executing via 'sudo' before the command." . PHP_EOL);
     }
     if (!file_exists($newPath)) {
-        exit("Error! Couldn't move directory." . PHP_EOL);
+        hl_preliminary_exit("Error! Couldn't move directory." . PHP_EOL);
     }
     echo "Moving files from a folder " . $standardPath . ". Cache cleared." . PHP_EOL;
     fwrite(STDOUT, "Delete files...");
