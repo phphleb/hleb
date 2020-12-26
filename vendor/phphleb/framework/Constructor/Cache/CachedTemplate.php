@@ -191,7 +191,7 @@ class CachedTemplate
     // Display content data.
     // Отображение данных контента.
     private function addContent() {
-        (new TCreator($this->data, $this->templateParams))->print();
+       print (new TCreator($this->data, $this->templateParams));
     }
 
     // Displaying data from a cached file.

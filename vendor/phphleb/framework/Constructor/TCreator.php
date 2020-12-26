@@ -58,7 +58,7 @@ class TCreator
     }
 
     // Output the template.
-    // Вывод шаблона.
+    // Ввывод шаблона.
     public function print() {
         return print $this->hlTemplatePath;
     }
@@ -71,6 +71,12 @@ class TCreator
         $result = ob_get_contents();
         ob_end_clean();
         return $result;
+    }
+
+    // Output the template.
+    // Отображение шаблона.
+    public function __toString() {
+        return strval($this->hlTemplatePath);
     }
 
 }
