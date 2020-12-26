@@ -2,19 +2,24 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// End of script execution (before starting the main project).
+function hl_preliminary_exit($text = '') {
+    exit($text);
+}
+
 if (intval(explode('.', phpversion())[0]) < 7) {
     // End of script execution before starting the framework.
-    exit("The application requires PHP version higher than 7.0 (Current version " . phpversion() . ")");
+    hl_preliminary_exit("The application requires PHP version higher than 7.0 (Current version " . phpversion() . ")");
 }
 
 if (empty($_SERVER['REQUEST_METHOD'])) {
     // End of script execution before starting the framework.
-    exit('Undefined $_SERVER[\'REQUEST_METHOD\']');
+    hl_preliminary_exit('Undefined $_SERVER[\'REQUEST_METHOD\']');
 }
 
 if (empty($_SERVER['HTTP_HOST'])) {
     // End of script execution before starting the framework.
-    exit('Undefined $_SERVER[\'HTTP_HOST\']');
+    hl_preliminary_exit('Undefined $_SERVER[\'HTTP_HOST\']');
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,11 +39,6 @@ if (!defined('HLEB_GLOBAL_DIRECTORY')) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// End of script execution (before starting the main project).
-function hl_preliminary_exit($text = '') {
-    exit($text);
-}
 
 // Monitors the execution of unnecessary output
 function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondPartOfPath) {
