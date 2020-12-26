@@ -2,10 +2,16 @@
 
 $arguments = $argv[1] ?? null;
 
+// End of script execution (before starting the main project).
+if (!function_exists('hl_preliminary_exit')) {
+    function hl_preliminary_exit($text = '') {
+        exit($text);
+    }
+}
 // Auto update packages
 if (!empty($arguments) && strpos($arguments, 'phphleb/') !== false && file_exists(dirname(__DIR__, 2) . '/' . $arguments . '/' . 'start.php')) {
     require dirname(__DIR__, 2) . '/' . $arguments . '/' . 'start.php';
-    exit();
+    hl_preliminary_exit();
 }
 
 if (!defined('HLEB_GLOBAL_DIRECTORY')) define('HLEB_GLOBAL_DIRECTORY', dirname(__DIR__, 3));
