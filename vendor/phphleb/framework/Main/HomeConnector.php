@@ -14,7 +14,7 @@ use Hleb\Scheme\Home\Main\Connector;
 
 class HomeConnector implements Connector
 {
-    function __construct(){}
+    public function __construct(){}
 
     public function add() {
         $vendor = HLEB_VENDOR_DIR_NAME;

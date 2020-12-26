@@ -30,7 +30,7 @@ class Workspace
 
     protected $viewPath = '/resources/views/';
 
-    function __construct(array $block, array $map) {
+    public function __construct(array $block, array $map) {
         $this->block = $block;
         $this->hlDebugInfo['block'] = $block;
         $this->map = $map;

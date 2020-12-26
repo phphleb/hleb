@@ -31,7 +31,7 @@ class Resources extends ResourceStandard
      * @param string $url - адрес подгружаемого ресурса.
      * @param string $charset - кодировка.
      */
-    function addBottomScript(string $url, string $charset = 'utf-8') {
+    public function addBottomScript(string $url, string $charset = 'utf-8') {
         $this->bottomScripts[$url] = ['url' => $url, 'charset' => $charset];
     }
 
@@ -46,7 +46,7 @@ class Resources extends ResourceStandard
      * @param int $indents - количество пробелов перед вставляемыми блоками.
      * @return string
      */
-    function getBottomScripts(int $indents = 2) {
+    public function getBottomScripts(int $indents = 2) {
         $result = PHP_EOL;
         $this->bottomScriptsOnce = true;
         foreach ($this->bottomScripts as $script) {
@@ -67,7 +67,7 @@ class Resources extends ResourceStandard
      * @param int $indents - количество пробелов перед вставляемыми блоками.
      * @return string|null
      */
-    function getBottomScriptsOnce(int $indents = 2) {
+    public function getBottomScriptsOnce(int $indents = 2) {
         if ($this->bottomScriptsOnce) return null;
         $this->bottomScriptsOnce = true;
         return self::getBottomScripts($indents);
@@ -80,7 +80,7 @@ class Resources extends ResourceStandard
      * Добавляет загрузку CSS-стилей.
      * @param string $url - адрес подгружаемого ресурса.
      */
-    function addBottomStyles(string $url) {
+    public function addBottomStyles(string $url) {
         $this->bottomStyles[$url] = $url;
     }
 
@@ -95,7 +95,7 @@ class Resources extends ResourceStandard
      * @param int $indents - количество пробелов перед вставляемыми блоками.
      * @return string
      */
-    function getBottomStyles(int $indents = 2) {
+    public function getBottomStyles(int $indents = 2) {
         $result = PHP_EOL;
         foreach ($this->bottomStyles as $style) {
             $result .= str_repeat(' ', $indents) . '<link rel="stylesheet" href="' . $this->convertPrivateTags($style) . '" type="text/css" media="screen">' . PHP_EOL;
@@ -114,7 +114,7 @@ class Resources extends ResourceStandard
      * @param int $indents - количество пробелов перед вставляемыми блоками.
      * @return string|null
      */
-    function getBottomStylesOnce(int $indents = 2) {
+    public function getBottomStylesOnce(int $indents = 2) {
         if ($this->bottomStylesOnce) return null;
         $this->bottomStylesOnce = true;
         return self::getBottomStyles($indents);

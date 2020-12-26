@@ -19,7 +19,7 @@ class RouteMethodProtect extends MainRouteMethod
 {
     protected $instance;
 
-    function __construct(StandardRoute $instance, string $validate_type = "CSRF") {
+    public function __construct(StandardRoute $instance, string $validate_type = "CSRF") {
         $this->methodTypeName = "protect";
         $this->instance = $instance;
         $this->protect[] = $validate_type;

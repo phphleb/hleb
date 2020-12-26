@@ -20,7 +20,7 @@ class RouteMethodName extends MainRouteMethod
 {
     protected $instance;
 
-    function __construct(StandardRoute $instance, string $name) {
+    public function __construct(StandardRoute $instance, string $name) {
         $this->methodTypeName = "name";
         $this->instance = $instance;
         $this->calc($name);

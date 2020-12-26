@@ -25,7 +25,7 @@ class RouteMethodRenderMap extends MainRouteMethod
      * @param string $name
      * @param string|array $map
      */
-    function __construct(StandardRoute $instance, string $name, $map) {
+    public function __construct(StandardRoute $instance, string $name, $map) {
         $this->methodTypeName = "renderMap";
         $this->instance = $instance;
         $this->calc($name, $map);

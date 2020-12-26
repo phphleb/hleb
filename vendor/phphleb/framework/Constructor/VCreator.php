@@ -14,7 +14,7 @@ class VCreator
 {
     private $hlTemplatePath = '';
 
-    function __construct(string $includePath) {
+    public function __construct(string $includePath) {
         $this->hlTemplatePath = $includePath;
         $data = hleb_to0me1cd6vo7gd_data();
         foreach ($data as $key => $value) {

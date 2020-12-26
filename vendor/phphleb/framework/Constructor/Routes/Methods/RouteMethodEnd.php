@@ -30,7 +30,7 @@ class RouteMethodEnd extends MainRouteMethod
 
     protected $addresses = [];
 
-    function __construct(StandardRoute $instance) {
+    public function __construct(StandardRoute $instance) {
         $this->methodTypeName = "end";
         $this->instance = $instance;
         $this->result = $this->instance->data();
@@ -176,7 +176,8 @@ class RouteMethodEnd extends MainRouteMethod
                 break;
             }
         }
-        for ($i = $end + 1; $i < count($blocks); $i++) {
+        $countBlocks = count($blocks);
+        for ($i = $end + 1; $i < $countBlocks; $i++) {
             if (in_array($blocks[$i]['method_type_name'], ["after", "name", "where", "controller", "adminPanController"])) {
                 $template["actions"]["following"][] = $blocks[$i];
             } else if (in_array($blocks[$i]['method_type_name'], ["get", "getGroup", "endGroup"])) {

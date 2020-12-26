@@ -18,7 +18,7 @@ class TCreator
 
     private $hlCacheTime = 0;
 
-    function __construct($content, $data = []) {
+    public function __construct($content, $data = []) {
         $this->hlTemplatePath = $content;
         $this->hlTemplateData = $data;
     }

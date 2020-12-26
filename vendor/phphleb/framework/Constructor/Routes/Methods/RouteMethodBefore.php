@@ -20,7 +20,7 @@ class RouteMethodBefore extends MainRouteMethod
 {
     protected $instance;
 
-    function __construct(StandardRoute $instance, string $controllerName, array $params = []) {
+    public function __construct(StandardRoute $instance, string $controllerName, array $params = []) {
         $this->methodTypeName = "before";
         $this->instance = $instance;
         $this->calc($controllerName, $params);

@@ -48,7 +48,7 @@ class CachedTemplate
      * @param array $templateParams - массив параметров, где ключи представляют собой названия отдаваемых
      * в контент переменных с соответствующими значениями.
      */
-    function __construct(string $path, array $templateParams = []) {
+    public function __construct(string $path, array $templateParams = []) {
         $backtrace = null;
         $time = 0;
         if (HLEB_PROJECT_DEBUG) {

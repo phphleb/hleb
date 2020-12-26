@@ -20,7 +20,7 @@ class RouteMethodModule extends MainRouteMethod
 {
     protected $instance;
 
-    function __construct(StandardRoute $instance, string $moduleName, string $className = "Controller", array $params = []) {
+    public function __construct(StandardRoute $instance, string $moduleName, string $className = "Controller", array $params = []) {
         $this->methodTypeName = "controller";
         $this->instance = $instance;
         $this->calc(trim($moduleName, "/\\"), trim($className, "/\\"), $params);

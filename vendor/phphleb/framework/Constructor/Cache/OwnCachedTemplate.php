@@ -14,13 +14,13 @@ class OwnCachedTemplate extends CachedTemplate
 {
     // The name of the action to be displayed in the debug panel.
     // Возвращает название действия для вывода в отладочной панели.
-    function infoTemplateName() {
+    public function infoTemplateName() {
         return 'include<b>Own</b>CachedTemplate';
     }
 
     // Returns a string to make the template unique to a specific user.
     // Возвращает идентификатор для создания уникальности шаблона по отношению к конкретному пользователю.
-    function templateAreaKey() {
+    public function templateAreaKey() {
         return session_id();
     }
 }
