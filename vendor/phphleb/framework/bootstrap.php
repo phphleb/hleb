@@ -214,7 +214,7 @@ if ($addressBar->redirect != null) {
     if (!headers_sent()) {
         header('Location: ' . $addressBar->redirect, true, 301);
     }
-    exit();
+    hl_preliminary_exit();
 }
 
 unset($addressBar, $actualProtocol, $address, $pathToStartFileDir);
