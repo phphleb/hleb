@@ -24,7 +24,7 @@ class MainTemplate
         $templateName = trim($path, '/\\') . '.php';
         $templateDirectory = $this->getTemplateDirectory($templateName);
         if($return) {
-            $this->content = (new TCreator($templateDirectory, $template))->toString();
+            $this->content = (new TCreator($templateDirectory, $template))->getString();
         } else {
             (new TCreator($templateDirectory, $template))->include();
         }

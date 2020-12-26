@@ -65,7 +65,7 @@ class TCreator
 
     // Return result.
     // Возвращает результат.
-    public function toString() {
+    public function getString() {
         ob_start();
         $this->include();
         $result = ob_get_contents();
