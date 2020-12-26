@@ -107,7 +107,7 @@ class URLHandler
                 header('Content-length: 0');
             }
             // End of script execution before starting the main project.
-            exit();
+            hl_preliminary_exit();
         }
         $resultBlocks = [];
         $adminPanData = [];
