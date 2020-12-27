@@ -13,6 +13,7 @@ namespace Hleb\Constructor\Routes\Methods;
 use Hleb\Scheme\Home\Constructor\Routes\RouteMethodStandard;
 use Hleb\Constructor\Routes\MainRouteMethod;
 use Hleb\Main\Errors\ErrorOutput;
+use Hleb\Scheme\Home\Constructor\Routes\StandardRoute;
 
 class RouteMethodEnd extends MainRouteMethod
 {
@@ -29,9 +30,9 @@ class RouteMethodEnd extends MainRouteMethod
     protected $addresses = [];
 
     /**
-     * @param RouteMethodStandard $instance
+     * @param StandardRoute $instance
      */
-    public function __construct(RouteMethodStandard $instance) {
+    public function __construct(StandardRoute $instance) {
         $this->methodTypeName = "end";
         $this->instance = $instance;
         if ($this->instance instanceof RouteMethodStandard) {
