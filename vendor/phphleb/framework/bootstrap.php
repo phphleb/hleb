@@ -2,6 +2,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+if(!defined('HLEB_START')) {
+    define('HLEB_START', microtime(true));
+}
+
 // End of script execution (before starting the main project).
 if (!function_exists('hl_preliminary_exit')) {
     function hl_preliminary_exit($text = '') {

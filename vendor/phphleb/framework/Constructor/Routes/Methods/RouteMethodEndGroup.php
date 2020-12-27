@@ -10,9 +10,7 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Routes\Methods;
 
-use Hleb\Scheme\Home\Constructor\Routes\{
-    StandardRoute
-};
+use Hleb\Scheme\Home\Constructor\Routes\{RouteMethodStandard, StandardRoute};
 use Hleb\Constructor\Routes\MainRouteMethod;
 use Hleb\Main\Errors\ErrorOutput;
 
@@ -21,10 +19,10 @@ class RouteMethodEndGroup extends MainRouteMethod
     protected $instance;
 
     /**
-     * @param StandardRoute $instance
+     * @param RouteMethodStandard $instance
      * @param string|null $name
      */
-    public function __construct(StandardRoute $instance, string $name = null) {
+    public function __construct(RouteMethodStandard $instance, string $name = null) {
         $this->methodTypeName = "endGroup";
         $this->instance = $instance;
         if (!empty($name)) $this->calc($name);
@@ -34,11 +32,14 @@ class RouteMethodEndGroup extends MainRouteMethod
     // Check the correct location of the group method.
     // Проверка правильного расположения метода группы.
     private function calcGroup() {
-        $instanceData = $this->instance->data();
         $open = false;
-        foreach ($instanceData as $inst) {
-            if ($inst["method_type_name"] == "getGroup") {
-                $open = true;
+        if ($this->instance instanceof RouteMethodStandard) {
+            $instanceData = $this->instance->data();
+
+            foreach ($instanceData as $inst) {
+                if ($inst["method_type_name"] == "getGroup") {
+                    $open = true;
+                }
             }
         }
         if (!$open) {

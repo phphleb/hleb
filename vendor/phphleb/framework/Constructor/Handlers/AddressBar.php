@@ -88,8 +88,8 @@ class AddressBar
         $partsOfActualUri = explode('?', $this->inputParameters['SERVER']['REQUEST_URI']);
         $firstActualUri = rawurldecode(array_shift($partsOfActualUri));
         $firstActualParams = count($partsOfActualUri) > 0 ? '?' . implode('?', $partsOfActualUri) : '';
-        $actualHost = is_null($idn) ? $this->inputParameters['SERVER']['HTTP_HOST'] : $idn->decode($this->inputParameters['SERVER']['HTTP_HOST']);
-        $actualUrl = $actualProtocol . $actualHost . $firstActualUri . $firstActualParams;
+        $actualHost = strval(is_null($idn) ? $this->inputParameters['SERVER']['HTTP_HOST'] : $idn->decode($this->inputParameters['SERVER']['HTTP_HOST']));
+        $actualUrl = $actualProtocol . strval($actualHost) . $firstActualUri . $firstActualParams;
         if ($realUrl !== $actualUrl) {
             $this->redirect($realUrl);
         }

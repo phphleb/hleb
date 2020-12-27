@@ -226,11 +226,14 @@ function hlClearCacheFiles($files, $path, $fn, $scan_path) {
             echo " (", $counter, "/", $all, ")";
             $counter++;
         }
-        @array_map('unlink', glob(HLEB_GLOBAL_DIRECTORY . $scan_path));
+        $pathDirectory = glob(HLEB_GLOBAL_DIRECTORY . $scan_path);
+        if(!empty($pathDirectory)) {
+            @array_map('unlink', $pathDirectory);
+        }
         $directories = glob(HLEB_GLOBAL_DIRECTORY . $path . '/*', GLOB_NOSORT);
         foreach ($directories as $key => $directory) {
             if (!file_exists($directory)) break;
-            if ([] === (array_diff(scandir($directory), array('.', '..')))) {
+            if ([] === (array_diff((scandir($directory) ?? []), ['.', '..']))) {
                 @rmdir($directory);
             }
         }
@@ -275,21 +278,22 @@ function hlForcedClearCacheFiles($path) {
 function hlRemoveDir($path) {
     if (file_exists($path) && is_dir($path)) {
         $dir = opendir($path);
-        while (false !== ($element = readdir($dir))) {
-            if ($element != '.' && $element != '..') {
-                $tmp = $path . '/' . $element;
-                chmod($tmp, 0777);
-                if (is_dir($tmp)) {
-                    hlRemoveDir($tmp);
-                } else {
-                    unlink($tmp);
+        if (!is_resource($dir)) return;
+            while (false !== ($element = readdir($dir))) {
+                if ($element != '.' && $element != '..') {
+                    $tmp = $path . '/' . $element;
+                    chmod($tmp, 0777);
+                    if (is_dir($tmp)) {
+                        hlRemoveDir($tmp);
+                    } else {
+                        unlink($tmp);
+                    }
                 }
             }
-        }
-        closedir($dir);
-        if (file_exists($path)) {
-            rmdir($path);
-        }
+            closedir($dir);
+            if (file_exists($path)) {
+                rmdir($path);
+            }
     }
 }
 

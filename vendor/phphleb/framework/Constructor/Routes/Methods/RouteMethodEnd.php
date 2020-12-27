@@ -10,9 +10,7 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Routes\Methods;
 
-use Hleb\Scheme\Home\Constructor\Routes\{
-    StandardRoute
-};
+use Hleb\Scheme\Home\Constructor\Routes\RouteMethodStandard;
 use Hleb\Constructor\Routes\MainRouteMethod;
 use Hleb\Main\Errors\ErrorOutput;
 
@@ -30,16 +28,19 @@ class RouteMethodEnd extends MainRouteMethod
 
     protected $addresses = [];
 
-    public function __construct(StandardRoute $instance) {
+    /**
+     * @param RouteMethodStandard $instance
+     */
+    public function __construct(RouteMethodStandard $instance) {
         $this->methodTypeName = "end";
         $this->instance = $instance;
         $this->result = $this->instance->data();
-        $this->result = self::createGroups();
+        $this->result = $this->createGroups();
         $this->checkController();
         $this->result["render"] = $this->render;
         $this->result["addresses"] = $this->addresses;
         $this->result["update"] = date("r") . " / " . rand();
-        $this->result["domains"] = self::searchDomains();
+        $this->result["domains"] = $this->searchDomains();
         ErrorOutput::run();
     }
     

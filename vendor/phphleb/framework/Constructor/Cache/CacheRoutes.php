@@ -43,21 +43,23 @@ class CacheRoutes
     // Check the availability of the file with the cache of routes. The contents of the file are returned or an error is displayed.
     // Проверка доступнсти файла с кешем роутов. Возвращается содержимое файла или выводится ошибка.
     private function check($data) {
-        $cache = $this->opt->loadCache();
-        if (json_encode($cache) !== json_encode($data)) {
-            $userAndGroup = $this->getFpmUserName();
-            $user = explode(':', $userAndGroup)[0];
+        if (!is_null($this->opt)) {
+            $cache = $this->opt->loadCache();
+            if (json_encode($cache) !== json_encode($data)) {
+                $userAndGroup = $this->getFpmUserName();
+                $user = explode(':', $userAndGroup)[0];
 
-            $errors = 'HL021-CACHE_ERROR: No write permission ! ' .
-                'Failed to save file to folder `/storage/*`.  You need to change permissions for the web server in this folder. ~ ' .
-                'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права веб-сервера для этой папки и вложений. <br>Например, выполнить в терминале ';
+                $errors = 'HL021-CACHE_ERROR: No write permission ! ' .
+                    'Failed to save file to folder `/storage/*`.  You need to change permissions for the web server in this folder. ~ ' .
+                    'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права веб-сервера для этой папки и вложений. <br>Например, выполнить в терминале ';
 
-            if (!empty($user) && !empty($userAndGroup) && substr_count($userAndGroup, ':') === 1) {
-                $errors .= '<span style="color:grey;background-color:#f4f7e4"><code>sudo chown -R ' . $user . ' ./storage</code></span> из корневой директории проекта, здесь <code>' . $userAndGroup . '</code> - это предполагаемый пользователь и группа, под которыми работает веб-сервер.';
-            } else {
-                $errors .= '<span style="color:grey;background-color:#f4f7e4"><code>sudo chown -R www-data ./storage</code></span> из корневой директории проекта, здесь <code>www-data</code> - это предполагаемый пользователь, под которым работает Apache.';
+                if (!empty($user) && !empty($userAndGroup) && substr_count($userAndGroup, ':') === 1) {
+                    $errors .= '<span style="color:grey;background-color:#f4f7e4"><code>sudo chown -R ' . $user . ' ./storage</code></span> из корневой директории проекта, здесь <code>' . $userAndGroup . '</code> - это предполагаемый пользователь и группа, под которыми работает веб-сервер.';
+                } else {
+                    $errors .= '<span style="color:grey;background-color:#f4f7e4"><code>sudo chown -R www-data ./storage</code></span> из корневой директории проекта, здесь <code>www-data</code> - это предполагаемый пользователь, под которым работает Apache.';
+                }
+                ErrorOutput::get($errors);
             }
-            ErrorOutput::get($errors);
         }
         return $data;
     }

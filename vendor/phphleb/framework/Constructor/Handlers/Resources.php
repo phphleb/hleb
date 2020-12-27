@@ -70,7 +70,7 @@ class Resources extends ResourceStandard
     public function getBottomScriptsOnce(int $indents = 2) {
         if ($this->bottomScriptsOnce) return null;
         $this->bottomScriptsOnce = true;
-        return self::getBottomScripts($indents);
+        return $this->getBottomScripts($indents);
     }
 
     /**
@@ -117,7 +117,7 @@ class Resources extends ResourceStandard
     public function getBottomStylesOnce(int $indents = 2) {
         if ($this->bottomStylesOnce) return null;
         $this->bottomStylesOnce = true;
-        return self::getBottomStyles($indents);
+        return $this->getBottomStyles($indents);
     }
 }
 

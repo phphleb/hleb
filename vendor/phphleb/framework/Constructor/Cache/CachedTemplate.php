@@ -145,7 +145,7 @@ class CachedTemplate
             $this->deleteOldFiles();
             @mkdir(HLEB_GLOBAL_DIRECTORY . HLEB_TEMPLATE_CACHED_PATH . '/' . $this->dir, 0775, true);
             $this->content = $content;
-            $file = $this->hashFile . '_' . $this->cacheTime . '.cache';
+            $file = $this->hashFile . '_' . strval($this->cacheTime) . '.cache';
             file_put_contents($file, $content, LOCK_EX);
 
         }
@@ -168,7 +168,7 @@ class CachedTemplate
             $directories = glob($path . '/*', GLOB_NOSORT);
             foreach ($directories as $key => $directory) {
                 if (!file_exists($directory)) break;
-                if ([] === (array_diff(scandir($directory), array('.', '..')))) {
+                if ([] === (array_diff((scandir($directory) ?? []), array('.', '..')))) {
                     @rmdir($directory);
                 }
             }
@@ -185,7 +185,7 @@ class CachedTemplate
     // Returns a standardized string with template cache times.
     // Возвращает стандартизированную строку с временем кеширования шаблона.
     private function infoCache() {
-        return ' cache ' . $this->cacheTime . ' s , ';
+        return ' cache ' . strval($this->cacheTime) . ' s , ';
     }
 
     // Display content data.

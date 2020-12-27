@@ -172,7 +172,7 @@ class idna_convert
      * Decode a given ACE domain name
      * @param    string   Domain name (ACE string)
      * [@param    string   Desired output encoding, see {@link set_parameter}]
-     * @return   string|false   Decoded Domain name (UTF-8 or UCS-4)
+     * @return   string|array|false   Decoded Domain name (UTF-8 or UCS-4)
      */
     public function decode($input, $one_time_encoding = false)
     {
@@ -273,7 +273,7 @@ class idna_convert
      * Encode a given UTF-8 domain name
      * @param    string   Domain name (UTF-8 or UCS-4)
      * [@param    string   Desired input encoding, see {@link set_parameter}]
-     * @return   string   Encoded Domain name (ACE string)
+     * @return   string|false   Encoded Domain name (ACE string)
      */
     public function encode($decoded, $one_time_encoding = '')
     {
@@ -284,6 +284,7 @@ class idna_convert
             $decoded = $this->_utf8_to_ucs4($decoded);
             break;
         case 'ucs4_string':
+            // To string
            $decoded = $this->_ucs4_string_to_ucs4($decoded);
         case 'ucs4_array':
            break;
@@ -479,7 +480,7 @@ class idna_convert
         }
         // Do NAMEPREP
         $decoded = $this->_nameprep($decoded);
-        if (!$decoded || !is_array($decoded)) return false; // NAMEPREP failed
+        if (empty($decoded) || !is_array($decoded)) return false; // NAMEPREP failed
         $deco_len  = count($decoded);
         if (!$deco_len) return false; // Empty array
         $codecount = 0; // How many chars have been consumed
@@ -591,7 +592,7 @@ class idna_convert
     /**
      * Do Nameprep according to RFC3491 and RFC3454
      * @param    array    Unicode Characters
-     * @return   string|bool   Unicode Characters, Nameprep'd
+     * @return   string|array|bool   Unicode Characters, Nameprep'd
      */
     protected function _nameprep($input)
     {
