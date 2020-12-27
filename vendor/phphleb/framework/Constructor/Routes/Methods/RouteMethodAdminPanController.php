@@ -26,7 +26,7 @@ class RouteMethodAdminPanController extends MainRouteMethod
      * @param string|array $blockName
      * @param array $params
      */
-    public function __construct(StandardRoute $instance, string $controllerName, $blockName, array $params = []) {
+    function __construct(StandardRoute $instance, string $controllerName, $blockName, array $params = []) {
         $this->methodTypeName = "adminPanController";
         $this->instance = $instance;
         $this->calc($controllerName, $blockName, $params);

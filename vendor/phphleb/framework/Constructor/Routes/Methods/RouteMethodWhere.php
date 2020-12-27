@@ -19,7 +19,7 @@ class RouteMethodWhere extends MainRouteMethod
 {
     protected $instance;
 
-    public function __construct(StandardRoute $instance, array $params) {
+    function __construct(StandardRoute $instance, array $params) {
         $this->methodTypeName = "where";
         $this->instance = $instance;
         $this->actions = [$params];

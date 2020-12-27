@@ -19,7 +19,7 @@ class RouteMethodGetProtect extends MainRouteMethod
 {
     protected $instance;
 
-    public function __construct(StandardRoute $instance, string $protect = "CSRF") {
+    function __construct(StandardRoute $instance, string $protect = "CSRF") {
         $this->methodTypeName = "getProtect";
         $this->instance = $instance;
         $this->protect[] = $protect;

@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Routes\Methods;
 
-use Hleb\Scheme\Home\Constructor\Routes\{RouteMethodStandard, StandardRoute};
+use Hleb\Scheme\Home\Constructor\Routes\{
+    StandardRoute
+};
 use Hleb\Constructor\Routes\MainRouteMethod;
 use Hleb\Main\Errors\ErrorOutput;
 
@@ -23,7 +25,7 @@ class RouteMethodRenderMap extends MainRouteMethod
      * @param string $name
      * @param string|array $map
      */
-    public function __construct(StandardRoute $instance, string $name, $map) {
+    function __construct(StandardRoute $instance, string $name, $map) {
         $this->methodTypeName = "renderMap";
         $this->instance = $instance;
         $this->calc($name, $map);
@@ -35,15 +37,13 @@ class RouteMethodRenderMap extends MainRouteMethod
         $this->dataName = $name;
         if (is_string($map)) $map = [$map];
         $this->dataParams = $map;
-        if ($this->instance instanceof RouteMethodStandard) {
-            $instanceData = $this->instance->data();
-            foreach ($instanceData as $key => $inst) {
-                if ($inst["data_name"] === $name) {
-                    $this->errors[] = "HL020-ROUTE_ERROR: Wrong argument to method ->renderMap() ! " .
-                        "Name duplication: `" . $name . "` ~ " .
-                        "Неправильный аргумент у метода ->renderMap() !  Такое название (`" . $name . "`) уже используется.";
-                    ErrorOutput::add($this->errors);
-                }
+        $instanceData = $this->instance->data();
+        foreach ($instanceData as $key => $inst) {
+            if ($inst["data_name"] === $name) {
+                $this->errors[] = "HL020-ROUTE_ERROR: Wrong argument to method ->renderMap() ! " .
+                    "Name duplication: `" . $name . "` ~ " .
+                    "Неправильный аргумент у метода ->renderMap() !  Такое название (`" . $name . "`) уже используется.";
+                ErrorOutput::add($this->errors);
             }
         }
     }

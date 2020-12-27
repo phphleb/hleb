@@ -19,7 +19,7 @@ class RouteMethodPrefix extends MainRouteMethod
 {
     protected $instance;
 
-    public function __construct(StandardRoute $instance, string $prefix) {
+    function __construct(StandardRoute $instance, string $prefix) {
         $this->methodTypeName = "prefix";
         $this->instance = $instance;
         $this->dataPath = $prefix;

@@ -19,7 +19,7 @@ class RouteMethodEndProtect extends MainRouteMethod
 {
     protected $instance;
 
-    public function __construct(StandardRoute $instance) {
+    function __construct(StandardRoute $instance) {
         $this->methodTypeName = "endProtect";
         $this->instance = $instance;
     }

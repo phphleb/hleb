@@ -24,7 +24,7 @@ class RouteMethodType extends MainRouteMethod
      * @param StandardRoute $instance
      * @param string|array $type
      */
-    public function __construct(StandardRoute $instance, $type) {
+    function __construct(StandardRoute $instance, $type) {
         $this->methodTypeName = "type";
         $this->instance = $instance;
         $this->calc($type);

@@ -26,7 +26,7 @@ class RouteMethodGet extends MainRouteMethod
      * @param string $routePath
      * @param string|object|Closure|array $params
      */
-    public function __construct(StandardRoute $instance, string $routePath, $params = []) {
+    function __construct(StandardRoute $instance, string $routePath, $params = []) {
         $this->methodTypeName = "get";
         $this->instance = $instance;
         $this->calc($routePath, $params);

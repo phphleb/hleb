@@ -25,7 +25,7 @@ class RouteMethodDomain extends MainRouteMethod
      * @param int $level
      * @param bool $pattern
      */
-    public function __construct(StandardRoute $instance, $name, $level, $pattern) {
+    function __construct(StandardRoute $instance, $name, $level, $pattern) {
         $this->methodTypeName = "domain";
         $this->instance = $instance;
         $this->domain = [is_array($name) ? $name : [$name], $level, $pattern];

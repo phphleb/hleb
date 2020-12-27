@@ -10,10 +10,11 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Routes\Methods;
 
-use Hleb\Scheme\Home\Constructor\Routes\RouteMethodStandard;
+use Hleb\Scheme\Home\Constructor\Routes\{
+    StandardRoute
+};
 use Hleb\Constructor\Routes\MainRouteMethod;
 use Hleb\Main\Errors\ErrorOutput;
-use Hleb\Scheme\Home\Constructor\Routes\StandardRoute;
 
 class RouteMethodEnd extends MainRouteMethod
 {
@@ -29,23 +30,17 @@ class RouteMethodEnd extends MainRouteMethod
 
     protected $addresses = [];
 
-    /**
-     * @param StandardRoute $instance
-     */
-    public function __construct(StandardRoute $instance) {
+    function __construct(StandardRoute $instance) {
         $this->methodTypeName = "end";
         $this->instance = $instance;
-        if ($this->instance instanceof RouteMethodStandard) {
-            $this->result = $this->instance->data();
-
-            $this->result = $this->createGroups();
-            $this->checkController();
-            $this->result["render"] = $this->render;
-            $this->result["addresses"] = $this->addresses;
-            $this->result["update"] = date("r") . " / " . rand();
-            $this->result["domains"] = $this->searchDomains();
-            ErrorOutput::run();
-        }
+        $this->result = $this->instance->data();
+        $this->result = self::createGroups();
+        $this->checkController();
+        $this->result["render"] = $this->render;
+        $this->result["addresses"] = $this->addresses;
+        $this->result["update"] = date("r") . " / " . rand();
+        $this->result["domains"] = self::searchDomains();
+        ErrorOutput::run();
     }
     
     // Returns the generated data of the current object.
@@ -181,8 +176,7 @@ class RouteMethodEnd extends MainRouteMethod
                 break;
             }
         }
-        $countBlocks = count($blocks);
-        for ($i = $end + 1; $i < $countBlocks; $i++) {
+        for ($i = $end + 1; $i < count($blocks); $i++) {
             if (in_array($blocks[$i]['method_type_name'], ["after", "name", "where", "controller", "adminPanController"])) {
                 $template["actions"]["following"][] = $blocks[$i];
             } else if (in_array($blocks[$i]['method_type_name'], ["get", "getGroup", "endGroup"])) {
