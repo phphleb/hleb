@@ -338,6 +338,7 @@ class idna_convert
                 }
             }
         }
+        $decoded = is_array($decoded) ? $decoded : [];
         // Catch the rest of the string
         if ($last_begin) {
             $inp_len = sizeof($decoded);
