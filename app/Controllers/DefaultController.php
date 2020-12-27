@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 class DefaultController extends \MainController
 {
-    function index() {
+    public function index() {
         return view("default");
     }
 
