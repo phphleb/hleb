@@ -44,7 +44,8 @@ class RouteMethodController extends MainRouteMethod
     // Returns the file search result.
     // Возвращает результат поиска файла.
     private function searchFile($name) {
-        $files = implode(" ", hleb_search_filenames(HLEB_GLOBAL_DIRECTORY . "/app/Controllers/") ?? []);
+        $list = hleb_search_filenames(HLEB_GLOBAL_DIRECTORY . "/app/Controllers/");
+        $files = implode(" ",  is_array($list) ? $list : []);
         $pos = strripos(str_replace("\\", "/", $files), "/" . str_replace("\\", "/", $name) . ".php");
         return !($pos === false);
     }

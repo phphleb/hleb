@@ -233,7 +233,8 @@ function hlClearCacheFiles($files, $path, $fn, $scan_path) {
         $directories = glob(HLEB_GLOBAL_DIRECTORY . $path . '/*', GLOB_NOSORT);
         foreach ($directories as $key => $directory) {
             if (!file_exists($directory)) break;
-            if ([] === (array_diff((scandir($directory) ?? []), ['.', '..']))) {
+            $listDirectory = scandir($directory);
+            if ([] === (array_diff((is_array($listDirectory)? $listDirectory : []), ['.', '..']))) {
                 @rmdir($directory);
             }
         }

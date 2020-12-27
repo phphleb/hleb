@@ -168,7 +168,8 @@ class CachedTemplate
             $directories = glob($path . '/*', GLOB_NOSORT);
             foreach ($directories as $key => $directory) {
                 if (!file_exists($directory)) break;
-                if ([] === (array_diff((scandir($directory) ?? []), array('.', '..')))) {
+                $listDirectory = scandir($directory);
+                if ([] === (array_diff((is_array($listDirectory)? $listDirectory : []), ['.', '..']))) {
                     @rmdir($directory);
                 }
             }

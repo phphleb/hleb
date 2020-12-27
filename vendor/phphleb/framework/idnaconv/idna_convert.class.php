@@ -275,8 +275,8 @@ class idna_convert
 
     /**
      * Encode a given UTF-8 domain name
-     * @param    string   Domain name (UTF-8 or UCS-4)
-     * [@param    string   Desired input encoding, see {@link set_parameter}]
+     * @param    string  $decoded Domain name (UTF-8 or UCS-4)
+     * [@param    string  $one_time_encoding Desired input encoding, see {@link set_parameter}]
      * @return   string|false   Encoded Domain name (ACE string)
      */
     public function encode($decoded, $one_time_encoding = '')
@@ -325,7 +325,8 @@ class idna_convert
                 } else {
                     // Skip first char
                     if ($k) {
-                        $encoded = $this->_encode(array_slice($decoded, $last_begin, (($k)-$last_begin)));
+                        $sliced = array_slice($decoded, $last_begin, (($k)-$last_begin));
+                        $encoded = $this->_encode(is_array($sliced) ? $sliced : []);
                         if (!empty($encoded)) {
                             $output .= $encoded;
                         } else {
@@ -456,7 +457,7 @@ class idna_convert
 
     /**
      * The actual encoding algorithm
-     * @param  string $decoded
+     * @param  string|array $decoded
      * @return mixed
      */
     protected function _encode($decoded)
@@ -464,7 +465,7 @@ class idna_convert
         // We cannot encode a domain name containing the Punycode prefix
         $extract = self::byteLength($this->_punycode_prefix);
         $check_pref = $this->_utf8_to_ucs4($this->_punycode_prefix);
-        $check_deco = array_slice($decoded, 0, $extract);
+        $check_deco = array_slice(is_array($decoded) ? $decoded : [], 0, $extract);
 
         if ($check_pref == $check_deco) {
             $this->_error('This is already a punycode string');
@@ -472,13 +473,15 @@ class idna_convert
         }
         // We will not try to encode strings consisting of basic code points only
         $encodable = false;
-        foreach ($decoded as $k => $v) {
-            if ($v > 0x7a) {
-                $encodable = true;
-                break;
+        if(is_array($decoded)) {
+            foreach ($decoded as $k => $v) {
+                if ($v > 0x7a) {
+                    $encodable = true;
+                    break;
+                }
             }
         }
-        if (!$encodable) {
+        if (!$encodable || !is_array($decoded)) {
             $this->_error('The given string does not contain encodable chars');
             return false;
         }
@@ -534,7 +537,7 @@ class idna_convert
                         $q = (int) (($q - $t) / ($this->_base - $t));
                     }
                     $encoded .= $this->_encode_digit($q);
-                    $bias = $this->_adapt($delta, $codecount+1, $is_first);
+                    $bias = $this->_adapt($delta, $codecount+1, intval($is_first));
                     $codecount++;
                     $delta = 0;
                     $is_first = false;
@@ -653,7 +656,7 @@ class idna_convert
                 $out = $this->_combine(array_slice($output, $last_starter, $seq_len));
                 // On match: Replace the last starter with the composed character and remove
                 // the now redundant non-starter(s)
-                if (!empty($out)) {
+                if (!empty($out) && is_array($out)) {
                     $output[$last_starter] = $out;
                     if (count($out) != $seq_len) {
                         for ($j = $i+1; $j < $out_len; ++$j) $output[$j-1] = $output[$j];
