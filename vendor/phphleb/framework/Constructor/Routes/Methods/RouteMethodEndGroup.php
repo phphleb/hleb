@@ -19,10 +19,10 @@ class RouteMethodEndGroup extends MainRouteMethod
     protected $instance;
 
     /**
-     * @param RouteMethodStandard $instance
+     * @param StandardRoute $instance
      * @param string|null $name
      */
-    public function __construct(RouteMethodStandard $instance, string $name = null) {
+    public function __construct(StandardRoute $instance, string $name = null) {
         $this->methodTypeName = "endGroup";
         $this->instance = $instance;
         if (!empty($name)) $this->calc($name);

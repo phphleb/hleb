@@ -34,14 +34,17 @@ class RouteMethodEnd extends MainRouteMethod
     public function __construct(RouteMethodStandard $instance) {
         $this->methodTypeName = "end";
         $this->instance = $instance;
-        $this->result = $this->instance->data();
-        $this->result = $this->createGroups();
-        $this->checkController();
-        $this->result["render"] = $this->render;
-        $this->result["addresses"] = $this->addresses;
-        $this->result["update"] = date("r") . " / " . rand();
-        $this->result["domains"] = $this->searchDomains();
-        ErrorOutput::run();
+        if ($this->instance instanceof RouteMethodStandard) {
+            $this->result = $this->instance->data();
+
+            $this->result = $this->createGroups();
+            $this->checkController();
+            $this->result["render"] = $this->render;
+            $this->result["addresses"] = $this->addresses;
+            $this->result["update"] = date("r") . " / " . rand();
+            $this->result["domains"] = $this->searchDomains();
+            ErrorOutput::run();
+        }
     }
     
     // Returns the generated data of the current object.

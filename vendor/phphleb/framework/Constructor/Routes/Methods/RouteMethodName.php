@@ -10,11 +10,10 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Routes\Methods;
 
-use Hleb\Scheme\Home\Constructor\Routes\{
-    StandardRoute
-};
+use Hleb\Scheme\Home\Constructor\Routes\RouteMethodStandard;
 use Hleb\Constructor\Routes\MainRouteMethod;
 use Hleb\Main\Errors\ErrorOutput;
+use Hleb\Scheme\Home\Constructor\Routes\StandardRoute;
 
 class RouteMethodName extends MainRouteMethod
 {
@@ -30,13 +29,15 @@ class RouteMethodName extends MainRouteMethod
     // Разбор и первоначальная проверка данных.
     private function calc($name) {
         $this->dataName = $name;
-        $instanceData = $this->instance->data();
-        foreach ($instanceData as $inst) {
-            if ($inst["data_name"] === $name) {
-                $this->errors[] = "HL017-ROUTE_ERROR: Wrong argument to method ->name() ! " .
-                    "Name duplication: " . $name . " ~ " .
-                    "Исключение в методе ->name() ! Такое название уже используется: " . $name;
-                ErrorOutput::add($this->errors);
+        if ($this->instance instanceof RouteMethodStandard) {
+            $instanceData = $this->instance->data();
+            foreach ($instanceData as $inst) {
+                if ($inst["data_name"] === $name) {
+                    $this->errors[] = "HL017-ROUTE_ERROR: Wrong argument to method ->name() ! " .
+                        "Name duplication: " . $name . " ~ " .
+                        "Исключение в методе ->name() ! Такое название уже используется: " . $name;
+                    ErrorOutput::add($this->errors);
+                }
             }
         }
     }
