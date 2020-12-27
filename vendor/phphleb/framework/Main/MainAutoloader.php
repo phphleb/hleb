@@ -79,7 +79,7 @@ class MainAutoloader
                         return true;
                     } else {
                         $fileParts = explode("/", $searchFileName);
-                        foreach ($fileParts as $key => &$part) {
+                        foreach ($fileParts as $keyPart => &$part) {
                             if (strlen($part)) {
                                 $part = strtolower($part);
                                 $searchFile = HLEB_GLOBAL_DIRECTORY . implode(DIRECTORY_SEPARATOR, $fileParts);
