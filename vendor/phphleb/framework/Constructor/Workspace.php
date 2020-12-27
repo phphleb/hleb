@@ -241,7 +241,7 @@ class Workspace
         $call = explode('@', $action[0]);
         $initiator = 'App\Controllers\\' . trim($call[0], '\\');
         $method = $call[1] ?? 'index';
-        if (!class_exists('Phphleb\Adminpan\MainAdminPanel')) {
+        if (!class_exists('Phphleb\Adminpan\MainAdminPanel') || !class_exists('Phphleb\Adminpan\Add\AdminPanHandler')) {
             ErrorOutput::get('HL030-ADMIN_PANEL_ERROR: Error in method adminPanController() ! ' .
                 'Library <a href="https://github.com/phphleb/adminpan">phphleb/adminpan</a> not connected ! ~' .
                 'Библиотека <a href="https://github.com/phphleb/adminpan">phphleb/adminpan</a> не подключена !'
@@ -252,6 +252,7 @@ class Workspace
         $admObj = new \Phphleb\Adminpan\Add\AdminPanHandler();
         $this->admFooter = $admObj->getFooter();
         echo $admObj->getHeader($block['number'], $block['_AdminPanelData']);
+
         return $controller;
     }
 }

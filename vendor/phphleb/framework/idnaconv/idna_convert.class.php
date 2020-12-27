@@ -85,6 +85,10 @@ class idna_convert
     protected $_strict_mode = false;     // Behave strict or not
     protected $_idn_version = 2003;      // Can be either 2003 (old, default) or 2008
 
+    protected $slast;
+    protected $safe_char;
+    protected $safe_mode;
+
     /**
      * the constructor
      *
@@ -117,8 +121,8 @@ class idna_convert
      *           on failures; false: loose mode, ideal for "wildlife" applications
      *           by silently ignoring errors and returning the original input instead
      *
-     * @param    mixed     Parameter to set (string: single parameter; array of Parameter => Value pairs)
-     * @param    string    Value to use (if parameter 1 is a string)
+     * @param    mixed     $option Parameter to set (string: single parameter)
+     * @param    string|bool    $value Value to use (if parameter 1 is a string)
      * @return   boolean   true on success, false otherwise
      */
     public function set_parameter($option, $value = false)
@@ -170,8 +174,8 @@ class idna_convert
 
     /**
      * Decode a given ACE domain name
-     * @param    string   Domain name (ACE string)
-     * [@param    string   Desired output encoding, see {@link set_parameter}]
+     * @param    string   $input Domain name (ACE string)
+     * [@param    string|boolean $one_time_encoding   Desired output encoding, see {@link set_parameter}]
      * @return   string|array|false   Decoded Domain name (UTF-8 or UCS-4)
      */
     public function decode($input, $one_time_encoding = false)
@@ -386,7 +390,7 @@ class idna_convert
     /**
      * Use this method to get the last error ocurred
      * @param    void
-     * @return   string   The last error, that occured
+     * @return   string|boolean   The last error, that occured
      */
     public function get_last_error()
     {
@@ -395,7 +399,7 @@ class idna_convert
 
     /**
      * The actual decoding algorithm
-     * @param string
+     * @param string $encoded
      * @return mixed
      */
     protected function _decode($encoded)
@@ -452,7 +456,7 @@ class idna_convert
 
     /**
      * The actual encoding algorithm
-     * @param  string
+     * @param  string $decoded
      * @return mixed
      */
     protected function _encode($decoded)
@@ -591,8 +595,8 @@ class idna_convert
 
     /**
      * Do Nameprep according to RFC3491 and RFC3454
-     * @param    array    Unicode Characters
-     * @return   string|array|bool   Unicode Characters, Nameprep'd
+     * @param    array  $input  Unicode Characters
+     * @return   string|array|integer[]|bool   Unicode Characters, Nameprep'd
      */
     protected function _nameprep($input)
     {
@@ -649,7 +653,7 @@ class idna_convert
                 $out = $this->_combine(array_slice($output, $last_starter, $seq_len));
                 // On match: Replace the last starter with the composed character and remove
                 // the now redundant non-starter(s)
-                if ($out) {
+                if (!empty($out)) {
                     $output[$last_starter] = $out;
                     if (count($out) != $seq_len) {
                         for ($j = $i+1; $j < $out_len; ++$j) $output[$j-1] = $output[$j];
@@ -672,7 +676,7 @@ class idna_convert
     /**
      * Decomposes a Hangul syllable
      * (see http://www.unicode.org/unicode/reports/tr15/#Hangul
-     * @param    integer  32bit UCS4 code point
+     * @param    integer  $char 32bit UCS4 code point
      * @return   array    Either Hangul Syllable decomposed or original 32bit value as one value array
      */
     protected function _hangul_decompose($char)
@@ -689,7 +693,7 @@ class idna_convert
     /**
      * Ccomposes a Hangul syllable
      * (see http://www.unicode.org/unicode/reports/tr15/#Hangul
-     * @param    array    Decomposed UCS4 sequence
+     * @param    array  $input  Decomposed UCS4 sequence
      * @return   array    UCS4 sequence with syllables composed
      */
     protected function _hangul_compose($input)
@@ -730,7 +734,7 @@ class idna_convert
 
     /**
      * Returns the combining class of a certain wide char
-     * @param    integer    Wide char to check (32bit integer)
+     * @param    integer   $char Wide char to check (32bit integer)
      * @return   integer    Combining class if found, else 0
      */
     protected function _get_combining_class($char)
@@ -740,7 +744,7 @@ class idna_convert
 
     /**
      * Applies the cannonical ordering of a decomposed UCS4 sequence
-     * @param    array      Decomposed UCS4 sequence
+     * @param    array  $input    Decomposed UCS4 sequence
      * @return   array      Ordered USC4 sequence
      */
     protected function _apply_cannonical_ordering($input)
@@ -772,8 +776,8 @@ class idna_convert
 
     /**
      * Do composition of a sequence of starter and non-starter
-     * @param    array      UCS4 Decomposed sequence
-     * @return   array      Ordered USC4 sequence
+     * @param    array   $input   UCS4 Decomposed sequence
+     * @return   array|bool|int|string      Ordered USC4 sequence
      */
     protected function _combine($input)
     {
@@ -933,7 +937,7 @@ class idna_convert
      * Convert UCS-4 strin into UCS-4 garray
      *
      * @param  string $input
-     * @return array
+     * @return array|false
      */
     protected function _ucs4_string_to_ucs4($input)
     {
@@ -1002,7 +1006,7 @@ class idna_convert
         }
         $signature = serialize($params);
         if (!isset($instances[$signature])) {
-            $instances[$signature] = idna_convert::getInstance($params);
+            $instances[$signature] = $this->getInstance($params);
         }
         return $instances[$signature];
     }
