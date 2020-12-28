@@ -32,7 +32,7 @@ class ErrorOutput
                 self::$messages[] = $message;
                 error_log(" " . explode('~', $message)[0] . PHP_EOL);
                 // End of script execution before starting the main project.
-                if (!HLEB_PROJECT_DEBUG) hl_preliminary_exit();
+                if (!HLEB_PROJECT_DEBUG_ON) hl_preliminary_exit();
             } else {
                 self::$messages[] = 'ErrorOutput:: Indefinite error.';
                 error_log(' ' . explode('~', $message)[0] . PHP_EOL);
@@ -47,14 +47,14 @@ class ErrorOutput
         $content = '';
         if (count(self::$messages) > 0) {
             foreach ($errors as $key => $value) {
-                if (HLEB_PROJECT_DEBUG) $value = str_replace('~', '<br><br>', $value);
+                if (HLEB_PROJECT_DEBUG_ON) $value = str_replace('~', '<br><br>', $value);
                 if ($key == 0) {
                     $content .= self::first_content($value);
                 } else {
                     $content .= self::content($value);
                 }
             }
-            if (HLEB_PROJECT_DEBUG) {
+            if (HLEB_PROJECT_DEBUG_ON) {
                 // End of script execution before starting the main project.
                 hl_preliminary_exit($content);
             }

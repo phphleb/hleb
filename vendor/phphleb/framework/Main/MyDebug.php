@@ -110,7 +110,7 @@ class MyDebug
     }
 
     private static function check() {
-        return HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] == 'GET';
+        return HLEB_PROJECT_DEBUG_ON && $_SERVER['REQUEST_METHOD'] == 'GET';
     }
 
 

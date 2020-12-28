@@ -25,7 +25,7 @@ final class WorkDebug
      * @param string|null $desc
      */
     public static function add($data, string $desc = null) {
-        if (HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] == 'GET') {
+        if (HLEB_PROJECT_DEBUG_ON && $_SERVER['REQUEST_METHOD'] == 'GET') {
             self::$data[] = [$data, $desc];
         }
     }

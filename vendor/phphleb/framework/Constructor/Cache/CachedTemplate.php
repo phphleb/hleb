@@ -51,7 +51,7 @@ class CachedTemplate
     public function __construct(string $path, array $templateParams = []) {
         $backtrace = null;
         $time = 0;
-        if (HLEB_PROJECT_DEBUG) {
+        if (HLEB_PROJECT_DEBUG_ON) {
             $backtrace = $this->debugBacktrace();
             $time = microtime(true);
         }
@@ -72,7 +72,7 @@ class CachedTemplate
             $this->data = $this->content;
         }
         $this->addContent();
-        if (HLEB_PROJECT_DEBUG) {
+        if (HLEB_PROJECT_DEBUG_ON) {
             $time = microtime(true) - $time;
             Info::insert('Templates', trim($path, '/') . $backtrace . $this->infoCache() . ' load: ' .
                 (round($time, 4) * 1000) . ' ms , ' . $this->infoTemplateName() . '(...)');

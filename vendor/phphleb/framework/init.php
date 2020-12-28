@@ -1,6 +1,6 @@
 <?php
 
-define('HLEB_PROJECT_FULL_VERSION', '1.5.45');
+define('HLEB_PROJECT_FULL_VERSION', '1.5.46');
 
 require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Controllers/MainController.php';
 
@@ -61,7 +61,7 @@ if (HL_TWIG_CONNECTED) {
 
     if (!defined('HL_TWIG_AUTO_RELOAD')) {
         //Recompilation of Twig templates
-        define('HL_TWIG_AUTO_RELOAD', HLEB_PROJECT_DEBUG);
+        define('HL_TWIG_AUTO_RELOAD', HLEB_PROJECT_DEBUG_ON);
     }
 
     if (!defined('HL_TWIG_STRICT_VARIABLES')) {
@@ -378,12 +378,12 @@ function hleb_bt3e3gl60pg8h71e00jep901_error_404() {
 
 $GLOBALS['HLEB_PROJECT_UPDATES'] = ['phphleb/hleb' => HLEB_FRAME_VERSION, 'phphleb/framework' => HLEB_PROJECT_FULL_VERSION];
 
-if (HLEB_PROJECT_DEBUG && (new Hleb\Main\TryClass('XdORM\XD'))->is_connect() &&
+if (HLEB_PROJECT_DEBUG_ON && (new Hleb\Main\TryClass('XdORM\XD'))->is_connect() &&
     file_exists(HLEB_VENDOR_DIRECTORY . '/phphleb/xdorm')) {
 
     $GLOBALS['HLEB_PROJECT_UPDATES']['phphleb/xdorm'] = 'dev';
 }
-if (HLEB_PROJECT_DEBUG && (file_exists(HLEB_VENDOR_DIRECTORY . '/phphleb/adminpan'))) {
+if (HLEB_PROJECT_DEBUG_ON && (file_exists(HLEB_VENDOR_DIRECTORY . '/phphleb/adminpan'))) {
     $GLOBALS['HLEB_PROJECT_UPDATES']['phphleb/adminpan'] = 'dev';
 }
 

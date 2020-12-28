@@ -119,7 +119,9 @@ class DB
         $time = microtime(true);
         $stmt = self::instance()->prepare($sql);
         $stmt->execute($args);
-        \Hleb\Main\DataDebug::add($sql, microtime(true) - $time, HLEB_TYPE_DB, true);
+        if(defined('HLEB_PROJECT_DEBUG_ON') && HLEB_PROJECT_DEBUG_ON) {
+            \Hleb\Main\DataDebug::add($sql, microtime(true) - $time, HLEB_TYPE_DB, true);
+        }
         return $stmt;
     }
 

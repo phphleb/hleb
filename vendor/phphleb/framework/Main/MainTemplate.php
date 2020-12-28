@@ -17,7 +17,7 @@ class MainTemplate
     private $content = null;
 
     public function __construct(string $path, array $template = [], bool $return = false ) {
-        if (HLEB_PROJECT_DEBUG) {
+        if (HLEB_PROJECT_DEBUG_ON) {
             $time = microtime(true);
             $backtrace = $this->debugBacktrace();
         }
@@ -28,7 +28,7 @@ class MainTemplate
         } else {
             (new TCreator($templateDirectory, $template))->include();
         }
-        if (HLEB_PROJECT_DEBUG) {
+        if (HLEB_PROJECT_DEBUG_ON) {
             $time = microtime(true) - $time;
             Info::insert('Templates', trim($path, '/') . $backtrace . ' load: ' . (round($time, 4) * 1000) . ' ms');
         }

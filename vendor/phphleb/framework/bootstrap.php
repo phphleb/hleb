@@ -95,6 +95,7 @@ if (!defined('HLEB_PROJECT_VALIDITY_URL') || !is_string(HLEB_PROJECT_VALIDITY_UR
     hl_preliminary_exit("Incorrectly defined setting: ...VALIDITY_URL");
 }
 
+define('HLEB_PROJECT_DEBUG_ON', (bool) (HLEB_PROJECT_DEBUG && (empty($_GET['_debug']) || $_GET['_debug'] === 'on')));
 
 // Demo redirection from "http" to "https"
 if (!defined('HLEB_PROJECT_ONLY_HTTPS')) {
@@ -150,7 +151,7 @@ if (HLEB_PROJECT_LOG_ON) {
     ini_set('error_log', hleb_dc64d27da09bab7_storage_directory()  . '/logs/' . date('Y_m_d_') . 'errors.log');
 }
 
-ini_set('display_errors', HLEB_PROJECT_DEBUG && (empty($_GET['_debug']) || $_GET['_debug'] === 'on') ? '1' : '0');
+ini_set('display_errors', HLEB_PROJECT_DEBUG_ON ? '1' : '0');
 
 // External autoloader
 if (file_exists(HLEB_VENDOR_DIRECTORY . '/autoload.php')) {
@@ -162,7 +163,7 @@ function hl_main_autoloader($class) {
     if (HLEB_PROJECT_CLASSES_AUTOLOAD) {
         \Hleb\Main\MainAutoloader::get($class);
     }
-    if (HLEB_PROJECT_DEBUG) {
+    if (HLEB_PROJECT_DEBUG_ON) {
         \Hleb\Main\Info::insert('Autoload', $class);
     }
 }
