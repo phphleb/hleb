@@ -150,7 +150,7 @@ if (HLEB_PROJECT_LOG_ON) {
     ini_set('error_log', hleb_dc64d27da09bab7_storage_directory()  . '/logs/' . date('Y_m_d_') . 'errors.log');
 }
 
-ini_set('display_errors', HLEB_PROJECT_DEBUG ? '1' : '0');
+ini_set('display_errors', HLEB_PROJECT_DEBUG && (empty($_GET['_debug']) || $_GET['_debug'] === 'on') ? '1' : '0');
 
 // External autoloader
 if (file_exists(HLEB_VENDOR_DIRECTORY . '/autoload.php')) {
