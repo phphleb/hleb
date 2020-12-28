@@ -32,12 +32,12 @@ if (empty($_SERVER['HTTP_HOST'])) {
 
 define('HLEB_PROJECT_DIRECTORY', __DIR__);
 
-define('HLEB_PROJECT_VERSION', '1');
+const HLEB_PROJECT_VERSION = '1';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'options']);
+const HLEB_HTTP_TYPE_SUPPORT = ['get', 'post', 'delete', 'put', 'patch', 'options'];
 
 // Project root directory
 if (!defined('HLEB_GLOBAL_DIRECTORY')) {
@@ -197,7 +197,7 @@ if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-define('HLEB_TEMPLATE_CACHED_PATH', '/storage/cache/templates');
+const HLEB_TEMPLATE_CACHED_PATH =  '/storage/cache/templates';
 
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/AddressBar.php';
 

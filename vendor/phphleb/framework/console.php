@@ -22,15 +22,15 @@ define('HLEB_VENDOR_DIRECTORY', dirname(__DIR__, 2));
 
 define('HLEB_VENDOR_DIR_NAME', array_reverse(explode(DIRECTORY_SEPARATOR, HLEB_VENDOR_DIRECTORY))[0]);
 
-define('HLEB_PROJECT_DIRECTORY', HLEB_VENDOR_DIRECTORY . '/phphleb/framework');
+const HLEB_PROJECT_DIRECTORY = HLEB_VENDOR_DIRECTORY . '/phphleb/framework';
 
-define('HLEB_PROJECT_DEBUG', false);
+const HLEB_PROJECT_DEBUG = false;
 
-define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'options']);
+const HLEB_HTTP_TYPE_SUPPORT = ['get', 'post', 'delete', 'put', 'patch', 'options'];
 
-define('HLEB_TEMPLATE_CACHED_PATH', '/storage/cache/templates');
+const HLEB_TEMPLATE_CACHED_PATH = '/storage/cache/templates';
 
-define('HL_TWIG_CACHED_PATH', '/storage/cache/twig/compilation');
+const HL_TWIG_CACHED_PATH = '/storage/cache/twig/compilation';
 
 define('HL_TWIG_CONNECTED', file_exists(HLEB_VENDOR_DIRECTORY . "/twig/twig"));
 
