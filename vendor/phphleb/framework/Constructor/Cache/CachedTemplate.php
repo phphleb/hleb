@@ -147,7 +147,7 @@ class CachedTemplate
             $this->content = $content;
             $file = $this->hashFile . '_' . strval($this->cacheTime) . '.cache';
             file_put_contents($file, $content, LOCK_EX);
-
+            @chmod($file, 0775);
         }
         if (rand(0, 1000) === 0) $this->deleteOldFiles();
     }

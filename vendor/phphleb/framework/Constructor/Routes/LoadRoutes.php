@@ -23,6 +23,7 @@ class LoadRoutes
     // Сохраняет кеш маршрутов в файл.
     public function update($data) {
         @file_put_contents($this->cacheRoutes, json_encode($data), LOCK_EX);
+        @chmod($this->cacheRoutes, 0775);
         return $data;
     }
 
