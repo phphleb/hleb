@@ -69,11 +69,10 @@ class CacheRoutes
     private function createRoutes() {
         hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY, '/main.php');
 
-        // Reserved name from directory.
-        // Используется зарезервированное название директории.
-        if (file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/hlogin/reg.php')) {
-            hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY, '/hlogin/reg.php');
-        }
+        // Reserved file name is used /routes/.../main.php
+        // Используется зарезервированное название файла /routes/.../main.php
+        $this->addRoutesFromLib();
+
         Route::instance()->end();
     }
 
@@ -81,6 +80,18 @@ class CacheRoutes
     // Возвращает результат попытки определения имени пользователя в Linux-подобных системах.
     private function getFpmUserName() {
         return preg_replace('|[\s]+|s', ':', strval(exec('ps -p ' . getmypid() . ' -o user,group')));
+    }
+
+    // Including all main.php files from nested directories.
+    // Подключение всех файлов main.php из вложенных директорий.
+    private function addRoutesFromLib() {
+        $dir = opendir(HLEB_LOAD_ROUTES_DIRECTORY);
+        while($file = readdir($dir)) {
+            $searchFile = DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . 'main.php';
+            if (file_exists(HLEB_LOAD_ROUTES_DIRECTORY . $searchFile)) {
+                hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY, $searchFile);
+            }
+        }
     }
 
 }
