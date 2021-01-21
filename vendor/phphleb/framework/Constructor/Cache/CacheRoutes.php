@@ -86,9 +86,10 @@ class CacheRoutes
     // Подключение всех файлов main.php из вложенных директорий.
     private function addRoutesFromLib() {
         $dir = opendir(HLEB_LOAD_ROUTES_DIRECTORY);
-        while($file = readdir($dir)) {
+        while ($file = readdir($dir)) {
             $searchFile = DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . 'main.php';
-            if (file_exists(HLEB_LOAD_ROUTES_DIRECTORY . $searchFile)) {
+            if ($file != '.' && $file != '..' && is_dir(HLEB_LOAD_ROUTES_DIRECTORY . DIRECTORY_SEPARATOR . $file) &&
+                file_exists(HLEB_LOAD_ROUTES_DIRECTORY . $searchFile)) {
                 hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY, $searchFile);
             }
         }
