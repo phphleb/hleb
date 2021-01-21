@@ -90,7 +90,7 @@ class CacheRoutes
             $searchFile = DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . 'main.php';
             if ($file != '.' && $file != '..' && is_dir(HLEB_LOAD_ROUTES_DIRECTORY . DIRECTORY_SEPARATOR . $file) &&
                 file_exists(HLEB_LOAD_ROUTES_DIRECTORY . $searchFile)) {
-                hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY, $searchFile);
+                require_once HLEB_LOAD_ROUTES_DIRECTORY . $searchFile;
             }
         }
     }
