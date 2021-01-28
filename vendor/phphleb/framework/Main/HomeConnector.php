@@ -29,12 +29,14 @@ class HomeConnector implements Connector
             'Hleb\Constructor\Cache\CacheRoutes' => $vendor . '/phphleb/framework/Constructor/Cache/CacheRoutes.php',
             'Hleb\Constructor\Handlers\Key' => $vendor . '/phphleb/framework/Constructor/Handlers/Key.php',
             'Hleb\Constructor\Handlers\ProtectedCSRF' => $vendor . '/phphleb/framework/Constructor/Handlers/ProtectedCSRF.php',
+            'Hleb\Scheme\Home\Constructor\Handlers\RequestInterface' => $vendor . "/phphleb/framework/Scheme/Home/Constructor/Handlers/RequestInterface.php",
             'Hleb\Constructor\Handlers\Request' => $vendor . '/phphleb/framework/Constructor/Handlers/Request.php',
             'Hleb\Constructor\Handlers\URL' => $vendor . '/phphleb/framework/Constructor/Handlers/URL.php',
             'Hleb\Constructor\Handlers\URLHandler' => $vendor . '/phphleb/framework/Constructor/Handlers/URLHandler.php',
             'Hleb\Constructor\Handlers\Head' => $vendor . '/phphleb/framework/Constructor/Handlers/Head.php',
             'Hleb\Constructor\Handlers\Resources' => $vendor . '/phphleb/framework/Constructor/Handlers/Resources.php',
             'Hleb\Scheme\Home\Constructor\Handlers\ResourceStandard' => $vendor . '/phphleb/framework/Scheme/Home/Constructor/Handlers/ResourceStandard.php',
+            'Hleb\Scheme\Home\Constructor\Handlers\HeadInterface' => $vendor . '/phphleb/framework/Scheme/Home/Constructor/Handlers/HeadInterface.php',
             'Hleb\Constructor\TCreator' => $vendor . '/phphleb/framework/Constructor/TCreator.php',
             'Hleb\Constructor\TwigCreator' => $vendor . '/phphleb/framework/Constructor/TwigCreator.php',
             'Hleb\Constructor\VCreator' => $vendor . '/phphleb/framework/Constructor/VCreator.php',
@@ -84,7 +86,6 @@ class HomeConnector implements Connector
             'Hleb\Main\TryClass' => $vendor . "/phphleb/framework/Main/TryClass.php",
             'Phphleb\Updater\FileRemover' => $vendor . '/phphleb/updater/FileRemover.php',
             'Phphleb\Updater\FileUploader' => $vendor . '/phphleb/updater/FileUploader.php',
-
         ];
     }
 }

@@ -11,8 +11,9 @@ declare(strict_types=1);
 namespace Hleb\Constructor\Handlers;
 
 use DeterminantStaticUncreated;
+use Hleb\Scheme\Home\Constructor\Handlers\RequestInterface;
 
-class Request
+class Request implements RequestInterface
 {
     use DeterminantStaticUncreated;
 
@@ -48,155 +49,93 @@ class Request
 
     private static $convertUri = null;
 
+
     /**
-     * Returns the primary session data of $_SESSION.
-     * @param mixed|null $name - parameter to get data by name.
-     * @return mixed|null
-     *//**
-     * Возвращает первичные данные сессии $_SESSION.
-     * @param mixed|null $name - параметр для получения данных по названию.
-     * @return mixed|null
+     * @inheritDoc
      */
     public static function getInitialSession($name = null) {
         return is_null($name) ? self::$initialSession : (isset(self::$initialSession[$name]) ? self::$initialSession[$name] : null);
     }
 
     /**
-     * Returns the primary session data of $_COOKIE.
-     * @param mixed|null $name - parameter to get data by name.
-     * @return mixed|null
-     *//**
-     * Возвращает первичные данные сессии $_COOKIE.
-     * @param mixed|null $name - параметр для получения данных по названию.
-     * @return mixed|null
+     * @inheritDoc
      */
     public static function getInitialCookie($name = null) {
         return is_null($name) ? self::$initialCookie : (isset(self::$initialCookie[$name]) ? self::$initialCookie[$name] : null);
     }
 
     /**
-     * Returns the current session data of $_SESSION.
-     * @param mixed|null $name - parameter to get data by name.
-     * @return mixed|null
-     *//**
-     * Возвращает текущие данные сессии $_SESSION.
-     * @param mixed|null $name - параметр для получения данных по названию.
-     * @return mixed|null
+     * @inheritDoc
      */
     public static function getSession($name = null) {
         return is_null($name) ? $_SESSION ?? [] : (isset($_SESSION) && isset($_SESSION[$name]) ? $_SESSION[$name] : null);
     }
 
     /**
-     * Returns the current session data of $_COOKIE.
-     * @param mixed|null $name - parameter to get data by name.
-     * @return mixed|null
-     *//**
-     * Возвращает текущие данные сессии $_COOKIE.
-     * @param mixed|null $name - параметр для получения данных по названию.
-     * @return mixed|null
+     * @inheritDoc
      */
     public static function getCookie($name = null) {
         return is_null($name) ? self::clearData($_COOKIE ?? []) : (isset($_COOKIE) && isset($_COOKIE[$name]) ? self::clearData($_COOKIE[$name]) : null);
     }
 
     /**
-     * Returns data from the current route.
-     * @param string|null $name - parameter to get data by name.
-     * @return mixed|null
-     *//**
-     * Возвращает данные из текущего роута.
-     * @param string|null $name - параметр для получения данных по названию.
-     * @return mixed|null
+     * @inheritDoc
      */
     public static function get(string $name = '') {
         return empty($name) ? self::$request : (self::$request[$name] ?? null);
     }
 
     /**
-     * Returns a value from the current route with conversion to a string value.
-     * @param string $name - name of the requested value.
-     * @param null|string $default - default value for empty or undetected values.
-     * @return null|string
-     *//**
-     * Возвращает значение из текущего роута с преобразованием в строковое значение.
-     * @param string $name - название необходимого значения.
-     * @param null|string $default - дефолтное значение для пустых или необнаруженнных значений.
-     * @return null|string
+     * @inheritDoc
      */
     public static function getString(string $name, $default = null) {
         return self::getTypeRequest($name, "strval", "request", $default);
     }
 
     /**
-     * Returns a value from current route with conversion to an integer value.
-     * @param string $name - name of the requested value.
-     * @param null|string $default - default value for empty or undetected values.
-     * @return null|string
-     *//**
-     * Возвращает значение из текущего роута с преобразованием в целочисленное значение.
-     * @param string $name - название необходимого значения.
-     * @param null|integer $default - дефолтное значение для пустых или необнаруженнных значений.
-     * @return null|integer
+     * @inheritDoc
      */
     public static function getInt(string $name, $default = 0) {
         return self::getTypeRequest($name, "intval", "request", $default);
     }
 
     /**
-     * Returns a value from current route with conversion to an floating-point value.
-     * @param string $name - name of the requested value.
-     * @param null|float $default - default value for empty or undetected values.
-     * @return null|float
-     *//**
-     * Возвращает значение из текущего роута  с преобразованием в число с плавающей запятой.
-     * @param string $name - название необходимого значения.
-     * @param null|float $default - дефолтное значение для пустых или необнаруженнных значений.
-     * @return null|float
+     * @inheritDoc
      */
     public static function getFloat(string $name, $default = 0.0) {
         return self::getTypeRequest($name, "floatval", "request", $default);
     }
 
     /**
-     * Returns the request method. For example, 'GET', 'HEAD', 'POST', 'PUT'
-     * @return string
-     *//**
-     * Возвращает метод запроса. Например: 'GET', 'HEAD', 'POST', 'PUT'
-     * @return string
+     * @inheritDoc
      */
     public static function getMethod() {
         return $_SERVER['REQUEST_METHOD'];
     }
 
     /**
-     * Returns the current request protocol 'http' or 'https'
-     * @return string
-     *//**
-     * Возвращает текущий протокол запроса 'http' или 'https'
-     * @return string
+     * @inheritDoc
      */
     public static function getHttpProtocol() {
         return hleb_actual_http_protocol(false);
     }
 
     /**
-     * Returns the complete current request protocol 'http://' or 'https://'
-     * @return string
-     *//**
-     * Возвращает полный текущий протокол запроса 'http://' или 'https://'
-     * @return string
+     * @inheritDoc
      */
     public static function getHttpFullProtocol() {
         return hleb_actual_http_protocol(true);
     }
 
     /**
-     * Trying to find the localization value
-     * @return string|false
-     *//**
-     * Попытка найти значение локализации
-     * @return string|false
+     * @inheritDoc
+     */
+    public static function getFullHost() {
+        return self::getHttpFullProtocol() . self::getHost();
+    }
+
+    /**
+     * @inheritDoc
      */
     public static function getLang() {
         if (!isset(self::$lang)) {
@@ -206,11 +145,7 @@ class Request
     }
 
     /**
-     * The address that was provided to access this page. For example '/index.php?p=example'
-     * @return null|string
-     *//**
-     * Адрес, который был предоставлен для доступа к этой странице. Например '/index.php?p=example'
-     * @return null|string
+     * @inheritDoc
      */
     public static function getUri() {
         if (!isset(self::$uri)) self::$uri = self::clearData(urldecode($_SERVER['REQUEST_URI']) ?? null);
@@ -218,11 +153,7 @@ class Request
     }
 
     /**
-     * The full URL of the current request, of the form 'http://site.com/index.php?p=example'
-     * @return null|string
-     *//**
-     * Полный URL-адрес текущего запроса, вида 'http://site.com/index.php?p=example'
-     * @return null|string
+     * @inheritDoc
      */
     public static function getFullUrl() {
         if (!isset(self::$url)) self::$url = HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN . self::getUri();
@@ -230,11 +161,7 @@ class Request
     }
 
     /**
-     * The transmitted address of the page from which the user made the transition.
-     * @return array|string|string[]|null
-     *//**
-     * Переданный адрес страницы, c которой пользователь совершил переход.
-     * @return array|string|string[]|null
+     * @inheritDoc
      */
     public static function getReferer() {
         if (!isset(self::$referer)) self::$referer = self::clearData($_SERVER['HTTP_REFERER'] ?? null);
@@ -242,33 +169,21 @@ class Request
     }
 
     /**
-     * Returns current domain.
-     * @return string
-     *//**
-     * Возвращает текущий домен.
-     * @return string
+     * @inheritDoc
      */
     public static function getDomain() {
-        return HLEB_MAIN_DOMAIN;
+        return self::getHost();
     }
 
     /**
-     * Returns the content of the `Host` header.
-     * @return string
-     *//**
-     * Возвращает содержимое заголовка `Host`.
-     * @return string
+     * @inheritDoc
      */
     public static function getHost() {
         return $_SERVER['HTTP_HOST'];
     }
 
     /**
-     * Get the port of the current connection from the host.
-     * @return string|null
-     *//**
-     * Получить порт текущего соединения из хоста.
-     * @return string|null
+     * @inheritDoc
      */
     public static function getPort() {
         $hostParts =  explode(':', self::getHost());
@@ -276,255 +191,133 @@ class Request
     }
 
     /**
-     * Returns the information array $_SERVER created by the web server, or the requested value from it.
-     * @param null|string $value - parameter to get data by name.
-     * @return null|array
-     *//**
-     * Возвращает массив с информацией $_SERVER, созданный веб-сервером, или запрошенное значение из него.
-     * @param null|string $value - параметр для получения данных по названию.
-     * @return null|mixed|array
+     * @inheritDoc
      */
     public static function getHttpHeader($value = null) {
         return self::checkValueInArray($value, $_SERVER);
     }
 
     /**
-     * Determines if a request is requested as ajax
-     * @return bool
-     *//**
-     * Определяет, запрошен ли запрос как ajax
-     * @return bool
+     * @inheritDoc
      */
     public static function isXmlHttpRequest() {
         return $_SERVER['X_REQUESTED_WITH'] == 'XMLHttpRequest';
     }
 
     /**
-     * Returns the array with data for the downloaded file.
-     * @return null|mixed
-     *//**
-     * Возвращает массив с данными для загруженного файла.
-     * @return null|mixed
+     * @inheritDoc
      */
     public static function getFiles() {
         return $_FILES ?? null;
     }
 
     /**
-     * Returns the part of the URL request after the script is executed.
-     * @return mixed|string
-     *//**
-     * Возвращает часть URL-запроса после выполняемого сценария.
-     * @return mixed|string
+     * @inheritDoc
      */
     public static function getUrlParameter() {
         return !empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : (!empty($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO'] : '');
     }
 
     /**
-     * Returns the IP address of the client or IP of the last proxy server through which the client got to the site.
-     * @return null|string
-     *//**
-     * Возвращает IP-адрес клиента или IP последнего прокси-сервера, через который клиент попал на сайт.
-     * @return null|string
+     * @inheritDoc
      */
     public static function getRemoteAddress() {
         return $_SERVER['REMOTE_ADDR'] ?? null;
     }
 
     /**
-     * Returns an array or a single value of $_GET.
-     * @param null|string $value - parameter to get data by name.
-     * @return mixed|null
-     *//**
-     * Возвращает массив или отдельное значение $_GET.
-     * @param null|string $value - параметр для получения данных по названию.
-     * @return mixed|null
+     * @inheritDoc
      */
     public static function getGet($value = null) {
         return self::checkValueInArray($value, self::getGetData());
     }
 
     /**
-     * Returns the value from $_GET with conversion to string value.
-     * @param string $name - name of the requested value.
-     * @param null|string $default - default value for empty or undetected values.
-     * @return null|string
-     *//**
-     * Возвращает значение из $_GET с преобразованием в строковое значение.
-     * @param string $name - название необходимого значения.
-     * @param null|string $default - дефолтное значение для пустых или необнаруженнных значений.
-     * @return null|string
+     * @inheritDoc
      */
     public static function getGetString(string $name, $default = null) {
         return self::getTypeRequest($name, "strval", "get", $default);
     }
 
     /**
-     * Returns the value from $_GET with conversion to an integer value.
-     * @param string $name - name of the requested value.
-     * @param null|integer $default - default value for empty or undetected values.
-     * @return null|integer
-     *//**
-     * Возвращает значение из $_GET с преобразованием в целочисленное значение.
-     * @param string $name - название необходимого значения.
-     * @param null|integer $default - дефолтное значение для пустых или необнаруженнных значений.
-     * @return null|integer
+     * @inheritDoc
      */
     public static function getGetInt(string $name, $default = 0) {
         return self::getTypeRequest($name, "intval", "get", $default);
     }
 
     /**
-     * Returns a value from $_GET with conversion to an floating-point value.
-     * @param string $name - name of the requested value.
-     * @param null|float $default - default value for empty or undetected values.
-     * @return null|float
-     *//**
-     * Возвращает значение из $_GET с преобразованием в число с плавающей запятой.
-     * @param string $name - название необходимого значения.
-     * @param null|float $default - дефолтное значение для пустых или необнаруженнных значений.
-     * @return null|float
+     * @inheritDoc
      */
     public static function getGetFloat(string $name, $default = 0.0) {
         return self::getTypeRequest($name, "floatval", "get", $default);
     }
 
     /**
-     * Returns an array or a single value of $_POST.
-     * @param null|string $value - parameter to get data by name.
-     * @return mixed|null
-     *//**
-     * Возвращает массив или отдельное значение $_POST.
-     * @param null|string $value - параметр для получения данных по названию.
-     * @return mixed|null
+     * @inheritDoc
      */
     public static function getPost($value = null) {
         return self::checkValueInArray($value, self::getPostData());
     }
 
     /**
-     * Returns the value from $_POST with conversion to string value.
-     * @param string $name - name of the requested value.
-     * @param null|string $default - default value for empty or undetected values.
-     * @return null|string
-     *//**
-     * Возвращает значение из $_POST с преобразованием в строковое значение.
-     * @param string $name - название необходимого значения.
-     * @param null|string $default - дефолтное значение для пустых или необнаруженнных значений.
-     * @return null|string
+     * @inheritDoc
      */
     public static function getPostString(string $name, $default = null) {
         return self::getTypeRequest($name, "strval", "post", $default);
     }
 
     /**
-     * Returns the value from $_POST with conversion to an integer value.
-     * @param string $name - name of the requested value.
-     * @param null|integer $default - default value for empty or undetected values.
-     * @return null|integer
-     *//**
-     * Возвращает значение из $_POST с преобразованием в целочисленное значение.
-     * @param string $name - название необходимого значения.
-     * @param null|integer $default - дефолтное значение для пустых или необнаруженнных значений.
-     * @return null|integer
+     * @inheritDoc
      */
     public static function getPostInt(string $name, $default = 0) {
         return self::getTypeRequest($name, "intval", "post", $default);
     }
 
     /**
-     * Returns a value from $_POST with conversion to an floating-point value.
-     * @param string $name - name of the requested value.
-     * @param null|float $default - default value for empty or undetected values.
-     * @return null|float
-     *//**
-     * Возвращает значение из $_POST с преобразованием в число с плавающей запятой.
-     * @param string $name - название необходимого значения.
-     * @param null|float $default - дефолтное значение для пустых или необнаруженнных значений.
-     * @return null|float
+     * @inheritDoc
      */
     public static function getPostFloat(string $name, $default = 0.0) {
         return self::getTypeRequest($name, "floatval", "post", $default);
     }
 
     /**
-     * Returns an array or a single value of $_REQUEST.
-     * @param null|string $value - parameter to get data by name.
-     * @return mixed|null
-     *//**
-     * Возвращает массив или отдельное значение $_REQUEST.
-     * @param null|string $value - параметр для получения данных по названию.
-     * @return mixed|null
+     * @inheritDoc
      */
     public static function getRequest($value = null) {
         return self::checkValueInArray($value, self::getRequestData());
     }
 
     /**
-     * Returns the value from $_REQUEST with conversion to string value.
-     * @param string $name - name of the requested value.
-     * @param null|string $default - default value for empty or undetected values.
-     * @return null|string
-     *//**
-     * Возвращает значение из $_REQUEST с преобразованием в строковое значение.
-     * @param string $name - название необходимого значения.
-     * @param null|string $default - дефолтное значение для пустых или необнаруженнных значений.
-     * @return null|string
+     * @inheritDoc
      */
     public static function getRequestString(string $name, $default = null) {
         return self::getTypeRequest($name, "strval", "req", $default);
     }
 
     /**
-     * Returns the value from $_REQUEST with conversion to an integer value.
-     * @param string $name - name of the requested value.
-     * @param null|integer $default - default value for empty or undetected values.
-     * @return null|integer
-     *//**
-     * Возвращает значение из $_REQUEST с преобразованием в целочисленное значение.
-     * @param string $name - название необходимого значения.
-     * @param null|integer $default - дефолтное значение для пустых или необнаруженнных значений.
-     * @return null|integer
+     * @inheritDoc
      */
     public static function getRequestInt(string $name, $default = 0) {
         return self::getTypeRequest($name, "intval", "req", $default);
     }
 
     /**
-     * Returns a value from $_REQUEST with conversion to an floating-point value.
-     * @param string $name - name of the requested value.
-     * @param null|float $default - default value for empty or undetected values.
-     * @return null|float
-     *//**
-     * Возвращает значение из $_REQUEST с преобразованием в число с плавающей запятой.
-     * @param string $name - название необходимого значения.
-     * @param null|float $default - дефолтное значение для пустых или необнаруженнных значений.
-     * @return null|float
+     * @inheritDoc
      */
     public static function getRequestFloat(string $name, $default = 0.0) {
         return self::getTypeRequest($name, "floatval", "req", $default);
     }
 
     /**
-     * Returns the original string with stripped tags.
-     * @param string $value - line to clean up.
-     * @return string
-     *//**
-     * Возвращает исходную строку с очищенными тегами.
-     * @param string $value - строка для очистки.
-     * @return string
+     * @inheritDoc
      */
     public static function returnPrivateTags(string $value) {
         return str_replace(self::REPLACING_TAGS, self::NEEDED_TAGS, $value);
     }
 
     /**
-     * Returns an object for placing headers, styles and scripts in the <head>...</head> of the page.
-     * @return Head|null
-     *//**
-     * Возвращает объект для размещения заголовков, стилей и скриптов в <head>...</head> страницы.
-     * @return Head|null
+     * @inheritDoc
      */
     public static function getHead() {
         if (!isset(self::$head)) self::$head = new Head();
@@ -532,11 +325,7 @@ class Request
     }
 
     /**
-     * Returns an object for placing loaded resources at the bottom of the page.
-     * @return Resources|null
-     *//**
-     * Возвращает объект для размещения подгружаемых ресурсов в нижней части страницы.
-     * @return Resources|null
+     * @inheritDoc
      */
     public static function getResources() {
         if (!isset(self::$resources)) self::$resources = new Resources();
@@ -544,11 +333,7 @@ class Request
     }
 
     /**
-     * Returns the relative current URL, similar to getMainUrl()
-     * @return string|null
-     *//**
-     * Возвращает относительный текущий URL, аналогично функции getMainUrl()
-     * @return string|null
+     * @inheritDoc
      */
     public static function getMainConvertUrl() {
         if (is_null(self::$convertUri)) self::$convertUri = self::getConvertUrl(urldecode($_SERVER['REQUEST_URI']));
@@ -556,11 +341,7 @@ class Request
     }
 
     /**
-     * Returns the relative current URL without GET parameters.
-     * @return string
-     *//**
-     * Возвращает относительный текущий URL без GET-параметров.
-     * @return string
+     * @inheritDoc
      */
     public static function getMainClearUrl() {
         return explode('?', urldecode($_SERVER['REQUEST_URI']))[0];
@@ -585,7 +366,7 @@ class Request
 
     // URL conversion.
     // Конвертация URL.
-    protected static function getConvertUrl($url) {
+    private static function getConvertUrl($url) {
         return rawurldecode($url);
     }
 

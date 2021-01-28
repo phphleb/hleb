@@ -1,6 +1,6 @@
 <?php
 
-define('HLEB_PROJECT_FULL_VERSION', '1.5.49');
+define('HLEB_PROJECT_FULL_VERSION', '1.5.50');
 
 require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Controllers/MainController.php';
 
@@ -29,8 +29,6 @@ require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/ProtectedCSRF.php';
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Workspace.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Main/TryClass.php';
-
-require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/Request.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Constructor/VCreator.php';
 
