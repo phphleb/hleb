@@ -23,7 +23,7 @@ if (empty($_SERVER['REQUEST_METHOD'])) {
     hl_preliminary_exit('Undefined $_SERVER[\'REQUEST_METHOD\']');
 }
 
-$_SERVER['HTTP_HOST'] = $_SERVER['HTTP_HOST'] ? $_SERVER['HTTP_HOST'] : function () {
+$_SERVER['HTTP_HOST'] = !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : function () {
 
     $possibleHostSources = array('HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR');
     $sourceTransformations = array(
