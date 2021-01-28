@@ -38,6 +38,8 @@ class Request
 
     private static $uri = null;
 
+    private static $lang = null;
+
     private static $url = null;
 
     private static $referer = null;
@@ -168,6 +170,42 @@ class Request
     }
 
     /**
+     * Returns the current request protocol 'http' or 'https'
+     * @return string
+     *//**
+     * Возвращает текущий протокол запроса 'http' или 'https'
+     * @return string
+     */
+    public static function getHttpProtocol() {
+        return hleb_actual_http_protocol(false);
+    }
+
+    /**
+     * Returns the complete current request protocol 'http://' or 'https://'
+     * @return string
+     *//**
+     * Возвращает полный текущий протокол запроса 'http://' или 'https://'
+     * @return string
+     */
+    public static function getHttpFullProtocol() {
+        return hleb_actual_http_protocol(true);
+    }
+
+    /**
+     * Trying to find the localization value
+     * @return string|false
+     *//**
+     * Попытка найти значение локализации
+     * @return string|false
+     */
+    public static function getLang() {
+        if (!isset(self::$lang)) {
+            self::$lang = self::searchLang();
+        }
+        return self::$lang;
+    }
+
+    /**
      * The address that was provided to access this page. For example '/index.php?p=example'
      * @return null|string
      *//**
@@ -216,13 +254,25 @@ class Request
 
     /**
      * Returns the content of the `Host` header.
-     * @return mixed
+     * @return string
      *//**
      * Возвращает содержимое заголовка `Host`.
-     * @return mixed
+     * @return string
      */
     public static function getHost() {
         return $_SERVER['HTTP_HOST'];
+    }
+
+    /**
+     * Get the port of the current connection from the host.
+     * @return string|null
+     *//**
+     * Получить порт текущего соединения из хоста.
+     * @return string|null
+     */
+    public static function getPort() {
+        $hostParts =  explode(':', self::getHost());
+        return count($hostParts) === 2 ? end($hostParts) : null;
     }
 
     /**
@@ -597,6 +647,38 @@ class Request
     // Возвращает результат очистки значений в строке.
     private static function convertPrivateTags(string $value) {
         return str_replace(self::NEEDED_TAGS, self::REPLACING_TAGS, $value);
+    }
+
+    // Trying to find the localization value
+    // Попытка найти значение локализации
+    private static function searchLang() {
+        // ISO 639-1
+
+        // Search in the passed parameter
+        // Поиск в переданном параметре
+        $requestLang = self::getString('lang') ?? self::getString('Lang') ?? self::getString('LANG');
+        if ($requestLang && !is_numeric($requestLang) && strlen($requestLang) === 2) {
+            $requestLang = strtolower($requestLang);
+            return $requestLang;
+        }
+
+        // Search at the beginning of url
+        // Поиск в начале url
+        $urlParts = explode('/', trim(self::getMainClearUrl(), '/'));
+        if (count($urlParts) && !is_numeric($urlParts[0]) && strlen($urlParts[0]) === 2) {
+            $urlPartLang = strtolower($urlParts[0]);
+            return $urlPartLang;
+        }
+
+        // Search in a server variable
+        // Поиск в серверной переменной
+        $serverLang = self::getHttpHeader('HTTP_ACCEPT_LANGUAGE');
+        if (is_string($serverLang) && !is_numeric($serverLang) && strlen($serverLang) === 2) {
+            $serverLang = strtolower($serverLang);
+            return $serverLang;
+        }
+
+        return false;
     }
 
 }

@@ -3,7 +3,7 @@
 ### [![HLEB LOGO](https://raw.githubusercontent.com/phphleb/hleb/f95d0092692c082c1b2b0d96c75dcaf68600b73b/public/images/logo.png)](https://github.com/phphleb/hleb/tree/master)
 # PHP Micro-Framework
 
-Requires PHP version 7 or higher (including version 8).
+Requires PHP version 7.0 or higher (including version 8).
 
 [Link to instructions](https://phphleb.ru/ru/v1/) (RU)
 
@@ -204,4 +204,4 @@ WorkDebug::add($debug_data, 'description');
 -----------------------------------
 
 
- [![version](https://img.shields.io/badge/packagist-v1.5.48-blue)](https://packagist.org/packages/phphleb/hleb) ![PHP](https://img.shields.io/badge/PHP-7,%208-lightgray) [![License: MIT](https://img.shields.io/badge/License-MIT%20(Free)-brightgreen.svg)](https://github.com/phphleb/hleb/blob/master/LICENSE)  [![Download](https://img.shields.io/badge/Download-0,5%20MB-blue)](https://github.com/phphleb/hleb/archive/master.zip)  [![Build Status](https://travis-ci.com/phphleb/hleb.svg?branch=master)](https://travis-ci.com/phphleb/hleb) [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Use%20a%20fast%20and%20simple%20PHP%207-8%20microframework&url=https://github.com/phphleb/hleb&via=phphleb&hashtags=php7,php8,framework,developers)
+ [![version](https://img.shields.io/badge/packagist-v1.5.49-blue)](https://packagist.org/packages/phphleb/hleb) ![PHP](https://img.shields.io/badge/PHP-7-lightgray) ![PHP](https://img.shields.io/badge/PHP-8-lightgray) [![License: MIT](https://img.shields.io/badge/License-MIT%20(Free)-brightgreen.svg)](https://github.com/phphleb/hleb/blob/master/LICENSE)  [![Download](https://img.shields.io/badge/Download-0,5%20MB-blue)](https://github.com/phphleb/hleb/archive/master.zip)  [![Build Status](https://travis-ci.com/phphleb/hleb.svg?branch=master)](https://travis-ci.com/phphleb/hleb) [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Use%20a%20fast%20and%20simple%20PHP%207-8%20microframework&url=https://github.com/phphleb/hleb&via=phphleb&hashtags=php7,php8,framework,developers)

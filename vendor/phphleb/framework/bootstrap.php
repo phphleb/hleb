@@ -23,9 +23,36 @@ if (empty($_SERVER['REQUEST_METHOD'])) {
     hl_preliminary_exit('Undefined $_SERVER[\'REQUEST_METHOD\']');
 }
 
+$_SERVER['HTTP_HOST'] = $_SERVER['HTTP_HOST'] ? $_SERVER['HTTP_HOST'] : function () {
+
+    $possibleHostSources = array('HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR');
+    $sourceTransformations = array(
+        "HTTP_X_FORWARDED_HOST" => function ($value) {
+            $elements = explode(',', $value);
+            return trim(end($elements));
+        }
+    );
+    $host = '';
+    foreach ($possibleHostSources as $key => $source) {
+        if (!empty($host)) break;
+        if (empty($_SERVER[$source])) continue;
+        $host = $_SERVER[$source];
+        if (array_key_exists($source, $sourceTransformations)) {
+            $host = $sourceTransformations[$source]($host);
+        }
+    }
+    return trim($host);
+};
+
+
 if (empty($_SERVER['HTTP_HOST'])) {
     // End of script execution before starting the framework.
     hl_preliminary_exit('Undefined $_SERVER[\'HTTP_HOST\']');
+}
+
+// For compatibility with earlier versions of the framework
+function hleb_get_host() {
+    return $_SERVER['HTTP_HOST'];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -201,12 +228,14 @@ const HLEB_TEMPLATE_CACHED_PATH =  '/storage/cache/templates';
 
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/AddressBar.php';
 
-$actualProtocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
+function hleb_actual_http_protocol($complete = true) {
+    return ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http') . ($complete ? '://' : '');
+}
 
 $addressBar = (new \Hleb\Constructor\Handlers\AddressBar(
     [
         'SERVER' => $_SERVER,
-        'HTTPS' => $actualProtocol,
+        'HTTPS' => hleb_actual_http_protocol(),
         'HLEB_PROJECT_ONLY_HTTPS' => HLEB_PROJECT_ONLY_HTTPS,
         'HLEB_PROJECT_ENDING_URL' => HLEB_PROJECT_ENDING_URL,
         'HLEB_PROJECT_DIRECTORY' => HLEB_PROJECT_DIRECTORY,
@@ -224,7 +253,7 @@ if ($addressBar->redirect != null) {
     hl_preliminary_exit();
 }
 
-unset($addressBar, $actualProtocol, $address, $pathToStartFileDir);
+unset($addressBar, $address, $pathToStartFileDir);
 
 require HLEB_VENDOR_DIRECTORY . '/phphleb/framework/init.php';
 

@@ -71,7 +71,7 @@ class CacheRoutes
 
         // Reserved file name is used /routes/.../main.php
         // Используется зарезервированное название файла /routes/.../main.php
-        $this->addRoutesFromLib();
+        $this->addRoutesFromLibs();
 
         Route::instance()->end();
     }
@@ -84,7 +84,7 @@ class CacheRoutes
 
     // Including all main.php files from nested directories.
     // Подключение всех файлов main.php из вложенных директорий.
-    private function addRoutesFromLib() {
+    private function addRoutesFromLibs() {
         $dir = opendir(HLEB_LOAD_ROUTES_DIRECTORY);
         while ($file = readdir($dir)) {
             $searchFile = DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . 'main.php';

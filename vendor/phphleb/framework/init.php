@@ -1,6 +1,6 @@
 <?php
 
-define('HLEB_PROJECT_FULL_VERSION', '1.5.48');
+define('HLEB_PROJECT_FULL_VERSION', '1.5.49');
 
 require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Controllers/MainController.php';
 
@@ -148,32 +148,6 @@ function hleb_search_filenames($dir) {
     closedir($handle);
 
     return $files;
-}
-
-function hleb_get_host() {
-
-    // Symfony origin function
-    $possibleHostSources = array('HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR');
-    $sourceTransformations = array(
-        "HTTP_X_FORWARDED_HOST" => function ($value) {
-            $elements = explode(',', $value);
-            return trim(end($elements));
-        }
-    );
-    $host = '';
-    foreach ($possibleHostSources as $key => $source) {
-        if (!empty($host)) break;
-        if (empty($_SERVER[$source])) continue;
-        $host = $_SERVER[$source];
-        if (array_key_exists($source, $sourceTransformations)) {
-            $host = $sourceTransformations[$source]($host);
-        }
-    }
-
-    // Remove port number from host
-    $host = preg_replace('/:\d+$/', '', $host);
-
-    return trim($host);
 }
 
 /*
