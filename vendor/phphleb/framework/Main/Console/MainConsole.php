@@ -35,7 +35,10 @@ class MainConsole
             'HLEB_PROJECT_LOG_ON',
             'HLEB_PROJECT_VALIDITY_URL',
             'HLEB_PROJECT_ONLY_HTTPS',
-            'HLEB_PROJECT_GLUE_WITH_WWW'
+            'HLEB_PROJECT_GLUE_WITH_WWW',
+            'HLEB_TEMPLATE_CACHE',
+            'HL_TWIG_AUTO_RELOAD',
+            'HL_TWIG_STRICT_VARIABLES'
         ];
         if (!file_exists($file)) {
             echo "Missing file " . $file;

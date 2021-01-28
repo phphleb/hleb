@@ -1,6 +1,6 @@
 <?php
 
-define('HLEB_PROJECT_FULL_VERSION', '1.5.50');
+define('HLEB_PROJECT_FULL_VERSION', '1.5.51');
 
 require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Controllers/MainController.php';
 
@@ -49,13 +49,9 @@ if (HL_TWIG_CONNECTED) {
         define('HL_TWIG_CHARSET', 'utf-8');
     }
 
-    if (!defined('HL_TWIG_CACHED_ON')) {
-        //Deny caching
-        define('HL_TWIG_CACHED', false);
-    } else {
-        //Turn on / off Twig caching. Set HL_TWIG_CACHED_ON
-        define('HL_TWIG_CACHED', HL_TWIG_CACHED_ON ? HLEB_GLOBAL_DIRECTORY . "/storage/cache/twig/compilation" : false);
-    }
+    //Turn on/off Twig caching. Set HL_TWIG_CACHED_ON (Twig) or HLEB_TEMPLATE_CACHE (All)
+    define('HL_TWIG_CACHED', (defined('HL_TWIG_CACHED_ON') && HL_TWIG_CACHED_ON) ||
+    (defined('HLEB_TEMPLATE_CACHE') && HLEB_TEMPLATE_CACHE) ? HLEB_GLOBAL_DIRECTORY . "/storage/cache/twig/compilation" : false);
 
     if (!defined('HL_TWIG_AUTO_RELOAD')) {
         //Recompilation of Twig templates

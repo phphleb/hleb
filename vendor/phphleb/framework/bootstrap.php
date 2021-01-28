@@ -25,13 +25,13 @@ if (empty($_SERVER['REQUEST_METHOD'])) {
 
 $_SERVER['HTTP_HOST'] = !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : function () {
 
-    $possibleHostSources = array('HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR');
-    $sourceTransformations = array(
+    $possibleHostSources = ['HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR'];
+    $sourceTransformations = [
         "HTTP_X_FORWARDED_HOST" => function ($value) {
             $elements = explode(',', $value);
             return trim(end($elements));
         }
-    );
+    ];
     $host = '';
     foreach ($possibleHostSources as $key => $source) {
         if (!empty($host)) break;
