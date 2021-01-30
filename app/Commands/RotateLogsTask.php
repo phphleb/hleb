@@ -27,7 +27,8 @@ class RotateLogsTask extends \Hleb\Scheme\App\Commands\MainTask
         foreach ($logs as $log) {
             $logPath = $log->getRealPath();
             if(!is_writable($logPath)) {
-                echo "Permission denied! Try executing via 'sudo' before the command." . PHP_EOL;
+                $user = @exec('whoami');
+                echo "Permission denied! It is necessary to assign rights to the directory `sudo chmod -R 770 ./storage` and the current user " . ($user ? "`{$user}`" : '') . PHP_EOL;
                 break;
             }
             if ($log->isFile() && $log->getFileName() !== ".gitkeep" && filemtime($logPath) < (time() - $prescriptionForRotation)) {

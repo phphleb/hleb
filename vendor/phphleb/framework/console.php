@@ -42,6 +42,10 @@ function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondP
     require_once $firstPartOfPath . $secondPartOfPath;
 }
 
+define('HLEB_CONSOLE_USER_NAME',  @exec('whoami'));
+
+define('HLEB_CONSOLE_PERMISSION_MESSAGE',  "Permission denied! It is necessary to assign rights to the directory `sudo chmod -R 770 ./storage` and the current user " . (HLEB_CONSOLE_USER_NAME ? "`" . HLEB_CONSOLE_USER_NAME. "`" : ''));
+
 $setArguments = array_splice($argv, 2);
 
 include_once HLEB_PROJECT_DIRECTORY . '/Main/Console/MainConsole.php';
@@ -250,7 +254,7 @@ function hlClearCacheFiles($files, $path, $fn, $scan_path) {
     }
     if($error) {
         fwrite(STDOUT, "\r");
-        fwrite(STDOUT, "Permission denied! Try executing via 'sudo' before the command.");
+        fwrite(STDOUT, HLEB_CONSOLE_PERMISSION_MESSAGE );
     }
 
 }
@@ -261,12 +265,12 @@ function hlForcedClearCacheFiles($path) {
         hl_preliminary_exit("No files in " . $standardPath . ". Cache cleared." . PHP_EOL);
     }
     if (!is_writable($path)) {
-        hl_preliminary_exit("Permission denied! Try executing via 'sudo' before the command." . PHP_EOL);
+        hl_preliminary_exit(HLEB_CONSOLE_PERMISSION_MESSAGE . PHP_EOL);
     }
     $newPath = rtrim($path, "/") . "_" . md5(microtime() . rand());
     rename($path, $newPath);
     if (file_exists($newPath) && !is_writable($newPath)) {
-        hl_preliminary_exit("Permission denied! Try executing via 'sudo' before the command." . PHP_EOL);
+        hl_preliminary_exit(HLEB_CONSOLE_PERMISSION_MESSAGE . PHP_EOL);
     }
     if (!file_exists($newPath)) {
         hl_preliminary_exit("Error! Couldn't move directory." . PHP_EOL);

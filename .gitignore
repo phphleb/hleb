@@ -1,10 +1,33 @@
+# phpstorm project files
 /.idea/*
+.idea
+
+# working files
 /storage/*
 !/storage/logs/.gitkeep
 /storage/cache/routes/routes.txt
 !/storage/cache/routes/.gitkeep
 !/storage/cache/key/.gitkeep
 !/storage/cache/templates/.gitkeep
+
+# database settings to production
 /database/dbase.config.php
+
+# framework settings to production
 /start.hleb.php
+
+# phpunit itself is not needed
+phpunit.phar
+# local phpunit config
+/phpunit.xml
+/.phpunit.result.cache
+
+# project testing settings
+/.travis.yml
+
+# windows thumbnail cache
+Thumbs.db
+
+# Mac DS_Store Files
+.DS_Store
 
