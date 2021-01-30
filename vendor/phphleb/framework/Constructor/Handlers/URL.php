@@ -18,6 +18,10 @@ class URL extends BaseSingleton
 
     const REPLACING_TAGS = ['&lt;', '&gt;'];
 
+    const MAX_COUNT_LIST = 100;
+
+    protected static $standardUrlList = [];
+
     protected static $addresses;
 
     // Create a list of used URLs.
@@ -135,6 +139,13 @@ class URL extends BaseSingleton
     // Returns a standardized URL.
     // Возвращает стандартизированный URL.
     public static function getStandardUrl(string $url) {
+        if (isset(self::$standardUrlList[$url])) {
+            if (count(self::$standardUrlList) < self::MAX_COUNT_LIST) {
+                return self::$standardUrlList[$url];
+            } else {
+                array_unshift(self::$standardUrlList);
+            }
+        }
         $allUrls = explode('?', $url);
         $params = '';
         foreach ($allUrls as $key => $allUrl) {
@@ -142,7 +153,8 @@ class URL extends BaseSingleton
                 $params .= '?' . str_replace(self::NEEDED_TAGS, self::REPLACING_TAGS, $allUrl);
             }
         }
-        return preg_replace('|([/]+)|s', '/',self::getStandard(self::endingUrl($allUrls[0])) . $params);
+        self::$standardUrlList[$url] = preg_replace('|([/]+)|s', '/', self::getStandard(self::endingUrl($allUrls[0])) . $params);
+        return self::$standardUrlList[$url];
     }
 
     // Returns a standardized string.

@@ -30,8 +30,6 @@ require HLEB_PROJECT_DIRECTORY . '/Constructor/Workspace.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Main/TryClass.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Scheme/Home/Constructor/Handlers/RequestInterface.php';
-
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/Request.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Constructor/VCreator.php';
