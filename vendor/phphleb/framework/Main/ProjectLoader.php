@@ -36,7 +36,7 @@ class ProjectLoader extends BaseSingleton
 
         Request::close();
 
-        Route::getInstance()->delete();
+        Route::instance()->delete();
 
         if ($block) {
             if (!isset($_SESSION)) @session_start();

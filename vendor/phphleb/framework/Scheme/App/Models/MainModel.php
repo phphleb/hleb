@@ -2,8 +2,10 @@
 
 namespace Hleb\Scheme\App\Models;
 
-class MainModel
+use Hleb\Main\Insert\BaseSingleton;
+
+class MainModel extends BaseSingleton
 {
-    use \DeterminantStaticUncreated;
+
 }
 

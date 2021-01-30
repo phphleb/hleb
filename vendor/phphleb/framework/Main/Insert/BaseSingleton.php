@@ -23,8 +23,4 @@ class BaseSingleton
     public function __wakeup() {
         throw new \Exception("Cannot unserialize singleton");
     }
-
-    public function __destruct() {
-        unset(self::$instances[get_called_class()]);
-    }
 }

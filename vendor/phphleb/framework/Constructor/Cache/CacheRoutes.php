@@ -30,14 +30,14 @@ class CacheRoutes
             if ($cache === false) {
                 $this->createRoutes();
                 Info::add('CacheRoutes', true);
-                return $this->check($this->opt->update(Route::getInstance()->data()));
+                return $this->check($this->opt->update(Route::instance()->data()));
             }
             Info::add('CacheRoutes', false);
             return $cache;
         }
         $this->createRoutes();
         Info::add('CacheRoutes', true);
-        return $this->check($this->opt->update(Route::getInstance()->data()));
+        return $this->check($this->opt->update(Route::instance()->data()));
     }
 
     // Check the availability of the file with the cache of routes. The contents of the file are returned or an error is displayed.
@@ -73,7 +73,7 @@ class CacheRoutes
         // Используется зарезервированное название файла /routes/.../main.php
         $this->addRoutesFromLibs();
 
-        Route::getInstance()->end();
+        Route::instance()->end();
     }
 
     // Returns the result of trying to determine the username on Linux-like systems.
