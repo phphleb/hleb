@@ -10,13 +10,11 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Handlers;
 
-use DeterminantStaticUncreated;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Scheme\Home\Constructor\Handlers\RequestInterface;
 
-class Request implements RequestInterface
+class Request extends BaseSingleton implements RequestInterface
 {
-    use DeterminantStaticUncreated;
-
     const NEEDED_TAGS = ['<', '>'];
 
     const REPLACING_TAGS = ['&lt;', '&gt;'];

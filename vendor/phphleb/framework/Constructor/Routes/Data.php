@@ -10,12 +10,10 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Routes;
 
-use DeterminantStaticUncreated;
+use Hleb\Main\Insert\BaseSingleton;
 
-class Data
+class Data extends BaseSingleton
 {
-    use DeterminantStaticUncreated;
-
     private static $data = null;
 
     public static function createData(array $array) {

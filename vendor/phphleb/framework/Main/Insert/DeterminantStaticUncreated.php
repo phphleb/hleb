@@ -2,12 +2,9 @@
 
 declare(strict_types=1);
 
-/*
- * Forming singleton trait.
- *
- * Трейт формирующий синглетон.
+/**
+ * @deprecated deprecated since version 1.5.52
  */
-
 trait DeterminantStaticUncreated
 {
     private static $instance;

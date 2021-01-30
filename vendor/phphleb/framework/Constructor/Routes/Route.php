@@ -57,7 +57,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function get(string $route, $params = []) {
-        return self::add(new RouteMethodGet(self::instance(), $route, $params));
+        return self::add(new RouteMethodGet(self::getInstance(), $route, $params));
     }
 
     /**
@@ -69,7 +69,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function getGroup($name = null) {
-        return self::add(new RouteMethodGetGroup(self::instance(), $name));
+        return self::add(new RouteMethodGetGroup(self::getInstance(), $name));
     }
 
     /**
@@ -81,7 +81,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function endGroup($name = null) {
-        return self::add(new RouteMethodEndGroup(self::instance(), $name));
+        return self::add(new RouteMethodEndGroup(self::getInstance(), $name));
     }
 
     /**
@@ -98,7 +98,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function before(string $class_name, array $params = []) {
-        return self::add(new RouteMethodBefore(self::instance(), $class_name, $params));
+        return self::add(new RouteMethodBefore(self::getInstance(), $class_name, $params));
     }
 
     /**
@@ -115,7 +115,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function after(string $class_name, array $params = []) {
-        return self::add(new RouteMethodAfter(self::instance(), $class_name, $params));
+        return self::add(new RouteMethodAfter(self::getInstance(), $class_name, $params));
     }
 
     /**
@@ -129,7 +129,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function where(array $params) {
-        return self::add(new RouteMethodWhere(self::instance(), $params));
+        return self::add(new RouteMethodWhere(self::getInstance(), $params));
     }
 
     /**
@@ -145,7 +145,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function type($types) {
-        return self::add(new RouteMethodType(self::instance(), $types));
+        return self::add(new RouteMethodType(self::getInstance(), $types));
     }
 
     /**
@@ -161,7 +161,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function getType($types) {
-        return self::add(new RouteMethodGetType(self::instance(), $types));
+        return self::add(new RouteMethodGetType(self::getInstance(), $types));
     }
 
     /**
@@ -172,7 +172,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function endType() {
-        return self::add(new RouteMethodEndType(self::instance()));
+        return self::add(new RouteMethodEndType(self::getInstance()));
     }
 
     /**
@@ -185,7 +185,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function renderMap(string $name, $map) {
-        return self::add(new RouteMethodRenderMap(self::instance(), $name, $map));
+        return self::add(new RouteMethodRenderMap(self::getInstance(), $name, $map));
     }
 
     /**
@@ -197,7 +197,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function protect(string $validate = 'CSRF') {
-        return self::add(new RouteMethodProtect(self::instance(), $validate));
+        return self::add(new RouteMethodProtect(self::getInstance(), $validate));
     }
 
     /**
@@ -211,7 +211,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function getProtect(string $validate = 'CSRF') {
-        return self::add(new RouteMethodGetProtect(self::instance(), $validate));
+        return self::add(new RouteMethodGetProtect(self::getInstance(), $validate));
     }
 
     /**
@@ -222,7 +222,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function endProtect() {
-        return self::add(new RouteMethodEndProtect(self::instance()));
+        return self::add(new RouteMethodEndProtect(self::getInstance()));
     }
 
     /**
@@ -239,7 +239,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function domain($name, $level = 3) {
-        return self::add(new RouteMethodDomain(self::instance(), $name, $level, false));
+        return self::add(new RouteMethodDomain(self::getInstance(), $name, $level, false));
     }
 
     /**
@@ -254,7 +254,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function domainPattern($name, $level = 3) {
-        return self::add(new RouteMethodDomain(self::instance(), $name, $level, true));
+        return self::add(new RouteMethodDomain(self::getInstance(), $name, $level, true));
     }
 
     /**
@@ -269,7 +269,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function domainTemplate($name, $level = 3) {
-        return self::add(new RouteMethodDomain(self::instance(), $name, $level, true));
+        return self::add(new RouteMethodDomain(self::getInstance(), $name, $level, true));
     }
 
     /**
@@ -281,7 +281,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function name(string $name) {
-        return self::add(new RouteMethodName(self::instance(), $name));
+        return self::add(new RouteMethodName(self::getInstance(), $name));
     }
 
     /**
@@ -298,7 +298,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function controller(string $class_name, array $params = []) {
-        return self::add(new RouteMethodController(self::instance(), $class_name, $params));
+        return self::add(new RouteMethodController(self::getInstance(), $class_name, $params));
     }
 
     /**
@@ -314,7 +314,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function module(string $module_name, string $class_name = "Controller", array $params = []) {
-        return self::add(new RouteMethodModule(self::instance(), $module_name, $class_name, $params));
+        return self::add(new RouteMethodModule(self::getInstance(), $module_name, $class_name, $params));
     }
 
     /**
@@ -328,7 +328,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function adminPanController(string $class_name, $block_name, array $params = []) {
-        return self::add(new RouteMethodAdminPanController(self::instance(), $class_name, $block_name, $params));
+        return self::add(new RouteMethodAdminPanController(self::getInstance(), $class_name, $block_name, $params));
     }
 
     /**
@@ -340,7 +340,7 @@ class Route extends MainRoute implements StandardRoute {
      * @return static|null
      */
     public static function prefix(string $add) {
-        return self::add(new RouteMethodPrefix(self::instance(), $add));
+        return self::add(new RouteMethodPrefix(self::getInstance(), $add));
     }
 
 }

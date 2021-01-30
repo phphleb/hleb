@@ -10,12 +10,10 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Handlers;
 
-use DeterminantStaticUncreated;
+use Hleb\Main\Insert\BaseSingleton;
 
-final class ProtectedCSRF
+final class ProtectedCSRF extends BaseSingleton
 {
-    use DeterminantStaticUncreated;
-
     private static $secretKey = null;
 
     // Returns the public security key.

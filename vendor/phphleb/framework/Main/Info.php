@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace Hleb\Main;
 
-class Info
-{
-    use \DeterminantStaticUncreated;
+use Hleb\Main\Insert\BaseSingleton;
 
+class Info extends BaseSingleton
+{
     protected static $data = [];
 
     const REG_NAMES = ['Autoload', 'CacheRoutes', 'RenderMap', 'Templates'];

@@ -11,11 +11,10 @@ declare(strict_types=1);
 namespace Hleb\Main;
 
 use Hleb\Main\Errors\ErrorOutput;
+use Hleb\Main\Insert\BaseSingleton;
 
-class DB
+class DB extends BaseSingleton
 {
-    use \DeterminantStaticUncreated;
-
     public static function instance() {
         if (is_null(self::$instance)) {
             $configSearchDir = defined('HLEB_SEARCH_DBASE_CONFIG_FILE') ?
@@ -117,7 +116,7 @@ class DB
     */
     public static function run($sql, $args = array()) {
         $time = microtime(true);
-        $stmt = self::instance()->prepare($sql);
+        $stmt = self::getInstance()->prepare($sql);
         $stmt->execute($args);
         if(defined('HLEB_PROJECT_DEBUG_ON') && HLEB_PROJECT_DEBUG_ON) {
             \Hleb\Main\DataDebug::add($sql, microtime(true) - $time, HLEB_TYPE_DB, true);

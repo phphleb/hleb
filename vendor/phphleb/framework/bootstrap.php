@@ -157,6 +157,7 @@ define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/routes');
 define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', hleb_dc64d27da09bab7_storage_directory() . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'routes');
 
 require_once HLEB_PROJECT_DIRECTORY . '/Main/Insert/DeterminantStaticUncreated.php';
+require_once HLEB_PROJECT_DIRECTORY . '/Main/Insert/BaseSingleton.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Main/Info.php';
 

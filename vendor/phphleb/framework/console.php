@@ -145,6 +145,8 @@ function hlUploadAll() {
 
     require HLEB_PROJECT_DIRECTORY . '/Main/Insert/DeterminantStaticUncreated.php';
 
+    require_once HLEB_PROJECT_DIRECTORY . '/Main/Insert/BaseSingleton.php';
+
     require HLEB_PROJECT_DIRECTORY . '/Main/Info.php';
 
     require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Commands/MainTask.php';

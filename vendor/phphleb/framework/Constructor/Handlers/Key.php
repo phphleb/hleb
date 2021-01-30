@@ -10,13 +10,11 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Handlers;
 
-use DeterminantStaticUncreated;
 use Hleb\Main\Errors\ErrorOutput;
+use Hleb\Main\Insert\BaseSingleton;
 
-final class Key
+final class Key extends BaseSingleton
 {
-    use DeterminantStaticUncreated;
-
     private static $key = null;
 
     private static $path = HLEB_GLOBAL_DIRECTORY . '/storage/cache/key/security-key.txt';

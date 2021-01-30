@@ -10,10 +10,8 @@ declare(strict_types=1);
 
 namespace Hleb\Main\Insert;
 
-class PageFinisher
+class PageFinisher extends BaseSingleton
 {
-    use \DeterminantStaticUncreated;
-
     protected static $data = null;
 
     static public function setContent(string $data) {

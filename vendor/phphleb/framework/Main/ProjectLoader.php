@@ -12,18 +12,16 @@ namespace Hleb\Main;
 
 use Hleb\Constructor\Cache\CacheRoutes;
 use Hleb\Main\Errors\ErrorOutput;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Main\Insert\PageFinisher;
 use Hleb\Constructor\Handlers\{
     ProtectedCSRF, URL, URLHandler, Request
 };
 use Hleb\Constructor\Workspace;
 use Hleb\Constructor\Routes\Route;
-use DeterminantStaticUncreated;
 
-class ProjectLoader
+class ProjectLoader extends BaseSingleton
 {
-    use DeterminantStaticUncreated;
-
     public static function start() {
 
         $routes_array = (new CacheRoutes())->load();
@@ -38,7 +36,7 @@ class ProjectLoader
 
         Request::close();
 
-        Route::instance()->delete();
+        Route::getInstance()->delete();
 
         if ($block) {
             if (!isset($_SESSION)) @session_start();

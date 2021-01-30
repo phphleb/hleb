@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace Hleb\Main;
 
-final class WorkDebug
-{
-    use \DeterminantStaticUncreated;
+use Hleb\Main\Insert\BaseSingleton;
 
+final class WorkDebug extends BaseSingleton
+{
     protected static $data = [];
 
     /**

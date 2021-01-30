@@ -10,12 +10,10 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Handlers;
 
-use DeterminantStaticUncreated;
+use Hleb\Main\Insert\BaseSingleton;
 
-class URL
+class URL extends BaseSingleton
 {
-    use DeterminantStaticUncreated;
-
     const NEEDED_TAGS = ['<', '>'];
 
     const REPLACING_TAGS = ['&lt;', '&gt;'];

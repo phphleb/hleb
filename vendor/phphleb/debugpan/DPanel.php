@@ -15,11 +15,10 @@ use Hleb\Main\Info;
 use Hleb\Main\MyDebug;
 use Hleb\Main\WorkDebug;
 use Hleb\Main\DataDebug;
+use Hleb\Main\Insert\BaseSingleton;
 
-class DPanel
+class DPanel extends BaseSingleton
 {
-    use \DeterminantStaticUncreated;
-
     private static $queries = false;
 
     private static $initPanel = false;
@@ -39,7 +38,7 @@ class DPanel
         }
         self::$initPanel = true;
 
-        $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/debugpan"] = "1.5";
+        $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/debugpan"] = "1.6";
 
         if (isset($GLOBALS["HLEB_MAIN_DEBUG_RADJAX"])) {
             $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/radjax"] = "dev";
@@ -67,7 +66,6 @@ class DPanel
         $debugActualRoute = self::actualBlock($info["block"]);
         $debugUpdates = self::myLinks();
         require_once "panels/block.php";
-
     }
 
     // Gather information for output

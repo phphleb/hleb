@@ -9,12 +9,10 @@ declare(strict_types=1);
 
 namespace Hleb\Main\Errors;
 
-use DeterminantStaticUncreated;
+use Hleb\Main\Insert\BaseSingleton;
 
-class ErrorOutput
+class ErrorOutput extends BaseSingleton
 {
-    use DeterminantStaticUncreated;
-
     protected static $messages = [];
 
     // Add a message to the queue.

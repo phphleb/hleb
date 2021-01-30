@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace Hleb\Main;
 
-class DataDebug
-{
-    use \DeterminantStaticUncreated;
+use Hleb\Main\Insert\BaseSingleton;
 
+class DataDebug extends BaseSingleton
+{
     protected static $data = [];
 
     public static function add(string $sql, $time, string $dbname, bool $exec = false) {

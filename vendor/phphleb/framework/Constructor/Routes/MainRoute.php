@@ -10,15 +10,14 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Routes;
 
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Constructor\Routes\Methods\{
     RouteMethodEnd
 };
 use Hleb\Scheme\Home\Constructor\Routes\RouteMethodStandard;
 
-class MainRoute
+class MainRoute extends BaseSingleton
 {
-    use \DeterminantStaticUncreated;
-
     protected static $objectMethods = [];
 
     protected static $dataMethods = [];
@@ -34,14 +33,15 @@ class MainRoute
     // Removes route information.
     // Удаляет информацию о маршрутах.
     public function delete() {
-        self::$instance = null;
+        Route::getInstance()->__destruct();
+        parent::getInstance()->__destruct();
     }
 
     // Finish parsing routes.
     // Завершает парсинг маршрутов.
     public function end() {
-        if (!is_null(self::$instance)) {
-            self::$dataMethods = (new RouteMethodEnd(self::$instance))->data();
+        if (!is_null(self::getInstance())) {
+            self::$dataMethods = (new RouteMethodEnd(self::getInstance()))->data();
         }
         return null;
     }
@@ -55,7 +55,7 @@ class MainRoute
     protected static function create(RouteMethodStandard $method) {
         self::$objectMethods[] = $method;
         if ($method->approved()) {
-            return self::instance();
+            return self::getInstance();
         }
         return null;
     }
