@@ -24,8 +24,7 @@
     "ext-json": "*",
     "ext-pdo": "*",
     "phphleb/framework": ">=1.5.15",
-    "phphleb/debugpan": "1.*",
-    "phphleb/tests": "^1.5"
+    "phphleb/debugpan": "1.*"
   },
   "autoload": {
     "classmap": [
