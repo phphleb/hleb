@@ -36,7 +36,8 @@ class DPanel extends BaseSingleton
         if (self::$initPanel) {
             return;
         }
-        self::$initPanel = true;
+
+        $debugActualMemoryMaxScript = round(memory_get_peak_usage (false) / 1024 / 1024, 2);
 
         $GLOBALS["HLEB_PROJECT_UPDATES"]["phphleb/debugpan"] = "1.6";
 

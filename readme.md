@@ -165,15 +165,15 @@ Templates
 -----------------------------------
 ```php
 // File /resources/views/content.php
-includeTemplate('templates/origin', ['variable1' => 'value1', 'variable2' => 'value2']);
+includeTemplate('templates/origin', ['title' => 'Short text', 'content' => 'Long text']);
 ```
 ```php
 // File /resources/views/templates/origin.php
-echo $variable1; // value1
-echo $variable2; // value2
+echo $title; // Short text
+echo $content; // Long text
 // or
-echo $this->variable1; // value1
-echo $this->variable2; // value2
+echo $this->title; // Short text
+echo $this->content; // Long text
 ```
 
 

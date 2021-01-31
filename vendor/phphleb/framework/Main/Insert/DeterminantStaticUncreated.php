@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * Forming singleton trait.
+ * Forming pseudo-singleton trait.
  *
- * Трейт формирующий синглетон.
+ * Трейт формирующий псевдо-синглетон.
  */
 
 trait DeterminantStaticUncreated

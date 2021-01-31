@@ -22,9 +22,6 @@ phpunit.phar
 /phpunit.xml
 /.phpunit.result.cache
 
-# project testing settings
-/.travis.yml
-
 # windows thumbnail cache
 Thumbs.db
 

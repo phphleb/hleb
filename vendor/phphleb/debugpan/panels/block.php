@@ -43,7 +43,8 @@
             <b>TIME</b> sec
         </div>
         <br>
-        <div style="padding-bottom: 25px"><?= $debugDataTime; ?></div>
+        <div style="padding-bottom: 8px"><?= $debugDataTime; ?></div>
+        <div style="padding: 0 0 25px 3px;"> Memory: <?= $debugActualMemoryMaxScript ?> Mb</div>
         <div style="margin-bottom: 15px; display: inline-block; border-bottom: 1px solid grey;padding-bottom: 5px; color: grey">
             <b>ROUTING</b></div>
         <br>
