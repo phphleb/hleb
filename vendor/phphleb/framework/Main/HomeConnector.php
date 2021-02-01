@@ -12,7 +12,7 @@ namespace Hleb\Main;
 
 use Hleb\Scheme\Home\Main\Connector;
 
-class HomeConnector implements Connector
+final class HomeConnector implements Connector
 {
     public function __construct(){}
 
@@ -68,6 +68,7 @@ class HomeConnector implements Connector
             'XdORM\Shell\XdHelper' => $vendor . '/phphleb/xdorm/Shell/XdHelper.php',
             'XdORM\XD' => $vendor . '/phphleb/xdorm/XD.php',
             'Hleb\Main\DB' => $vendor . '/phphleb/framework/Main/DB.php',
+            'Hleb\Main\MainDB' => $vendor . '/phphleb/framework/Main/MainDB.php',
             'XdORM\Shell\XdDB' => $vendor . '/phphleb/xdorm/Shell/XdDB.php',
             'Radjax\Src\RCreator' => $vendor . '/phphleb/radjax/Src/RCreator.php',
             'Phphleb\Adminpan\MainAdminPanel' => $vendor . '/phphleb/adminpan/MainAdminPanel.php',

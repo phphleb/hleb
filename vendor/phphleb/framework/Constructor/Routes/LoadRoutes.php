@@ -13,7 +13,7 @@ namespace Hleb\Constructor\Routes;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-class LoadRoutes
+final class LoadRoutes
 {
     private $cacheRoutes = HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt';
 

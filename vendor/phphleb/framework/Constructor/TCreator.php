@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor;
 
-class TCreator
+final class TCreator
 {
     private $hlTemplatePath = '';
 

@@ -3,38 +3,20 @@
 declare(strict_types=1);
 
 /*
- * A wrapper for working with PDO.
+ * A wrapper for working with PDO. This class is required for compatibility with old versions, where inheritance came from it.
  *
- * Оболочка для работы с PDO.
+ * Оболочка для работы с PDO. Этот класс необходим для совместимости со старыми версиями, где от него происходило наследование.
  */
 
 namespace Hleb\Main;
 
 class DB
 {
-    use \DeterminantStaticUncreated;
-    public static function instance() {
-        if (is_null(self::$instance)) {
-            $configSearchDir = defined('HLEB_SEARCH_DBASE_CONFIG_FILE') ?
-                HLEB_SEARCH_DBASE_CONFIG_FILE :
-                HLEB_GLOBAL_DIRECTORY . '/database';
-
-            if (file_exists($configSearchDir . "/dbase.config.php")) {
-                hl_print_fulfillment_inspector($configSearchDir, "/dbase.config.php");
-            } else {
-                hl_print_fulfillment_inspector($configSearchDir, "/default.dbase.config.php");
-            }
-            self::$instance = self::init();
-        }
-        return self::$instance;
-    }
-
     /*
      |--------------------------------------------------------------------------------------
      | Examples of appeals.
      |--------------------------------------------------------------------------------------
-     | use Hleb\Main\DB;
-     | DB::run() -  secure connection to the database of the form
+     | \DB::run() -  secure connection to the database of the form
      | ("SELECT name_ru,icon,link_ru FROM `catalogs` WHERE `show`=? AND `type`=?", $args)
      | where $args is an enumeration of the values (show and type) in the array.
      |
@@ -73,8 +55,7 @@ class DB
      |--------------------------------------------------------------------------------------
      |  Примеры обращения
      |--------------------------------------------------------------------------------------
-     | use Hleb\Main\DB;
-     | DB::run() -  безопасное подключение к базе вида
+     | \DB::run() -  безопасное подключение к базе вида
      | ("SELECT name_ru,icon,link_ru FROM `catalogs` WHERE `show`=? AND `type`=?", $args)
      | где $args - перечисление значений (show и type) в массиве
      |
@@ -113,13 +94,7 @@ class DB
      |--------------------------------------------------------------------------------------
     */
     public static function run($sql, $args = array()) {
-        $time = microtime(true);
-        $stmt = self::instance()->prepare($sql);
-        $stmt->execute($args);
-        if(defined('HLEB_PROJECT_DEBUG_ON') && HLEB_PROJECT_DEBUG_ON) {
-            \Hleb\Main\DataDebug::add($sql, microtime(true) - $time, HLEB_TYPE_DB, true);
-        }
-        return $stmt;
+        return \Hleb\Main\MainDB::run($sql, $args);
     }
 
 
@@ -145,35 +120,8 @@ class DB
      |--------------------------------------------------------------------------------------
     */
     public static function db_query($sql) {
-        $time = microtime(true);
-        $stmt = self::instance()->query($sql);
-        $data = $stmt->fetchAll();
-        \Hleb\Main\DataDebug::add(htmlentities($sql), microtime(true) - $time, HLEB_TYPE_DB, true);
-        return $data;
+        return \Hleb\Main\MainDB::db_query($sql);
     }
-
-    protected static function init() {
-        $prms = HLEB_PARAMETERS_FOR_DB[HLEB_TYPE_DB];
-
-        $opt = array(
-            \PDO::ATTR_ERRMODE => $prms["errmode"] ?? \PDO::ERRMODE_EXCEPTION,
-            \PDO::ATTR_DEFAULT_FETCH_MODE => $prms["default_fetch_mode"] ?? \PDO::FETCH_ASSOC,
-            \PDO::ATTR_EMULATE_PREPARES => $prms["emulate_prepares"] ?? false
-        );
-
-        $user = $prms["user"];
-        $pass = $prms["pass"];
-        $condition = [];
-
-        foreach ($prms as $key => $prm) {
-            if (is_numeric($key)) {
-                $condition [] = preg_replace('/\s+/', '', $prm);
-            }
-        }
-        $connection = implode(";", $condition);
-        return new \PDO($connection, $user, $pass, $opt);
-    }
-
 }
 
 

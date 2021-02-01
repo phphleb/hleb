@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Handlers;
 
-class URLHandler
+final class URLHandler
 {
     // Parse the array with routes.
     // Разбор массива с маршрутами.

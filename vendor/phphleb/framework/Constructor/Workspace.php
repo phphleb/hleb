@@ -16,7 +16,7 @@ use Hleb\Main\TryClass;
 use Phphleb\Debugpan\DPanel;
 use Hleb\Main\Info;
 
-class Workspace
+final class Workspace
 {
     protected $block;
 

@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Hleb\Main\Console;
 
-class MainConsole
+final class MainConsole
 {
     //Search for version from file by php-code.
     // Поиск версии из файла по php-коду.

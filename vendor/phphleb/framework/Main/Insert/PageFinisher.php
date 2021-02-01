@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Hleb\Main\Insert;
 
-class PageFinisher extends BaseSingleton
+final class PageFinisher extends BaseSingleton
 {
     protected static $data = null;
 

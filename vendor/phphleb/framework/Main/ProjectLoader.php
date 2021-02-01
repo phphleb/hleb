@@ -20,7 +20,7 @@ use Hleb\Constructor\Handlers\{
 use Hleb\Constructor\Workspace;
 use Hleb\Constructor\Routes\Route;
 
-class ProjectLoader extends BaseSingleton
+final class ProjectLoader extends BaseSingleton
 {
     public static function start() {
 

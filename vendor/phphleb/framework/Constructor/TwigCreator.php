@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor;
 
-class TwigCreator
+final class TwigCreator
 {
     public function view(string $path) {
         if(class_exists('Twig\Loader\FilesystemLoader') && class_exists('Twig\Environment')) {

@@ -1,6 +1,6 @@
 <?php
 
-class DB extends \Hleb\Main\DB
+class DB
 {
     /*
      |--------------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ class DB extends \Hleb\Main\DB
      |--------------------------------------------------------------------------------------
     */
     public static function run($sql, $args = array()) {
-        return parent::run($sql, $args);
+        return \Hleb\Main\DB::run($sql, $args);
     }
 
 
@@ -110,7 +110,7 @@ class DB extends \Hleb\Main\DB
      |--------------------------------------------------------------------------------------
     */
     public static function db_query($sql) {
-        return parent::db_query($sql);
+        return \Hleb\Main\DB::db_query($sql);
     }
 }
 

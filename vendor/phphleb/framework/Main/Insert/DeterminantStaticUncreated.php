@@ -12,16 +12,15 @@ trait DeterminantStaticUncreated
 {
     private static $instance;
 
-    protected function __construct() { }
+    protected function __construct() {}
 
-    protected function __clone() { }
+    protected function __clone() {}
 
     public static function instance() {
         if (is_null(self::$instance)) {
             self::$instance = new static();
-        }
-        if(self::$instance instanceof Closure) {
-            return self::$instance->call(new static);
+        } elseif (is_bool(self::$instance)) {
+            throw new \Exception('Object is destruct');
         }
         return self::$instance;
     }

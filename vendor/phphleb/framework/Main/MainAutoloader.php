@@ -7,7 +7,7 @@ namespace Hleb\Main;
 use App\Optional\MainConnector;
 use Hleb\Scheme\Home\Main\Connector;
 
-class MainAutoloader
+final class MainAutoloader
 {
     public static function get(string $class) {
         if (class_exists($class, false) || interface_exists($class, false)) return;
@@ -27,8 +27,7 @@ class MainAutoloader
                 if ($path[0] === 'hleb') {
                     $path[0] = 'phphleb/framework';
                     $clarification = '/' . HLEB_VENDOR_DIR_NAME . '/';
-                }
-                if ($path[0] === 'phphleb') {
+                } elseif ($path[0] === 'phphleb') {
                     $clarification = '/' . HLEB_VENDOR_DIR_NAME . '/';
                 }
                 /* By the name of the library. */

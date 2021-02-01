@@ -12,7 +12,7 @@ namespace Hleb\Main;
 
 use Hleb\Constructor\TCreator;
 
-class MainTemplate
+final class MainTemplate
 {
     private $content = null;
 

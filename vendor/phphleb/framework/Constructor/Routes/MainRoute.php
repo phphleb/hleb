@@ -34,9 +34,7 @@ class MainRoute
     // Removes route information.
     // Удаляет информацию о маршрутах.
     public function delete() {
-        self::$instance =  function() {
-            throw new \Exception("Route object is destruct!");
-        };
+        self::$instance = false;
     }
 
     // Finish parsing routes.

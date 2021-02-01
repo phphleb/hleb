@@ -6,7 +6,7 @@ namespace Hleb\Main;
 
 use App\Optional\MainConnector;
 
-class TryClass
+final class TryClass
 {
     private $classname;
 

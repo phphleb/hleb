@@ -11,7 +11,7 @@ namespace Hleb\Main\Errors;
 
 use Hleb\Main\Insert\BaseSingleton;
 
-class ErrorOutput extends BaseSingleton
+final class ErrorOutput extends BaseSingleton
 {
     protected static $messages = [];
 

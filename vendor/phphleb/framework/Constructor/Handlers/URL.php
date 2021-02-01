@@ -12,7 +12,7 @@ namespace Hleb\Constructor\Handlers;
 
 use Hleb\Main\Insert\BaseSingleton;
 
-class URL extends BaseSingleton
+final class URL extends BaseSingleton
 {
     const NEEDED_TAGS = ['<', '>'];
 

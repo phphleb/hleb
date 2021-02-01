@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Handlers;
 
-class AddressBar
+final class AddressBar
 {
     const IDNACONV_PATH = '/idnaconv/idna_convert.class.php';
 

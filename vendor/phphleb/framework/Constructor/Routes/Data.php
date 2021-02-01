@@ -12,7 +12,7 @@ namespace Hleb\Constructor\Routes;
 
 use Hleb\Main\Insert\BaseSingleton;
 
-class Data extends BaseSingleton
+final class Data extends BaseSingleton
 {
     private static $data = null;
 

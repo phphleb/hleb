@@ -12,7 +12,7 @@ namespace Hleb\Main;
 
 use Hleb\Main\Insert\BaseSingleton;
 
-class DataDebug extends BaseSingleton
+final class DataDebug extends BaseSingleton
 {
     protected static $data = [];
 
