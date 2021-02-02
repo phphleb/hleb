@@ -34,7 +34,6 @@
     ],
     "psr-4": {
       "App\\": "app/",
-      "Modules\\": "modules/",
       "Phphleb\\": "vendor/phphleb/",
       "Hleb\\": "vendor/phphleb/framework/"
     }

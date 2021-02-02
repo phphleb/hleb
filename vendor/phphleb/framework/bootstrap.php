@@ -200,6 +200,10 @@ spl_autoload_register('hl_main_autoloader', true, true);
 
 if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 
+    if(!defined('HLEB_ONLY_RADJAX_ROUTES')) {
+        define('HLEB_ONLY_RADJAX_ROUTES', false);
+    }
+
     $GLOBALS['HLEB_MAIN_DEBUG_RADJAX'] = [];
 
     if (file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/radjax.php')) {
@@ -215,54 +219,64 @@ if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 
         require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Src/App.php';
 
-        (new Radjax\Src\App(
-            HLEB_RADJAX_PATHS_TO_ROUTE_PATHS,
-            HLEB_GLOBAL_DIRECTORY . '/app/Controllers'
-        ))->get();
+        $radjaxIsActive = (new Radjax\Src\App(HLEB_RADJAX_PATHS_TO_ROUTE_PATHS))->get();
+    }
+
+    if(HLEB_ONLY_RADJAX_ROUTES) {
+        if( !$radjaxIsActive) {
+            include HLEB_GLOBAL_DIRECTORY . '/app/Optional/404.php';
+            hl_preliminary_exit();
+        } else {
+            $radjaxIsActive = true;
+        }
     }
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const HLEB_TEMPLATE_CACHED_PATH =  '/storage/cache/templates';
+const HLEB_TEMPLATE_CACHED_PATH = '/storage/cache/templates';
 
-require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/AddressBar.php';
+if(empty($radjaxIsActive)) {
 
-function hleb_actual_http_protocol($complete = true) {
-    return ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http') . ($complete ? '://' : '');
-}
+    require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/AddressBar.php';
 
-$addressBar = (new \Hleb\Constructor\Handlers\AddressBar(
-    [
-        'SERVER' => $_SERVER,
-        'HTTPS' => hleb_actual_http_protocol(),
-        'HLEB_PROJECT_ONLY_HTTPS' => HLEB_PROJECT_ONLY_HTTPS,
-        'HLEB_PROJECT_ENDING_URL' => HLEB_PROJECT_ENDING_URL,
-        'HLEB_PROJECT_DIRECTORY' => HLEB_PROJECT_DIRECTORY,
-        'HLEB_PROJECT_GLUE_WITH_WWW' => HLEB_PROJECT_GLUE_WITH_WWW,
-        'HLEB_PROJECT_VALIDITY_URL' => HLEB_PROJECT_VALIDITY_URL
-    ]
-));
-
-$address = $addressBar->get();
-
-if ($addressBar->redirect != null) {
-    if (!headers_sent()) {
-        header('Location: ' . $addressBar->redirect, true, 301);
+    function hleb_actual_http_protocol($complete = true) {
+        return ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http') . ($complete ? '://' : '');
     }
-    hl_preliminary_exit();
+
+    $addressBar = (new \Hleb\Constructor\Handlers\AddressBar(
+        [
+            'SERVER' => $_SERVER,
+            'HTTPS' => hleb_actual_http_protocol(),
+            'HLEB_PROJECT_ONLY_HTTPS' => HLEB_PROJECT_ONLY_HTTPS,
+            'HLEB_PROJECT_ENDING_URL' => HLEB_PROJECT_ENDING_URL,
+            'HLEB_PROJECT_DIRECTORY' => HLEB_PROJECT_DIRECTORY,
+            'HLEB_PROJECT_GLUE_WITH_WWW' => HLEB_PROJECT_GLUE_WITH_WWW,
+            'HLEB_PROJECT_VALIDITY_URL' => HLEB_PROJECT_VALIDITY_URL
+        ]
+    ));
+
+    $address = $addressBar->get();
+
+    if ($addressBar->redirect != null) {
+        if (!headers_sent()) {
+            header('Location: ' . $addressBar->redirect, true, 301);
+        }
+        hl_preliminary_exit();
+    }
+
+    unset($addressBar, $address, $pathToStartFileDir);
+
+    require HLEB_VENDOR_DIRECTORY . '/phphleb/framework/init.php';
+
+    if (file_exists(HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php')) {
+        hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY, '/app/Optional/aliases.php');
+    }
+    hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY, '/app/Optional/shell.php');
+
+    \Hleb\Main\ProjectLoader::start();
+
 }
-
-unset($addressBar, $address, $pathToStartFileDir);
-
-require HLEB_VENDOR_DIRECTORY . '/phphleb/framework/init.php';
-
-if (file_exists(HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php')) {
-    hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY, '/app/Optional/aliases.php');
-}
-hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY, '/app/Optional/shell.php');
-
-\Hleb\Main\ProjectLoader::start();
 
 

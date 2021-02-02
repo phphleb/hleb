@@ -33,7 +33,7 @@ class RouteMethodController extends MainRouteMethod
         $fileName = explode("@", $controllerName)[0];
         $classes = explode("/", $fileName);
         $className = end($classes);
-        if (!$this->searchFile($fileName)) {
+        if (!$this->searchFile($fileName) && strip_tags($fileName) === $fileName) {
             $this->errors[] = "HL016-ROUTE_ERROR: Does not match in method ->controller() ! " .
                 "Class `" . $className . "` ( file `" . $fileName . ".php` ) not found in folder `/app/Controllers/*` ~ " .
                 "Класс `" . $className . "` ( предполагаемый файл `" . $fileName . ".php` ) не обнаружен в папке `/app/Controllers/*`";

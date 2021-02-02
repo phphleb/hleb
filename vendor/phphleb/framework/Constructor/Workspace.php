@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor;
 
+use Hleb\Constructor\Handlers\Request;
 use Hleb\Constructor\Routes\Data;
 use Hleb\Main\Errors\ErrorOutput;
 use Hleb\Main\TryClass;
@@ -119,7 +120,6 @@ final class Workspace
                 }
             }
         }
-
         // data()
         if (is_array($hlExcludedParams) && !empty($hlExcludedParams[1])) {
             Data::createData($hlExcludedParams[1]);
@@ -150,7 +150,9 @@ final class Workspace
     // Реализует разницу в выводе стандартного и Twig шаблонизаторов.
     private function selectableViewFile(string $file, string $methodType, int $errorNum) {
         // View error 404
-        if ($methodType === 'view' && trim($file) === '404') hleb_bt3e3gl60pg8h71e00jep901_error_404();
+        if ($methodType === 'view' && trim($file) === '404') {
+            hleb_bt3e3gl60pg8h71e00jep901_error_404();
+        }
 
         $extension = false;
         $hlFile = trim($file, '\/ ');
@@ -190,13 +192,24 @@ final class Workspace
         //Вызов класса с методом.
         $arguments = $action[1] ?? [];
         $call = explode('@', $action[0]);
-        $initiator = 'App\Middleware\\' . $type . '\\' . trim($call[0], '\\');
+        $className = trim($call[0], '\\');
         $method = $call[1] ?? 'index';
+
+        $initiator = 'App\Middleware\\' . $type . '\\' . $className;
+
         if (!class_exists($initiator)) {
             $hlExcludedErrors = 'HL043-ROUTE_ERROR: Сlass `' . $initiator . '` not exists. ~' .
                 ' Класс `' . $initiator . '` не обнаружен.';
             ErrorOutput::get($hlExcludedErrors);
         }
+
+        if (!method_exists($initiator, $method)) {
+            $hlExcludedErrors = 'HL048-ROUTE_ERROR: Method `' . $method . '` in class `' . $initiator . '` not exists. ~' .
+                ' Метод  `' . $method . '` для класса `' . $initiator . '` не обнаружен.';
+            ErrorOutput::get($hlExcludedErrors);
+            return null;
+        }
+
         (new $initiator())->{$method}(...$arguments);
     }
 
@@ -206,6 +219,16 @@ final class Workspace
         $arguments = $action[1] ?? [];
         $call = explode('@', $action[0]);
         $className = trim($call[0], '\\');
+        $method = $call[1] ?? 'index';
+
+        $searchTags = strip_tags($className . $method) !== $className . $method;
+
+        if($searchTags) {
+            $searchTags = $this->getCalledClassAndMethodConverter($className, $method);
+            $className = $searchTags['class'];
+            $method = $searchTags['method'];
+        }
+
         if (isset($action[2]) && $action[2] == 'module') {
             if (!defined('HLEB_OPTIONAL_MODULE_SELECTION')) {
                 define('HLEB_OPTIONAL_MODULE_SELECTION', file_exists(HLEB_GLOBAL_DIRECTORY . "/modules/"));
@@ -223,37 +246,117 @@ final class Workspace
             $this->viewPath = "/modules/" . implode("/", array_slice($searchToModule, 0, count($searchToModule) - 1)) . "/";
             $className = implode("\\", array_map('ucfirst', $searchToModule));
         }
+
         $initiator = $this->controllerForepart . $className;
-        $method = $call[1] ?? 'index';
+
         if (!class_exists($initiator)) {
-            $hlExcludedErrors = 'HL042-ROUTE_ERROR: Class `' . $initiator . '` not exists. ~' .
-                ' Класс  `' . $initiator . '` не обнаружен.';
-            ErrorOutput::get($hlExcludedErrors);
-            return null;
+            if (!$searchTags) {
+                $hlExcludedErrors = 'HL047-ROUTE_ERROR: Class `' . $initiator . '` not exists. ~' .
+                    ' Класс  `' . $initiator . '` не обнаружен.';
+                ErrorOutput::get($hlExcludedErrors);
+                return null;
+            } else {
+                hleb_bt3e3gl60pg8h71e00jep901_error_404();
+            }
         }
+
+        if (!method_exists($initiator, $method)) {
+            if (!$searchTags) {
+                $hlExcludedErrors = 'HL042-ROUTE_ERROR: Method `' . $method . '` in class `' . $initiator . '` not exists. ~' .
+                    ' Метод  `' . $method . '` для класса `' . $initiator . '` не обнаружен.';
+                ErrorOutput::get($hlExcludedErrors);
+                return null;
+            } else {
+                hleb_bt3e3gl60pg8h71e00jep901_error_404();
+            }
+        }
+
         return (new $initiator())->{$method}(...$arguments);
     }
 
     // Returns the initiated controller class for the admin panel.
     // Возвращает инициированный класс контроллера для админпанели.
     private function getAdminPanController(array $action, $block) {
-        $arguments = $action[1] ?? [];
-        $call = explode('@', $action[0]);
-        $initiator = 'App\Controllers\\' . trim($call[0], '\\');
-        $method = $call[1] ?? 'index';
-        if (!class_exists('Phphleb\Adminpan\MainAdminPanel') || !class_exists('Phphleb\Adminpan\Add\AdminPanHandler')) {
+        // Проверка подключения админ панели
+        if (!class_exists('Phphleb\Adminpan\MainAdminPanel')) {
             ErrorOutput::get('HL030-ADMIN_PANEL_ERROR: Error in method adminPanController() ! ' .
                 'Library <a href="https://github.com/phphleb/adminpan">phphleb/adminpan</a> not connected ! ~' .
                 'Библиотека <a href="https://github.com/phphleb/adminpan">phphleb/adminpan</a> не подключена !'
             );
             return null;
         }
+
+        $arguments = $action[1] ?? [];
+        $call = explode('@', $action[0]);
+        $className = trim($call[0], '\\');
+        $method = $call[1] ?? 'index';
+
+        $initiator = 'App\Controllers\\' . $className;
+
+        if (!class_exists($initiator)) {
+            $hlExcludedErrors = 'HL046-ROUTE_ERROR: Class `' . $initiator . '` from `AdminPanController` not exists. ~' .
+                ' Класс  `' . $initiator . '` для `AdminPanController` не обнаружен.';
+            ErrorOutput::get($hlExcludedErrors);
+            return null;
+        }
+
+        if (!method_exists($initiator, $method)) {
+            $hlExcludedErrors = 'HL049-ROUTE_ERROR: Method `' . $method . '` in class `' . $initiator . '` not exists. ~' .
+                ' Метод  `' . $method . '` для класса `' . $initiator . '` не обнаружен.';
+            ErrorOutput::get($hlExcludedErrors);
+            return null;
+        }
+
         $controller = (new $initiator())->{$method}(...$arguments);
         $admObj = new \Phphleb\Adminpan\Add\AdminPanHandler();
         $this->admFooter = $admObj->getFooter();
         echo $admObj->getHeader($block['number'], $block['_AdminPanelData']);
 
         return $controller;
+    }
+
+    // Поиск вариативных названий в тегах класса и метода
+    private function getCalledClassAndMethodConverter(string $controllerName, string $methodName) {
+        $params = Request::get();
+
+        $data = ['class' => $controllerName, 'method' => $methodName];
+        if (empty($params)) {
+            ErrorOutput::get('HL051-ROUTE_SYNTAX_ERROR: Invalid controller call syntax ! ' .
+                'Parameters are not specified in the route address for replacement in the controller `' . htmlentities($controllerName . '@' . $methodName) . '`. ~' .
+                'Не указаны параметры в адресе роута для замещения в контроллере `' . htmlentities($controllerName . '@' . $methodName) . '`'
+            );
+            return $data;
+        }
+        $fullTarget = $controllerName . '@' . $methodName;
+
+        foreach ($params as $key => $value) {
+            if($key === $methodName) {
+                $fullTarget = str_replace('<' . $key . '>', strval($value), $fullTarget);
+            } else {
+                $fullTarget = str_replace('<' . $key . '>', $this->reformatValue(strval($value)), $fullTarget);
+            }
+        }
+        $fullTargetList = explode('@', $fullTarget);
+
+        // Если Неправильный формат и есть другие теги
+        if (count($fullTargetList) !== 2 || strip_tags($fullTarget) !== $fullTarget) {
+            ErrorOutput::get('HL045-ROUTE_SYNTAX_ERROR: Invalid controller call syntax ! ' .
+                'Incorrectly set controller name `' . htmlentities($controllerName . '@' . $methodName) . '` or method substitution &ltname&gt;@&lt;method&gt;. ~' .
+                'Неправильно задано замещение  &ltname&gt;@&lt;method&gt; имени `' . htmlentities($controllerName . '@' . $methodName) . '` или метода контроллера.'
+            );
+            return $data;
+        }
+        return ['class' => $fullTargetList[0], 'method' => $fullTargetList[1]];
+    }
+
+    // Преобразует значение в camelСase наименование
+    private function reformatValue(string $value) {
+        $parts = explode('-', $value);
+        $result = '';
+        foreach($parts as $part) {
+            $result .= ucfirst($part);
+        }
+        return $result;
     }
 }
 

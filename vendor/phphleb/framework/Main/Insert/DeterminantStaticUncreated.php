@@ -19,8 +19,8 @@ trait DeterminantStaticUncreated
     public static function instance() {
         if (is_null(self::$instance)) {
             self::$instance = new static();
-        } elseif (is_bool(self::$instance)) {
-            throw new \Exception('Object is destruct');
+        } elseif (is_string(self::$instance)) {
+            error_log('Object is destruct');
         }
         return self::$instance;
     }
