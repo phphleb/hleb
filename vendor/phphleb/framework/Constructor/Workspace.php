@@ -333,7 +333,8 @@ final class Workspace
             if($key === $methodName) {
                 $fullTarget = str_replace('<' . $key . '>', strval($value), $fullTarget);
             } else {
-                $fullTarget = str_replace('<' . $key . '>', $this->reformatValue(strval($value)), $fullTarget);
+                $reformatValue = $this->reformatValue(strval($value));
+                $fullTarget = $reformatValue !== false ? str_replace('<' . $key . '>', $reformatValue, $fullTarget) : '@';
             }
         }
         $fullTargetList = explode('@', $fullTarget);
@@ -354,6 +355,9 @@ final class Workspace
         $parts = explode('-', $value);
         $result = '';
         foreach($parts as $part) {
+            if($part == '') {
+                return false;
+            }
             $result .= ucfirst($part);
         }
         return $result;
