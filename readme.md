@@ -63,7 +63,11 @@ This is an example of a more complex-named route. Here, $x and $y values are tra
 Route::get('/ru/{version}/{page?}/', view('/map/new', ['x' => 59.9, 'y' => 30.3]))->where(['version' => '[a-z0-9]+', 'page' => '[a-z]+'])->name('RouteName'); // /ru/.../.../ or /ru/.../
 
 ```
+Replacing class and method calls from url:
+```php
+Route::get('/combine/{class}/{method}/')->controller('<class>Controller@get<method>'); // Converts `site.com/example/all-users/user/` to `AllUsersController@getUser`
 
+```
 
 Groups of routes
 -----------------------------------
@@ -84,11 +88,6 @@ Methods located after a route or group:
 
 ```php
 Route::type(['get','post'])->before('ClassBefore')->get('/path/')->controller('ClassController')->after('ClassAfter');
-
-```
-Replacing class and method calls from url:
-```php
-Route::get('/combine/{class}/{method}/')->controller('<class>Controller@get<method>'); // Converts `site.com/example/all-users/user/` to `AllUsersController@getUser`
 
 ```
 
