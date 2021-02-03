@@ -65,7 +65,7 @@ Route::get('/ru/{version}/{page?}/', view('/map/new', ['x' => 59.9, 'y' => 30.3]
 ```
 Replacing class and method calls from url:
 ```php
-Route::get('/combine/{class}/{method}/')->controller('<class>Controller@get<method>'); // Converts `site.com/example/all-users/user/` to `AllUsersController@getUser`
+Route::get('/example/{class}/{method}/')->controller('<class>Controller@get<method>'); // Converts `site.com/example/all-users/user/` to `AllUsersController@getUser`
 
 ```
 
