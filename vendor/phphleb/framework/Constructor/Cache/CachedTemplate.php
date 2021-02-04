@@ -137,7 +137,7 @@ class CachedTemplate
     // Caches content.
     // Кеширует контент.
     private function cacheTemplate($content) {
-        if ($this->cacheTime === 0 || (defined('HLEB_TEMPLATE_CACHE') && HLEB_TEMPLATE_CACHE)) {
+        if ($this->cacheTime === 0) {
             // Without caching.
             $this->data = $content;
             $this->addContent();

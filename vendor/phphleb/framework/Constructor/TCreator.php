@@ -32,7 +32,7 @@ final class TCreator
      * @param int $seconds
      */
     public function setCacheTime(int $seconds) {
-        $this->hlCacheTime = $seconds;
+        $this->hlCacheTime =  $seconds;
     }
 
     // Assigns route parameters to class variables and properties with content display.
@@ -47,7 +47,7 @@ final class TCreator
         }
         require $this->templatePath();;
 
-        return $this->hlCacheTime;
+        return  !defined('HLEB_TEMPLATE_CACHE') || (defined('HLEB_TEMPLATE_CACHE') && HLEB_TEMPLATE_CACHE) ? $this->hlCacheTime : 0;
     }
 
     // Returns the path to the content file.
