@@ -15,6 +15,8 @@ final class ErrorOutput extends BaseSingleton
 {
     protected static $messages = [];
 
+    protected static $firstType = true;
+
     // Add a message to the queue.
     // Добавление сообщения в очередь.
     /**
@@ -46,7 +48,7 @@ final class ErrorOutput extends BaseSingleton
         if (count(self::$messages) > 0) {
             foreach ($errors as $key => $value) {
                 if (HLEB_PROJECT_DEBUG_ON) $value = str_replace('~', '<br><br>', $value);
-                if ($key == 0) {
+                if ($key == 0 && self::$firstType) {
                     $content .= self::first_content($value);
                 } else {
                     $content .= self::content($value);
@@ -61,7 +63,8 @@ final class ErrorOutput extends BaseSingleton
 
     // Simultaneous display of the message with the exit from the script.
     // Одновременный вывод сообщения с выходом из скрипта.
-    public static function get($message) {
+    public static function get($message, $first_type = true) {
+        self::$firstType = $first_type;
         self::add($message);
         self::run();
     }

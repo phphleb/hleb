@@ -58,7 +58,7 @@ class CacheRoutes
                 } else {
                     $errors .= '<span style="color:grey;background-color:#f4f7e4"><code>sudo chown -R www-data ./storage</code></span> из корневой директории проекта, здесь <code>www-data</code> - это предполагаемый пользователь, под которым работает Apache.';
                 }
-                ErrorOutput::get($errors);
+                ErrorOutput::get($errors, false);
             }
         }
         return $data;
