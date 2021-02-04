@@ -228,6 +228,9 @@ function hlClearCacheFiles($files, $path, $fn, $scan_path) {
                 @chmod($value, 0777);
             }
             @unlink($value);
+            if(file_exists($value)) {
+                $error++;
+            }
             $fn->progressConsole(count($files), $k);
             echo " (", $counter, "/", $all, ")";
             $counter++;
