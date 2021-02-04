@@ -50,7 +50,7 @@ class CacheRoutes
                 $user = explode(':', $userAndGroup)[0];
 
                 $errors = 'HL021-CACHE_ERROR: No write permission ! ' .
-                    'Failed to save file to folder `/storage/*`.  You need to change permissions for the web server in this folder. ~ ' .
+                    'Failed to save file to folder `/storage/*`.  You need to change the web server permissions in this folder. ~ ' .
                     'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права веб-сервера для этой папки и вложений. <br>Например, выполнить в терминале ';
 
                 if (!empty($user) && !empty($userAndGroup) && substr_count($userAndGroup, ':') === 1) {
