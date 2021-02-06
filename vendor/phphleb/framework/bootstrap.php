@@ -192,6 +192,7 @@ function hl_main_autoloader($class) {
         \Hleb\Main\MainAutoloader::get($class);
     }
     if (HLEB_PROJECT_DEBUG_ON) {
+        $class = class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false) ? '<b title="HLEB Autoloader">&#10004;</b> ' . $class : '&#9745; ' . $class;
         \Hleb\Main\Info::insert('Autoload', $class);
     }
 }
