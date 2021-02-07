@@ -46,7 +46,8 @@ define('HLEB_CONSOLE_USER_NAME',  @exec('whoami'));
 
 define('HLEB_CONSOLE_PERMISSION_MESSAGE',  "Permission denied! It is necessary to assign rights to the directory `sudo chmod -R 770 ./storage` and the current user " . (HLEB_CONSOLE_USER_NAME ? "`" . HLEB_CONSOLE_USER_NAME. "`" : ''));
 
-$setArguments = array_splice($argv, 2);
+$argumentsList = $argv;
+$setArguments = array_splice($argumentsList, 2);
 
 include_once HLEB_PROJECT_DIRECTORY . '/Main/Console/MainConsole.php';
 
@@ -92,10 +93,17 @@ if ($arguments) {
         case '--help':
         case '-h':
             echo PHP_EOL;
-            echo " --version or -v" . PHP_EOL . " --clear-cache -- or -cc" . PHP_EOL . " --forced-cc" . PHP_EOL .
-                " --info or -i" . PHP_EOL . " --help or -h" . PHP_EOL . " --routes or -r" . PHP_EOL . " --list or -l" .
-                PHP_EOL . " --logs or -lg" . PHP_EOL .
-                (HL_TWIG_CONNECTED ? ' --clear-cache--twig or -cc-twig'  . PHP_EOL . ' --forced-cc-twig'  . PHP_EOL : '');
+            echo " --version or -v           (displays the version of the framework)" . PHP_EOL .
+                 " --clear-cache -- or -cc   (clears the template cache)" . PHP_EOL .
+                 " --forced-cc               (forcefully clears the template cache)" . PHP_EOL .
+                 " --info or -i              (displays the values of the main settings)" . PHP_EOL .
+                 " --help or -h              (displays a list of default console actions)" . PHP_EOL .
+                 " --routes or -r            (forms a list of routes)" . PHP_EOL .
+                 " --list or -l              (forms a list of commands)" . PHP_EOL .
+                 " --logs or -lg             (prints multiple trailing lines from a log file)" . PHP_EOL .
+                 " --new-task                (сreates a new command)" . PHP_EOL .
+                 "                           [ --new-task example-task \"Short description\"]" . PHP_EOL . PHP_EOL .
+                (HL_TWIG_CONNECTED ? " --clear-cache--twig or -cc-twig"  . PHP_EOL . " --forced-cc-twig"  . PHP_EOL : '');
             echo PHP_EOL;
             break;
         case '--routes':
@@ -116,6 +124,10 @@ if ($arguments) {
         case '--logs':
         case '-lg':
             $fn->getLogs();
+            break;
+        case '--new-task':
+            include_once HLEB_PROJECT_DIRECTORY . '/Main/Console/CreateTask.php';
+            new \Hleb\Main\Console\CreateTask(strval($argv[2] ?? ''), strval($argv[3] ?? ''));
             break;
         default:
             $file = $fn->convertCommandToTask($arguments);
@@ -289,21 +301,21 @@ function hlRemoveDir($path) {
     if (file_exists($path) && is_dir($path)) {
         $dir = opendir($path);
         if (!is_resource($dir)) return;
-            while (false !== ($element = readdir($dir))) {
-                if ($element != '.' && $element != '..') {
-                    $tmp = $path . '/' . $element;
-                    chmod($tmp, 0777);
-                    if (is_dir($tmp)) {
-                        hlRemoveDir($tmp);
-                    } else {
-                        unlink($tmp);
-                    }
+        while (false !== ($element = readdir($dir))) {
+            if ($element != '.' && $element != '..') {
+                $tmp = $path . '/' . $element;
+                chmod($tmp, 0777);
+                if (is_dir($tmp)) {
+                    hlRemoveDir($tmp);
+                } else {
+                    unlink($tmp);
                 }
             }
-            closedir($dir);
-            if (file_exists($path)) {
-                rmdir($path);
-            }
+        }
+        closedir($dir);
+        if (file_exists($path)) {
+            rmdir($path);
+        }
     }
 }
 
