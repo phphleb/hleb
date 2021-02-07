@@ -93,16 +93,16 @@ if ($arguments) {
         case '--help':
         case '-h':
             echo PHP_EOL;
-            echo " --version or -v           (displays the version of the framework)" . PHP_EOL .
-                 " --clear-cache -- or -cc   (clears the template cache)" . PHP_EOL .
-                 " --forced-cc               (forcefully clears the template cache)" . PHP_EOL .
-                 " --info or -i              (displays the values of the main settings)" . PHP_EOL .
-                 " --help or -h              (displays a list of default console actions)" . PHP_EOL .
-                 " --routes or -r            (forms a list of routes)" . PHP_EOL .
-                 " --list or -l              (forms a list of commands)" . PHP_EOL .
-                 " --logs or -lg             (prints multiple trailing lines from a log file)" . PHP_EOL .
-                 " --new-task                (сreates a new command)" . PHP_EOL .
-                 "                           [ --new-task example-task \"Short description\"]" . PHP_EOL . PHP_EOL .
+            echo " --version or -v      (displays the version of the framework)" . PHP_EOL .
+                 " --clear-cache or -cc (clears the template cache)" . PHP_EOL .
+                 " --forced-cc          (forcefully clears the template cache)" . PHP_EOL .
+                 " --info or -i         (displays the values of the main settings)" . PHP_EOL .
+                 " --help or -h         (displays a list of default console actions)" . PHP_EOL .
+                 " --routes or -r       (forms a list of routes)" . PHP_EOL .
+                 " --list or -l         (forms a list of commands)" . PHP_EOL .
+                 " --logs or -lg        (prints multiple trailing lines from a log file)" . PHP_EOL .
+                 " --new-task           (сreates a new command)" . PHP_EOL .
+                 "                      [ --new-task example-task \"Short description\"]" . PHP_EOL . PHP_EOL .
                 (HL_TWIG_CONNECTED ? " --clear-cache--twig or -cc-twig"  . PHP_EOL . " --forced-cc-twig"  . PHP_EOL : '');
             echo PHP_EOL;
             break;
