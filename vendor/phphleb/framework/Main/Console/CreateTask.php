@@ -83,3 +83,4 @@ class $class extends \Hleb\Scheme\App\Commands\MainTask
         return file_put_contents($fileName, $content);
     }
 }
+

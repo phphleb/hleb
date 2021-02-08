@@ -70,11 +70,19 @@ if ($arguments) {
             break;
         case '--clear-cache':
         case '-cc':
+            if (file_exists(HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt')) {
+                unlink(HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt');
+                echo PHP_EOL . 'Route cache cleared.';
+            }
             $files = glob(HLEB_GLOBAL_DIRECTORY . HLEB_TEMPLATE_CACHED_PATH . '/*/*.cache', GLOB_NOSORT);
             hlClearCacheFiles($files, HLEB_TEMPLATE_CACHED_PATH, $fn, HLEB_TEMPLATE_CACHED_PATH . '/*/*.cache');
             echo PHP_EOL, PHP_EOL;
             break;
         case '--forced-cc':
+            if(file_exists(HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt')) {
+                unlink(HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt');
+                echo  PHP_EOL . 'Route cache cleared.';
+            }
             hlForcedClearCacheFiles(HLEB_GLOBAL_DIRECTORY . HLEB_TEMPLATE_CACHED_PATH);
             echo PHP_EOL;
             break;
@@ -94,8 +102,8 @@ if ($arguments) {
         case '-h':
             echo PHP_EOL;
             echo " --version or -v      (displays the version of the framework)" . PHP_EOL .
-                 " --clear-cache or -cc (clears the template cache)" . PHP_EOL .
-                 " --forced-cc          (forcefully clears the template cache)" . PHP_EOL .
+                 " --clear-cache or -cc (clears the templates and routes cache)" . PHP_EOL .
+                 " --forced-cc          (forcefully clears the templates and routes cache)" . PHP_EOL .
                  " --info or -i         (displays the values of the main settings)" . PHP_EOL .
                  " --help or -h         (displays a list of default console actions)" . PHP_EOL .
                  " --routes or -r       (forms a list of routes)" . PHP_EOL .

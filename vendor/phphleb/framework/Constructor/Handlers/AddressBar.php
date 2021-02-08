@@ -102,3 +102,4 @@ final class AddressBar
         $this->redirect = $realUrl;
     }
 }
+
