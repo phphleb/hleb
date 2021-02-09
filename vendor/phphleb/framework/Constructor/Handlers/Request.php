@@ -12,7 +12,7 @@ namespace Hleb\Constructor\Handlers;
 
 use Hleb\Main\Insert\BaseSingleton;
 
-class Request extends BaseSingleton
+final class Request extends BaseSingleton
 {
     const NEEDED_TAGS = ['<', '>'];
 
@@ -585,6 +585,9 @@ class Request extends BaseSingleton
     // Keeps the original settings as original.
     // Сохраняет исходные параметры как первоначальные.
     public static function close() {
+        if(self::$close) {
+            return;
+        }
         self::$post = self::getPostData();
         self::$get = self::getGetData();
         self::$req = self::getRequestData();
