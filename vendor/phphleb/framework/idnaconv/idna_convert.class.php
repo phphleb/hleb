@@ -126,7 +126,7 @@ class idna_convert
      */
     public function set_parameter($option, $value = false) {
         if (!is_array($option)) {
-            $option = array($option => $value);
+            $option = [$option => $value];
         }
         foreach ($option as $k => $v) {
             switch ($k) {

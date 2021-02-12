@@ -26,7 +26,7 @@ trait DeterminantStaticUncreated
     }
 
     public static function __callStatic($method, $args) {
-        return call_user_func_array(array(self::instance(), $method), $args);
+        return call_user_func_array([self::instance(), $method], $args);
     }
 
     public function __wakeup() {

@@ -30,7 +30,7 @@ final class MainDB
         return self::$instance;
     }
 
-    public static function run($sql, $args = array()) {
+    public static function run($sql, $args = []) {
         $time = microtime(true);
         $stmt = self::instance()->prepare($sql);
         $stmt->execute($args);
@@ -52,11 +52,11 @@ final class MainDB
     protected static function init() {
         $prms = HLEB_PARAMETERS_FOR_DB[HLEB_TYPE_DB];
 
-        $opt = array(
+        $opt = [
             \PDO::ATTR_ERRMODE => $prms["errmode"] ?? \PDO::ERRMODE_EXCEPTION,
             \PDO::ATTR_DEFAULT_FETCH_MODE => $prms["default_fetch_mode"] ?? \PDO::FETCH_ASSOC,
             \PDO::ATTR_EMULATE_PREPARES => $prms["emulate_prepares"] ?? false
-        );
+        ];
 
         $user = $prms["user"];
         $pass = $prms["pass"];

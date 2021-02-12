@@ -93,7 +93,7 @@ class DB
      |
      |--------------------------------------------------------------------------------------
     */
-    public static function run($sql, $args = array()) {
+    public static function run($sql, $args = []) {
         return \Hleb\Main\MainDB::run($sql, $args);
     }
 
