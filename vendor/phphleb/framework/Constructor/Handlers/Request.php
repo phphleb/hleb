@@ -20,7 +20,11 @@ final class Request extends BaseSingleton
 
     private static $request = [];
 
-    private static $close = false;
+    private static $post = null;
+
+    private static $get = null;
+
+    private static $req = null;
 
     private static $head = null;
 
@@ -560,19 +564,22 @@ final class Request extends BaseSingleton
     // Returns $_POST data.
     // Возвращает данные $_POST.
     private static function getPostData() {
-        return self::clearData($_POST ?? []);
+        if(is_null(self::$post)) self::$post = self::clearData($_POST ?? []);
+        return self::$post;
     }
 
     // Returns $_GET data.
     // Возвращает данные $_GET.
     private static function getGetData() {
-        return self::clearData($_GET ?? []);
+        if(is_null(self::$get)) self::$get = self::clearData($_GET ?? []);
+        return self::$get;
     }
 
     // Returns $_REQUEST data.
     // Возвращает данные $_REQUEST.
     private static function getRequestData() {
-        return self::clearData($_REQUEST ?? []);
+        if(is_null(self::$req)) self::$req = self::clearData($_REQUEST ?? []);
+        return self::$req;
     }
 
     // Determines the type of the value and clears tags from it or nested data. Returns a cleared value.
@@ -634,7 +641,6 @@ final class Request extends BaseSingleton
             $serverLang = strtolower($serverLang);
             return $serverLang;
         }
-
         return false;
     }
 
