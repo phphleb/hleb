@@ -26,6 +26,8 @@ final class Request extends BaseSingleton
 
     private static $req = null;
 
+    private static $cookie = null;
+
     private static $head = null;
 
     private static $uri = null;
@@ -63,7 +65,8 @@ final class Request extends BaseSingleton
      * @return mixed|null
      */
     public static function getCookie($name = null) {
-        return is_null($name) ? self::clearData($_COOKIE ?? []) : (isset($_COOKIE) && isset($_COOKIE[$name]) ? self::clearData($_COOKIE[$name]) : null);
+        if (is_null(self::$cookie)) self::$cookie = self::getCookieData();
+        return is_null($name) ? self::$cookie : (isset($_COOKIE) && isset(self::$cookie[$name]) ? self::$cookie[$name] : null);
     }
 
     /**
@@ -580,6 +583,13 @@ final class Request extends BaseSingleton
     private static function getRequestData() {
         if(is_null(self::$req)) self::$req = self::clearData($_REQUEST ?? []);
         return self::$req;
+    }
+
+    // Returns $_COOKIE data.
+    // Возвращает данные $_COOKIE.
+    private static function getCookieData() {
+        if(is_null(self::$cookie)) self::$cookie = self::clearData($_COOKIE ?? []);
+        return self::$cookie;
     }
 
     // Determines the type of the value and clears tags from it or nested data. Returns a cleared value.
