@@ -34,8 +34,6 @@ final class ProjectLoader extends BaseSingleton
 
         unset($routes_array);
 
-        Request::close();
-
         Route::instance()->delete();
 
         if ($block) {

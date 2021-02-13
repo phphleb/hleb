@@ -22,16 +22,6 @@ final class Request extends BaseSingleton
 
     private static $close = false;
 
-    private static $post = null;
-
-    private static $get = null;
-
-    private static $req = null;
-
-    private static $initialCookie = null;
-
-    private static $initialSession = null;
-
     private static $head = null;
 
     private static $uri = null;
@@ -45,33 +35,6 @@ final class Request extends BaseSingleton
     private static $resources = null;
 
     private static $convertUri = null;
-
-
-    /**
-     * Returns the primary session data of $_SESSION.
-     * @param mixed|null $name - parameter to get data by name.
-     * @return mixed|null
-     *//**
-     * Возвращает первичные данные сессии $_SESSION.
-     * @param mixed|null $name - параметр для получения данных по названию.
-     * @return mixed|null
-     */
-    public static function getInitialSession($name = null) {
-        return is_null($name) ? self::$initialSession : (isset(self::$initialSession[$name]) ? self::$initialSession[$name] : null);
-    }
-
-    /**
-     * Returns the primary session data of $_COOKIE.
-     * @param mixed|null $name - parameter to get data by name.
-     * @return mixed|null
-     *//**
-     * Возвращает первичные данные сессии $_COOKIE.
-     * @param mixed|null $name - параметр для получения данных по названию.
-     * @return mixed|null
-     */
-    public static function getInitialCookie($name = null) {
-        return is_null($name) ? self::$initialCookie : (isset(self::$initialCookie[$name]) ? self::$initialCookie[$name] : null);
-    }
 
     /**
      * Returns the current session data of $_SESSION.
@@ -109,7 +72,7 @@ final class Request extends BaseSingleton
      * @return mixed|null
      */
     public static function get(string $name = '') {
-        return empty($name) ? self::$request : (self::$request[$name] ?? null);
+        return self::getData($name);
     }
 
     /**
@@ -124,7 +87,7 @@ final class Request extends BaseSingleton
      * @return null|string
      */
     public static function getString(string $name, $default = null) {
-        return self::getTypeRequest($name, "strval", "request", $default);
+        return self::getData($name, $default, 'strval');
     }
 
     /**
@@ -139,7 +102,7 @@ final class Request extends BaseSingleton
      * @return null|integer
      */
     public static function getInt(string $name, $default = 0) {
-        return self::getTypeRequest($name, "intval", "request", $default);
+        return self::getData($name, $default, 'intval');
     }
 
     /**
@@ -154,7 +117,7 @@ final class Request extends BaseSingleton
      * @return null|float
      */
     public static function getFloat(string $name, $default = 0.0) {
-        return self::getTypeRequest($name, "floatval", "request", $default);
+        return self::getData($name, $default, 'floatval');
     }
 
     /**
@@ -235,7 +198,7 @@ final class Request extends BaseSingleton
      * @return null|string
      */
     public static function getFullUrl() {
-        if (!isset(self::$url)) self::$url = HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN . self::getUri();
+        if (!isset(self::$url)) self::$url = self::getFullHost() . self::getUri();
         return self::$url;
     }
 
@@ -367,7 +330,7 @@ final class Request extends BaseSingleton
      * @return null|string
      */
     public static function getGetString(string $name, $default = null) {
-        return self::getTypeRequest($name, "strval", "get", $default);
+        return self::getData($name, $default, "strval", self::getGetData());
     }
 
     /**
@@ -382,7 +345,7 @@ final class Request extends BaseSingleton
      * @return null|integer
      */
     public static function getGetInt(string $name, $default = 0) {
-        return self::getTypeRequest($name, "intval", "get", $default);
+        return self::getData($name, $default, "intval", self::getGetData());
     }
 
     /**
@@ -397,7 +360,7 @@ final class Request extends BaseSingleton
      * @return null|float
      */
     public static function getGetFloat(string $name, $default = 0.0) {
-        return self::getTypeRequest($name, "floatval", "get", $default);
+        return self::getData($name, $default, "floatval", self::getGetData());
     }
 
     /**
@@ -425,7 +388,7 @@ final class Request extends BaseSingleton
      * @return null|string
      */
     public static function getPostString(string $name, $default = null) {
-        return self::getTypeRequest($name, "strval", "post", $default);
+        return self::getData($name, $default, "strval", self::getPostData());
     }
 
     /**
@@ -440,7 +403,7 @@ final class Request extends BaseSingleton
      * @return null|integer
      */
     public static function getPostInt(string $name, $default = 0) {
-        return self::getTypeRequest($name, "intval", "post", $default);
+        return self::getData($name, $default, "intval", self::getPostData());
     }
 
     /**
@@ -455,7 +418,7 @@ final class Request extends BaseSingleton
      * @return null|float
      */
     public static function getPostFloat(string $name, $default = 0.0) {
-        return self::getTypeRequest($name, "floatval", "post", $default);
+        return self::getData($name, $default, "floatval", self::getPostData());
     }
 
     /**
@@ -483,7 +446,7 @@ final class Request extends BaseSingleton
      * @return null|string
      */
     public static function getRequestString(string $name, $default = null) {
-        return self::getTypeRequest($name, "strval", "req", $default);
+        return self::getData($name, $default, "strval", self::getRequestData());
     }
 
     /**
@@ -498,7 +461,7 @@ final class Request extends BaseSingleton
      * @return null|integer
      */
     public static function getRequestInt(string $name, $default = 0) {
-        return self::getTypeRequest($name, "intval", "req", $default);
+        return self::getData($name, $default, "intval", self::getRequestData());
     }
 
     /**
@@ -513,7 +476,7 @@ final class Request extends BaseSingleton
      * @return null|float
      */
     public static function getRequestFloat(string $name, $default = 0.0) {
-        return self::getTypeRequest($name, "floatval", "req", $default);
+        return self::getData($name, $default, "floatval", self::getRequestData());
     }
 
     /**
@@ -579,21 +542,7 @@ final class Request extends BaseSingleton
     // Adds a parameter by name and value.
     // Добавляет параметр по имени и значению.
     public static function add(string $name, string $value) {
-        if (!self::$close) self::$request[$name] = is_numeric($value) ? floatval($value) : self::clearData($value);
-    }
-
-    // Keeps the original settings as original.
-    // Сохраняет исходные параметры как первоначальные.
-    public static function close() {
-        if(self::$close) {
-            return;
-        }
-        self::$post = self::getPostData();
-        self::$get = self::getGetData();
-        self::$req = self::getRequestData();
-        self::$initialCookie = self::clearData($_COOKIE ?? []);
-        self::$initialSession = $_SESSION ?? [];
-        self::$close = true;
+       self::$request[$name] = is_numeric($value) ? floatval($value) : self::clearData($value);
     }
 
     // URL conversion.
@@ -602,33 +551,22 @@ final class Request extends BaseSingleton
         return rawurldecode($url);
     }
 
-    // Returns the desired value from the request parameters by its name.
-    // Возвращает нужное значение из параметров запроса по его названию.
-    private static function getTypeRequest(string $name, string $function, string $param, $default) {
-        return isset(self::$$param[$name]) ? (!is_null(self::$$param[$name]) ?
-            $function(self::clearData(!is_array(self::$$param[$name]) ? self::$$param[$name] : null)) : $default) :
-            $default;
-    }
-
     // Returns $_POST data.
     // Возвращает данные $_POST.
     private static function getPostData() {
-        if (!isset(self::$post)) self::$post = self::clearData($_POST ?? []);
-        return self::$post;
+        return self::clearData($_POST ?? []);
     }
 
     // Returns $_GET data.
     // Возвращает данные $_GET.
     private static function getGetData() {
-        if (!isset(self::$get)) self::$get = self::clearData($_GET ?? []);
-        return self::$get;
+        return self::clearData($_GET ?? []);
     }
 
     // Returns $_REQUEST data.
     // Возвращает данные $_REQUEST.
     private static function getRequestData() {
-        if (!isset(self::$req)) self::$req = self::clearData($_REQUEST ?? []);
-        return self::$req;
+        return self::clearData($_REQUEST ?? []);
     }
 
     // Determines the type of the value and clears tags from it or nested data. Returns a cleared value.
@@ -692,6 +630,23 @@ final class Request extends BaseSingleton
         }
 
         return false;
+    }
+
+    // Returns a standardized value
+    // Возвращает стандартизированное значение
+    private static function getData($name = null, $default = '', $function = '', array $list = null) {
+        $data = is_null($list) ? self::$request : $list;
+        if($name) {
+            $value = isset($data[$name]) ? $data[$name] : null;
+            if(!is_null($value)) {
+                $value = $function ? $function($value) : $value;
+                if(!empty($value)) {
+                    return $value;
+                }
+            }
+            return $default;
+        }
+        return $data ?? [];
     }
 
 }
