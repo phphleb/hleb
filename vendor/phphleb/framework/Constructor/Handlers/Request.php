@@ -539,6 +539,12 @@ final class Request extends BaseSingleton
         return explode('?', urldecode($_SERVER['REQUEST_URI']))[0];
     }
 
+    // Reserved for backward compatibility
+    // Оставлено для обратной совместимости
+    public static function close() {
+        return null;
+    }
+
     // Adds a parameter by name and value.
     // Добавляет параметр по имени и значению.
     public static function add(string $name, string $value) {
