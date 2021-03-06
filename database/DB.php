@@ -41,6 +41,8 @@ class DB
      | $in  = str_repeat('?,', count($arr) - 1) . '?';
      | $row = DB::run("SELECT * FROM tablename WHERE column IN ($in)", $in)->fetch();
      |
+     | [config key] - select the type of connection.
+     |
      |
      |--------------------------------------------------------------------------------------
      |  Примеры обращения
@@ -80,11 +82,12 @@ class DB
      | $in  = str_repeat('?,', count($arr) - 1) . '?';
      | $row = DB::run("SELECT * FROM tablename WHERE column IN ($in)", $in)->fetch();
      |
+     | [config key] - выбор типа соединения.
      |
      |--------------------------------------------------------------------------------------
     */
-    public static function run($sql, $args = []) {
-        return \Hleb\Main\DB::run($sql, $args);
+    public static function run($sql, $args = [], $config_key = null) {
+        return \Hleb\Main\DB::run($sql, $args, $config_key);
     }
 
 
@@ -97,6 +100,8 @@ class DB
      | Result:
      | $result = DB::db_query("SELECT id FROM tablename WHERE name=" . (DB::quote($per)) );
      |
+     | [config key] - select the type of connection.
+     |
      |
      |--------------------------------------------------------------------------------------
      | Обычный запрос в базу данных по типу mysql
@@ -106,11 +111,12 @@ class DB
      | в итоге:
      | $result = DB::db_query("SELECT id FROM tablename WHERE name=" . (DB::quote($per)) );
      |
+     | [config key] - выбор типа соединения.
      |
      |--------------------------------------------------------------------------------------
     */
-    public static function db_query($sql) {
-        return \Hleb\Main\DB::db_query($sql);
+    public static function db_query($sql, $config_key = null) {
+        return \Hleb\Main\DB::db_query($sql, $config_key);
     }
 }
 
