@@ -83,7 +83,7 @@ final class AddressBar
 
         // Check if the URL is correct.
         // Проверка на корректность URL.
-        $realHostWww = $realHostWww . (empty($relAddress) ? ( $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? '/' : "") : "");
+        $realHostWww = empty($relAddress) ? rtrim($realHostWww, '/') . '/' : $realHostWww;
         $realUrl = $realProtocol . (preg_replace('/\/{2,}/', '/', $realHostWww . $relAddress)) . $realParameters;
         $partsOfActualUri = explode('?', $this->inputParameters['SERVER']['REQUEST_URI']);
         $firstActualUri = rawurldecode(array_shift($partsOfActualUri));
