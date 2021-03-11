@@ -40,8 +40,6 @@ final class AddressBar
         $fileUrl = stripos(end($endElement), '.') !== false;
         $relAddress = "";
 
-
-
         if (!empty($address)) {
             if (!$fileUrl) {
                 if ($address[strlen($address) - 1] == '/') {
@@ -53,8 +51,6 @@ final class AddressBar
                 $relAddress = $address;
             }
         }
-
-
 
         // Processing domains with Cyrillic letters.
         // Обработка доменов с кириллицей.
