@@ -83,13 +83,16 @@ final class AddressBar
 
         // Check if the URL is correct.
         // Проверка на корректность URL.
-        $realHostWww = empty($relAddress) ? rtrim($realHostWww, '/') . '/' : $realHostWww;
         $realUrl = $realProtocol . (preg_replace('/\/{2,}/', '/', $realHostWww . $relAddress)) . $realParameters;
         $partsOfActualUri = explode('?', $this->inputParameters['SERVER']['REQUEST_URI']);
         $firstActualUri = rawurldecode(array_shift($partsOfActualUri));
         $firstActualParams = count($partsOfActualUri) > 0 ? '?' . implode('?', $partsOfActualUri) : '';
         $actualHost = strval(is_null($idn) ? $this->inputParameters['SERVER']['HTTP_HOST'] : $idn->decode($this->inputParameters['SERVER']['HTTP_HOST']));
         $actualUrl = $actualProtocol . strval($actualHost) . $firstActualUri . $firstActualParams;
+        if(empty($relAddress)) {
+            $realUrl =  rtrim($realUrl, '/');
+            $actualUrl = rtrim($actualUrl, '/');
+        }
         if ($realUrl !== $actualUrl) {
             $this->redirect($realUrl);
         }
