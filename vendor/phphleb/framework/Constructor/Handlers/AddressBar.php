@@ -40,6 +40,8 @@ final class AddressBar
         $fileUrl = stripos(end($endElement), '.') !== false;
         $relAddress = "";
 
+
+
         if (!empty($address)) {
             if (!$fileUrl) {
                 if ($address[strlen($address) - 1] == '/') {
@@ -51,6 +53,8 @@ final class AddressBar
                 $relAddress = $address;
             }
         }
+
+
 
         // Processing domains with Cyrillic letters.
         // Обработка доменов с кириллицей.
@@ -83,7 +87,7 @@ final class AddressBar
 
         // Check if the URL is correct.
         // Проверка на корректность URL.
-        $realHostWww = empty($relAddress) ? ($realHostWww . $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? '/' : "") : $realHostWww;
+        $realHostWww = $realHostWww . (empty($relAddress) ? ( $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? '/' : "") : "");
         $realUrl = $realProtocol . (preg_replace('/\/{2,}/', '/', $realHostWww . $relAddress)) . $realParameters;
         $partsOfActualUri = explode('?', $this->inputParameters['SERVER']['REQUEST_URI']);
         $firstActualUri = rawurldecode(array_shift($partsOfActualUri));
