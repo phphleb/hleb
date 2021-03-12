@@ -153,7 +153,9 @@ final class URL extends BaseSingleton
                 $params .= '?' . str_replace(self::NEEDED_TAGS, self::REPLACING_TAGS, $allUrl);
             }
         }
-        self::$standardUrlList[$url] = preg_replace('|([/]+)|s', '/', self::getStandard(self::endingUrl($allUrls[0])) . $params);
+        $standardUrl = preg_replace('|([/]+)|s', '/', self::getStandard(self::endingUrl($allUrls[0])) . $params);
+        self::$standardUrlList[$url] = !empty(trim($standardUrl, '/')) ? $standardUrl : "/";
+
         return self::$standardUrlList[$url];
     }
 
