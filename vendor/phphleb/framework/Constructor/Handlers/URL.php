@@ -187,7 +187,11 @@ final class URL extends BaseSingleton
     // Реализует редирект.
     protected static function universalRedirect(string $url, int $code = 302) {
         if (!headers_sent()) {
-            header('Location: ' . self::getStandardUrl($url), true, $code);
+            if($url === '/') {
+                header('Location: /', true, $code);
+            } else {
+                header('Location: ' . self::getStandardUrl($url), true, $code);
+            }
         }
         hl_preliminary_exit();
     }
