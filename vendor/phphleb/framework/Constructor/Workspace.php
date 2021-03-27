@@ -75,7 +75,7 @@ final class Workspace
         if ($realType === 'options' && implode($types) !== 'options') {
             $types[] = 'options';
             if (!headers_sent()) {
-                header($_SERVER['SERVER_PROTOCOL'] . ' 200 OK');
+                http_response_code (200);
                 header('Allow: ' . strtoupper(implode(',', array_unique($types))));
                 header('Content-length: 0');
             }

@@ -102,7 +102,7 @@ final class URLHandler
         $realType = strtolower($_SERVER['REQUEST_METHOD']);
         if (!in_array($realType, HLEB_HTTP_TYPE_SUPPORT)) {
             if (!headers_sent()) {
-                header($_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed');
+                http_response_code (405);
                 header('Allow: ' . strtoupper(implode(',', HLEB_HTTP_TYPE_SUPPORT)));
                 header('Content-length: 0');
             }

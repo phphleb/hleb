@@ -50,7 +50,7 @@ final class ProtectedCSRF extends BaseSingleton
     public static function blocked() {
         $request = $_REQUEST['_token'] ?? '';
         if (!self::checkKey($request)) {
-            header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
+            http_response_code (403);
             // End of script execution before starting the main project.
             hl_preliminary_exit('Protected from CSRF');
         }

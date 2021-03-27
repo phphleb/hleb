@@ -25,7 +25,7 @@ final class ErrorOutput extends BaseSingleton
     public static function add($messages) {
         if (is_string($messages)) $messages = [$messages];
         if (!headers_sent()) {
-            header($_SERVER["SERVER_PROTOCOL"] . ' 500 Internal Server Error');
+            http_response_code (500);
         }
         foreach ($messages as $key => $message) {
             if (isset($message)) {
