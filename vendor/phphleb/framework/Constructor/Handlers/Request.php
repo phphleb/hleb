@@ -658,11 +658,14 @@ final class Request extends BaseSingleton
     // Возвращает стандартизированное значение
     private static function getData($name = null, $default = '', $function = '', array $list = null) {
         $data = is_null($list) ? self::$request : $list;
-        if($name) {
+        if ($name) {
             $value = isset($data[$name]) ? $data[$name] : null;
-            if(!is_null($value)) {
-                $value = $function ? $function($value) : $value;
-                if(!empty($value)) {
+            if (!is_numeric($value) && in_array($function, ['intval', 'floatval'])) {
+                return $default;
+            }
+            if (!is_null($value)) {
+                $value = $function && $value !== '' ? $function($value) : $value;
+                if (!empty($value) || (is_numeric($value) && $value == 0)) {
                     return $value;
                 }
             }
