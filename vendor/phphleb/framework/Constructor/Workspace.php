@@ -203,14 +203,16 @@ final class Workspace
             ErrorOutput::get($hlExcludedErrors);
         }
 
-        if (!is_callable([$initiator, $method])) {
+        $initiatorObject = new $initiator;
+
+        if (!is_callable([$initiatorObject, $method])) {
             $hlExcludedErrors = 'HL048-ROUTE_ERROR: Method `' . $method . '` in class `' . $initiator . '` not exists. ~' .
                 ' Метод  `' . $method . '` для класса `' . $initiator . '` не обнаружен.';
             ErrorOutput::get($hlExcludedErrors);
             return null;
         }
 
-        (new $initiator())->{$method}(...$arguments);
+        $initiatorObject->{$method}(...$arguments);
     }
 
     // Returns the initiated controller class.
@@ -260,7 +262,9 @@ final class Workspace
             }
         }
 
-        if (!is_callable([$initiator, $method])) {
+        $initiatorObject = new $initiator;
+
+        if (!is_callable([$initiatorObject, $method])) {
             if (!$searchTags) {
                 $hlExcludedErrors = 'HL042-ROUTE_ERROR: Method `' . $method . '` in class `' . $initiator . '` not exists. ~' .
                     ' Метод  `' . $method . '` для класса `' . $initiator . '` не обнаружен.';
@@ -271,7 +275,7 @@ final class Workspace
             }
         }
 
-        return (new $initiator())->{$method}(...$arguments);
+        return $initiatorObject->{$method}(...$arguments);
     }
 
     // Returns the initiated controller class for the admin panel.
@@ -300,14 +304,16 @@ final class Workspace
             return null;
         }
 
-        if (!is_callable([$initiator, $method])) {
+        $initiatorObject = new $initiator;
+
+        if (!is_callable([$initiatorObject, $method])) {
             $hlExcludedErrors = 'HL049-ROUTE_ERROR: Method `' . $method . '` in class `' . $initiator . '` not exists. ~' .
                 ' Метод  `' . $method . '` для класса `' . $initiator . '` не обнаружен.';
             ErrorOutput::get($hlExcludedErrors);
             return null;
         }
 
-        $controller = (new $initiator())->{$method}(...$arguments);
+        $controller = $initiatorObject->{$method}(...$arguments);
         $admObj = new \Phphleb\Adminpan\Add\AdminPanHandler();
         $this->admFooter = $admObj->getFooter();
         echo $admObj->getHeader($block['number'], $block['_AdminPanelData']);
