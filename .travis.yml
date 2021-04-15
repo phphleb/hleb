@@ -18,7 +18,9 @@ jobs:
     - php: 7.3
     - php: 7.4
     - php: 7.4.9
+    - php: 7.4.16
     - php: 8.0
+    - php: 8.0.3
 
 install:
   - composer require phphleb/framework $FRAMEWORK_VERSION
