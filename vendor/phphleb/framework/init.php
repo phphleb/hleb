@@ -114,8 +114,29 @@ function hleb_to0me1cd6vo7gd_data() {
 function hleb_v10s20hdp8nm7c_render($render, $data = null) {
 
     if (is_string($render)) {
-
         $render = [$render];
+    }
+
+    /*
+     *  Replacement by string key in a named array (first element).
+     *
+     *  Замена по строковому ключу в именованном массиве (первый элемент).
+     *
+     *  $map = ['header' => 'headerMap', 'content' => 'origin', 'footer' => 'footerMap'];
+     *  render([$map, 'content' => 'replace']);
+     */
+    if (count($render) >= 2 && is_array($render[0])) {
+        $list = [];
+        $replace = $render;
+        $origin = array_shift($replace);
+        foreach ($origin as $key => $value) {
+            if (!is_string($key)) {
+                $list = [];
+                break;
+            }
+            $list[] = isset($replace[$key]) ? $replace[$key] : $origin[$key];
+        }
+        $render = $list;
     }
 
     return hleb_gop0m3f4hpe10d_all($render, $data, 'render');
