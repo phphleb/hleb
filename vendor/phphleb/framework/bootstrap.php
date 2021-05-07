@@ -117,6 +117,11 @@ if (!defined('HLEB_PROJECT_GLUE_WITH_WWW')) {
     define('HLEB_PROJECT_GLUE_WITH_WWW', 0);
 }
 
+// Allows to set/unset session_start when loading the framework. For GET request method only.
+if (!defined('HLEB_DEFAULT_SESSION_INIT')) {
+    define('HLEB_DEFAULT_SESSION_INIT', true);
+}
+
 if (isset($_GET["_token"])) {
     header("Referrer-Policy: origin-when-cross-origin");
 }

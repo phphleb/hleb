@@ -37,8 +37,10 @@ final class ProjectLoader extends BaseSingleton
         Route::instance()->delete();
 
         if ($block) {
-            if (!isset($_SESSION)) @session_start();
-            if (!isset($_SESSION)) ErrorOutput::get("HL050-ERROR: SESSION not initialized !");
+            if(HLEB_DEFAULT_SESSION_INIT || $_SERVER['REQUEST_METHOD'] !== 'GET') {
+                if (!isset($_SESSION)) @session_start();
+                if (!isset($_SESSION)) ErrorOutput::get("HL050-ERROR: SESSION not initialized !");
+            }
             ProtectedCSRF::testPage($block);
             new Workspace($block, $render_map);
             print PageFinisher::getContent();
