@@ -15,13 +15,13 @@ final class URLHandler
     // Parse the array with routes.
     // Разбор массива с маршрутами.
     public function page(array $blocks) {
+        $searchDomains = $blocks['domains'] ?? false;
         // Clearing global data.
         // Очистка глобальных данных.
-        if (isset($blocks['update'])) unset($blocks['update']);
-        if (isset($blocks['render'])) unset($blocks['render']);
-        if (isset($blocks['addresses'])) unset($blocks['addresses']);
-        $searchDomains = $blocks['domains'] ?? false;
-        if (isset($blocks['domains'])) unset($blocks['domains']);
+        unset($blocks['domains']);
+        unset($blocks['update']);
+        unset($blocks['render']);
+        unset($blocks['addresses']);
 
         $url = Request::getMainClearUrl();
         $blocks = $searchDomains ? $this->matchSubdomains($blocks) : $blocks;
