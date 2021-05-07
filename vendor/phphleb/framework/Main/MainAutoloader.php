@@ -9,12 +9,16 @@ use Hleb\Scheme\Home\Main\Connector;
 
 final class MainAutoloader
 {
+    private static $homeList = null;
+    private static $mainList = null;
+
     public static function get(string $class) {
-        if (class_exists($class, false) || interface_exists($class, false)) return;
-        if (self::search_and_include($class, new HomeConnector())) {
+        self::createData();
+
+        if (self::searchAndInclude($class, self::$homeList)) {
             /* Checking inner classes. */
             /* Проверка внутренних классов. */
-        } else if (self::search_and_include($class, new MainConnector())) {
+        } else if (self::searchAndInclude($class, self::$mainList)) {
             /* Checking custom classes. */
             /* Проверка пользовательских классов. */
         } else {
@@ -58,7 +62,10 @@ final class MainAutoloader
     }
 
     public static function search_and_include(string $class, Connector $connector): bool {
-        $responding = $connector->add();
+        return self::searchAndInclude($class, $connector->add());
+    }
+
+    private static function searchAndInclude(string $class, array $responding): bool {
         /* If a class with a direct link is found. */
         /* Если найден класс с прямой ссылкой. */
         if (isset($responding[$class])) {
@@ -98,6 +105,15 @@ final class MainAutoloader
     private static function init(string $path, $test = true) {
         if ($test && is_readable($path) === false) return;
         include_once "$path";
+    }
+
+    private static function createData() {
+        if(is_null(self::$homeList)) {
+            self::$homeList = (new HomeConnector())->add();
+        }
+        if(is_null(self::$mainList)) {
+            self::$mainList = (new MainConnector())->add();
+        }
     }
 }
 
