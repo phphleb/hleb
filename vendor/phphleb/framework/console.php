@@ -38,8 +38,8 @@ if (!defined('HLEB_PROJECT_CLASSES_AUTOLOAD')) {
     define('HLEB_PROJECT_CLASSES_AUTOLOAD', true);
 }
 
-function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondPartOfPath) {
-    require_once $firstPartOfPath . $secondPartOfPath;
+function hleb_require(string $path) {
+    require_once "$path";
 }
 
 define('HLEB_CONSOLE_USER_NAME',  @exec('whoami'));

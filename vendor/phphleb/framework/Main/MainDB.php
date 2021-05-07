@@ -23,9 +23,9 @@ final class MainDB
                 HLEB_GLOBAL_DIRECTORY . '/database';
 
             if (file_exists($configSearchDir . "/dbase.config.php")) {
-                hl_print_fulfillment_inspector($configSearchDir, "/dbase.config.php");
+                hleb_require($configSearchDir . "/dbase.config.php");
             } else {
-                hl_print_fulfillment_inspector($configSearchDir, "/default.dbase.config.php");
+                hleb_require($configSearchDir . "/default.dbase.config.php");
             }
         }
         $config = self::setConfigKey($config_key);

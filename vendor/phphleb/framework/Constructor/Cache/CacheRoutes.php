@@ -67,7 +67,7 @@ class CacheRoutes
     // Output and compile the route map.
     // Вывод и компиляция карты роутов.
     private function createRoutes() {
-        hl_print_fulfillment_inspector(HLEB_LOAD_ROUTES_DIRECTORY, '/main.php');
+        hleb_require(HLEB_LOAD_ROUTES_DIRECTORY . '/main.php');
 
         // Reserved file name is used /routes/.../main.php
         // Используется зарезервированное название файла /routes/.../main.php
