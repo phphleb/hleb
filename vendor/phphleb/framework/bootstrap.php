@@ -73,29 +73,12 @@ if (!defined('HLEB_GLOBAL_DIRECTORY')) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Monitors the execution of unnecessary output
-function hl_print_fulfillment_inspector(string $firstPartOfPath, string $secondPartOfPath) {
-    $log = defined('HLEB_PROJECT_LOG_ON') && HLEB_PROJECT_LOG_ON;
-    $debug = defined('HLEB_PROJECT_DEBUG') && HLEB_PROJECT_DEBUG;
-    $fullPath = realpath($firstPartOfPath . $secondPartOfPath);
-    $error = " ERROR! The file " . (!$debug && $log ? $fullPath : $secondPartOfPath);
-    if (!file_exists($fullPath)) {
-        $error .= " not found. " . PHP_EOL;
-        // End of script execution before starting the framework.
-        hl_preliminary_exit(!$debug && $log ? error_log($error) : $error);
-    }
-    ob_start();
-    require_once "$fullPath";
-    $content = ob_get_contents();
-    ob_end_flush();
-    if ($content !== '') {
-        $error .= " is not intended to display content. " . PHP_EOL;
-        // End of script execution before starting the framework.
-        hl_preliminary_exit(!$debug && $log ? error_log($error) : $error);
-    }
+function hleb_require(string $path) {
+    require_once "$path";
 }
+
 $pathToStartFileDir = rtrim(defined('HLEB_SEARCH_START_CONFIG_FILE') ? HLEB_SEARCH_START_CONFIG_FILE : HLEB_GLOBAL_DIRECTORY, '\\/ ');
-hl_print_fulfillment_inspector( $pathToStartFileDir,  '/' . (file_exists($pathToStartFileDir . '/start.hleb.php') ? '' : 'default.') . 'start.hleb.php');
+hleb_require( $pathToStartFileDir .  '/' . (file_exists($pathToStartFileDir . '/start.hleb.php') ? '' : 'default.') . 'start.hleb.php');
 
 if (!defined('HLEB_PROJECT_DEBUG') || !is_bool(HLEB_PROJECT_DEBUG)) {
     // End of script execution before starting the framework.
@@ -273,9 +256,9 @@ if(empty($radjaxIsActive)) {
     require HLEB_VENDOR_DIRECTORY . '/phphleb/framework/init.php';
 
     if (file_exists(HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php')) {
-        hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY, '/app/Optional/aliases.php');
+        hleb_require(HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php');
     }
-    hl_print_fulfillment_inspector(HLEB_GLOBAL_DIRECTORY, '/app/Optional/shell.php');
+    hleb_require(HLEB_GLOBAL_DIRECTORY . '/app/Optional/shell.php');
 
     \Hleb\Main\ProjectLoader::start();
 
