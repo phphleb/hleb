@@ -8,11 +8,6 @@ if (!function_exists('hl_preliminary_exit')) {
         exit($text);
     }
 }
-// Auto update packages
-if (!empty($arguments) && strpos($arguments, 'phphleb/') !== false && file_exists(dirname(__DIR__, 2) . '/' . $arguments . '/' . 'start.php')) {
-    require dirname(__DIR__, 2) . '/' . $arguments . '/' . 'start.php';
-    hl_preliminary_exit();
-}
 
 if (!defined('HLEB_GLOBAL_DIRECTORY')) define('HLEB_GLOBAL_DIRECTORY', dirname(__DIR__, 3));
 
@@ -40,6 +35,13 @@ if (!defined('HLEB_PROJECT_CLASSES_AUTOLOAD')) {
 
 function hleb_require(string $path) {
     require_once "$path";
+}
+
+// Auto update packages
+if (!empty($arguments) && strpos($arguments, 'phphleb/') !== false && file_exists(dirname(__DIR__, 2) . '/' . $arguments . '/' . 'start.php')) {
+    hlUploadAll();
+    require dirname(__DIR__, 2) . '/' . $arguments . '/' . 'start.php';
+    hl_preliminary_exit();
 }
 
 define('HLEB_CONSOLE_USER_NAME',  @exec('whoami'));
