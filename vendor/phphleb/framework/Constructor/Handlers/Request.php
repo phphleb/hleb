@@ -36,6 +36,8 @@ final class Request extends BaseSingleton
 
     private static $url = null;
 
+    private static $address = null;
+
     private static $referer = null;
 
     private static $resources = null;
@@ -199,14 +201,26 @@ final class Request extends BaseSingleton
 
     /**
      * The full URL of the current request, of the form 'http://site.com/index.php?p=example'
-     * @return null|string
+     * @return string
      *//**
      * Полный URL-адрес текущего запроса, вида 'http://site.com/index.php?p=example'
-     * @return null|string
+     * @return string
      */
     public static function getFullUrl() {
         if (!isset(self::$url)) self::$url = self::getFullHost() . self::getUri();
         return self::$url;
+    }
+
+    /**
+     * Full URL of the current request without GET parameters, of the form 'http://site.com/index.php'
+     * @return string
+     *//**
+     * Полный URL-адрес текущего запроса без GET-параметров, вида 'http://site.com/index.php'
+     * @return string
+     */
+    public static function getFullUrlAddress() {
+        if (!isset(self::$address)) self::$address = explode('?', self::getFullUrl())[0];
+        return self::$address;
     }
 
     /**

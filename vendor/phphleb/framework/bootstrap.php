@@ -265,7 +265,11 @@ if(empty($radjaxIsActive)) {
     }
     hleb_require(HLEB_GLOBAL_DIRECTORY . '/app/Optional/shell.php');
 
-    \Hleb\Main\ProjectLoader::start();
+    try {
+        \Hleb\Main\ProjectLoader::start();
+    } catch (Throwable $exception) {
+        throw new Error( "[" . \Hleb\Constructor\Handlers\Request::getFullUrlAddress() . "]" . PHP_EOL . $exception->getTraceAsString(), $exception->getCode());
+    }
 
 }
 
