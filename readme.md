@@ -105,7 +105,7 @@ use App\Models\UserModel;
 class TestController extends \MainController
 {
     function index($status) {  // $status = 'friends'
-      $data = UserModel::getUsersDatByParentId(\Request::get('id'), $status);
+      $data = UserModel::getUsersDataByParentId(\Request::get('id'), $status);
       return view('/user/profile', ['contacts' => $data]);
     }
 }
@@ -134,7 +134,7 @@ Models
 namespace App\Models;
 class UserModel extends \MainModel
 {
-   static function getUsersDatByParentId(int $id, string $status) {
+   static function getUsersDataByParentId(int $id, string $status) {
      $data = /* ... */ // A query to the database, returning users data.
      return $data;
    }
