@@ -25,21 +25,35 @@ class MainRoute
 
     protected static $number = 1000;
 
+    public function __call($name, $arguments) {
+        switch ($name) {
+            case 'data':
+                return $this->data();
+                break;
+            case 'delete':
+                $this->delete();
+                break;
+            case 'end':
+                $this->end();
+                break;
+        }
+    }
+
     // Returns the collected route data.
     // Возвращает собранные данные маршрутов.
-    public function data() {
+    protected function data() {
         return self::$dataMethods;
     }
 
     // Removes route information.
     // Удаляет информацию о маршрутах.
-    public function delete() {
+    protected function delete() {
         self::$instance = false;
     }
 
     // Finish parsing routes.
     // Завершает парсинг маршрутов.
-    public function end() {
+    protected function end() {
         if (!is_null(self::$instance)) {
             self::$dataMethods = (new RouteMethodEnd(self::$instance))->data();
         }

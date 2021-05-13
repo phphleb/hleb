@@ -86,6 +86,14 @@ Route::type(['get','post'])->before('ClassBefore')->get('/path/')->controller('C
 
 ```
 
+or (with **IDE** hints)
+
+```php
+Route::type(['get','post'])::before('ClassBefore')::get('/path/')::controller('ClassController')::after('ClassAfter');
+
+```
+
+
 Controllers
 -----------------------------------
 Creating a simple controller with such content:
