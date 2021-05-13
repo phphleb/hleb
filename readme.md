@@ -105,8 +105,8 @@ use App\Models\UserModel;
 class TestController extends \MainController
 {
     function index($status) {  // $status = 'friends'
-     $data = UserModel::getUsersDatByParentId(\Request::get('id'), $status);
-     return view('/user/profile', ['contacts' => $data]);
+      $data = UserModel::getUsersDatByParentId(\Request::get('id'), $status);
+      return view('/user/profile', ['contacts' => $data]);
     }
 }
 ```
