@@ -60,7 +60,14 @@ Route::get('/', view('index'));
 
 This is an example of a more complex-named route. Here, $x and $y values are transferred to the "/views/map/new.php" file, and conditions for the dynamic address are set ("version" and "page" can take different values). You can call a route up by its name using dedicated functions of the framework.
 ```php
-Route::get('/ru/{version}/{page?}/', view('/map/new', ['x' => 59.9, 'y' => 30.3]))->where(['version' => '[a-z0-9]+', 'page' => '[a-z]+'])->name('RouteName'); // /ru/.../.../ or /ru/.../
+Route::get('/ru/{version}/{page?}/', view('/map/new', ['x' => 0, 'y' => 0]))->where(['version' => '[a-z0-9]+', 'page' => '[a-z]+'])->name('RouteName'); // /ru/.../.../ or /ru/.../
+
+```
+
+or (with **IDE** hints)
+
+```php
+Route::get('/ru/{version}/{page?}/', view('/map/new', ['x' => 0, 'y' => 0]))::where(['version' => '[a-z0-9]+', 'page' => '[a-z]+'])::name('RouteName'); // /ru/.../.../ or /ru/.../
 
 ```
 
@@ -86,12 +93,6 @@ Route::type(['get','post'])->before('ClassBefore')->get('/path/')->controller('C
 
 ```
 
-or (with **IDE** hints)
-
-```php
-Route::type(['get','post'])::before('ClassBefore')::get('/path/')::controller('ClassController')::after('ClassAfter');
-
-```
 
 
 Controllers
@@ -103,27 +104,41 @@ namespace App\Controllers;
 use App\Models\UserModel;
 class TestController extends \MainController
 {
-    function index($value) {  // $value = 'friends'
-     $data = UserModel::getData(['id' => \Request::get('id'), 'join' => $value]);
-     return view('/user/profile', ['data' => $data]);
+    function index($status) {  // $status = 'friends'
+     $data = UserModel::getUsersDatByParentId(\Request::get('id'), $status);
+     return view('/user/profile', ['contacts' => $data]);
     }
 }
 ```
 You can use it in the route map:
 
 ```php
-Route::get('/profile/{id}/')->controller('TestController',['friends'])->where(['id' => '[0-9]+']);
+Route::get('/profile/{id}/contacts/')->controller('TestController',['friends'])->where(['id' => '[0-9]+']);
 ```  
 or
 
 ```php
-Route::get('/profile/{id}/')->controller('TestController@index',['friends'])->where(['id' => '[0-9]+']);
+Route::get('/profile/{id}/contacts/')->controller('TestController@index',['friends'])->where(['id' => '[0-9]+']);
 ``` 
 
 Replacing class and method calls from url:
 ```php
 Route::get('/example/{class}/{method}/')->controller('<class>Controller@get<method>'); // Converts `site.com/example/all-users/user/` to `AllUsersController@getUser`
 
+```
+
+Models
+-----------------------------------
+ ```php
+// File /app/Models/UserModel.php
+namespace App\Models;
+class UserModel extends \MainModel
+{
+   static function getUsersDatByParentId(int $id, string $status) {
+     $data = /* ... */ // A query to the database, returning users data.
+     return $data;
+   }
+}
 ```
 
 Modules
@@ -156,19 +171,6 @@ includeTemplate('/example/templates/origin');
 
 ```
 
-Models
------------------------------------
- ```php
-// File /app/Models/UserModel.php
-namespace App\Models;
-class UserModel extends \MainModel
-{
-   static function getData($params) {
-     $data = /* ... */ // A query to the database, returning an array of user data.
-     return $data;
-   }
-}
-```
 
 ORM
 -----------------------------------
