@@ -39,8 +39,16 @@ final class MainDB
         $time = microtime(true);
         $stmt = self::instance($config)->prepare($sql);
         $stmt->execute($args);
+        $time = microtime(true) - $time;
         if (defined('HLEB_PROJECT_DEBUG_ON') && HLEB_PROJECT_DEBUG_ON) {
-            \Hleb\Main\DataDebug::add($sql, microtime(true) - $time, self::setConfigKey($config), true);
+            \Hleb\Main\DataDebug::add($sql, $time, self::setConfigKey($config), true);
+        }
+        if (defined('HLEB_DB_LOG_ENABLED') && HLEB_DB_LOG_ENABLED && defined('HLEB_PROJECT_LOG_ON') && HLEB_PROJECT_LOG_ON) {
+            $logFile = hleb_storage_directory('logs')  . DIRECTORY_SEPARATOR . date('Y_m_d_') . 'errors.log';
+            print $logFile;
+            if(file_exists($logFile)) {
+                file_put_contents($logFile, '[DB LOG ' . date("Y-m-d H:i:s") . ' ' . round ($time, 4) . ' sec] ' . $sql . ';' . PHP_EOL, FILE_APPEND);
+            }
         }
         return $stmt;
     }

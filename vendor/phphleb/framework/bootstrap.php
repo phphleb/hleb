@@ -132,17 +132,22 @@ if (!defined('HLEB_VENDOR_DIR_NAME')) {
     define('HLEB_VENDOR_DIR_NAME', array_reverse(explode(DIRECTORY_SEPARATOR, dirname(__DIR__, 2)))[0]);
 }
 
+define('HLEB_PROJECT_STORAGE_DIR', (defined('HLEB_STORAGE_DIRECTORY') ? rtrim(HLEB_STORAGE_DIRECTORY, '\\/ ') : HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage'));
+
+//Full path to folder '/storage'
+function hleb_storage_directory($subPath = '') {
+    return  HLEB_PROJECT_STORAGE_DIR . (!empty($subPath) ? DIRECTORY_SEPARATOR . (rtrim($subPath, '\\/ ')) : '');
+}
+// For compatibility
 function hleb_dc64d27da09bab7_storage_directory() {
-    return (defined('HLEB_STORAGE_DIRECTORY') ?
-        rtrim(HLEB_STORAGE_DIRECTORY , '\\/ ') :
-        HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage');
+    return hleb_storage_directory();
 }
 
 define('HLEB_VENDOR_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME);
 
 define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/routes');
 
-define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', hleb_dc64d27da09bab7_storage_directory() . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'routes');
+define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', hleb_storage_directory('cache' . DIRECTORY_SEPARATOR . 'routes'));
 
 require_once HLEB_PROJECT_DIRECTORY . '/Main/Insert/DeterminantStaticUncreated.php';
 
@@ -165,7 +170,7 @@ if (HLEB_PROJECT_LOG_ON) {
 
     ini_set('log_errors', 'On');
 
-    ini_set('error_log', hleb_dc64d27da09bab7_storage_directory()  . '/logs/' . date('Y_m_d_') . 'errors.log');
+    ini_set('error_log', hleb_storage_directory(DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . date('Y_m_d_') . 'errors.log'));
 }
 
 ini_set('display_errors', HLEB_PROJECT_DEBUG_ON ? '1' : '0');
