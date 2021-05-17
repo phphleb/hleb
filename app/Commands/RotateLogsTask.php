@@ -22,7 +22,7 @@ class RotateLogsTask extends \Hleb\Scheme\App\Commands\MainTask
         $total = 0;
         $logs = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(
-                realpath(hleb_storage_directory('logs'))
+                realpath(hleb_system_storage_path('logs'))
             )
         );
         foreach ($logs as $log) {

@@ -43,13 +43,10 @@ final class MainDB
         if (defined('HLEB_PROJECT_DEBUG_ON') && HLEB_PROJECT_DEBUG_ON) {
             \Hleb\Main\DataDebug::add($sql, $time, self::setConfigKey($config), true);
         }
-        if (defined('HLEB_DB_LOG_ENABLED') && HLEB_DB_LOG_ENABLED && defined('HLEB_PROJECT_LOG_ON') && HLEB_PROJECT_LOG_ON) {
-            $logFile = hleb_storage_directory('logs')  . DIRECTORY_SEPARATOR . date('Y_m_d_') . 'errors.log';
-            print $logFile;
-            if(file_exists($logFile)) {
-                file_put_contents($logFile, '[DB LOG ' . date("Y-m-d H:i:s") . ' ' . round ($time, 4) . ' sec] ' . $sql . ';' . PHP_EOL, FILE_APPEND);
-            }
+        if(defined('HLEB_DB_LOG_ENABLED') && HLEB_DB_LOG_ENABLED) {
+           hleb_system_log('[DB LOG ' . round($time, 4) . ' sec] ' . $sql . ';');
         }
+
         return $stmt;
     }
 
@@ -71,8 +68,8 @@ final class MainDB
             \PDO::ATTR_EMULATE_PREPARES => $param["emulate_prepares"] ?? false
         ];
 
-        $user = $param["user"];
-        $pass = $param["pass"];
+        $user = $param["user"] ?? '';
+        $pass = $param["pass"] ?? $param["password"] ?? '';
         $condition = [];
 
         foreach ($param as $key => $prm) {

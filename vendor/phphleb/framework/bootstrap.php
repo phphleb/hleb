@@ -135,19 +135,38 @@ if (!defined('HLEB_VENDOR_DIR_NAME')) {
 define('HLEB_PROJECT_STORAGE_DIR', (defined('HLEB_STORAGE_DIRECTORY') ? rtrim(HLEB_STORAGE_DIRECTORY, '\\/ ') : HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage'));
 
 //Full path to folder '/storage'
-function hleb_storage_directory($subPath = '') {
-    return  HLEB_PROJECT_STORAGE_DIR . (!empty($subPath) ? DIRECTORY_SEPARATOR . (rtrim($subPath, '\\/ ')) : '');
+if (!function_exists('hleb_system_storage_path')) {
+    function hleb_system_storage_path($subPath = '') {
+        return HLEB_PROJECT_STORAGE_DIR . (!empty($subPath) ? DIRECTORY_SEPARATOR . (trim($subPath, '\\/ ')) : '');
+    }
 }
 // For compatibility
 function hleb_dc64d27da09bab7_storage_directory() {
-    return hleb_storage_directory();
+    return hleb_system_storage_path();
+}
+
+if (!function_exists('hleb_system_log')) {
+    function hleb_system_log($message, $exit = false) {
+        if (defined('HLEB_PROJECT_LOG_ON') && HLEB_PROJECT_LOG_ON && HLEB_PROJECT_DEBUG) {
+            file_put_contents(
+                hleb_system_storage_path('logs') . DIRECTORY_SEPARATOR . date('Y_m_d_') . 'errors.log',
+                '[' . date("d-F-Y H:i:s") . '] ' . $message . PHP_EOL,
+                FILE_APPEND
+            );
+        } else {
+            error_log($message);
+        }
+        if($exit) {
+            hl_preliminary_exit();
+        }
+    }
 }
 
 define('HLEB_VENDOR_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME);
 
 define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/routes');
 
-define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', hleb_storage_directory('cache' . DIRECTORY_SEPARATOR . 'routes'));
+define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', hleb_system_storage_path('cache' . DIRECTORY_SEPARATOR . 'routes'));
 
 require_once HLEB_PROJECT_DIRECTORY . '/Main/Insert/DeterminantStaticUncreated.php';
 
@@ -170,7 +189,7 @@ if (HLEB_PROJECT_LOG_ON) {
 
     ini_set('log_errors', 'On');
 
-    ini_set('error_log', hleb_storage_directory(DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . date('Y_m_d_') . 'errors.log'));
+    ini_set('error_log', hleb_system_storage_path(DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . date('Y_m_d_') . 'errors.log'));
 }
 
 ini_set('display_errors', HLEB_PROJECT_DEBUG_ON ? '1' : '0');
@@ -273,7 +292,12 @@ if(empty($radjaxIsActive)) {
     try {
         \Hleb\Main\ProjectLoader::start();
     } catch (Throwable $exception) {
-        throw new Error( "[" . \Hleb\Constructor\Handlers\Request::getFullUrlAddress() . "]" . PHP_EOL . $exception->getTraceAsString(), $exception->getCode());
+        if (!headers_sent()) {
+            http_response_code (500);
+        }
+
+        // Getting errors in project.
+        throw new Error('[' . \Hleb\Constructor\Handlers\Request::getFullUrlAddress() . ']' . PHP_EOL . $exception->getTraceAsString(), $exception->getCode());
     }
 
 }

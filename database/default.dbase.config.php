@@ -34,5 +34,12 @@ define("HLEB_PARAMETERS_FOR_DB", [
         "pass" => "password"
     ],
 
+    "mysql.sphinx-search" => [
+        "mysql:host=127.0.0.1",
+        "port=9306",
+        "user" => "username",
+        "pass" => "password"
+    ],
+
 ]);
 
