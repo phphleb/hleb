@@ -289,16 +289,7 @@ if(empty($radjaxIsActive)) {
     }
     hleb_require(HLEB_GLOBAL_DIRECTORY . '/app/Optional/shell.php');
 
-    try {
-        \Hleb\Main\ProjectLoader::start();
-    } catch (Throwable $exception) {
-        if (!headers_sent()) {
-            http_response_code (500);
-        }
-
-        // Getting errors in project.
-        throw new Error('[' . \Hleb\Constructor\Handlers\Request::getFullUrlAddress() . ']' . PHP_EOL . $exception->getTraceAsString(), $exception->getCode());
-    }
+    \Hleb\Main\ProjectLoader::start();
 
 }
 
