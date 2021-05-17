@@ -146,19 +146,8 @@ function hleb_dc64d27da09bab7_storage_directory() {
 }
 
 if (!function_exists('hleb_system_log')) {
-    function hleb_system_log($message, $exit = false) {
-        if (defined('HLEB_PROJECT_LOG_ON') && HLEB_PROJECT_LOG_ON && HLEB_PROJECT_DEBUG) {
-            file_put_contents(
-                hleb_system_storage_path('logs') . DIRECTORY_SEPARATOR . date('Y_m_d_') . 'errors.log',
-                '[' . date("d-F-Y H:i:s") . '] ' . $message . PHP_EOL,
-                FILE_APPEND
-            );
-        } else {
-            error_log($message);
-        }
-        if($exit) {
-            hl_preliminary_exit();
-        }
+    function hleb_system_log($message) {
+      error_log($message);
     }
 }
 
