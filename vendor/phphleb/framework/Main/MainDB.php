@@ -62,11 +62,11 @@ final class MainDB
     protected static function init(string $config) {
         $param = HLEB_PARAMETERS_FOR_DB[$config];
 
-        $opt = [
+        $opt = array_merge([
             \PDO::ATTR_ERRMODE => $param["errmode"] ?? \PDO::ERRMODE_EXCEPTION,
-            \PDO::ATTR_DEFAULT_FETCH_MODE => $param["default_fetch_mode"] ?? \PDO::FETCH_ASSOC,
-            \PDO::ATTR_EMULATE_PREPARES => $param["emulate_prepares"] ?? false
-        ];
+            \PDO::ATTR_DEFAULT_FETCH_MODE => $param["default-mode"] ?? $param["default_fetch_mode"] ?? \PDO::FETCH_ASSOC,
+            \PDO::ATTR_EMULATE_PREPARES => $param["emulate-prepares"] ?? $param["emulate_prepares"] ?? false
+        ], $param["options-list"] ?? []);
 
         $user = $param["user"] ?? '';
         $pass = $param["pass"] ?? $param["password"] ?? '';
