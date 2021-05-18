@@ -120,8 +120,16 @@ class CachedTemplate
             }
             $searchFile = $searchAll[0];
             $this->cacheTime = $this->getFileTime($searchFile);
-            if (filemtime($searchFile) >= time() - $this->cacheTime) {
-                return $searchFile;
+            $period = time() - filemtime($searchFile);
+            if ($this->cacheTime >= $period) {
+                if ($this->cacheTime > 3 &&
+                    (($this->cacheTime - 2 <= $period && rand(0, 10) === 2) ||
+                        ($this->cacheTime - 1 <= $period && rand(0, 5) === 2))) {
+                    // Pre-warming the cache.
+                    // Предварительный прогрев кеша.
+                } else {
+                    return $searchFile;
+                }
             }
             @unlink("$searchFile");
         }
