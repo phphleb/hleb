@@ -22,7 +22,9 @@ class Head extends ResourceStandard
 
     private $styles = [];
 
-    private $meta = [];
+    private $metaName = [];
+
+    private $uniqueMetaList = [];
 
     /**
      * Loading CSS styles by URL. Pre-made in the controller.
@@ -75,7 +77,20 @@ class Head extends ResourceStandard
      * @param mixed $content
      */
     public function addMeta(string $name, $content) {
-        $this->meta[$name] = $content;
+        $this->metaName[$name] = $content;
+    }
+
+    /**
+     * Adds an arbitrary meta assembled from a variable list.
+     * ['key1' => 'value1', 'key2' => 'value2'] -> <meta key1="value1" key2="value2"/>
+     * @param array $list - named array 'tag' => 'value'
+     *//**
+     * Добавляет произвольное мета-сообщение собранное из вариативного списка.
+     * ['key1' => 'value1', 'key2' => 'value2'] -> <meta key1="value1" key2="value2"/>
+     * @param array $list - именованный массив  'тег' => 'значение'
+     */
+    public function addMetaFromParts(array $list) {
+        $this->uniqueMetaList[] = $list;
     }
 
     /**
@@ -111,21 +126,22 @@ class Head extends ResourceStandard
         if (!empty($this->description)) {
             $result .= $ind . '<meta name="description" content="' . $this->convertPrivateTags($this->description) . '" />' . PHP_EOL;
         }
-        if (count($this->meta)) {
-            foreach ($this->meta as $key => $value) {
-                $result .= $ind . "<meta name=\"$key\" content=\"" . $this->convertPrivateTags($value) . "\">" . PHP_EOL;
-            }
+        foreach ($this->metaName as $key => $value) {
+            $result .= $ind . "<meta name=\"" . $this->convertPrivateTags($key) . "\" content=\"" . $this->convertPrivateTags($value) . "\">" . PHP_EOL;
         }
-        if (count($this->styles)) {
-            foreach ($this->styles as $style) {
-                $result .= $ind . '<link rel="stylesheet" href="' . $this->convertPrivateTags($style) . '" type="text/css" >' . PHP_EOL;
+        foreach ($this->uniqueMetaList as $list) {
+            $result .= $ind . "<meta";
+            foreach ($list as $key => $value) {
+                $result .= " " . $this->convertPrivateTags($key) . "=\"" . $this->convertPrivateTags($value) . "\" ";
             }
+            $result .= ">" . PHP_EOL;
         }
-        if (count($this->scripts)) {
-            foreach ($this->scripts as $script) {
-                $script = $this->convertPrivateTagsInArray($script);
-                $result .= $ind . '<script ' . $script["attribute"] . ' src="' . $script["url"] . '" charset="' . $script["charset"] . '"></script>' . PHP_EOL;
-            }
+        foreach ($this->styles as $style) {
+            $result .= $ind . '<link rel="stylesheet" href="' . $this->convertPrivateTags($style) . '" type="text/css" >' . PHP_EOL;
+        }
+        foreach ($this->scripts as $script) {
+            $script = $this->convertPrivateTagsInArray($script);
+            $result .= $ind . '<script ' . $script["attribute"] . ' src="' . $script["url"] . '" charset="' . $script["charset"] . '"></script>' . PHP_EOL;
         }
         if ($print) echo $result;
         return $result;
