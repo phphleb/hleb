@@ -132,7 +132,7 @@ class Head extends ResourceStandard
         foreach ($this->uniqueMetaList as $list) {
             $result .= $ind . "<meta";
             foreach ($list as $key => $value) {
-                $result .= " " . $this->convertPrivateTags($key) . "=\"" . $this->convertPrivateTags($value) . "\" ";
+                $result .= " " . $this->convertPrivateTags($key) . "=\"" . $this->convertPrivateTags($value) . "\"";
             }
             $result .= ">" . PHP_EOL;
         }
