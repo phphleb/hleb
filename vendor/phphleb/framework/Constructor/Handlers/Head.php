@@ -29,12 +29,15 @@ class Head extends ResourceStandard
     /**
      * Loading CSS styles by URL. Pre-made in the controller.
      * @param string $url - direct or relative address of the resource.
+     * @return Head
      *//**
      * Загрузка стилей CSS по URL. Производится предварительно в контроллере.
      * @param string $url - прямой или относитеьный адрес ресурса.
+     * @return Head
      */
     public function addStyles(string $url) {
         $this->styles[$url] = $url;
+        return $this;
     }
 
     /**
@@ -42,68 +45,88 @@ class Head extends ResourceStandard
      * @param string $url - direct or relative address of the resource.
      * @param string $attr - load type attribute.
      * @param string $charset - encoding.
+     * @return Head
      *//**
      * Загрузка скриптов JS по URL. Производится предварительно в контроллере.
      * @param string $url - прямой или относитеьный адрес ресурса.
      * @param string $attr - атрибут типа загрузки.
      * @param string $charset - кодировка.
+     * @return Head
      */
     public function addScript(string $url, string $attr = 'defer', string $charset = 'utf-8') {
         $this->scripts[$url] = ['url' => $url, 'charset' => $charset, 'attribute' => $attr];
+        return $this;
     }
 
     /**
      * Sets the title of the page. Pre-made in the controller.
      * <title>{$value}</title>
      * @param string $value - title text.
+     * @return Head
      *//**
      * Устанавливает заголовок страницы. Производится предварительно в контроллере.
      * <title>{$value}</title>
      * @param string $value - текст заголовка.
+     * @return Head
      */
     public function setTitle(string $value) {
         $this->title = $value;
+        return $this;
     }
 
     /**
      * Adds a custom meta post. Pre-made in the controller.
-     * <meta name="{$name}" content="{$content}" />
-     * @param string $name
+     * <meta name="{$data}" content="{$content}" />
+     * or $data = ['key1' => 'value1', 'key2' => 'value2'] -> <meta key1="value1" key2="value2"/>
+     * @param string|array $data
      * @param mixed $content
+     * @return Head
      *//**
      * Добавляет произвольное мета-сообщение. Производится предварительно в контроллере.
-     * <meta name="{$name}" content="{$content}" />
-     * @param string $name
-     * @param mixed $content
+     * <meta name="{$data}" content="{$content}" />
+     * или $data = ['key1' => 'value1', 'key2' => 'value2'] -> <meta key1="value1" key2="value2"/>
+     * @param string|array $data
+     * @param string $content
+     * @return Head
      */
-    public function addMeta(string $name, $content) {
-        $this->metaName[$name] = $content;
+    public function addMeta($data, $content = '') {
+        if (is_array($data)) {
+            return $this->addMetaFromParts($data);
+        }
+        $this->metaName[$data] = $content;
+        return $this;
     }
 
     /**
      * Adds an arbitrary meta assembled from a variable list.
      * ['key1' => 'value1', 'key2' => 'value2'] -> <meta key1="value1" key2="value2"/>
      * @param array $list - named array 'tag' => 'value'
+     * @return Head
      *//**
      * Добавляет произвольное мета-сообщение собранное из вариативного списка.
      * ['key1' => 'value1', 'key2' => 'value2'] -> <meta key1="value1" key2="value2"/>
      * @param array $list - именованный массив  'тег' => 'значение'
+     * @return Head
      */
     public function addMetaFromParts(array $list) {
         $this->uniqueMetaList[] = $list;
+        return $this;
     }
 
     /**
      * Sets the page description. Pre-made in the controller.
      * <meta name="description" content="{$value}" />
      * @param string $value - a short description (or annotation) of the page.
+     * @return Head
      *//**
      * Устанавливает описание страницы. Производится предварительно в контроллере.
      * <meta name="description" content="{$value}" />
      * @param string $value - краткое описание (или аннотация) страницы.
+     * @return Head
      */
     public function setDescription(string $value) {
         $this->description = $value;
+        return $this;
     }
 
     /**
