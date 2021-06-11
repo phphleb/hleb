@@ -7,7 +7,7 @@
 // Все вызовы направляются в этот файл.
 
 define('HLEB_START', microtime(true));
-define('HLEB_FRAME_VERSION', "1.5.64");
+define('HLEB_FRAME_VERSION', "1.5.65");
 define('HLEB_PUBLIC_DIR', __DIR__);
 
 
