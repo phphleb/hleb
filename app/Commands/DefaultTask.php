@@ -20,6 +20,9 @@ class DefaultTask extends \Hleb\Scheme\App\Commands\MainTask
     /* Короткое название действия для команды */
     const DESCRIPTION = "Default task";
 
+    /**
+     * @param string|int|null $arg - argument description
+     */
     protected function execute($arg = null) {
 
         // Your code here.

@@ -4,8 +4,6 @@ namespace Hleb\Scheme\App\Commands;
 
 class MainTask
 {
-    public function __construct() {}
-
     public function createTask($arguments) {
         if(method_exists($this, 'execute')) {
             $this->execute(...$arguments);

@@ -10,14 +10,17 @@ namespace App\Commands;
 
 class RotateLogsTask extends \Hleb\Scheme\App\Commands\MainTask
 {
-    /** php console rotate-logs-task **/
+    /** php console rotate-logs-task [arg] **/
 
     const DESCRIPTION = "Delete old logs";
 
-    protected function execute() {
-        // Delete earlier than this time in seconds.
-        // Удаление ранее этого времени в секундах.
-        $prescriptionForRotation = 60 * 60 * 24 * 3;
+    /**
+     * Delete earlier than this time in days.
+     * Удаление ранее этого времени в днях.
+     * @param int $days
+     */
+    protected function execute(int $days = 3) {
+        $prescriptionForRotation = 60 * 60 * 24 * $days;
 
         $total = 0;
         $logs = new \RecursiveIteratorIterator(

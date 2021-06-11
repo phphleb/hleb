@@ -1,5 +1,4 @@
 <?php
-
 $arguments = $argv[1] ?? null;
 
 // End of script execution (before starting the main project).
@@ -56,7 +55,6 @@ include_once HLEB_PROJECT_DIRECTORY . '/Main/Console/MainConsole.php';
 $fn = new \Hleb\Main\Console\MainConsole();
 
 if ($arguments) {
-
     switch ($arguments) {
         case '--version':
         case '-v':
@@ -70,21 +68,20 @@ if ($arguments) {
                 " ╚═ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ══ ═╝ " . PHP_EOL;
             echo PHP_EOL;
             break;
-        case '--clear-cache':
-        case '-cc':
+        case '--clear-routes-cache':
+        case '-routes-cc':
             if (file_exists(HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt')) {
                 unlink(HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt');
                 echo PHP_EOL . 'Route cache cleared.';
             }
+            break;
+        case '--clear-cache':
+        case '-cc':
             $files = glob(HLEB_GLOBAL_DIRECTORY . HLEB_TEMPLATE_CACHED_PATH . '/*/*.cache', GLOB_NOSORT);
             hlClearCacheFiles($files, HLEB_TEMPLATE_CACHED_PATH, $fn, HLEB_TEMPLATE_CACHED_PATH . '/*/*.cache');
             echo PHP_EOL, PHP_EOL;
             break;
         case '--forced-cc':
-            if(file_exists(HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt')) {
-                unlink(HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt');
-                echo  PHP_EOL . 'Route cache cleared.';
-            }
             hlForcedClearCacheFiles(HLEB_GLOBAL_DIRECTORY . HLEB_TEMPLATE_CACHED_PATH);
             echo PHP_EOL;
             break;
@@ -103,17 +100,19 @@ if ($arguments) {
         case '--help':
         case '-h':
             echo PHP_EOL;
-            echo " --version or -v      (displays the version of the framework)" . PHP_EOL .
-                 " --clear-cache or -cc (clears the templates and routes cache)" . PHP_EOL .
-                 " --forced-cc          (forcefully clears the templates and routes cache)" . PHP_EOL .
-                 " --info or -i         (displays the values of the main settings)" . PHP_EOL .
-                 " --help or -h         (displays a list of default console actions)" . PHP_EOL .
-                 " --routes or -r       (forms a list of routes)" . PHP_EOL .
-                 " --list or -l         (forms a list of commands)" . PHP_EOL .
-                 " --logs or -lg        (prints multiple trailing lines from a log file)" . PHP_EOL .
-                 " --new-task           (сreates a new command)" . PHP_EOL .
-                 "                      [ --new-task example-task \"Short description\"]" . PHP_EOL . PHP_EOL .
-                (HL_TWIG_CONNECTED ? " --clear-cache--twig or -cc-twig"  . PHP_EOL . " --forced-cc-twig"  . PHP_EOL : '');
+            echo " --version or -v   (displays the version of the framework)" . PHP_EOL .
+                " --clear-cache or -cc (clears the templates)" . PHP_EOL .
+                " --forced-cc       (forcefully clears the templates)" . PHP_EOL .
+                " --clear-routes-cache or -routes-cc (clear routes cache)" . PHP_EOL .
+                " --info or -i      (displays the values of the main settings)" . PHP_EOL .
+                " --help or -h      (displays a list of default console actions)" . PHP_EOL .
+                " --routes or -r    (forms a list of routes)" . PHP_EOL .
+                " --list or -l      (forms a list of commands)" . PHP_EOL .
+                "                   <command> [--help]" . PHP_EOL .
+                " --logs or -lg     (prints multiple trailing lines from a log file)" . PHP_EOL .
+                " --new-task        (сreates a new command)" . PHP_EOL .
+                "                   --new-task example-task \"Short description\"" . PHP_EOL .
+                (HL_TWIG_CONNECTED ? " --clear-cache--twig or -cc-twig" . PHP_EOL . " --forced-cc-twig" . PHP_EOL : '');
             echo PHP_EOL;
             break;
         case '--routes':
@@ -125,7 +124,7 @@ if ($arguments) {
         case '-l':
             hlUploadAll();
             echo $fn->listing();
-            echo PHP_EOL . PHP_EOL;
+            echo PHP_EOL;
             break;
         case '--info':
         case '-i':
@@ -143,10 +142,12 @@ if ($arguments) {
             $file = $fn->convertCommandToTask($arguments);
 
             if (file_exists(HLEB_GLOBAL_DIRECTORY . "/app/Commands/$file.php")) {
-
                 hlUploadAll();
-
-                hlCreateUsersTask(HLEB_GLOBAL_DIRECTORY, $file, $setArguments, $fn);
+                if (end($argv) === '--help') {
+                    hlShowCommandHelp(HLEB_GLOBAL_DIRECTORY, $file, $fn);
+                } else {
+                    hlCreateUsersTask(HLEB_GLOBAL_DIRECTORY, $file, $setArguments, $fn);
+                }
 
             } else {
                 echo "Missing required arguments after `console`. Add --help to display more options.", PHP_EOL;
@@ -207,6 +208,13 @@ function hlUploadAll() {
 }
 
 function hlCreateUsersTask($path, $class, $arg, Hleb\Main\Console\MainConsole $fn) {
+   $task =  hlCreateTaskClass($path, $class, $fn);
+   if($task) {
+       $task->createTask($arg);
+   }
+}
+
+function hlCreateTaskClass($path, $class, Hleb\Main\Console\MainConsole $fn) {
     $realPath = $path . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Commands' . DIRECTORY_SEPARATOR . $class . ".php";
     include_once "$realPath";
 
@@ -215,11 +223,43 @@ function hlCreateUsersTask($path, $class, $arg, Hleb\Main\Console\MainConsole $f
         foreach ($searchNames as $search_name) {
             if (class_exists('App\Commands\\' . $search_name)) {
                 $className = 'App\Commands\\' . $search_name;
-                (new $className())->createTask($arg);
-                break;
+               return new $className();
             }
         }
     }
+    return null;
+}
+
+
+
+function hlShowCommandHelp($path, $class, Hleb\Main\Console\MainConsole $fn) {
+    /** @var object|null $task */
+    $task = hlCreateTaskClass($path, $class, $fn);
+    if (!is_null($task)) {
+        print PHP_EOL . 'DESCRIPTION: ' .  $task::DESCRIPTION . PHP_EOL . PHP_EOL;
+        try {
+            $reflector = new ReflectionClass(get_class($task));
+            $comment = str_replace('  ', '',  $reflector->getMethod('execute')->getDocComment());
+            if(!empty($comment)) {
+                print $comment . PHP_EOL;
+            }
+        } catch (Throwable $e) {
+           print '#' . $e->getMessage();
+        }
+    }
+
+    $content = file_get_contents(HLEB_GLOBAL_DIRECTORY . "/app/Commands/$class.php");
+    preg_match('/function( *)execute\(([^)]*?)\)/', $content, $match_1);
+
+    if (!empty($match_1[2])) {
+        $args = explode(',', $match_1[2]);
+        foreach ($args as $arg) {
+            $item = array_map('trim', explode('=', $arg));
+            print PHP_EOL . ' - ' . $item[0] . (isset($item[1]) ? ' default ' . $item[1] : '') . PHP_EOL;
+        }
+        return;
+    }
+    print PHP_EOL . "No arguments." . PHP_EOL;
 }
 
 
