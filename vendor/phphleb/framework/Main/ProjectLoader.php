@@ -15,7 +15,7 @@ use Hleb\Main\Errors\ErrorOutput;
 use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Main\Insert\PageFinisher;
 use Hleb\Constructor\Handlers\{
-    ProtectedCSRF, URL, URLHandler, Request
+    ProtectedCSRF, URL, URLHandler
 };
 use Hleb\Constructor\Workspace;
 use Hleb\Constructor\Routes\Route;
