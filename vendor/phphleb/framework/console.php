@@ -264,7 +264,10 @@ function hlShowCommandHelp($path, $class, Hleb\Main\Console\MainConsole $fn) {
 
 
 function hlGetFrameVersion() {
-    return hlSearchVersion(HLEB_PUBLIC_DIR . '/index.php', 'HLEB_FRAME_VERSION');
+    if(file_exists(HLEB_PUBLIC_DIR . '/index.php')) {
+        return hlSearchVersion(HLEB_PUBLIC_DIR . '/index.php', 'HLEB_FRAME_VERSION');
+    }
+    return '-';
 }
 
 function hlGetFrameworkVersion() {
