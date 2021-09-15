@@ -36,6 +36,8 @@ final class Request extends BaseSingleton
 
     private static $url = null;
 
+    private static $domain = null;
+
     private static $address = null;
 
     private static $referer = null;
@@ -236,14 +238,17 @@ final class Request extends BaseSingleton
     }
 
     /**
-     * Returns current domain.
+     * Returns current domain, of the form 'site.com'.
      * @return string
      *//**
-     * Возвращает текущий домен.
+     * Возвращает текущий домен, в виде 'site.com'.
      * @return string
      */
     public static function getDomain() {
-        return self::getHost();
+        if(is_null(self::$domain)) {
+            self::$domain = preg_replace('/^www./', '', trim(self::getHost(), ' /'));
+        }
+        return self::$domain;
     }
 
     /**
