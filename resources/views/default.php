@@ -30,7 +30,7 @@
         .hl-block{
             display:block;
             margin-bottom: 30px;
-            color: #FF786C;
+            color: #cc0126;
         }
         a.hl-block{
             width:max-content;
@@ -55,7 +55,7 @@
         <a href="https://github.com/phphleb/hleb/blob/master/readme.md" target="_blank" rel="noreferrer" class="hl-block">Manual for HLEB framework</a>
         <br><br>
         <div>
-            <img src="/en/login/resource/<?= Phphleb\Hlogin\App\Main::getVersion() ?>/all/svg/svg/hlogin-logo/" width="170" height="70"><br>
+            <img src="/en/login/resource/<?= Phphleb\Hlogin\App\Main::getVersion() ?>/all/svg/svg/hlogin-logo/" width="170" height="70" alt="HLOGIN"><br>
             <span class="reg-type"><a href="/en/login/profile/" id="hlLink" class="reg-type">Registration panel</a> in </span>
             <select onchange="document.getElementById('hlLink').href = '/' + this.value + '/login/profile/'">
                 <?php
