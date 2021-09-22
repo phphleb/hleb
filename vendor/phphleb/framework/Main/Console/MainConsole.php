@@ -178,6 +178,13 @@ final class MainConsole
                 }
             }
         }
+        $list = [];
+        foreach($taskList as $key => $task) {
+            if(in_array($task[0], $list)) {
+                unset($taskList[$key]);
+            }
+            $list[] = $task[0];
+        }
         if (count($taskList) === 1) return "No tasks in project." . PHP_EOL;
         return $this->sortData($taskList);
     }
@@ -185,16 +192,12 @@ final class MainConsole
     public function convertCommandToTask($name) {
         $result = '';
         $parts = array_map('ucfirst', explode("/", str_replace('\\', '/', $name)));
-        $path = "";
-        if (count($parts) > 1) {
-            $name = array_pop($parts);
-            $path = implode("/", $parts) . "/";
+        $path = implode("/", $parts);
+        $segments = explode("-", $path);
+        foreach ($segments as $key => $segment) {
+            $result .= ucfirst($segment);
         }
-        $parts = explode("-", $name);
-        foreach ($parts as $key => $part) {
-            $result .= ucfirst($part);
-        }
-        return $path . $result;
+        return $result;
     }
 
     public function searchFiles($path) {
@@ -352,14 +355,26 @@ final class MainConsole
             return "undefined (wrong namespace)";
         }
         $className = str_split($endName);
-
-        $path = count($parts) ? implode("/", $parts) . "/" : "";
         foreach ($className as $key => $part) {
             if (isset($className[$key - 1]) && $className[$key - 1] == strtolower($className[$key - 1]) && $part == strtoupper($part)) {
                 $result .= "-";
             }
             $result .= $part;
         }
+        foreach($parts as $keyPart => $onePart) {
+            $name = '';
+            $onePart = str_split($onePart);
+            foreach ($onePart as $key => $part) {
+                $prefix  = '';
+                if (isset($onePart[$key - 1]) && $onePart[$key - 1] == strtolower($onePart[$key - 1]) && $part == strtoupper($part)) {
+                    $prefix  = "-";
+                }
+                $name .= $prefix . $part;
+            }
+            $parts[$keyPart] = $name;
+        }
+
+        $path = count($parts) ? implode("/", $parts) . "/" : "";
 
         return strtolower(str_replace(["-\\-", "-/-"], "/", $path . $result));
     }
