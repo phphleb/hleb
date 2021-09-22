@@ -72,8 +72,10 @@ if ($arguments) {
         case '-routes-cc':
             if (file_exists(HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt')) {
                 unlink(HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt');
-                echo PHP_EOL . 'Route cache cleared.';
+                echo PHP_EOL . ' Deleted one file.';
             }
+            echo PHP_EOL . ' Route cache cleared.';
+            echo PHP_EOL;
             break;
         case '--clear-cache':
         case '-cc':
