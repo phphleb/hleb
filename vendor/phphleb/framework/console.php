@@ -140,7 +140,6 @@ if ($arguments) {
             break;
         default:
             $file = $fn->convertCommandToTask($arguments);
-
             if (file_exists(HLEB_GLOBAL_DIRECTORY . "/app/Commands/$file.php")) {
                 hlUploadAll();
                 if (end($argv) === '--help') {

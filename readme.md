@@ -171,11 +171,6 @@ includeTemplate('/example/templates/origin');
 
 ```
 
-
-ORM
------------------------------------
-Recommended [phphleb/xdorm](https://github.com/phphleb/xdorm)
-
 Templates
 -----------------------------------
 ```php
@@ -214,6 +209,10 @@ Debug Panel
 ```php
 WorkDebug::add($debug_data, 'description');
 ```
+
+Database queries
+-----------------------------------
+Recommended [phphleb/xdorm](https://github.com/phphleb/xdorm) ORM or [DB](https://github.com/phphleb/hleb/blob/master/database/DB.php) (add-on over PDO) class.
 
 
 -----------------------------------

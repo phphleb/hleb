@@ -184,7 +184,7 @@ final class MainConsole
 
     public function convertCommandToTask($name) {
         $result = '';
-        $parts = explode("/", $name);
+        $parts = array_map('ucfirst', explode("/", str_replace('\\', '/', $name)));
         $path = "";
         if (count($parts) > 1) {
             $name = array_pop($parts);
@@ -345,9 +345,9 @@ final class MainConsole
 
     private function convertTaskToCommand($name) {
         $result = "";
-        $parts = explode("/", str_replace(HLEB_GLOBAL_DIRECTORY, "/", $name));
+        $parts = explode("/", str_replace(str_replace('\\', '/', HLEB_GLOBAL_DIRECTORY), "/", str_replace('\\', '/', $name)));
         $endName = array_pop($parts);
-
+        $parts = array_map('ucfirst', $parts);
         if (!file_exists(str_replace("//", "/", HLEB_GLOBAL_DIRECTORY . "/app/Commands/" . (implode("/", $parts)) . "/" . $endName . ".php"))) {
             return "undefined (wrong namespace)";
         }
