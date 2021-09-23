@@ -39,7 +39,7 @@ class RouteMethodModule extends MainRouteMethod
                 "The `/modules/` folder was not found, create it in the root directory of the project. ~ " .
                 "Не обнаружена папка `/modules/` в корневой директории проекта, необходимо эту папку создать.";
         }
-        if (!$this->searchFile($fileName)) {
+        if (!$this->searchFile($fileName) && strip_tags($fileName) === $fileName) {
             $this->errors[] = "HL023-ROUTE_ERROR: Does not match in method ->module() ! " .
                 "Class `" . $className . "`  not found in folder `/modules/" . $moduleName . "/` ~ " .
                 "Класс-контроллер `" . $className . "`  не обнаружен в папке `/modules/" . $moduleName . "/`";
