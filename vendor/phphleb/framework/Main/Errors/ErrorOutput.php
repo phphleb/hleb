@@ -32,7 +32,7 @@ final class ErrorOutput extends BaseSingleton
                 self::$messages[] = $message;
                 error_log(" " . explode('~', $message)[0] . PHP_EOL);
                 // End of script execution before starting the main project.
-                if (!HLEB_PROJECT_DEBUG_ON) hl_preliminary_exit();
+                if (!HLEB_PROJECT_DEBUG) hl_preliminary_exit();
             } else {
                 self::$messages[] = 'ErrorOutput:: Indefinite error.';
                 error_log(' ' . explode('~', $message)[0] . PHP_EOL);
@@ -54,7 +54,7 @@ final class ErrorOutput extends BaseSingleton
                     $content .= self::content($value);
                 }
             }
-            if (HLEB_PROJECT_DEBUG_ON) {
+            if (HLEB_PROJECT_DEBUG) {
                 // End of script execution before starting the main project.
                 hl_preliminary_exit($content);
             }

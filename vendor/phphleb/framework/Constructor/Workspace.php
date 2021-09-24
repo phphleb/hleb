@@ -84,7 +84,7 @@ final class Workspace
         }
         $this->renderGetMethod($block);
         $this->calculateTime('Create Project');
-        if (HLEB_PROJECT_DEBUG_ON && $_SERVER['REQUEST_METHOD'] == 'GET' &&
+        if (HLEB_PROJECT_DEBUG_ON &&
             (new TryClass('Phphleb\Debugpan\DPanel'))->is_connect()) {
             DPanel::init($this->hlDebugInfo);
         }

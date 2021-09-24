@@ -105,7 +105,8 @@ if (!defined('HLEB_PROJECT_VALIDITY_URL') || !is_string(HLEB_PROJECT_VALIDITY_UR
     hl_preliminary_exit("Incorrectly defined setting: ...VALIDITY_URL");
 }
 
-define('HLEB_PROJECT_DEBUG_ON', (bool) (HLEB_PROJECT_DEBUG && (empty($_GET['_debug']) || $_GET['_debug'] === 'on')));
+define('HLEB_PROJECT_DEBUG_ON', (bool) (HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] === 'GET' && (empty($_GET['_debug']) || $_GET['_debug'] === 'on')) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') !== 'xmlhttprequest');
+
 
 // Demo redirection from "http" to "https"
 if (!defined('HLEB_PROJECT_ONLY_HTTPS')) {
@@ -181,7 +182,7 @@ if (HLEB_PROJECT_LOG_ON) {
     ini_set('error_log', hleb_system_storage_path(DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . date('Y_m_d_') . 'errors.log'));
 }
 
-ini_set('display_errors', HLEB_PROJECT_DEBUG_ON ? '1' : '0');
+ini_set('display_errors', HLEB_PROJECT_DEBUG ? '1' : '0');
 
 // External autoloader
 if (file_exists(HLEB_VENDOR_DIRECTORY . '/autoload.php')) {

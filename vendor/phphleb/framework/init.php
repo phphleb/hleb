@@ -57,7 +57,7 @@ if (HL_TWIG_CONNECTED) {
 
     if (!defined('HL_TWIG_AUTO_RELOAD')) {
         //Recompilation of Twig templates
-        define('HL_TWIG_AUTO_RELOAD', HLEB_PROJECT_DEBUG_ON);
+        define('HL_TWIG_AUTO_RELOAD', HLEB_PROJECT_DEBUG);
     }
 
     if (!defined('HL_TWIG_STRICT_VARIABLES')) {

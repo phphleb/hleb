@@ -17,7 +17,7 @@ final class TwigCreator
             $loader = new \Twig\Loader\FilesystemLoader(HL_TWIG_LOADER_FILESYSTEM);
             $twig = new \Twig\Environment($loader, [
                 'cache' => HL_TWIG_CACHED,
-                'debug' => HLEB_PROJECT_DEBUG_ON,
+                'debug' => HLEB_PROJECT_DEBUG,
                 'charset' => HL_TWIG_CHARSET,
                 'auto_reload' => HL_TWIG_AUTO_RELOAD,
                 'strict_variables' => HL_TWIG_STRICT_VARIABLES,
