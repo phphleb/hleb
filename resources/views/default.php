@@ -79,9 +79,8 @@
         </div>
     </div>
     <br>
-    <?php
-    // Adding registration buttons / Добавление кнопок регистрации
-    includeTemplate('hlogin/templates/add');
+<?php
+    echo Phphleb\Hlogin\App\OriginData::initRegistrationPanels();
 else: ?>
     <div id="hl-cont" align="center">
         <img src="/svg/logo.svg" width="200" height="200" class="hl-block" alt="HL">
