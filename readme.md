@@ -210,6 +210,16 @@ Debug Panel
 WorkDebug::add($debug_data, 'description');
 ```
 
+User registration
+-----------------------------------
+```bash
+$ composer require phphleb/hlogin
+```
+```bash
+$ php console phphleb/hlogin --add
+```
+These two steps install the module for registration. [More details](https://github.com/phphleb/hlogin)
+
 Database queries
 -----------------------------------
 Recommended [phphleb/xdorm](https://github.com/phphleb/xdorm) ORM or [DB](https://github.com/phphleb/hleb/blob/master/database/DB.php) (add-on over PDO) class.
