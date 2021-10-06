@@ -15,7 +15,7 @@ final class MainAutoloader
     public static function get(string $class) {
         self::createData();
 
-        if (self::searchAndInclude($class, self::$homeList, true)) {
+        if (self::searchVendorAndInclude($class, self::$homeList)) {
             /* Checking inner classes. */
             /* Проверка внутренних классов. */
         } else if (self::searchAndInclude($class, self::$mainList)) {
@@ -61,15 +61,25 @@ final class MainAutoloader
 
     }
 
-    public static function search_and_include(string $class, Connector $connector): bool {
-        return self::searchAndInclude($class, $connector->add());
+    public static function search_and_include(string $class, Connector $connector, $vendorPath = false): bool {
+        return $vendorPath ? self::searchVendorAndInclude($class, $connector->add()) : self::searchAndInclude($class, $connector->add());
+    }
+
+    private static function searchVendorAndInclude(string $class, array $responding) {
+        /* If a class with a direct link is found. */
+        /* Если найден класс с прямой ссылкой. */
+        if (isset($responding[$class])) {
+            self::init(HLEB_VENDOR_DIRECTORY . $responding[$class]);
+            return true;
+        }
+        return false;
     }
 
     private static function searchAndInclude(string $class, array $responding, bool $vendorPath = false): bool {
         /* If a class with a direct link is found. */
         /* Если найден класс с прямой ссылкой. */
         if (isset($responding[$class])) {
-            self::init(($vendorPath ? HLEB_VENDOR_DIRECTORY : HLEB_GLOBAL_DIRECTORY  . '/') . $responding[$class]);
+            self::init(HLEB_GLOBAL_DIRECTORY  . '/' . $responding[$class]);
             return true;
         }
 
