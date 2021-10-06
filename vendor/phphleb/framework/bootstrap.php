@@ -128,10 +128,7 @@ if (isset($_GET["_token"])) {
 }
 
 //To set a different directory name 'vendor' add HLEB_VENDOR_DIR_NAME to the constants
-if (!defined('HLEB_VENDOR_DIR_NAME')) {
-    //Auto detect current library directory
-    define('HLEB_VENDOR_DIR_NAME', trim(str_replace(str_replace("\\", "/", HLEB_GLOBAL_DIRECTORY), '', str_replace("\\", "/", dirname(__DIR__, 2))), "\\/ "));
-}
+define('HLEB_VENDOR_DIRECTORY', defined('HLEB_VENDOR_DIR_NAME') ? HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME : dirname(__DIR__, 2));
 
 define('HLEB_PROJECT_STORAGE_DIR', (defined('HLEB_STORAGE_DIRECTORY') ? rtrim(HLEB_STORAGE_DIRECTORY, '\\/ ') : HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage'));
 
@@ -151,8 +148,6 @@ if (!function_exists('hleb_system_log')) {
       error_log($message);
     }
 }
-
-define('HLEB_VENDOR_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME);
 
 define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/routes');
 

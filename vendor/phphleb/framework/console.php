@@ -11,12 +11,7 @@ if (!function_exists('hl_preliminary_exit')) {
 if (!defined('HLEB_GLOBAL_DIRECTORY')) define('HLEB_GLOBAL_DIRECTORY', dirname(__DIR__, 3));
 
 //To set a different directory name 'vendor' add HLEB_VENDOR_DIR_NAME to the constants
-if (!defined('HLEB_VENDOR_DIR_NAME')) {
-    //Auto detect current library directory
-    define('HLEB_VENDOR_DIR_NAME', trim(str_replace(str_replace("\\", "/", HLEB_GLOBAL_DIRECTORY), '', str_replace("\\", "/", dirname(__DIR__, 2))), "\\/ "));
-}
-
-define('HLEB_VENDOR_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME);
+define('HLEB_VENDOR_DIRECTORY', defined('HLEB_VENDOR_DIR_NAME') ? HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME : dirname(__DIR__, 2));
 
 define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', (defined('HLEB_STORAGE_DIRECTORY') ? HLEB_STORAGE_DIRECTORY : HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . "/storage") . "/cache/routes");
 
