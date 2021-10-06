@@ -130,7 +130,7 @@ if (isset($_GET["_token"])) {
 //To set a different directory name 'vendor' add HLEB_VENDOR_DIR_NAME to the constants
 if (!defined('HLEB_VENDOR_DIR_NAME')) {
     //Auto detect current library directory
-    define('HLEB_VENDOR_DIR_NAME', array_reverse(explode(DIRECTORY_SEPARATOR, dirname(__DIR__, 2)))[0]);
+    define('HLEB_VENDOR_DIR_NAME', trim(str_replace(str_replace("\\", "/", HLEB_GLOBAL_DIRECTORY), '', str_replace("\\", "/", dirname(__DIR__, 2))), "\\/ "));
 }
 
 define('HLEB_PROJECT_STORAGE_DIR', (defined('HLEB_STORAGE_DIRECTORY') ? rtrim(HLEB_STORAGE_DIRECTORY, '\\/ ') : HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage'));
