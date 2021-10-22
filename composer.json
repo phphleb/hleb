@@ -36,7 +36,10 @@
       "App\\": "app/",
       "Phphleb\\": "vendor/phphleb/",
       "Hleb\\": "vendor/phphleb/framework/"
-    }
+    },
+    "exclude-from-classmap": [
+      "**/DraftInstances/"
+    ]
   },
   "suggest": {
     "phphleb/xdorm": "XD ORM is a compact shell over PHP PDO",
