@@ -3,7 +3,7 @@ os: linux
 language: php
 env:
   global:
-    - FRAMEWORK_VERSION=1.5.71 # <current version>
+    - FRAMEWORK_VERSION=1.5.72 # <current version>
     - PHPHUNIT_VERSION=>=9.0.0
 
 jobs:
