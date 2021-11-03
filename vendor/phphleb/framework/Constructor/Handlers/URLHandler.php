@@ -14,7 +14,7 @@ final class URLHandler
 {
     // Parse the array with routes.
     // Разбор массива с маршрутами.
-    public function page(array $blocks, $url = null, $method = null, $domain = null) {
+    public function page(array $blocks, string $url = null, string $method = null, string $domain = null) {
         $searchDomains = $blocks['domains'] ?? false;
         // Clearing incoming data.
         // Очистка входящих данных.
