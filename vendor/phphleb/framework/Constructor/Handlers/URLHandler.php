@@ -14,30 +14,26 @@ final class URLHandler
 {
     // Parse the array with routes.
     // Разбор массива с маршрутами.
-    public function page(array $blocks) {
+    public function page(array $blocks, $url = null, $method = null, $domain = null) {
         $searchDomains = $blocks['domains'] ?? false;
-        // Clearing global data.
-        // Очистка глобальных данных.
-        unset($blocks['domains']);
-        unset($blocks['update']);
-        unset($blocks['render']);
-        unset($blocks['addresses']);
+        // Clearing incoming data.
+        // Очистка входящих данных.
+        unset($blocks['domains'], $blocks['update'], $blocks['render'], $blocks['addresses']);
 
-        $url = Request::getMainClearUrl();
-        $blocks = $searchDomains ? $this->matchSubdomains($blocks) : $blocks;
-        if (empty(count($blocks))) {
+        $blocks = $searchDomains ? $this->matchSubdomains($blocks, $domain ?? hleb_get_host()) : $blocks;
+        if (!count($blocks)) {
             // No suitable route was found for the current subdomain.
             // Подходящего роута по текущему поддомену не найдено.
             return false;
         }
 
-        $blocks = $this->matchSearchType($blocks);
-        if (empty(count($blocks))) {
+        $blocks = $this->matchSearchType($blocks, $method ?? $_SERVER['REQUEST_METHOD']);
+        if (!count($blocks)) {
             // No suitable route of type REQUEST_METHOD found.
             // Подходящего роута по типу REQUEST_METHOD не найдено.
             return false;
         }
-        return $this->matchSearchAllPath($blocks, $url);
+        return $this->matchSearchAllPath($blocks, $url ?? Request::getMainClearUrl());
     }
 
     // Remove extra slashes.
@@ -54,8 +50,8 @@ final class URLHandler
 
     // Find a method for subdomains.
     // Поиск метода для субдоменов.
-    private function matchSubdomains($blocks) {
-        $host = array_reverse(explode('.', hleb_get_host()));
+    private function matchSubdomains($blocks, $httpHost) {
+        $host = array_reverse(explode('.', $httpHost));
         if ($host[0] === 'localhost') {
             array_unshift($host, '*');
         }
@@ -98,8 +94,8 @@ final class URLHandler
 
     // Sort the list of routes and filter by the appropriate type.
     // Сортировка списка роутов и отбор по подходящему типу.
-    private function matchSearchType($blocks) {
-        $realType = strtolower($_SERVER['REQUEST_METHOD']);
+    private function matchSearchType($blocks, $method) {
+        $realType = strtolower($method);
         if (!in_array($realType, HLEB_HTTP_TYPE_SUPPORT)) {
             if (!headers_sent()) {
                 http_response_code (405);
