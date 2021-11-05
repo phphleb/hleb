@@ -293,9 +293,7 @@ final class MainConsole
     }
 
     public function getLogs() {
-        $pathToLogsDir = (defined('HLEB_STORAGE_DIRECTORY') ?
-                rtrim(HLEB_STORAGE_DIRECTORY, '\\/ ') :
-                HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage') . DIRECTORY_SEPARATOR . "logs";
+        $pathToLogsDir = rtrim(HLEB_STORAGE_DIRECTORY, '\\/ ') . DIRECTORY_SEPARATOR . "logs";
 
         $time = 0;
         $lastLogFile = null;

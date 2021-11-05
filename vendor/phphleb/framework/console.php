@@ -13,7 +13,21 @@ if (!defined('HLEB_GLOBAL_DIRECTORY')) define('HLEB_GLOBAL_DIRECTORY', dirname(_
 //To set a different directory name 'vendor' add HLEB_VENDOR_DIR_NAME to the constants
 define('HLEB_VENDOR_DIRECTORY', defined('HLEB_VENDOR_DIR_NAME') ? HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME : dirname(__DIR__, 2));
 
-define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', (defined('HLEB_STORAGE_DIRECTORY') ? HLEB_STORAGE_DIRECTORY : HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . "/storage") . "/cache/routes");
+if(!defined('HLEB_STORAGE_DIRECTORY')) {
+    define('HLEB_STORAGE_DIRECTORY', HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . "/storage");
+}
+
+define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', rtrim(HLEB_STORAGE_DIRECTORY, '\\/ ') . "/cache/routes");
+
+
+if(!defined('HLEB_PROJECT_LOG_ON')) {
+    define('HLEB_PROJECT_LOG_ON', true);
+}
+ini_set('log_errors', 'On');
+ini_set('display_errors', '1');
+if (HLEB_PROJECT_LOG_ON) {
+    ini_set('error_log', HLEB_STORAGE_DIRECTORY. DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . date('Y_m_d_') . 'errors.cli.log');
+}
 
 define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'routes');
 
