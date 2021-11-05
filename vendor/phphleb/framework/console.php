@@ -23,9 +23,9 @@ define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', rtrim(HLEB_STORAGE_DIRECTORY, '\\/
 if(!defined('HLEB_PROJECT_LOG_ON')) {
     define('HLEB_PROJECT_LOG_ON', true);
 }
-ini_set('log_errors', 'On');
-ini_set('display_errors', '1');
 if (HLEB_PROJECT_LOG_ON) {
+    ini_set('log_errors', 'On');
+    ini_set('display_errors', '1');
     ini_set('error_log', HLEB_STORAGE_DIRECTORY. DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . date('Y_m_d_') . 'errors.cli.log');
 }
 
