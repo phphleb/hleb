@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor;
 
+#[AllowDynamicProperties]
 final class TCreator
 {
     private $hlTemplatePath = '';
