@@ -1,6 +1,10 @@
 # phpstorm project files
+/.idea
 /.idea/*
-.idea
+
+# visualstudio files
+/.vscode
+/.vscode/*
 
 # working files
 /storage/*
@@ -18,13 +22,16 @@
 
 # phpunit itself is not needed
 phpunit.phar
+
 # local phpunit config
 /phpunit.xml
 /.phpunit.result.cache
+
+# docker-compose config
+docker-compose.override.yml
 
 # windows thumbnail cache
 Thumbs.db
 
 # Mac DS_Store Files
 .DS_Store
-
