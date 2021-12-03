@@ -1,6 +1,8 @@
 
 # HLEB
-### [![HLEB LOGO](https://raw.githubusercontent.com/phphleb/hleb/f95d0092692c082c1b2b0d96c75dcaf68600b73b/public/images/logo.png)](https://github.com/phphleb/hleb/tree/master)
+
+[![HLEB LOGO](https://raw.githubusercontent.com/phphleb/hleb/f95d0092692c082c1b2b0d96c75dcaf68600b73b/public/images/logo.png)](https://github.com/phphleb/hleb/tree/master)
+
 # PHP Micro-Framework
 
 Requires PHP version 7.0 or higher (including version 8).
@@ -105,7 +107,7 @@ use App\Models\UserModel;
 class TestController extends \MainController
 {
     function index($status) {  // $status = 'friends'
-      $data = UserModel::getUsersDataByParentId(\Request::get('id'), $status);
+      $data = UserModel::getUserData(\Request::get('id'), $status);
       return view('/user/profile', ['contacts' => $data]);
     }
 }
@@ -134,7 +136,7 @@ Models
 namespace App\Models;
 class UserModel extends \MainModel
 {
-   static function getUsersDataByParentId(int $id, string $status) {
+   static function getUserData(int $id, string $status) {
      $data = /* ... */ // A query to the database, returning users data.
      return $data;
    }
@@ -210,19 +212,17 @@ Debug Panel
 WorkDebug::add($debug_data, 'description');
 ```
 
-User registration
------------------------------------
-```bash
-$ composer require phphleb/hlogin
-```
-```bash
-$ php console phphleb/hlogin --add
-```
-These two steps install the module for registration. [More details](https://github.com/phphleb/hlogin)
-
 Database queries
 -----------------------------------
 Recommended [phphleb/xdorm](https://github.com/phphleb/xdorm) ORM or [DB](https://github.com/phphleb/hleb/blob/master/database/DB.php) (add-on over PDO) class.
+
+Additional features
+-----------------------------------
++ **User registration** module [phphleb/hlogin](https://github.com/phphleb/hlogin)
+
++ **DI** (Dependency injection) [phphleb/draft](https://github.com/phphleb/draft)
+
++ **Mutex**es [phphleb/conductor](https://github.com/phphleb/conductor)
 
 
 -----------------------------------
