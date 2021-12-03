@@ -3,6 +3,11 @@ $arguments = $argv[1] ?? null;
 
 // End of script execution (before starting the main project).
 if (!function_exists('hl_preliminary_exit')) {
+    /**
+     * @param string $text - message text.
+     *
+     * @internal
+     */
     function hl_preliminary_exit($text = '') {
         exit($text);
     }
@@ -47,6 +52,11 @@ if (!defined('HLEB_PROJECT_CLASSES_AUTOLOAD')) {
     define('HLEB_PROJECT_CLASSES_AUTOLOAD', true);
 }
 
+/**
+ * @param string $path - file path.
+ *
+ * @internal
+ */
 function hleb_require(string $path) {
     require_once "$path";
 }
@@ -125,7 +135,7 @@ if ($arguments) {
                 " --help or -h      (displays a list of default console actions)" . PHP_EOL .
                 " --routes or -r    (forms a list of routes)" . PHP_EOL .
                 " --list or -l      (forms a list of commands)" . PHP_EOL .
-                "                   <command> [--help]" . PHP_EOL .
+                " --list <command> [--help] (command info)" . PHP_EOL .
                 " --logs or -lg     (prints multiple trailing lines from a log file)" . PHP_EOL .
                 " --new-task        (сreates a new command)" . PHP_EOL .
                 "                   --new-task example-task \"Short description\"" . PHP_EOL .
@@ -173,17 +183,30 @@ if ($arguments) {
     echo "Missing arguments after `console`. Add --help to display more options.", PHP_EOL;
 }
 
-
+/**
+ * @return string
+ *
+ * @internal
+ */
 function hlConsoleCopyright() {
     $start = "2019";
     $cp = date("Y") != $start ? "$start - " . date("Y") : $start;
     return "(c)$cp Foma Tuturov";
 }
 
+/**
+ * @param string $type
+ * @return string
+ *
+ * @internal
+ */
 function hlAllowedHttpTypes($type) {
     return empty($type) ? "GET" : ((in_array(strtolower($type), HLEB_HTTP_TYPE_SUPPORT)) ? $type : $type . " [NOT SUPPORTED]");
 }
 
+/**
+ * @internal
+ */
 function hlUploadAll() {
 
     require HLEB_PROJECT_DIRECTORY . '/Main/Insert/DeterminantStaticUncreated.php';
@@ -216,6 +239,11 @@ function hlUploadAll() {
 
     // Custom class autoloader.
     // Собственный автозагрузчик классов.
+    /**
+     * @param string $class - class name.
+     *
+     * @internal
+     */
     function hl_main_autoloader($class) {
         \Hleb\Main\MainAutoloader::get($class);
     }
@@ -223,6 +251,13 @@ function hlUploadAll() {
     if (HLEB_PROJECT_CLASSES_AUTOLOAD) spl_autoload_register('hl_main_autoloader', true, true);
 }
 
+/**
+ * @param string $path
+ * @param string $class
+ * @param array $arg
+ *
+ * @internal
+ */
 function hlCreateUsersTask($path, $class, $arg) {
    $task =  hlCreateTaskClass($path, $class);
    if($task) {
@@ -230,6 +265,13 @@ function hlCreateUsersTask($path, $class, $arg) {
    }
 }
 
+/**
+ * @param string $path
+ * @param string $class
+ * @return null|object
+ *
+ * @internal
+ */
 function hlCreateTaskClass($path, $class) {
     $realPath = $path . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Commands' . DIRECTORY_SEPARATOR . $class . ".php";
     include_once "$realPath";
@@ -243,7 +285,12 @@ function hlCreateTaskClass($path, $class) {
 }
 
 
-
+/**
+ * @param string $path
+ * @param string $class
+ *
+ * @internal
+ */
 function hlShowCommandHelp($path, $class) {
     /** @var object|null $task */
     $task = hlCreateTaskClass($path, $class);
@@ -274,7 +321,11 @@ function hlShowCommandHelp($path, $class) {
     print PHP_EOL . "No arguments." . PHP_EOL;
 }
 
-
+/**
+ * @return string
+ *
+ * @internal
+ */
 function hlGetFrameVersion() {
     if(file_exists(HLEB_PUBLIC_DIR . '/index.php')) {
         return hlSearchVersion(HLEB_PUBLIC_DIR . '/index.php', 'HLEB_FRAME_VERSION');
@@ -282,16 +333,36 @@ function hlGetFrameVersion() {
     return '-';
 }
 
+/**
+ * @return string
+ *
+ * @internal
+ */
 function hlGetFrameworkVersion() {
     return hlSearchVersion(HLEB_PROJECT_DIRECTORY . '/init.php', 'HLEB_PROJECT_FULL_VERSION');
 }
 
+/**
+ * @param string $file
+ * @param string $const
+ * @return string
+ *
+ * @internal
+ */
 function hlSearchVersion($file, $const) {
     $content = file_get_contents($file, true);
     preg_match_all("|define\(\s*\'" . $const . "\'\s*\,\s*([^\)]+)\)|u", $content, $def);
     return trim($def[1][0] ?? 'undefined', "' \"");
 }
 
+/**
+ * @param array $files
+ * @param string $path
+ * @param object $fn
+ * @param string $scan_path
+ *
+ * @internal
+ */
 function hlClearCacheFiles($files, $path, $fn, $scan_path) {
     echo PHP_EOL, "Clearing cache [          ] 0% ";
     $all = count($files);
@@ -339,6 +410,11 @@ function hlClearCacheFiles($files, $path, $fn, $scan_path) {
 
 }
 
+/**
+ * @param string $path
+ *
+ * @internal
+ */
 function hlForcedClearCacheFiles($path) {
     $standardPath = str_replace('\\', '/', $path);
     if (!file_exists($path)) {
@@ -362,6 +438,11 @@ function hlForcedClearCacheFiles($path) {
     fwrite(STDOUT, "Delete files [//////////] 100% ");
 }
 
+/**
+ * @param string $path
+ *
+ * @internal
+ */
 function hlRemoveDir($path) {
     if (file_exists($path) && is_dir($path)) {
         $dir = opendir($path);

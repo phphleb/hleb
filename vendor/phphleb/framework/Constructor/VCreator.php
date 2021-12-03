@@ -13,8 +13,14 @@ namespace Hleb\Constructor;
 #[AllowDynamicProperties]
 final class VCreator
 {
+    /** @internal */
     private $hlTemplatePath = '';
 
+    /**
+     * @param string $includePath
+     *
+     * @internal
+     */
     public function __construct(string $includePath) {
         $this->hlTemplatePath = $includePath;
         $data = hleb_to0me1cd6vo7gd_data();
@@ -27,13 +33,18 @@ final class VCreator
 
     // Returns the path to the content file.
     // Возвращает путь до файла с контентом.
-    /** @return string */
+    /**
+     * @return string
+     *
+     * @internal
+     */
     public function templatePath() {
         return $this->hlTemplatePath;
     }
 
     // Display content.
     // Отображение контента.
+    /** @internal */
     public function view() {
         extract($this->getData());
         require $this->templatePath();
@@ -41,6 +52,7 @@ final class VCreator
 
     // Getting variables.
     // Получение переменных.
+    /** @internal */
     private function getData() {
         $data = hleb_to0me1cd6vo7gd_data();
         return is_array($data) ? $data : [];

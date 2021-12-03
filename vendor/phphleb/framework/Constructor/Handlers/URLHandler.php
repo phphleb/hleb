@@ -10,6 +10,10 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Handlers;
 
+/**
+ * @package Hleb\Constructor\Handlers
+ * @internal
+ */
 final class URLHandler
 {
     // Parse the array with routes.

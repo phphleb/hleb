@@ -25,7 +25,7 @@ final class Workspace
 
     protected $hlDebugInfo = ['time' => [], 'block' => []];
 
-    protected $admFooter;
+    protected $admFooter = null;
 
     protected $controllerForepart = 'App\Controllers\\';
 

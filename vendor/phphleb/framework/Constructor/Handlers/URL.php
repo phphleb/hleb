@@ -12,6 +12,10 @@ namespace Hleb\Constructor\Handlers;
 
 use Hleb\Main\Insert\BaseSingleton;
 
+/**
+ * @package Hleb\Constructor\Handlers *
+ * @internal
+ */
 final class URL extends BaseSingleton
 {
     const NEEDED_TAGS = ['<', '>'];
@@ -22,7 +26,7 @@ final class URL extends BaseSingleton
 
     protected static $standardUrlList = [];
 
-    protected static $addresses;
+    protected static $addresses = null;
 
     // Create a list of used URLs.
     // Создание списка используемых адресов URL

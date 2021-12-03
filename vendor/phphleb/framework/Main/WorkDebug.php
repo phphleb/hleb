@@ -30,6 +30,7 @@ final class WorkDebug extends BaseSingleton
         }
     }
 
+    /** @internal */
     public static function get(): array {
         return self::$data;
     }

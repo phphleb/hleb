@@ -12,7 +12,7 @@ namespace Hleb\Constructor\Handlers;
 
 final class AddressBar
 {
-    const IDNACONV_PATH = '/idnaconv/idna_convert.class.php';
+    const IDNACONV_PATH = '/Idnaconv/idnaConvert.php';
 
     private $inputParameters;
 
@@ -60,7 +60,7 @@ final class AddressBar
         if (stripos($host, 'xn--') !== false) {
             $idnPath = $this->inputParameters['HLEB_PROJECT_DIRECTORY'] . self::IDNACONV_PATH;
             require("$idnPath");
-            $idn = new \idna_convert(['idn_version' => 2008]);
+            $idn = new \idnaConvert();
             $host = $idn->decode($host);
         }
 

@@ -8,6 +8,11 @@ if(!defined('HLEB_START')) {
 
 // End of script execution (before starting the main project).
 if (!function_exists('hl_preliminary_exit')) {
+    /**
+     * @param string $text - message text.
+     *
+     * @internal
+     */
     function hl_preliminary_exit($text = '') {
         exit(strval($text));
     }
@@ -240,6 +245,12 @@ if(empty($radjaxIsActive)) {
 
     require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/AddressBar.php';
 
+    /**
+     * @param bool $complete - full protocol.
+     * @return string
+     *
+     * @internal
+     */
     function hleb_actual_http_protocol($complete = true) {
         return ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http') . ($complete ? '://' : '');
     }

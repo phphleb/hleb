@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 trait DeterminantStaticUncreated
 {
-    private static $instance;
+    private static $instance = null;
 
     protected function __construct() {}
 

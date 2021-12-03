@@ -14,8 +14,10 @@ use Hleb\Main\Insert\BaseSingleton;
 
 final class Request extends BaseSingleton
 {
+    /** @internal */
     const NEEDED_TAGS = ['<', '>'];
 
+    /** @internal */
     const REPLACING_TAGS = ['&lt;', '&gt;'];
 
     private static $request = [];
@@ -567,12 +569,19 @@ final class Request extends BaseSingleton
 
     // Reserved for backward compatibility
     // Оставлено для обратной совместимости
+    /** @internal */
     public static function close() {
         return null;
     }
 
     // Adds a parameter by name and value.
     // Добавляет параметр по имени и значению.
+    /**
+     * @param string $name
+     * @param string $value
+     *
+     * @internal
+     */
     public static function add(string $name, string $value) {
        self::$request[$name] = is_numeric($value) ? floatval($value) : self::clearData($value);
     }
