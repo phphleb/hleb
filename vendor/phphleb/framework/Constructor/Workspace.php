@@ -97,22 +97,22 @@ final class Workspace
 
     // Parse and display the main action for the route.
     // Разбор и вывод основного действия для роута.
-    private function renderGetMethod($hlExBlock) {
-        $hlExParams = $hlExBlock['data_params'];
-        if (count($hlExParams) === 0) {
-            $hlExActions = $hlExBlock['actions'];
-            foreach ($hlExActions as $k => $hlExc) {
-                if (isset($hlExc['controller']) || isset($hlExc['adminPanController'])) {
-                    $hlExParams = isset($hlExc['controller']) ? $this->getController($hlExc['controller']) :
-                        $this->getAdminPanController($hlExc['adminPanController'], $hlExBlock);
-                    if (is_array($hlExParams)) {
-                        if (isset($hlExParams[2]) && $hlExParams[2] == 'render') {
+    private function renderGetMethod($block) {
+        $params = $block['data_params'];
+        if (count($params) === 0) {
+            $actions = $block['actions'];
+            foreach ($actions as $k => $action) {
+                if (isset($action['controller']) || isset($action['adminPanController'])) {
+                    $params = isset($action['controller']) ? $this->getController($action['controller']) :
+                        $this->getAdminPanController($action['adminPanController'], $block);
+                    if (is_array($params)) {
+                        if (isset($params[2]) && $params[2] == 'render') {
                             // render
                         } else {
-                            $hlExParams[0] = [$hlExParams[0]];
+                            $params[0] = [$params[0]];
                         }
                     } else {
-                        echo $hlExParams;
+                        echo $params;
                         if (!empty($this->admFooter)) echo $this->admFooter;
                         return;
                     }
@@ -121,25 +121,30 @@ final class Workspace
             }
         }
         // data()
-        if (is_array($hlExParams) && !empty($hlExParams[1])) {
-            Data::createData($hlExParams[1]);
+        if (is_array($params) && !empty($params[1])) {
+            Data::createData($params[1]);
         }
-        if (isset($hlExParams['text']) && is_string($hlExParams['text'])) {
-            echo $hlExParams['text'];
-        } else if (isset($hlExParams[2]) && $hlExParams[2] == 'views') {
+        if (isset($params['text']) && is_string($params['text'])) {
+            echo $params['text'];
+        } else if (isset($params[2]) && $params[2] == 'views') {
             //  view(...)
-            $this->selectableViewFile($hlExParams[0][0], 'view', 37);
-        } else if (isset($hlExParams[2]) && $hlExParams[2] == 'render') {
+            $this->selectableViewFile($params[0][0], 'view', 37);
+        } else if (isset($params[2]) && $params[2] == 'render') {
             // render(...)
-            $hlExParamsMaps = $hlExParams[0];
-            Info::add('RenderMap', $hlExParamsMaps);
-            foreach ($hlExParamsMaps as $hlExParamsMap) {
-                foreach ($this->map as $hlExKey => $hlExMaps) {
-                    if ($hlExKey == $hlExParamsMap) {
-                        foreach ($hlExMaps as $hlEx_map) {
-                            $this->selectableViewFile($hlEx_map, 'render', 27);
+            $allMaps = $params[0];
+            Info::add('RenderMap', $allMaps);
+            foreach ($allMaps as $originMap) {
+                $select = 0;
+                foreach ($this->map as $key => $initMaps) {
+                    if ($key == $originMap) {
+                        $select++;
+                        foreach ($initMaps as $initPage) {
+                            $this->selectableViewFile($initPage, 'render', 27);
                         }
                     }
+                }
+                if (!$select && !isset($this->map[$originMap])) {
+                    $this->selectableViewFile($originMap, 'render', 27);
                 }
             }
         }
@@ -155,33 +160,33 @@ final class Workspace
         }
 
         $extension = false;
-        $hlFile = trim($file, '\/ ');
-        $hlFileParts = explode("/", $hlFile);
-        $hlExFile = str_replace(['\\', '//'], '/', HLEB_GLOBAL_DIRECTORY . $this->viewPath . $hlFile);
+        $file = trim($file, '\/ ');
+        $fileParts = explode("/", $file);
+        $proFile = str_replace(['\\', '//'], '/', HLEB_GLOBAL_DIRECTORY . $this->viewPath . $file);
         // twig file
-        if (file_exists($hlExFile . ".php")) {
-            $hlExFile .= '.php';
+        if (file_exists($proFile . ".php")) {
+            $proFile .= '.php';
         } else {
-            $extension = strripos(end($hlFileParts), ".") !== false;
+            $extension = strripos(end($fileParts), ".") !== false;
         }
-        if (file_exists($hlExFile)) {
+        if (file_exists($proFile)) {
             if (!HL_TWIG_CONNECTED && $extension) {
-                $hlExt = strip_tags(array_reverse(explode(".", $hlFile))[0]);
-                $hlExErrors = 'HL041-VIEW_ERROR: The file has the `.' . $hlExt . '` extension and is not processed.' .
+                $ext = strip_tags(array_reverse(explode(".", $file))[0]);
+                $exErrors = 'HL041-VIEW_ERROR: The file has the `.' . $ext . '` extension and is not processed.' .
                     ' Probably the TWIG template engine is not connected.' . '~' .
-                    ' Файл имеет расширение `.' . $hlExt . '`. и не обработан. Вероятно не подключён шаблонизатор TWIG.';
-                ErrorOutput::get($hlExErrors);
+                    ' Файл имеет расширение `.' . $ext . '`. и не обработан. Вероятно не подключён шаблонизатор TWIG.';
+                ErrorOutput::get($exErrors);
             } else {
                 // view file
-                $extension ? (new TwigCreator())->view($hlFile) : (new VCreator($hlExFile))->view();
+                $extension ? (new TwigCreator())->view($file) : (new VCreator($proFile))->view();
             }
         } else {
-            $errorFile = str_replace(str_replace(['\\', '//'], '/', HLEB_GLOBAL_DIRECTORY), "", $hlExFile) . ($extension ? "" : ".php");
+            $errorFile = str_replace(str_replace(['\\', '//'], '/', HLEB_GLOBAL_DIRECTORY), "", $proFile) . ($extension ? "" : ".php");
             // Search to HL027-VIEW_ERROR or Search to HL037-VIEW_ERROR
-            $hlExErrors = 'HL0' . $errorNum . '-VIEW_ERROR: Error in function ' . $methodType . '() ! ' .
+            $exErrors = 'HL0' . $errorNum . '-VIEW_ERROR: Error in function ' . $methodType . '() ! ' .
                 'Missing file `' . $errorFile . '` . ~ ' .
                 'Исключение в функции ' . $methodType . '() ! Отсутствует файл `' . $errorFile . '`';
-            ErrorOutput::get($hlExErrors);
+            ErrorOutput::get($exErrors);
         }
     }
 
@@ -198,17 +203,17 @@ final class Workspace
         $initiator = 'App\Middleware\\' . $type . '\\' . $className;
 
         if (!class_exists($initiator)) {
-            $hlExErrors = 'HL043-ROUTE_ERROR: Сlass `' . $initiator . '` not exists. ~' .
+            $errors = 'HL043-ROUTE_ERROR: Сlass `' . $initiator . '` not exists. ~' .
                 ' Класс `' . $initiator . '` не обнаружен.';
-            ErrorOutput::get($hlExErrors);
+            ErrorOutput::get($errors);
         }
 
         $initiatorObject = new $initiator;
 
         if (!is_callable([$initiatorObject, $method])) {
-            $hlExErrors = 'HL048-ROUTE_ERROR: Method `' . $method . '` in class `' . $initiator . '` not exists. ~' .
+            $errors = 'HL048-ROUTE_ERROR: Method `' . $method . '` in class `' . $initiator . '` not exists. ~' .
                 ' Метод  `' . $method . '` для класса `' . $initiator . '` не обнаружен.';
-            ErrorOutput::get($hlExErrors);
+            ErrorOutput::get($errors);
             return null;
         }
 
@@ -236,9 +241,9 @@ final class Workspace
                 define('HLEB_OPTIONAL_MODULE_SELECTION', file_exists(HLEB_GLOBAL_DIRECTORY . "/modules/"));
             }
             if (!HLEB_OPTIONAL_MODULE_SELECTION) {
-                $hlExErrors = 'HL044-ROUTE_ERROR: Error in method ->module() ! ' . 'The `/modules` directory is not found, you must create it. ~' .
+                $errors = 'HL044-ROUTE_ERROR: Error in method ->module() ! ' . 'The `/modules` directory is not found, you must create it. ~' .
                     ' Директория `/modules` не обнаружена, необходимо её создать.';
-                ErrorOutput::get($hlExErrors);
+                ErrorOutput::get($errors);
             }
             $this->controllerForepart = 'Modules\\';
             $searchToModule = explode("/", trim($className, '/\\'));
@@ -253,9 +258,9 @@ final class Workspace
 
         if (!class_exists($initiator)) {
             if (!$searchTags) {
-                $hlExErrors = 'HL047-ROUTE_ERROR: Class `' . $initiator . '` not exists. ~' .
+                $errors = 'HL047-ROUTE_ERROR: Class `' . $initiator . '` not exists. ~' .
                     ' Класс  `' . $initiator . '` не обнаружен.';
-                ErrorOutput::get($hlExErrors);
+                ErrorOutput::get($errors);
                 return null;
             } else {
                 hleb_bt3e3gl60pg8h71e00jep901_error_404();
@@ -266,9 +271,9 @@ final class Workspace
 
         if (!is_callable([$initiatorObject, $method])) {
             if (!$searchTags) {
-                $hlExErrors = 'HL042-ROUTE_ERROR: Method `' . $method . '` in class `' . $initiator . '` not exists. ~' .
+                $errors = 'HL042-ROUTE_ERROR: Method `' . $method . '` in class `' . $initiator . '` not exists. ~' .
                     ' Метод  `' . $method . '` для класса `' . $initiator . '` не обнаружен.';
-                ErrorOutput::get($hlExErrors);
+                ErrorOutput::get($errors);
                 return null;
             } else {
                 hleb_bt3e3gl60pg8h71e00jep901_error_404();
@@ -298,18 +303,18 @@ final class Workspace
         $initiator = 'App\Controllers\\' . $className;
 
         if (!class_exists($initiator)) {
-            $hlExErrors = 'HL046-ROUTE_ERROR: Class `' . $initiator . '` from `AdminPanController` not exists. ~' .
+            $errors = 'HL046-ROUTE_ERROR: Class `' . $initiator . '` from `AdminPanController` not exists. ~' .
                 ' Класс  `' . $initiator . '` для `AdminPanController` не обнаружен.';
-            ErrorOutput::get($hlExErrors);
+            ErrorOutput::get($errors);
             return null;
         }
 
         $initiatorObject = new $initiator;
 
         if (!is_callable([$initiatorObject, $method])) {
-            $hlExErrors = 'HL049-ROUTE_ERROR: Method `' . $method . '` in class `' . $initiator . '` not exists. ~' .
+            $errors = 'HL049-ROUTE_ERROR: Method `' . $method . '` in class `' . $initiator . '` not exists. ~' .
                 ' Метод  `' . $method . '` для класса `' . $initiator . '` не обнаружен.';
-            ErrorOutput::get($hlExErrors);
+            ErrorOutput::get($errors);
             return null;
         }
 

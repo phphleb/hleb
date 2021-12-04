@@ -192,8 +192,10 @@ echo $this->content; // Long text
 Page Builder
 -----------------------------------
 ```php
-Route::renderMap('index page', ['/parts/header', 'index', '/parts/footer']);
-Route::get('/', render('index page'));
+Route::renderMap('header.map', ['/parts/header', '/parts/resources']);
+Route::renderMap('footer.map', ['/parts/reviews', '/parts/footer']);
+
+Route::get('/', render(['header.map', '/pages/index', 'footer.map'], ['variable' => 'value']));
 ```
 
 Optional use of `Twig` template engine
