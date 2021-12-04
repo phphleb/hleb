@@ -24,15 +24,15 @@ final class ProjectLoader extends BaseSingleton
 {
     public static function start() {
 
-        $routes_array = (new CacheRoutes())->load();
+        $routesArray = (new CacheRoutes())->load();
 
-        $render_map = $routes_array['render'] ?? [];
+        $renderMap = $routesArray['render'] ?? [];
 
-        if (isset($routes_array['addresses'])) URL::create($routes_array['addresses']);
+        if (isset($routesArray['addresses'])) URL::create($routesArray['addresses']);
 
-        $block = (new URLHandler())->page($routes_array);
+        $block = (new URLHandler())->page($routesArray);
 
-        unset($routes_array);
+        unset($routesArray);
 
         Route::instance()->delete();
 
@@ -42,11 +42,13 @@ final class ProjectLoader extends BaseSingleton
                 if (!isset($_SESSION)) ErrorOutput::get("HL050-ERROR: SESSION not initialized !");
             }
             ProtectedCSRF::testPage($block);
-            new Workspace($block, $render_map);
+
+            new Workspace($block, $renderMap);
+
             print PageFinisher::getContent();
 
         } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            unset($block, $render_map);
+            unset($block, $renderMap);
             hleb_bt3e3gl60pg8h71e00jep901_error_404();
 
         } else {
