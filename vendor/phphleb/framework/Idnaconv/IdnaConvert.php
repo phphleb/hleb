@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 foldmethod=marker: */
 
+namespace Hleb\Idnaconv;
 
 /**
  * Encode/decode Internationalized Domain Names.
@@ -33,7 +34,7 @@ declare(strict_types=1);
  *
  * @contributor Foma Tuturov (update to PHP7+ )
  */
-class idnaConvert
+class IdnaConvert
 {
     // NP See below
 
@@ -946,11 +947,11 @@ class idnaConvert
      * Attempts to return a concrete IDNA instance.
      *
      * @param array $params Set of parameters
-     * @return idnaConvert
+     * @return IdnaConvert
      * @access public
      */
     public function getInstance(array $params = []) {
-        return new idnaConvert($params);
+        return new IdnaConvert($params);
     }
 
     /**

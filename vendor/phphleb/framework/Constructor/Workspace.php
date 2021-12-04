@@ -88,7 +88,7 @@ final class Workspace
             (new TryClass('Phphleb\Debugpan\DPanel'))->is_connect()) {
             DPanel::init($this->hlDebugInfo);
         }
-        foreach ($actions as $key => $action) {
+        foreach ($actions as $action) {
             if (isset($action['after'])) {
                 $this->allAction($action['after'], 'After');
             }
@@ -101,7 +101,7 @@ final class Workspace
         $params = $block['data_params'];
         if (count($params) === 0) {
             $actions = $block['actions'];
-            foreach ($actions as $k => $action) {
+            foreach ($actions as $action) {
                 if (isset($action['controller']) || isset($action['adminPanController'])) {
                     $params = isset($action['controller']) ? $this->getController($action['controller']) :
                         $this->getAdminPanController($action['adminPanController'], $block);
@@ -136,14 +136,14 @@ final class Workspace
             foreach ($allMaps as $originMap) {
                 $select = 0;
                 foreach ($this->map as $key => $initMaps) {
-                    if ($key == $originMap) {
+                    if ($key === $originMap) {
                         $select++;
                         foreach ($initMaps as $initPage) {
                             $this->selectableViewFile($initPage, 'render', 27);
                         }
                     }
                 }
-                if (!$select && !isset($this->map[$originMap])) {
+                if (!$select) {
                     $this->selectableViewFile($originMap, 'render', 27);
                 }
             }
@@ -161,10 +161,10 @@ final class Workspace
 
         $extension = false;
         $file = trim($file, '\/ ');
-        $fileParts = explode("/", $file);
+        $fileParts = explode('/', $file);
         $proFile = str_replace(['\\', '//'], '/', HLEB_GLOBAL_DIRECTORY . $this->viewPath . $file);
         // twig file
-        if (file_exists($proFile . ".php")) {
+        if (file_exists($proFile . '.php')) {
             $proFile .= '.php';
         } else {
             $extension = strripos(end($fileParts), ".") !== false;
@@ -181,7 +181,7 @@ final class Workspace
                 $extension ? (new TwigCreator())->view($file) : (new VCreator($proFile))->view();
             }
         } else {
-            $errorFile = str_replace(str_replace(['\\', '//'], '/', HLEB_GLOBAL_DIRECTORY), "", $proFile) . ($extension ? "" : ".php");
+            $errorFile = str_replace(str_replace(['\\', '//'], '/', HLEB_GLOBAL_DIRECTORY), "", $proFile) . ($extension ? '' : '.php');
             // Search to HL027-VIEW_ERROR or Search to HL037-VIEW_ERROR
             $exErrors = 'HL0' . $errorNum . '-VIEW_ERROR: Error in function ' . $methodType . '() ! ' .
                 'Missing file `' . $errorFile . '` . ~ ' .
@@ -250,7 +250,7 @@ final class Workspace
             if (count($searchToModule) && !defined('HLEB_MODULE_NAME')) {
                 define('HLEB_MODULE_NAME', $searchToModule[0]);
             }
-            $this->viewPath = "/modules/" . implode("/", array_slice($searchToModule, 0, count($searchToModule) - 1)) . "/";
+            $this->viewPath = '/modules/' . implode('/', array_slice($searchToModule, 0, count($searchToModule) - 1)) . '/';
             $className = implode("\\", array_map('ucfirst', $searchToModule));
         }
 

@@ -56,6 +56,7 @@ if (empty($_SERVER['HTTP_HOST'])) {
 }
 
 // For compatibility with earlier versions of the framework
+/** @internal */
 function hleb_get_host() {
     return $_SERVER['HTTP_HOST'];
 }
@@ -78,6 +79,11 @@ if (!defined('HLEB_GLOBAL_DIRECTORY')) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @param string $path
+ *
+ * @internal
+ */
 function hleb_require(string $path) {
     require_once "$path";
 }
@@ -139,16 +145,28 @@ define('HLEB_PROJECT_STORAGE_DIR', (defined('HLEB_STORAGE_DIRECTORY') ? rtrim(HL
 
 //Full path to folder '/storage'
 if (!function_exists('hleb_system_storage_path')) {
+    /**
+     * @param string $subPath
+     * @return string
+     *
+     * @internal
+     */
     function hleb_system_storage_path($subPath = '') {
         return HLEB_PROJECT_STORAGE_DIR . (!empty($subPath) ? DIRECTORY_SEPARATOR . (trim($subPath, '\\/ ')) : '');
     }
 }
 // For compatibility
+/** @internal */
 function hleb_dc64d27da09bab7_storage_directory() {
     return hleb_system_storage_path();
 }
 
 if (!function_exists('hleb_system_log')) {
+    /**
+     * @param $message
+     *
+     * @internal
+     */
     function hleb_system_log($message) {
       error_log($message);
     }
@@ -190,7 +208,13 @@ if (file_exists(HLEB_VENDOR_DIRECTORY . '/autoload.php')) {
 }
 
 //Own autoloader
+/**
+ * @param $class
+ *
+ * @internal
+ */
 function hl_main_autoloader($class) {
+    var_dump($class);
     if (HLEB_PROJECT_CLASSES_AUTOLOAD) {
         \Hleb\Main\MainAutoloader::get($class);
     }
