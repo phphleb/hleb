@@ -214,7 +214,6 @@ if (file_exists(HLEB_VENDOR_DIRECTORY . '/autoload.php')) {
  * @internal
  */
 function hl_main_autoloader($class) {
-    var_dump($class);
     if (HLEB_PROJECT_CLASSES_AUTOLOAD) {
         \Hleb\Main\MainAutoloader::get($class);
     }
