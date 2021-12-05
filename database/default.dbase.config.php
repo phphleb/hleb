@@ -7,28 +7,28 @@
  * Этот файл необходимо скрывать при копировании проекта, так как он содержит важную информацию.
  */
 
-define('HLEB_TYPE_DB', 'mysql.myname');
+define('HLEB_TYPE_DB', 'mysql.name');
 
-define('HLEB_MUTEX_TYPE_REDIS', 'redis.predis');
+define('HLEB_MUTEX_TYPE_REDIS', 'redis.name');
 
 define('HLEB_PARAMETERS_FOR_DB', [
 
-    'mysql.myname' => [
+    'mysql.name' => [
         'mysql:host=localhost',
-        'port=3360',
-        'dbname=maintesthleb',
+        'port=3306',
+        'dbname=databasename',
         'charset=utf8',
-        'user' => 'newuser',
+        'user' => 'username',
         'pass' => 'password'
     ],
 
-    'sqlite.myname' => [
+    'sqlite.name' => [
         'sqlite:c:/main.db',
         'user' => 'username',
         'pass' => 'password'
     ],
 
-    'postgresql.myname' => [
+    'postgresql.name' => [
         'pgsql:host=127.0.0.1',
         'port=5432',
         'dbname=databasename',
@@ -43,11 +43,11 @@ define('HLEB_PARAMETERS_FOR_DB', [
         'pass' => 'password'
     ],
 
-    'redis.predis' => [
+    'redis.name' => [
         'scheme' => 'tcp',
         'host' => '127.0.0.1',
         'port' => '6379',
-        'password' => 'password'
+     // 'password' => 'password'
     ]
 
 ]);

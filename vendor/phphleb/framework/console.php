@@ -61,6 +61,16 @@ function hleb_require(string $path) {
     require_once "$path";
 }
 
+/**
+ * @param string $subPath - directory name.
+ * @return string
+ *
+ * @internal
+ */
+function hleb_system_storage_path($subPath = '') {
+    return HLEB_STORAGE_DIRECTORY . (!empty($subPath) ? DIRECTORY_SEPARATOR . (trim($subPath, '\\/ ')) : '');
+}
+
 // Auto update packages
 if (!empty($arguments) && strpos($arguments, 'phphleb/') !== false && file_exists(dirname(__DIR__, 2) . '/' . $arguments . '/' . 'start.php')) {
     hlUploadAll();

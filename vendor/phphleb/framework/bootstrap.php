@@ -146,7 +146,7 @@ define('HLEB_PROJECT_STORAGE_DIR', (defined('HLEB_STORAGE_DIRECTORY') ? rtrim(HL
 //Full path to folder '/storage'
 if (!function_exists('hleb_system_storage_path')) {
     /**
-     * @param string $subPath
+     * @param string $subPath - directory name.
      * @return string
      *
      * @internal
