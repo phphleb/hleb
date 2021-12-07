@@ -284,7 +284,7 @@ if(empty($radjaxIsActive)) {
         hl_preliminary_exit();
     }
 
-    unset($addressBar, $address, $pathToStartFileDir);
+    unset($addressBar, $address, $pathToStartFileDir, $radjaxIsActive);
 
     require HLEB_VENDOR_DIRECTORY . '/phphleb/framework/init.php';
 
