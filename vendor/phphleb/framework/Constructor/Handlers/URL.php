@@ -121,7 +121,7 @@ final class URL extends BaseSingleton
     // Returns the current URL without parameters.
     // Возвращает текущий URL без параметров.
     public static function getMainClearUrl() {
-        return Request::getMainClearUrl();
+        return explode('?', urldecode($_SERVER['REQUEST_URI']))[0];
     }
 
     // Returns a secure URL with a GET parameter containing a token. Not recommended for use!

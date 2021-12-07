@@ -569,7 +569,7 @@ final class Request extends BaseSingleton
 
     // Reserved for backward compatibility
     // Оставлено для обратной совместимости
-    /** @internal */
+    /** @deprecated  */
     public static function close() {
         return null;
     }

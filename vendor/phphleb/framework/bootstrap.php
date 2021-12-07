@@ -2,9 +2,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-if(!defined('HLEB_START')) {
-    define('HLEB_START', microtime(true));
-}
+defined('HLEB_START') or  define('HLEB_START', microtime(true));
 
 // End of script execution (before starting the main project).
 if (!function_exists('hl_preliminary_exit')) {
@@ -73,9 +71,7 @@ const HLEB_PROJECT_VERSION = '1';
 const HLEB_HTTP_TYPE_SUPPORT = ['get', 'post', 'delete', 'put', 'patch', 'options'];
 
 // Project root directory
-if (!defined('HLEB_GLOBAL_DIRECTORY')) {
-    define('HLEB_GLOBAL_DIRECTORY', realpath(HLEB_PUBLIC_DIR . '/../'));
-}
+defined('HLEB_GLOBAL_DIRECTORY') or define('HLEB_GLOBAL_DIRECTORY', realpath(HLEB_PUBLIC_DIR . '/../'));
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -120,19 +116,13 @@ define('HLEB_PROJECT_DEBUG_ON', (bool) (HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_
 
 
 // Demo redirection from "http" to "https"
-if (!defined('HLEB_PROJECT_ONLY_HTTPS')) {
-    define('HLEB_PROJECT_ONLY_HTTPS', false);
-}
+defined('HLEB_PROJECT_ONLY_HTTPS') or define('HLEB_PROJECT_ONLY_HTTPS', false);
 
 // Demo URL redirection from "www" to without "www" and back 0/1/2
-if (!defined('HLEB_PROJECT_GLUE_WITH_WWW')) {
-    define('HLEB_PROJECT_GLUE_WITH_WWW', 0);
-}
+defined('HLEB_PROJECT_GLUE_WITH_WWW') or define('HLEB_PROJECT_GLUE_WITH_WWW', 0);
 
 // Allows to set/unset session_start when loading the framework. For GET request method only.
-if (!defined('HLEB_DEFAULT_SESSION_INIT')) {
-    define('HLEB_DEFAULT_SESSION_INIT', true);
-}
+defined('HLEB_DEFAULT_SESSION_INIT') or define('HLEB_DEFAULT_SESSION_INIT', true);
 
 if (isset($_GET["_token"])) {
     header("Referrer-Policy: origin-when-cross-origin");
@@ -227,19 +217,14 @@ spl_autoload_register('hl_main_autoloader', true, true);
 
 if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 
-    if(!defined('HLEB_ONLY_RADJAX_ROUTES')) {
-        define('HLEB_ONLY_RADJAX_ROUTES', false);
-    }
+    defined('HLEB_ONLY_RADJAX_ROUTES') or define('HLEB_ONLY_RADJAX_ROUTES', false);
 
     $GLOBALS['HLEB_MAIN_DEBUG_RADJAX'] = [];
 
     if (file_exists(HLEB_LOAD_ROUTES_DIRECTORY . '/radjax.php')) {
 
-        if (!defined("HLEB_RADJAX_PATHS_TO_ROUTE_PATHS")) {
-            define("HLEB_RADJAX_PATHS_TO_ROUTE_PATHS", [
-                HLEB_LOAD_ROUTES_DIRECTORY . '/radjax.php'
-            ]);
-        }
+        defined("HLEB_RADJAX_PATHS_TO_ROUTE_PATHS") or define("HLEB_RADJAX_PATHS_TO_ROUTE_PATHS", [HLEB_LOAD_ROUTES_DIRECTORY . '/radjax.php']);
+
         require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Route.php';
 
         require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Src/RCreator.php';

@@ -13,21 +13,17 @@ if (!function_exists('hl_preliminary_exit')) {
     }
 }
 
-if (!defined('HLEB_GLOBAL_DIRECTORY')) define('HLEB_GLOBAL_DIRECTORY', dirname(__DIR__, 3));
+defined('HLEB_GLOBAL_DIRECTORY') or define('HLEB_GLOBAL_DIRECTORY', dirname(__DIR__, 3));
 
 //To set a different directory name 'vendor' add HLEB_VENDOR_DIR_NAME to the constants
 define('HLEB_VENDOR_DIRECTORY', defined('HLEB_VENDOR_DIR_NAME') ? HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME : dirname(__DIR__, 2));
 
-if(!defined('HLEB_STORAGE_DIRECTORY')) {
-    define('HLEB_STORAGE_DIRECTORY', HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . "storage");
-}
+defined('HLEB_STORAGE_DIRECTORY') or  define('HLEB_STORAGE_DIRECTORY', HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . "storage");
 
 define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', rtrim(HLEB_STORAGE_DIRECTORY, '\\/ ') . "/cache/routes");
 
+defined('HLEB_PROJECT_LOG_ON') or define('HLEB_PROJECT_LOG_ON', true);
 
-if(!defined('HLEB_PROJECT_LOG_ON')) {
-    define('HLEB_PROJECT_LOG_ON', true);
-}
 if (HLEB_PROJECT_LOG_ON) {
     ini_set('log_errors', 'On');
     ini_set('display_errors', '1');
@@ -48,9 +44,7 @@ const HL_TWIG_CACHED_PATH = '/storage/cache/twig/compilation';
 
 define('HL_TWIG_CONNECTED', file_exists(HLEB_VENDOR_DIRECTORY . "/twig/twig"));
 
-if (!defined('HLEB_PROJECT_CLASSES_AUTOLOAD')) {
-    define('HLEB_PROJECT_CLASSES_AUTOLOAD', true);
-}
+defined('HLEB_PROJECT_CLASSES_AUTOLOAD') or define('HLEB_PROJECT_CLASSES_AUTOLOAD', true);
 
 /**
  * @param string $path - file path.

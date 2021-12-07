@@ -30,8 +30,6 @@ require HLEB_PROJECT_DIRECTORY . '/Constructor/Workspace.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Main/TryClass.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/Request.php';
-
 require HLEB_PROJECT_DIRECTORY . '/Constructor/VCreator.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/Data.php';
@@ -41,39 +39,27 @@ define('HL_TWIG_CONNECTED', file_exists(HLEB_VENDOR_DIRECTORY . '/twig'));
 
 if (HL_TWIG_CONNECTED) {
 
-    if (!defined('HL_TWIG_LOADER_FILESYSTEM')) {
-        //Folder with .twig files
-        define('HL_TWIG_LOADER_FILESYSTEM', HLEB_GLOBAL_DIRECTORY . '/resources/views');
-    }
+    //Folder with .twig files
+    defined('HL_TWIG_LOADER_FILESYSTEM') or  define('HL_TWIG_LOADER_FILESYSTEM', HLEB_GLOBAL_DIRECTORY . '/resources/views');
 
-    if (!defined('HL_TWIG_CHARSET')) {
-        //Twig template encoding
-        define('HL_TWIG_CHARSET', 'utf-8');
-    }
+    //Twig template encoding
+    defined('HL_TWIG_CHARSET') or define('HL_TWIG_CHARSET', 'utf-8');
 
     //Turn on/off Twig caching. Set HL_TWIG_CACHED_ON (Twig) or HLEB_TEMPLATE_CACHE (All)
     define('HL_TWIG_CACHED', (defined('HL_TWIG_CACHED_ON') && HL_TWIG_CACHED_ON) ||
     (defined('HLEB_TEMPLATE_CACHE') && HLEB_TEMPLATE_CACHE) ? HLEB_GLOBAL_DIRECTORY . "/storage/cache/twig/compilation" : false);
 
-    if (!defined('HL_TWIG_AUTO_RELOAD')) {
-        //Recompilation of Twig templates
-        define('HL_TWIG_AUTO_RELOAD', HLEB_PROJECT_DEBUG);
-    }
+    //Recompilation of Twig templates
+    defined('HL_TWIG_AUTO_RELOAD') or define('HL_TWIG_AUTO_RELOAD', HLEB_PROJECT_DEBUG);
 
-    if (!defined('HL_TWIG_STRICT_VARIABLES')) {
-        //Ignoring non-existent Twig variables
-        define('HL_TWIG_STRICT_VARIABLES', false);
-    }
+    //Ignoring non-existent Twig variables
+    defined('HL_TWIG_STRICT_VARIABLES') or define('HL_TWIG_STRICT_VARIABLES', false);
 
-    if (!defined('HL_TWIG_AUTOESCAPE')) {
-        // Automatic screening of Twig data
-        define('HL_TWIG_AUTOESCAPE', false);
-    }
+    // Automatic screening of Twig data
+    defined('HL_TWIG_AUTOESCAPE') or define('HL_TWIG_AUTOESCAPE', false);
 
-    if (!defined('HL_TWIG_OPTIMIZATIONS')) {
-        // Optimize data with Twig
-        define('HL_TWIG_OPTIMIZATIONS', -1);
-    }
+    // Optimize data with Twig
+    defined('HL_TWIG_OPTIMIZATIONS') or define('HL_TWIG_OPTIMIZATIONS', -1);
 }
 
 /**
@@ -417,7 +403,7 @@ function hleb_t0ulb902e69thp_request_head() {
  * @internal
  */
 function hleb_e70c10c1057hn11cc8il2_get_request() {
-    return \Hleb\Constructor\Handlers\Request::class;
+    return \Hleb\Constructor\Handlers\Request::getInstance();
 }
 
 /**
