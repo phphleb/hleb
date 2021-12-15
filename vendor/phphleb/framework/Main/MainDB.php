@@ -54,6 +54,9 @@ final class MainDB
     public static function db_query($sql, $config = null) {
         $time = microtime(true);
         $stmt = self::instance($config)->query($sql);
+        if (is_bool($stmt)) {
+            return $stmt;
+        }
         $data = $stmt->fetchAll();
         \Hleb\Main\DataDebug::add(htmlentities($sql), microtime(true) - $time, self::setConfigKey($config), true);
         return $data;
