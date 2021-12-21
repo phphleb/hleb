@@ -23,7 +23,7 @@ final class VCreator
      */
     public function __construct(string $includePath) {
         $this->hlTemplatePath = $includePath;
-        $data = hleb_to0me1cd6vo7gd_data();
+        $data = hleb_data();
         foreach ($data as $key => $value) {
             if (!in_array($key, ['hlTemplatePath', 'hlTemplateData', 'hlCacheTime'])) {
                 $this->$key = $value;
@@ -54,7 +54,7 @@ final class VCreator
     // Получение переменных.
     /** @internal */
     private function getData() {
-        $data = hleb_to0me1cd6vo7gd_data();
+        $data = hleb_data();
         return is_array($data) ? $data : [];
     }
 }

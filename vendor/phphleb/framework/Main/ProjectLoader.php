@@ -49,7 +49,7 @@ final class ProjectLoader extends BaseSingleton
 
         } else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             unset($block, $renderMap);
-            hleb_bt3e3gl60pg8h71e00jep901_error_404();
+            hleb_page_404();
 
         } else {
             if (!headers_sent()) {

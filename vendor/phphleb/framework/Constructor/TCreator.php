@@ -56,7 +56,7 @@ final class TCreator
                 $this->$key = $value;
             }
         }
-        require $this->templatePath();;
+        require $this->templatePath();
 
         return  !defined('HLEB_TEMPLATE_CACHE') || (defined('HLEB_TEMPLATE_CACHE') && HLEB_TEMPLATE_CACHE) ? $this->hlCacheTime : 0;
     }

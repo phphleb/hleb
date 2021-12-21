@@ -291,7 +291,10 @@ if(empty($radjaxIsActive)) {
     if (file_exists(HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php')) {
         hleb_require(HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php');
     }
-    hleb_require(HLEB_GLOBAL_DIRECTORY . '/app/Optional/shell.php');
+    if (file_exists(HLEB_GLOBAL_DIRECTORY . '/app/Optional/shell.php')) {
+        hleb_require(HLEB_GLOBAL_DIRECTORY . '/app/Optional/shell.php');
+    }
+    hleb_require(__DIR__ . '/functions.php');
 
     \Hleb\Main\ProjectLoader::start();
 

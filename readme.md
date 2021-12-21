@@ -169,7 +169,7 @@ class DefaultModuleController extends \MainController
 ```
 ```php
 // File /modules/example/content.php
-includeTemplate('/example/templates/origin');
+insertTemplate('/example/templates/origin');
 
 ```
 
@@ -177,15 +177,13 @@ Templates
 -----------------------------------
 ```php
 // File /resources/views/content.php
-includeTemplate('templates/origin', ['title' => 'Short text', 'content' => 'Long text']);
+insertTemplate('templates/origin', ['title' => 'Short text', 'content' => 'Long text']);
 ```
 ```php
 // File /resources/views/templates/origin.php
 echo $title; // Short text
 echo $content; // Long text
-// or
-echo $this->title; // Short text
-echo $this->content; // Long text
+
 ```
 
 

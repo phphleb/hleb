@@ -24,7 +24,7 @@ final class TwigCreator
                 'autoescape' => HL_TWIG_AUTOESCAPE,
                 'optimizations' => HL_TWIG_OPTIMIZATIONS
             ]);
-            echo $twig->render($path, hleb_to0me1cd6vo7gd_data());
+            echo $twig->render($path, hleb_data());
         } else {
             error_log('Undefined Twig class on TwigCreator');
         }

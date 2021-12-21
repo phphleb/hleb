@@ -156,7 +156,7 @@ final class Workspace
     private function selectableViewFile(string $file, string $methodType, int $errorNum) {
         // View error 404
         if ($methodType === 'view' && trim($file) === '404') {
-            hleb_bt3e3gl60pg8h71e00jep901_error_404();
+            hleb_page_404();
         }
 
         $extension = false;
@@ -262,7 +262,7 @@ final class Workspace
                 ErrorOutput::get($errors);
                 return null;
             } else {
-                hleb_bt3e3gl60pg8h71e00jep901_error_404();
+                hleb_page_404();
             }
         }
 
@@ -275,7 +275,7 @@ final class Workspace
                 ErrorOutput::get($errors);
                 return null;
             } else {
-                hleb_bt3e3gl60pg8h71e00jep901_error_404();
+                hleb_page_404();
             }
         }
 
