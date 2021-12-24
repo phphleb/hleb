@@ -317,4 +317,3 @@ if (!function_exists('insertTemplate')) {
     }
 }
 
-

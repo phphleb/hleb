@@ -78,7 +78,7 @@
         <br>
         <div style="padding-bottom: 25px; display: none;" id="<?= $debugBlockName; ?>_templates">
             <?php  foreach($debugActualRoute['templates'] as $key => $value):  ?>
-                <div style='padding: 3px'><span style="color:grey">resources/views/</span><?= $value; ?></div>
+                <div style='padding: 3px'><?= $value; ?></div>
             <?php  endforeach; ?>
         </div>
         <br>

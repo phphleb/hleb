@@ -1,6 +1,6 @@
 <?php
 
-define('HLEB_PROJECT_FULL_VERSION', '1.5.82');
+define('HLEB_PROJECT_FULL_VERSION', '1.5.83');
 
 require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Controllers/MainController.php';
 
@@ -530,12 +530,33 @@ function hleb_page_404() {
  * @see insertTemplate()
  * @internal
  */
-function hleb_insert_template(string $hlPath, array $hlParams = []) {
-    extract($hlParams);
-    $hlPath = explode('/', str_replace('\\', '/', $hlPath));
-    $hlPath = implode(DIRECTORY_SEPARATOR, $hlPath) . (strripos(end($hlPath), '.') === false ?  '.php' : '');
-    unset($hlParams);
-    require HLEB_GLOBAL_DIRECTORY . '/resources/views/' . $hlPath;
+function hleb_insert_template(string $hlTemplatePath, array $hlTemplateData = []) {
+    extract($hlTemplateData);
+    !HLEB_PROJECT_DEBUG_ON or $hlCacheTime = microtime(true);
+    unset($hlTemplateData);
+    $hlTemplatePath = trim($hlTemplatePath, '/\\') . '.php';
+    if (defined('HLEB_OPTIONAL_MODULE_SELECTION') && HLEB_OPTIONAL_MODULE_SELECTION) {
+        require HLEB_GLOBAL_DIRECTORY . '/modules/' . (file_exists(HLEB_GLOBAL_DIRECTORY . '/modules/' . $hlTemplatePath) ? '' : HLEB_MODULE_NAME . '/') . $hlTemplatePath;
+    } else {
+        require HLEB_GLOBAL_DIRECTORY . '/resources/views/' . $hlTemplatePath;
+    }
+    !HLEB_PROJECT_DEBUG_ON or Hleb\Main\Info::insert('Templates', (defined('HLEB_MODULE_NAME') ? ' module `' . HLEB_MODULE_NAME . '` ' : '') . trim($hlTemplatePath, '/') . hleb_debug_bugtrace(2) . ' (insertTemplate)' . ' load: ' . (round(microtime(true) - $hlCacheTime, 4) * 1000) . ' ms');
+}
+
+/**
+ * Attempt to define a line in the content, which includes a template for output in the debug panel.
+ *
+ * Попытка определения строки в контенте, в которой подключен шаблон для вывода в отладочной панели.
+ *
+ * @internal
+ */
+function hleb_debug_bugtrace(int $level) {
+    $trace = debug_backtrace(2, $level + 1);
+    if (isset($trace[$level])) {
+        $path = explode(HLEB_GLOBAL_DIRECTORY, ($trace[$level]['file'] ?? ''));
+        return ' (' . end($path) . " : " . ($trace[$level]['line'] ?? '') . ')';
+    }
+    return '';
 }
 
 

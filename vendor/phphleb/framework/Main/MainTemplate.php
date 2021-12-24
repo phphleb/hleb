@@ -30,19 +30,14 @@ final class MainTemplate
         }
         if (HLEB_PROJECT_DEBUG_ON) {
             $time = microtime(true) - $time;
-            Info::insert('Templates', trim($path, '/') . $backtrace . ' load: ' . (round($time, 4) * 1000) . ' ms');
+            Info::insert('Templates', (defined('HLEB_MODULE_NAME') ? ' module `' . HLEB_MODULE_NAME . '` ' : '') . trim($path, '/')  . $backtrace . ' (includeTemplate) load: ' . (round($time, 4) * 1000) . ' ms');
         }
     }
 
     // Attempt to define a line in the content, which includes a template for output in the debug panel.
     // Попытка определения строки в контенте, в которой подключен шаблон для вывода в отладочной панели.
     public function debugBacktrace() {
-        $trace = debug_backtrace(2, 4);
-        if (isset($trace[3])) {
-            $path = explode(HLEB_GLOBAL_DIRECTORY, ($trace[3]['file'] ?? ''));
-            return ' (' . end($path) . " : " . ($trace[3]['line'] ?? '') . ')';
-        }
-        return '';
+        return hleb_debug_bugtrace(4);
     }
 
     // Return content.

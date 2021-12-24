@@ -8,7 +8,6 @@
     "phphleb",
     "microframework",
     "micro-framework",
-    "php framework",
     "php"
   ],
   "homepage": "https://phphleb.ru",
@@ -23,7 +22,7 @@
     "php": "^7.0.0 || ^8.0.0",
     "ext-json": "*",
     "ext-pdo": "*",
-    "phphleb/framework": ">=1.5.15",
+    "phphleb/framework": ">=1.5.83",
     "phphleb/debugpan": "1.*"
   },
   "autoload": {
