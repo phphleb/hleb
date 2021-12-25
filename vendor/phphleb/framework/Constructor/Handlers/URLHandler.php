@@ -18,26 +18,32 @@ final class URLHandler
 {
     // Parse the array with routes.
     // Разбор массива с маршрутами.
-    public function page(array $blocks, string $url = null, string $method = null, string $domain = null) {
+    public function page(array &$blocks, string $url = null, string $method = null, string $domain = null) {
         $searchDomains = $blocks['domains'] ?? false;
         // Clearing incoming data.
         // Очистка входящих данных.
         unset($blocks['domains'], $blocks['update'], $blocks['render'], $blocks['addresses']);
 
-        $blocks = $searchDomains ? $this->matchSubdomains($blocks, $domain ?? hleb_get_host()) : $blocks;
+        !$searchDomains or $this->matchSubdomains($blocks, $domain ?? hleb_get_host());
         if (!count($blocks)) {
             // No suitable route was found for the current subdomain.
             // Подходящего роута по текущему поддомену не найдено.
             return false;
         }
 
-        $blocks = $this->matchSearchType($blocks, $method ?? $_SERVER['REQUEST_METHOD']);
+        $this->matchSearchType($blocks, $method ?? $_SERVER['REQUEST_METHOD']);
         if (!count($blocks)) {
             // No suitable route of type REQUEST_METHOD found.
             // Подходящего роута по типу REQUEST_METHOD не найдено.
             return false;
         }
-        return $this->matchSearchAllPath($blocks, $url ?? Request::getMainClearUrl());
+        return $this->matchSearchAllPath($blocks, $url ?? $this->getMainClearUrl());
+    }
+
+    // Returns the relative current URL without GET parameters.
+    // Возвращает относительный текущий URL без GET-параметров.p
+    private function getMainClearUrl() {
+        return explode('?', urldecode($_SERVER['REQUEST_URI']))[0];
     }
 
     // Remove extra slashes.
@@ -54,12 +60,11 @@ final class URLHandler
 
     // Find a method for subdomains.
     // Поиск метода для субдоменов.
-    private function matchSubdomains($blocks, $httpHost) {
+    private function matchSubdomains(&$blocks, $httpHost) {
         $host = array_reverse(explode('.', $httpHost));
         if ($host[0] === 'localhost') {
             array_unshift($host, '*');
         }
-        $resultBlocks = [];
         foreach ($blocks as $key => $block) {
             $search = [];
             $actions = !empty($block['actions']) ? $block['actions'] : [];
@@ -91,14 +96,15 @@ final class URLHandler
                     }
                 }
             }
-            if (count($search) == 0 || !in_array(false, $search)) $resultBlocks[] = $block;
+            if (!(count($search) == 0 || !in_array(false, $search))){
+                unset($blocks[$key]);
+            }
         }
-        return $resultBlocks;
     }
 
     // Sort the list of routes and filter by the appropriate type.
     // Сортировка списка роутов и отбор по подходящему типу.
-    private function matchSearchType($blocks, $method) {
+    private function matchSearchType(&$blocks, $method) {
         $realType = strtolower($method);
         if (!in_array($realType, HLEB_HTTP_TYPE_SUPPORT)) {
             if (!headers_sent()) {
@@ -109,7 +115,6 @@ final class URLHandler
             // End of script execution before starting the main project.
             hl_preliminary_exit();
         }
-        $resultBlocks = [];
         $adminPanData = [];
         foreach ($blocks as $key => $block) {
             $type = [];
@@ -133,22 +138,21 @@ final class URLHandler
             if (count($type) === 0) {
                 $type = ['get'];
             }
-            if (in_array($realType, $type) || $realType == 'options') {
-                $resultBlocks[] = $block;
+            if (!(in_array($realType, $type) || $realType == 'options')) {
+                unset($blocks[$key]);
             }
         }
-        foreach ($resultBlocks as &$resultBlock) {
-            $resultBlock['_AdminPanelData'] = $adminPanData;
+        foreach ($blocks as &$block) {
+            $block['_AdminPanelData'] = $adminPanData;
         }
-        return $resultBlocks;
     }
 
     // Returns the matching route, or `false` if not found.
     // Возвращает совпавший роут или `false` если не найден.
-    private function matchSearchAllPath(array $blocks, string $resultUrl) {
+    private function matchSearchAllPath(array &$blocks, string $resultUrl) {
         $resultUrlParts = array_reverse(explode('/', $resultUrl));
         $url = $this->trimEndSlash($resultUrl);
-        foreach ($blocks as $key => $block) {
+        foreach ($blocks as $key => &$block) {
             $result = $this->matchSearchPath($block, $url, $resultUrlParts);
             if ($result !== false) return $result;
         }

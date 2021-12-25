@@ -30,7 +30,7 @@ final class MainTemplate
         }
         if (HLEB_PROJECT_DEBUG_ON) {
             $time = microtime(true) - $time;
-            Info::insert('Templates', (defined('HLEB_MODULE_NAME') ? ' module `' . HLEB_MODULE_NAME . '` ' : '') . trim($path, '/')  . $backtrace . ' (includeTemplate) load: ' . (round($time, 4) * 1000) . ' ms');
+            Info::insert('Templates', (defined('HLEB_MODULE_NAME') ? ' module `' . HLEB_MODULE_NAME . '` ' : '') . $templateName . $backtrace . ' (includeTemplate) load: ' . (round($time, 4) * 1000) . ' ms');
         }
     }
 
