@@ -19,11 +19,9 @@ use Hleb\Main\Info;
 
 final class Workspace
 {
-    protected $block;
-
     protected $map;
 
-    protected $hlDebugInfo = ['time' => [], 'block' => []];
+    protected $debugTime = [];
 
     protected $admFooter = null;
 
@@ -32,8 +30,6 @@ final class Workspace
     protected $viewPath = '/resources/views/';
 
     public function __construct(array $block, array $map) {
-        $this->block = $block;
-        $this->hlDebugInfo['block'] = $block;
         $this->map = $map;
         $this->create($block);
     }
@@ -41,9 +37,9 @@ final class Workspace
     // Calculate the execution time for the debug panel.
     // Расчёт времени выполнения для панели отладки.
     private function calculateTime($name) {
-        $num = count($this->hlDebugInfo['time']) + 1;
+        $num = count($this->debugTime) + 1;
         if(defined('HLEB_START')) {
-            $this->hlDebugInfo['time'][$num . ' ' . $name] = round((microtime(true) - HLEB_START), 4);
+            $this->debugTime[$num . ' ' . $name] = round((microtime(true) - HLEB_START), 4);
         }
     }
 
@@ -86,7 +82,7 @@ final class Workspace
         $this->calculateTime('Create Project');
         if (HLEB_PROJECT_DEBUG_ON &&
             (new TryClass('Phphleb\Debugpan\DPanel'))->is_connect()) {
-            DPanel::init($this->hlDebugInfo);
+            DPanel::init(['time' => $this->debugTime, 'block' => $block]);
         }
         foreach ($actions as $action) {
             if (isset($action['after'])) {
