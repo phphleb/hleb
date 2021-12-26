@@ -31,13 +31,13 @@ final class URLHandler
             return false;
         }
 
-        $this->matchSearchType($blocks, $method ?? $_SERVER['REQUEST_METHOD']);
+        $adminPanData = $this->matchSearchType($blocks, $method ?? $_SERVER['REQUEST_METHOD']);
         if (!count($blocks)) {
             // No suitable route of type REQUEST_METHOD found.
             // Подходящего роута по типу REQUEST_METHOD не найдено.
             return false;
         }
-        return $this->matchSearchAllPath($blocks, $url ?? $this->getMainClearUrl());
+        return $this->matchSearchAllPath($blocks, $url ?? $this->getMainClearUrl(), $adminPanData);
     }
 
     // Returns the relative current URL without GET parameters.
@@ -142,19 +142,20 @@ final class URLHandler
                 unset($blocks[$key]);
             }
         }
-        foreach ($blocks as &$block) {
-            $block['_AdminPanelData'] = $adminPanData;
-        }
+        return $adminPanData;
     }
 
     // Returns the matching route, or `false` if not found.
     // Возвращает совпавший роут или `false` если не найден.
-    private function matchSearchAllPath(array &$blocks, string $resultUrl) {
+    private function matchSearchAllPath(array &$blocks, string $resultUrl, array $adminPanData = []) {
         $resultUrlParts = array_reverse(explode('/', $resultUrl));
         $url = $this->trimEndSlash($resultUrl);
         foreach ($blocks as $key => &$block) {
             $result = $this->matchSearchPath($block, $url, $resultUrlParts);
-            if ($result !== false) return $result;
+            if ($result !== false){
+                $result['_AdminPanelData'] = $adminPanData;
+                return $result;
+            }
         }
         return false;
     }
