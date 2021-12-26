@@ -265,7 +265,10 @@ if(empty($radjaxIsActive)) {
 
     $addressBar = (new \Hleb\Constructor\Handlers\AddressBar(
         [
-            'SERVER' => $_SERVER,
+            'SERVER' => [
+                'REQUEST_URI' => $_SERVER['REQUEST_URI'],
+                'HTTP_HOST' => $_SERVER['HTTP_HOST']
+            ],
             'HTTPS' => hleb_actual_http_protocol(),
             'HLEB_PROJECT_ONLY_HTTPS' => HLEB_PROJECT_ONLY_HTTPS,
             'HLEB_PROJECT_ENDING_URL' => HLEB_PROJECT_ENDING_URL,
