@@ -1,5 +1,6 @@
 # Setting up automated tests for the framework
 os: linux
+dist: bionic
 language: php
 env:
   global:
@@ -22,7 +23,7 @@ jobs:
     - php: 8.0.1
     - php: 8.0.2
     - php: 8.0.9
-  # - php: 8.1.0
+    - php: 8.1.0
 
 install:
   - composer require phphleb/framework $FRAMEWORK_VERSION
