@@ -50,10 +50,10 @@ class Head extends ResourceStandard
      * Загрузка скриптов JS по URL. Производится предварительно в контроллере.
      * @param string $url - прямой или относитеьный адрес ресурса.
      * @param string $attr - атрибут типа загрузки.
-     * @param string $charset - кодировка.
+     * @param  string $charset - кодировка.
      * @return Head
      */
-    public function addScript(string $url, string $attr = 'defer', string $charset = 'utf-8') {
+    public function addScript(string $url, string $attr = 'defer', string $charset = '') {
         $this->scripts[$url] = ['url' => $url, 'charset' => $charset, 'attribute' => $attr];
         return $this;
     }
@@ -164,7 +164,7 @@ class Head extends ResourceStandard
         }
         foreach ($this->scripts as $script) {
             $script = $this->convertPrivateTagsInArray($script);
-            $result .= $ind . '<script ' . $script["attribute"] . ' src="' . $script["url"] . '" charset="' . $script["charset"] . '"></script>' . PHP_EOL;
+            $result .= $ind . '<script ' . $script["attribute"] . ' src="' . $script["url"] . (!empty($script["charset"]) ? '" charset="' . $script["charset"] : '') . '"></script>' . PHP_EOL;
         }
         if ($print) echo $result;
         return $result;
