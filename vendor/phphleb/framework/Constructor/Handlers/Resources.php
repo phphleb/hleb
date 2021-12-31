@@ -31,7 +31,7 @@ class Resources extends ResourceStandard
      * @param string $url - адрес подгружаемого ресурса.
      * @param string $charset - кодировка.
      */
-    public function addBottomScript(string $url, string $charset = 'utf-8') {
+    public function addBottomScript(string $url, string $charset = '') {
         $this->bottomScripts[$url] = ['url' => $url, 'charset' => $charset];
     }
 
@@ -51,7 +51,7 @@ class Resources extends ResourceStandard
         $this->bottomScriptsOnce = true;
         foreach ($this->bottomScripts as $script) {
             $script = $this->convertPrivateTagsInArray($script);
-            $result .= str_repeat(' ', $indents) . '<script src="' . $script["url"] . '" charset="' . $script["charset"] . '"></script>' . PHP_EOL;
+            $result .= str_repeat(' ', $indents) . '<script src="' . $script['url'] . (!empty($script['charset']) ? '" charset="' . $script['charset']  : '') . '"></script>' . PHP_EOL;
         }
         return $result;
     }
@@ -76,12 +76,14 @@ class Resources extends ResourceStandard
     /**
      * Adds loading CSS styles.
      * @param string $url - the address of the loaded resource.
+     * @param string $media - media attribute that applies the linked resource.
      *//**
      * Добавляет загрузку CSS-стилей.
      * @param string $url - адрес подгружаемого ресурса.
+     * @param string $media - медиа-атрибут, который применяет связываемый ресурс.
      */
-    public function addBottomStyles(string $url) {
-        $this->bottomStyles[$url] = $url;
+    public function addBottomStyles(string $url, string $media = '') {
+        $this->bottomStyles[$url] = ['url' => $url, 'media' => $media];
     }
 
     /**
@@ -98,7 +100,8 @@ class Resources extends ResourceStandard
     public function getBottomStyles(int $indents = 2) {
         $result = PHP_EOL;
         foreach ($this->bottomStyles as $style) {
-            $result .= str_repeat(' ', $indents) . '<link rel="stylesheet" href="' . $this->convertPrivateTags($style) . '" type="text/css" media="screen">' . PHP_EOL;
+            $style = $this->convertPrivateTagsInArray($style);
+            $result .= str_repeat(' ', $indents) . '<link rel="stylesheet" href="' . $style['url'] . '" type="text/css"'  . (!empty($style['media']) ? ' media="' . $style['media'] . '"' : '') . '>' . PHP_EOL;
         }
         return $result;
     }
