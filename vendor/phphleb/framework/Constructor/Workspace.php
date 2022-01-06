@@ -133,6 +133,9 @@ final class Workspace
                 $select = 0;
                 foreach ($this->map as $key => $initMaps) {
                     if ($key === $originMap) {
+                        if (HLEB_PROJECT_DEBUG_ON && ($key[0]  !== '#' || strpos($key, ' ') !== false)) {
+                            trigger_error('Warning in the "render()" method. The set name must begin with a "#" character and not contain spaces. For example "#Main_map".', E_USER_NOTICE);
+                        }
                         $select++;
                         foreach ($initMaps as $initPage) {
                             $this->selectableViewFile($initPage, 'render', 27);

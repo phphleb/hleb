@@ -67,6 +67,7 @@ if (HL_TWIG_CONNECTED) {
  * @deprecated
  */
 function hleb_v5ds34hop4nm1d_page_view($view = null, $data = null) {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_view($view, $data);
 }
 
@@ -84,6 +85,7 @@ function hleb_view($view = null, $data = null) {
 
 /** @deprecated */
 function hleb_gop0m3f4hpe10d_all($view = null, $data = null, $type = 'views') {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_all($view, $data, $type);
 }
 
@@ -101,6 +103,7 @@ function hleb_all($view = null, $data = null, $type = 'views') {
  * @deprecated
  */
 function hleb_to0me1cd6vo7gd_data() {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_data();
 }
 
@@ -117,6 +120,7 @@ function hleb_data() {
  * @deprecated
  */
 function hleb_v10s20hdp8nm7c_render($render, $data = null) {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_render($render, $data);
 }
 
@@ -191,6 +195,7 @@ function hleb_search_filenames($dir) {
  * @deprecated
  */
 function hleb_c3dccfa0da1a3e_csrf_token() {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_csrf_token();
 }
 
@@ -207,6 +212,7 @@ function hleb_csrf_token() {
  * @deprecated
  */
 function hleb_ds5bol10m0bep2_csrf_field() {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_csrf_field();
 }
 
@@ -223,6 +229,7 @@ function hleb_csrf_field() {
  * @deprecated
  */
 function hleb_ba5c9de48cba78c_redirectToSite($url) {
+    hleb_deprecated_info(__FUNCTION__);
     hleb_redirect_to_site($url);
 }
 
@@ -239,6 +246,7 @@ function hleb_redirect_to_site(string $url) {
  * @deprecated
  */
 function hleb_ad7371873a6ad40_redirect(string $url, int $code = 303) {
+    hleb_deprecated_info(__FUNCTION__);
     hleb_redirect($url, $code);
 }
 
@@ -255,6 +263,7 @@ function hleb_redirect(string $url, int $code = 303) {
  * @deprecated
  */
 function hleb_ba5c9de48cba78c_getProtectUrl($url) {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_get_protect_url($url);
 }
 
@@ -271,6 +280,7 @@ function hleb_get_protect_url(string $url) {
  * @deprecated
  */
 function hleb_e0b1036cd5b501_getFullUrl($url) {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_get_full_url($url);
 }
 
@@ -287,6 +297,7 @@ function hleb_get_full_url(string $url) {
  * @deprecated
  */
 function hleb_e2d3aeb0253b7_getMainUrl() {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_get_main_url();
 }
 
@@ -303,6 +314,7 @@ function hleb_get_main_url() {
  * @deprecated
  */
 function hleb_daa581cdd6323_getMainClearUrl() {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_get_main_clear_url();
 }
 
@@ -319,6 +331,7 @@ function hleb_get_main_clear_url() {
  * @deprecated
  */
 function hleb_i245eaa1a3b6d_getByName(string $name, array $params = []) {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_get_by_name($name, $params);
 }
 
@@ -335,6 +348,7 @@ function hleb_get_by_name(string $name, array $params = []) {
  * @deprecated
  */
 function hleb_a1a3b6di245ea_getStandardUrl(string $name) {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_get_standard_url($name);
 }
 
@@ -351,6 +365,7 @@ function hleb_get_standard_url(string $name) {
  * @deprecated
  */
 function hleb_e0b1036c1070101_template(string $template, array $params = [], bool $return = false) {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_include_template($template, $params, $return);
 }
 
@@ -367,6 +382,7 @@ function hleb_include_template(string $template, array $params = [], bool $retur
  * @deprecated
  */
 function hleb_e0b1036c1070102_template(string $template, array $params = []) {
+    hleb_deprecated_info(__FUNCTION__);
     hleb_include_cached_template($template, $params);
 }
 
@@ -383,6 +399,7 @@ function hleb_include_cached_template(string $template, array $params = []) {
  * @deprecated
  */
 function hleb_ade9e72e1018c6_template(string $template, array $params = []) {
+    hleb_deprecated_info(__FUNCTION__);
     hleb_include_own_cached_template($template, $params);
 }
 
@@ -399,6 +416,7 @@ function hleb_include_own_cached_template(string $template, array $params = []) 
  * @deprecated
  */
 function hleb_a581cdd66c107015_print_r2($data, $desc = null) {
+    hleb_deprecated_info(__FUNCTION__);
     hleb_print_r2($data, $desc);
 }
 
@@ -415,6 +433,7 @@ function hleb_print_r2($data, $desc = null) {
  * @deprecated
  */
 function hleb_ra3le00te0m01n_request_resources() {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_get_request_resources();
 }
 
@@ -431,6 +450,7 @@ function hleb_get_request_resources() {
  * @deprecated
  */
 function hleb_t0ulb902e69thp_request_head() {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_request_head();
 }
 
@@ -447,6 +467,7 @@ function hleb_request_head() {
  * @deprecated
  */
 function hleb_e70c10c1057hn11cc8il2_get_request() {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_get_request();
 }
 
@@ -463,6 +484,7 @@ function hleb_get_request() {
  * @deprecated
  */
 function hleb_6iopl942e103te6i10600l_storage_path() {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_storage_public_path();
 }
 
@@ -479,6 +501,7 @@ function hleb_storage_public_path() {
  * @deprecated
  */
 function hleb_10p134l66o0il0e0t92e6i_public_path() {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_public_path();
 }
 
@@ -495,6 +518,7 @@ function hleb_public_path() {
  * @deprecated
  */
 function hleb_601e30l60p2ii1e0o469tl_view_path() {
+    hleb_deprecated_info(__FUNCTION__);
     return hleb_view_path();
 }
 
@@ -510,6 +534,7 @@ function hleb_view_path() {
  * @deprecated
  */
 function hleb_bt3e3gl60pg8h71e00jep901_error_404() {
+    hleb_deprecated_info(__FUNCTION__);
     hleb_page_404();
 }
 
@@ -557,6 +582,13 @@ function hleb_debug_bugtrace(int $level) {
         return ' (' . end($path) . " : " . ($trace[$level]['line'] ?? '') . ')';
     }
     return '';
+}
+
+/** @internal */
+function hleb_deprecated_info(string $name) {
+    if (HLEB_PROJECT_DEBUG_ON) {
+        trigger_error("Warning about using deprecated function `{$name}`. It is necessary to remove this function in the `/app/Optional/shell.php` file according to the latest version of the framework.", E_USER_NOTICE);
+    }
 }
 
 

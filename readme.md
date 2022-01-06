@@ -190,10 +190,10 @@ echo $content; // Long text
 Page Builder
 -----------------------------------
 ```php
-Route::renderMap('header.map', ['/parts/header', '/parts/resources']);
-Route::renderMap('footer.map', ['/parts/reviews', '/parts/footer']);
+Route::renderMap('#Header_map', ['/parts/header', '/parts/resources']);
+Route::renderMap('#Footer_map', ['/parts/reviews', '/parts/footer']);
 
-Route::get('/', render(['header.map', '/pages/index', 'footer.map'], ['variable' => 'value']));
+Route::get('/', render(['#Header_map', '/pages/index', '#Footer_map'], ['variable' => 'value']));
 ```
 
 Optional use of `Twig` template engine
