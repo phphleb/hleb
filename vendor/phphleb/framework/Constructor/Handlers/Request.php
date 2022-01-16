@@ -642,7 +642,7 @@ final class Request extends BaseSingleton
     //Returns the result of clearing values from an array by name.
     // Возвращает результат получения значений из массива по названию.
     private static function checkValueInArray($value, array $list) {
-        return $value != null ? ((true === array_key_exists($value, $list) && strlen($list[$value]) > 0) ? $list[$value] : null) : $list;
+        return $value != null ? ((true === array_key_exists($value, $list) && $list[$value] !== '') ? $list[$value] : null) : $list;
     }
 
     //Returns the result of clearing values ​​in a string.
