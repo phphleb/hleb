@@ -53,11 +53,11 @@ if (empty($_SERVER['HTTP_HOST'])) {
     hl_preliminary_exit('Undefined $_SERVER[\'HTTP_HOST\']');
 }
 
-// For compatibility with earlier versions of the framework
 /** @internal */
 function hleb_get_host() {
-    return $_SERVER['HTTP_HOST'];
+    return  $_SERVER['HTTP_HOST'];
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -184,10 +184,18 @@ if (HLEB_PROJECT_CLASSES_AUTOLOAD) {
 }
 
 if (HLEB_PROJECT_LOG_ON) {
+    $prefix = defined('HLEB_PROJECT_LOG_SORT_BY_DOMAIN') && HLEB_PROJECT_LOG_SORT_BY_DOMAIN ?
+        str_replace(['\\', '//', '@', '<', '>'], '',
+            str_replace('127.0.0.1', 'localhost' ,
+                str_replace( '.', '_',
+                    explode(':', $_SERVER['HTTP_HOST'])[0]
+                )
+            )
+        ) . '_' : '';
 
     ini_set('log_errors', 'On');
 
-    ini_set('error_log', hleb_system_storage_path(DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . date('Y_m_d_') . 'errors.log'));
+    ini_set('error_log', hleb_system_storage_path(DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . date('Y_m_d_') . $prefix . 'errors.log'));
 }
 
 ini_set('display_errors', HLEB_PROJECT_DEBUG ? '1' : '0');
