@@ -64,15 +64,6 @@ if (HL_TWIG_CONNECTED) {
 
 /**
  * @see view()
- * @deprecated
- */
-function hleb_v5ds34hop4nm1d_page_view($view = null, $data = null) {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_view($view, $data);
-}
-
-/**
- * @see view()
  * @internal
  */
 function hleb_view($view = null, $data = null) {
@@ -81,12 +72,6 @@ function hleb_view($view = null, $data = null) {
     }
 
     return [$view, $data, 'views'];
-}
-
-/** @deprecated */
-function hleb_gop0m3f4hpe10d_all($view = null, $data = null, $type = 'views') {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_all($view, $data, $type);
 }
 
 /** @internal */
@@ -100,28 +85,10 @@ function hleb_all($view = null, $data = null, $type = 'views') {
 
 /**
  * @see data()
- * @deprecated
- */
-function hleb_to0me1cd6vo7gd_data() {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_data();
-}
-
-/**
- * @see data()
  * @internal
  */
 function hleb_data() {
     return \Hleb\Constructor\Routes\Data::returnData();
-}
-
-/**
- * @see render()
- * @deprecated
- */
-function hleb_v10s20hdp8nm7c_render($render, $data = null) {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_render($render, $data);
 }
 
 /**
@@ -192,28 +159,10 @@ function hleb_search_filenames($dir) {
 
 /**
  * @see csrf_token()
- * @deprecated
- */
-function hleb_c3dccfa0da1a3e_csrf_token() {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_csrf_token();
-}
-
-/**
- * @see csrf_token()
  * @internal
  */
 function hleb_csrf_token() {
     return \Hleb\Constructor\Handlers\ProtectedCSRF::key();
-}
-
-/**
- * @see csrf_field()
- * @deprecated
- */
-function hleb_ds5bol10m0bep2_csrf_field() {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_csrf_field();
 }
 
 /**
@@ -224,14 +173,6 @@ function hleb_csrf_field() {
     return '<input type="hidden" name="_token" value="' . hleb_csrf_token() . '">';
 }
 
-/**
- * @see redirectToSite()
- * @deprecated
- */
-function hleb_ba5c9de48cba78c_redirectToSite($url) {
-    hleb_deprecated_info(__FUNCTION__);
-    hleb_redirect_to_site($url);
-}
 
 /**
  * @see redirectToSite()
@@ -239,15 +180,6 @@ function hleb_ba5c9de48cba78c_redirectToSite($url) {
  */
 function hleb_redirect_to_site(string $url) {
     \Hleb\Constructor\Handlers\URL::redirectToSite($url);
-}
-
-/**
- * @see redirect()
- * @deprecated
- */
-function hleb_ad7371873a6ad40_redirect(string $url, int $code = 303) {
-    hleb_deprecated_info(__FUNCTION__);
-    hleb_redirect($url, $code);
 }
 
 /**
@@ -260,28 +192,10 @@ function hleb_redirect(string $url, int $code = 303) {
 
 /**
  * @see getProtectUrl()
- * @deprecated
- */
-function hleb_ba5c9de48cba78c_getProtectUrl($url) {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_get_protect_url($url);
-}
-
-/**
- * @see getProtectUrl()
  * @internal
  */
 function hleb_get_protect_url(string $url) {
     return \Hleb\Constructor\Handlers\URL::getProtectUrl($url);
-}
-
-/**
- * @see getFullUrl()
- * @deprecated
- */
-function hleb_e0b1036cd5b501_getFullUrl($url) {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_get_full_url($url);
 }
 
 /**
@@ -294,15 +208,6 @@ function hleb_get_full_url(string $url) {
 
 /**
  * @see getMainUrl()
- * @deprecated
- */
-function hleb_e2d3aeb0253b7_getMainUrl() {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_get_main_url();
-}
-
-/**
- * @see getMainUrl()
  * @internal
  */
 function hleb_get_main_url() {
@@ -311,28 +216,10 @@ function hleb_get_main_url() {
 
 /**
  * @see getMainClearUrl()
- * @deprecated
- */
-function hleb_daa581cdd6323_getMainClearUrl() {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_get_main_clear_url();
-}
-
-/**
- * @see getMainClearUrl()
  * @internal
  */
 function hleb_get_main_clear_url() {
     return explode('?', hleb_get_main_url())[0];
-}
-
-/**
- * @see getByName()
- * @deprecated
- */
-function hleb_i245eaa1a3b6d_getByName(string $name, array $params = []) {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_get_by_name($name, $params);
 }
 
 /**
@@ -362,28 +249,10 @@ function hleb_get_standard_url(string $name) {
 
 /**
  * @see includeTemplate()
- * @deprecated
- */
-function hleb_e0b1036c1070101_template(string $template, array $params = [], bool $return = false) {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_include_template($template, $params, $return);
-}
-
-/**
- * @see includeTemplate()
  * @internal
  */
 function hleb_include_template(string $template, array $params = [], bool $return = false) {
     return (new \Hleb\Main\MainTemplate($template, $params, $return))->getContent();
-}
-
-/**
- * @see includeCachedTemplate()
- * @deprecated
- */
-function hleb_e0b1036c1070102_template(string $template, array $params = []) {
-    hleb_deprecated_info(__FUNCTION__);
-    hleb_include_cached_template($template, $params);
 }
 
 /**
@@ -396,28 +265,10 @@ function hleb_include_cached_template(string $template, array $params = []) {
 
 /**
  * @see includeOwnCachedTemplate()
- * @deprecated
- */
-function hleb_ade9e72e1018c6_template(string $template, array $params = []) {
-    hleb_deprecated_info(__FUNCTION__);
-    hleb_include_own_cached_template($template, $params);
-}
-
-/**
- * @see includeOwnCachedTemplate()
  * @internal
  */
 function hleb_include_own_cached_template(string $template, array $params = []) {
     new \Hleb\Constructor\Cache\OwnCachedTemplate($template, $params);
-}
-
-/**
- * @see print_r2()
- * @deprecated
- */
-function hleb_a581cdd66c107015_print_r2($data, $desc = null) {
-    hleb_deprecated_info(__FUNCTION__);
-    hleb_print_r2($data, $desc);
 }
 
 /**
@@ -430,28 +281,10 @@ function hleb_print_r2($data, $desc = null) {
 
 /**
  * @see getRequestResources()
- * @deprecated
- */
-function hleb_ra3le00te0m01n_request_resources() {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_get_request_resources();
-}
-
-/**
- * @see getRequestResources()
  * @internal
  */
 function hleb_get_request_resources() {
     return \Hleb\Constructor\Handlers\Request::getResources();
-}
-
-/**
- * @see getRequestHead()
- * @deprecated
- */
-function hleb_t0ulb902e69thp_request_head() {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_request_head();
 }
 
 /**
@@ -464,28 +297,10 @@ function hleb_request_head() {
 
 /**
  * @see getRequest()
- * @deprecated
- */
-function hleb_e70c10c1057hn11cc8il2_get_request() {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_get_request();
-}
-
-/**
- * @see getRequest()
  * @internal
  */
 function hleb_get_request() {
     return \Hleb\Constructor\Handlers\Request::getInstance();
-}
-
-/**
- * @see storage_path()
- * @deprecated
- */
-function hleb_6iopl942e103te6i10600l_storage_path() {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_storage_public_path();
 }
 
 /**
@@ -498,15 +313,6 @@ function hleb_storage_public_path() {
 
 /**
  * @see public_path()
- * @deprecated
- */
-function hleb_10p134l66o0il0e0t92e6i_public_path() {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_public_path();
-}
-
-/**
- * @see public_path()
  * @internal
  */
 function hleb_public_path() {
@@ -515,27 +321,10 @@ function hleb_public_path() {
 
 /**
  * @see view_path()
- * @deprecated
- */
-function hleb_601e30l60p2ii1e0o469tl_view_path() {
-    hleb_deprecated_info(__FUNCTION__);
-    return hleb_view_path();
-}
-
-/**
- * @see view_path()
  * @internal
  */
 function hleb_view_path() {
     return HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'view';
-}
-
-/**
- * @deprecated
- */
-function hleb_bt3e3gl60pg8h71e00jep901_error_404() {
-    hleb_deprecated_info(__FUNCTION__);
-    hleb_page_404();
 }
 
 /**

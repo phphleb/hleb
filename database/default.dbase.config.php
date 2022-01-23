@@ -9,7 +9,7 @@
 
 define('HLEB_TYPE_DB', 'mysql.name');
 
-define('HLEB_MUTEX_TYPE_REDIS', 'redis.name');
+define('HLEB_TYPE_REDIS', 'redis.name');
 
 define('HLEB_PARAMETERS_FOR_DB', [
 
@@ -47,7 +47,7 @@ define('HLEB_PARAMETERS_FOR_DB', [
         'scheme' => 'tcp',
         'host' => '127.0.0.1',
         'port' => '6379',
-     // 'password' => 'password'
+    /** 'password' => 'password' */
     ]
 
 ]);
