@@ -19,7 +19,7 @@
     }
   ],
   "require": {
-    "php": "^7.0.0 || ^8.0.0",
+    "php": ">=7.0.0",
     "ext-json": "*",
     "ext-pdo": "*",
     "phphleb/framework": ">=1.5.90",
@@ -42,7 +42,9 @@
   },
   "suggest": {
     "phphleb/xdorm": "XD ORM is a compact shell over PHP PDO",
-    "phphleb/adminpan": "Simple and adaptive Admin Panel"
+    "phphleb/adminpan": "Simple and adaptive Admin Panel",
+    "phphleb/conductor": "Special mutexes",
+    "phphleb/hlogin": "User registration module"
   },
   "config": {
     "optimize-autoloader": true
