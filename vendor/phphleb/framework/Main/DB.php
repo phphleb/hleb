@@ -128,6 +128,28 @@ class DB
     public static function db_query($sql, $config_key = null) {
         return \Hleb\Main\MainDB::db_query($sql, $config_key);
     }
+
+    /*
+     |--------------------------------------------------------------------------------------
+     | Returns a PDO object initialized from the current or specified configuration.
+     |--------------------------------------------------------------------------------------
+     | DB::getPdoInstance()->getAttribute(\PDO::ATTR_DRIVER_NAME);
+     | // similarly
+     | DB::getPdoInstance(HLEB_TYPE_DB)->getAttribute(\PDO::ATTR_DRIVER_NAME);
+     |
+     |
+     |--------------------------------------------------------------------------------------
+     | Возвращает инициализированный из текущей или указанной конфигурации объект PDO.
+     |--------------------------------------------------------------------------------------
+     |  DB::getPdoInstance()->getAttribute(\PDO::ATTR_DRIVER_NAME);
+     |  // аналогично
+     |  DB::getPdoInstance(HLEB_TYPE_DB)->getAttribute(\PDO::ATTR_DRIVER_NAME);
+     |
+     |--------------------------------------------------------------------------------------
+    */
+    public static function getPdoInstance($configKey = null) {
+        return \Hleb\Main\MainDB::getPdoInstance($configKey);
+    }
 }
 
 

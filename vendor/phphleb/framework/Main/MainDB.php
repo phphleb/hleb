@@ -10,6 +10,10 @@ declare(strict_types=1);
 
 namespace Hleb\Main;
 
+/**
+ * @package Hleb\Main
+ * @internal
+ */
 final class MainDB
 {
     use \DeterminantStaticUncreated;
@@ -60,6 +64,10 @@ final class MainDB
         $data = $stmt->fetchAll();
         \Hleb\Main\DataDebug::add(htmlentities($sql), microtime(true) - $time, self::setConfigKey($config), true);
         return $data;
+    }
+
+    public static function getPdoInstance($configKey = null) {
+        return self::instance($configKey);
     }
 
     protected static function init(string $config) {
