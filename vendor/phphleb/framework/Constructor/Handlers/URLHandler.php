@@ -200,7 +200,11 @@ final class URLHandler
                     return false;
                 }
                 foreach ($generateUrls as $q => $generateUrl) {
-                    $generateRealUrls[$q] = $generateRealUrls[$q] ?? '';
+                   $generateRealUrls[$q] = $generateRealUrls[$q] ?? '';
+                    if (strlen($generateRealUrls[$q]) > 1 && $generateRealUrls[$q][0] === '@' && $generateUrl[0] === '@' && $generateUrl[1] === '{') {
+                        $generateUrl = ltrim($generateUrl, '@');
+                        $generateRealUrls[$q] = ltrim($generateRealUrls[$q], '@');
+                    }
                     if (!empty($generateUrl)) {
                         if ($generateUrl[0] === '{' && $generateUrl[strlen($generateUrl) - 1] === '}') {
                             $exp = trim($generateUrl, '{?}');

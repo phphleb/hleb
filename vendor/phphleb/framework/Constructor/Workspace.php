@@ -133,8 +133,9 @@ final class Workspace
                 $select = 0;
                 foreach ($this->map as $key => $initMaps) {
                     if ($key === $originMap) {
-                        if (HLEB_PROJECT_DEBUG_ON && ($key[0]  !== '#' || strpos($key, ' ') !== false)) {
-                            trigger_error('Warning in the "render()" method. The set name must begin with a "#" character and not contain spaces. For example "#Main_map".', E_USER_NOTICE);
+                        if (empty($key) || $key[0]  !== '#' || strpos($key, ' ') !== false) {
+                            ErrorOutput::get('HL052-RENDER_ERROR: Warning in the "renderMap()" method. The set name must begin with a "#" character and not contain spaces. For example "#Main_map".' . '~' .
+                                ' В методе renderMap() первый символ названия должен быть "#", а само название не содержать пробелов. Образец "#Main_map".');
                         }
                         $select++;
                         foreach ($initMaps as $initPage) {
@@ -171,10 +172,9 @@ final class Workspace
         if (file_exists($proFile)) {
             if (!HL_TWIG_CONNECTED && $extension) {
                 $ext = strip_tags(array_reverse(explode(".", $file))[0]);
-                $exErrors = 'HL041-VIEW_ERROR: The file has the `.' . $ext . '` extension and is not processed.' .
+                ErrorOutput::get('HL041-VIEW_ERROR: The file has the `.' . $ext . '` extension and is not processed.' .
                     ' Probably the TWIG template engine is not connected.' . '~' .
-                    ' Файл имеет расширение `.' . $ext . '`. и не обработан. Вероятно не подключён шаблонизатор TWIG.';
-                ErrorOutput::get($exErrors);
+                    ' Файл имеет расширение `.' . $ext . '`. и не обработан. Вероятно не подключён шаблонизатор TWIG.');
             } else {
                 // view file
                 $extension ? (new TwigCreator())->view($file) : (new VCreator($proFile))->view();
@@ -182,10 +182,9 @@ final class Workspace
         } else {
             $errorFile = str_replace(str_replace(['\\', '//'], '/', HLEB_GLOBAL_DIRECTORY), "", $proFile) . ($extension ? '' : '.php');
             // Search to HL027-VIEW_ERROR or Search to HL037-VIEW_ERROR
-            $exErrors = 'HL0' . $errorNum . '-VIEW_ERROR: Error in function ' . $methodType . '() ! ' .
+            ErrorOutput::get('HL0' . $errorNum . '-VIEW_ERROR: Error in function ' . $methodType . '() ! ' .
                 'Missing file `' . $errorFile . '` . ~ ' .
-                'Исключение в функции ' . $methodType . '() ! Отсутствует файл `' . $errorFile . '`';
-            ErrorOutput::get($exErrors);
+                'Исключение в функции ' . $methodType . '() ! Отсутствует файл `' . $errorFile . '`');
         }
     }
 
@@ -202,17 +201,15 @@ final class Workspace
         $initiator = 'App\Middleware\\' . $type . '\\' . $className;
 
         if (!class_exists($initiator)) {
-            $errors = 'HL043-ROUTE_ERROR: Сlass `' . $initiator . '` not exists. ~' .
-                ' Класс `' . $initiator . '` не обнаружен.';
-            ErrorOutput::get($errors);
+            ErrorOutput::get('HL043-ROUTE_ERROR: Сlass `' . $initiator . '` not exists. ~' .
+                ' Класс `' . $initiator . '` не обнаружен.');
         }
 
         $initiatorObject = new $initiator;
 
         if (!is_callable([$initiatorObject, $method])) {
-            $errors = 'HL048-ROUTE_ERROR: Method `' . $method . '` in class `' . $initiator . '` not exists. ~' .
-                ' Метод  `' . $method . '` для класса `' . $initiator . '` не обнаружен.';
-            ErrorOutput::get($errors);
+            ErrorOutput::get('HL048-ROUTE_ERROR: Method `' . $method . '` in class `' . $initiator . '` not exists. ~' .
+                ' Метод  `' . $method . '` для класса `' . $initiator . '` не обнаружен.');
             return null;
         }
 
@@ -239,9 +236,8 @@ final class Workspace
             defined('HLEB_OPTIONAL_MODULE_SELECTION') or define('HLEB_OPTIONAL_MODULE_SELECTION', file_exists(HLEB_GLOBAL_DIRECTORY . "/modules/"));
 
             if (!HLEB_OPTIONAL_MODULE_SELECTION) {
-                $errors = 'HL044-ROUTE_ERROR: Error in method ->module() ! ' . 'The `/modules` directory is not found, you must create it. ~' .
-                    ' Директория `/modules` не обнаружена, необходимо её создать.';
-                ErrorOutput::get($errors);
+                ErrorOutput::get('HL044-ROUTE_ERROR: Error in method ->module() ! ' . 'The `/modules` directory is not found, you must create it. ~' .
+                    ' Директория `/modules` не обнаружена, необходимо её создать.');
             }
             $this->controllerForepart = 'Modules\\';
             $searchToModule = explode("/", trim($className, '/\\'));

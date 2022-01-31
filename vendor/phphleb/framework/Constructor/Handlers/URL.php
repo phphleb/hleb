@@ -61,25 +61,30 @@ final class URL extends BaseSingleton
         if (count($perem) === 0 && (strpos(self::$addresses[$name], '?}') === false)) {
             return self::endingUrl(self::$addresses[$name]);
         }
-        $addressParts = explode('/', self::$addresses[$name]);
-        foreach ($addressParts as $key => $part) {
-            if (strlen($part) > 2 && $part[0] == '{') {
+        $addressParts = explode('/', trim(self::$addresses[$name], '/\\ '));
+        foreach ($addressParts as &$part) {
+            $isTag = $part && $part[0] == '@' && $part[1] == '{';
+            if ($isTag) {
+                $part = ltrim($part, '@');
+             }
+            if (strlen($part) > 2 && ($part[0] == '{')) {
                 if (count($perem)) {
                     foreach ($perem as $k => $p) {
-                        if (($part[strlen($part) - 2] == '?' && $addressParts[$key] == '{' . $k . '?}') ||
-                            $addressParts[$key] == '{' . $k . '}') {
-                            $addressParts[$key] = $p;
+                        if (($part[strlen($part) - 2] == '?' && $part == '{' . $k . '?}') ||
+                            $part == '{' . $k . '}') {
+                            $part = ($isTag ? '@' : '') . $p;
                         } else if ($part[strlen($part) - 2] == '?') {
-                            $addressParts[$key] = '';
+                            $part = '';
                         }
                     }
                 } else {
                     if ($part[strlen($part) - 2] == '?') {
-                        $addressParts[$key] = '';
+                        $part = '';
                     }
                 }
             }
         }
+
         return self::endingUrl(preg_replace('|([/]+)|s', '/', '/' . implode('/', $addressParts) . '/'));
     }
 

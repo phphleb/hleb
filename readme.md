@@ -95,6 +95,9 @@ Route::type(['get','post'])->before('ClassBefore')->get('/path/')->controller('C
 
 ```
 
+```php
+Route::get('/@{user}/', view('profile')); // Special tag (@) for category or user.
+```
 
 
 Controllers
