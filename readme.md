@@ -73,6 +73,12 @@ Route::get('/ru/{version}/{page?}/', view('/map/new', ['x' => 0, 'y' => 0]))::wh
 
 ```
 
+Special tag _@_ for categories or users
+
+```php
+Route::get('/@{user}/', view('profile'));
+```
+
 Groups of routes
 -----------------------------------
 
@@ -93,10 +99,6 @@ Methods located after a route or group:
 ```php
 Route::type(['get','post'])->before('ClassBefore')->get('/path/')->controller('ClassController')->after('ClassAfter');
 
-```
-
-```php
-Route::get('/@{user}/', view('profile')); // Special tag (@) for category or user.
 ```
 
 
