@@ -66,6 +66,7 @@ final class HomeConnector implements Connector
             'Phphleb\Debugpan\DPanel' => '/phphleb/debugpan/DPanel.php',
             'XdORM\Shell\XdHelper' => '/phphleb/xdorm/Shell/XdHelper.php',
             'XdORM\XD' => '/phphleb/xdorm/XD.php',
+            'Hleb\Main\PdoManager' => '/phphleb/framework/Main/PdoManager.php',
             'Hleb\Main\DB' => '/phphleb/framework/Main/DB.php',
             'Hleb\Main\MainDB' => '/phphleb/framework/Main/MainDB.php',
             'XdORM\Shell\XdDB' => '/phphleb/xdorm/Shell/XdDB.php',

@@ -16,6 +16,9 @@ trait DeterminantStaticUncreated
 
     protected function __clone() {}
 
+    /**
+     * @internal
+     */
     public static function instance() {
         if (is_null(self::$instance)) {
             self::$instance = new static();

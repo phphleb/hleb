@@ -16,19 +16,23 @@ final class AddressBar
 {
     private $inputParameters;
 
+    /** @internal */
     public $redirect = null;
 
+    /** @internal */
     public $realUrl = null;
 
 
     // Initialization with input parameters.
     // Инициализация с вводными параметрами.
+    /** @internal */
     public function __construct(array $params) {
         $this->inputParameters = $params;
     }
 
     // Parses data to check the current URL, otherwise marks it as a redirect to the correct one.
     // Выполняет разбор данных для проверки текущего URL, в противном случае отмечается как редирект на правильный.
+    /** @internal */
     public function get() {
         $partsOfAddress = explode('?', $this->inputParameters['SERVER']['REQUEST_URI']);
         $address = rawurldecode(array_shift($partsOfAddress));

@@ -64,6 +64,7 @@ final class MyDebug extends BaseSingleton
      *
      * Добавляет к значению <name> в отладночной панели собственные данные <data>.
      *
+     * @deprecated
      * @param string $name
      * @param $data
      */
@@ -82,7 +83,8 @@ final class MyDebug extends BaseSingleton
      * Adds its own <data> string to the <name> value in the debug panel, which is appended to the current value.
      * 
      * Добавляет к значению <name> в отладночной панели собственную строку <data>, которая добавляется к текущему значению.
-     * 
+     *
+     * @deprecated
      * @param string $name
      * @param string $data
      */

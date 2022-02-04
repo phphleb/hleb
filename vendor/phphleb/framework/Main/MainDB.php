@@ -55,7 +55,7 @@ final class MainDB
     }
 
 
-    public static function db_query($sql, $config = null) {
+    public static function dbQuery(string $sql, $config = null) {
         $time = microtime(true);
         $stmt = self::instance($config)->query($sql);
         if (is_bool($stmt)) {
@@ -66,8 +66,12 @@ final class MainDB
         return $data;
     }
 
+    /**
+     * @param string|null $configKey
+     * @return PdoManager
+     */
     public static function getPdoInstance($configKey = null) {
-        return self::instance($configKey);
+        return new PdoManager(self::instance($configKey));
     }
 
     protected static function init(string $config) {
