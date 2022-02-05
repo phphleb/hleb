@@ -157,6 +157,11 @@ class DB
     public static function getPdoInstance($configKey = null) {
         return \Hleb\Main\MainDB::getPdoInstance($configKey);
     }
+
+    /** @see \Hleb\Main\DB::getPdoInstance() */
+    public static function getNewPdoInstance($configKey = null) {
+        return \Hleb\Main\MainDB::getNewPdoInstance($configKey);
+    }
 }
 
 
