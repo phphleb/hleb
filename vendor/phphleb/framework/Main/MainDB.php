@@ -22,20 +22,9 @@ final class MainDB
 
     private static $connectionList = [];
 
-    public static function instance($config_key)
+    public static function instance($configKey)
     {
-        if (empty(self::$connectionList) && !defined('HLEB_TYPE_DB')) {
-            $configSearchDir = defined('HLEB_SEARCH_DBASE_CONFIG_FILE') ?
-                HLEB_SEARCH_DBASE_CONFIG_FILE :
-                HLEB_GLOBAL_DIRECTORY . '/database';
-
-            if (file_exists($configSearchDir . "/dbase.config.php")) {
-                hleb_require($configSearchDir . "/dbase.config.php");
-            } else {
-                hleb_require($configSearchDir . "/default.dbase.config.php");
-            }
-        }
-        $config = self::setConfigKey($config_key);
+        $config = self::getConfig($configKey);
         if (!isset(self::$connectionList[$config])) {
             self::$connectionList[$config] = self::init($config);
         }
@@ -86,7 +75,7 @@ final class MainDB
      */
     public static function getNewPdoInstance($configKey = null)
     {
-        return self::createConnection($configKey);
+        return self::createConnection(self::getConfig($configKey));
     }
 
     protected static function init(string $config)
@@ -102,7 +91,7 @@ final class MainDB
     protected static function createConnection(string $config = null)
     {
         $config = $config ? $config : (defined('HLEB_TYPE_DB') ? HLEB_TYPE_DB : null);
-        $param = HLEB_PARAMETERS_FOR_DB[$config];
+        $param = defined('HLEB_PARAMETERS_FOR_DB') ? HLEB_PARAMETERS_FOR_DB[$config] : [];
         $opt = $param["options-list"] ?? [];
         $opt[PDO::ATTR_ERRMODE] = $param["errmode"] ?? PDO::ERRMODE_EXCEPTION;
         $opt[PDO::ATTR_DEFAULT_FETCH_MODE] = $param["default_fetch_mode"] ?? PDO::FETCH_ASSOC;
@@ -118,6 +107,22 @@ final class MainDB
             }
         }
         return new PDO(implode(";", $condition), $user, $pass, $opt);
+    }
+
+    private static function getConfig($configKey = null)
+    {
+        if (empty(self::$connectionList) && !defined('HLEB_TYPE_DB')) {
+            $configSearchDir = defined('HLEB_SEARCH_DBASE_CONFIG_FILE') ?
+                HLEB_SEARCH_DBASE_CONFIG_FILE :
+                HLEB_GLOBAL_DIRECTORY . '/database';
+
+            if (file_exists($configSearchDir . "/dbase.config.php")) {
+                hleb_require($configSearchDir . "/dbase.config.php");
+            } else {
+                hleb_require($configSearchDir . "/default.dbase.config.php");
+            }
+        }
+        return self::setConfigKey($configKey);
     }
 
 }
