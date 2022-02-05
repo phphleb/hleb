@@ -85,7 +85,6 @@ final class MainDB
 
     protected static function createConnection(string $config = null)
     {
-        $config = $config ? $config : (defined('HLEB_TYPE_DB') ? HLEB_TYPE_DB : null);
         $param = defined('HLEB_PARAMETERS_FOR_DB') ? HLEB_PARAMETERS_FOR_DB[$config] : [];
         $opt = $param["options-list"] ?? [];
         $opt[PDO::ATTR_ERRMODE] = $param["errmode"] ?? PDO::ERRMODE_EXCEPTION;
@@ -106,7 +105,7 @@ final class MainDB
 
     private static function getConfig($configKey = null)
     {
-        if (empty(self::$connectionList) && !defined('HLEB_TYPE_DB')) {
+        if (!defined('HLEB_TYPE_DB')) {
             $configSearchDir = defined('HLEB_SEARCH_DBASE_CONFIG_FILE') ?
                 HLEB_SEARCH_DBASE_CONFIG_FILE :
                 HLEB_GLOBAL_DIRECTORY . '/database';
