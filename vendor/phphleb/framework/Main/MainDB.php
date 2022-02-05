@@ -26,7 +26,7 @@ final class MainDB
     {
         $config = self::getConfig($configKey);
         if (!isset(self::$connectionList[$config])) {
-            self::$connectionList[$config] = self::init($config);
+            self::$connectionList[$config] = self::createConnection($config);
         }
         return self::$connectionList[$config];
     }
@@ -76,11 +76,6 @@ final class MainDB
     public static function getNewPdoInstance($configKey = null)
     {
         return self::createConnection(self::getConfig($configKey));
-    }
-
-    protected static function init(string $config)
-    {
-        return self::$connectionList[$config] = self::createConnection($config);
     }
 
     protected static function setConfigKey($config)
