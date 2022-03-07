@@ -21,7 +21,6 @@ jobs:
     - php: 8.0.2
     - php: 8.0.9
     - php: 8.1.0
-    - php: 8.1.2
     - php: nightly
 
 install:
