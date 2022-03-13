@@ -87,6 +87,7 @@ final class HomeConnector implements Connector
             'Hleb\Main\TryClass' => '/phphleb/framework/Main/TryClass.php',
             'Phphleb\Updater\FileRemover' => '/phphleb/updater/FileRemover.php',
             'Phphleb\Updater\FileUploader' => '/phphleb/updater/FileUploader.php',
+            'Hleb\Main\Helpers\RangeChecker' => '/phphleb/framework/Main/Helpers/RangeChecker.php',
         ];
     }
 }

@@ -40,6 +40,7 @@ class RouteMethodEnd extends MainRouteMethod
         $this->result["addresses"] = $this->addresses;
         $this->result["update"] = date("r") . " / " . rand();
         $this->result["domains"] = self::searchDomains();
+        $this->result["multiple"] = self::searchMultiple();
         ErrorOutput::run();
     }
     
@@ -58,6 +59,20 @@ class RouteMethodEnd extends MainRouteMethod
                 $actions = $block["actions"];
                 foreach ($actions as $action) {
                     if (isset($action["domain"]) && count($action["domain"])) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Finding the presence of a multiple route (with '...').
+    // Поиск присутствия множественного марщрута (с '...').
+    private function searchMultiple() {
+        $blocks = $this->result;
+        foreach ($blocks as $key => $block) {
+            if (isset($block["data_path"])) {
+                if (strpos($block["data_path"], '...') !== false) {
+                    return true;
                 }
             }
         }

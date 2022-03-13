@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Handlers;
 
+use Hleb\Main\Helpers\RangeChecker;
 use Hleb\Main\Insert\BaseSingleton;
 
 /**
@@ -55,21 +56,24 @@ final class URL extends BaseSingleton
 
     // Returns the address of the route by name with the replacement of variable values ​​in it with the required values.
     // Возвращает адрес роута по имени с заменой переменных значений в нём на необходимые значения.
-    public static function getByName(string $name, array $perem = []) {
+    public static function getByName(string $name, array $params = []) {
         // Получение пути с префиксами по существующему имени роута
         if (!isset(self::$addresses[$name])) return false;
-        if (count($perem) === 0 && (strpos(self::$addresses[$name], '?}') === false)) {
+        if (count($params) === 0 && (strpos(self::$addresses[$name], '?}') === false)) {
             return self::endingUrl(self::$addresses[$name]);
         }
         $addressParts = explode('/', trim(self::$addresses[$name], '/\\ '));
+        if (strpos(end($addressParts), '...') === 0) {
+            return self::endingUrl(self::getMultiple($addressParts, $params));
+        }
         foreach ($addressParts as &$part) {
             $isTag = $part && $part[0] == '@' && $part[1] == '{';
             if ($isTag) {
                 $part = ltrim($part, '@');
              }
             if (strlen($part) > 2 && ($part[0] == '{')) {
-                if (count($perem)) {
-                    foreach ($perem as $k => $p) {
+                if (count($params)) {
+                    foreach ($params as $k => $p) {
                         if (($part[strlen($part) - 2] == '?' && $part == '{' . $k . '?}') ||
                             $part == '{' . $k . '}') {
                             $part = ($isTag ? '@' : '') . $p;
@@ -88,21 +92,21 @@ final class URL extends BaseSingleton
         return self::endingUrl(preg_replace('|([/]+)|s', '/', '/' . implode('/', $addressParts) . '/'));
     }
 
-    // Returns the ending from the URL after the `?`, If any.
-    // Возвращает окончание из URL после `?`, если оно есть.
+    // Handles URL ending depending on settings.
+    // Обрабатывает окончание URL в зависимости от настроек.
     protected static function endingUrl(string $url) {
-        $ending = $url[strlen($url) - 1];
-        $element = explode('/', $ending);
-        $endElement = end($element);
-        if (strpos($endElement, '.') !== false) return $url;
-        if(defined('HLEB_PROJECT_ENDING_URL')) {
+        if ($url !== '' && defined('HLEB_PROJECT_ENDING_URL')) {
+            $ending = $url[strlen($url) - 1];
+            $element = explode('/', $url);
+            $endElement = end($element);
+            if (strpos($endElement, '.') !== false) return $url;
             if (HLEB_PROJECT_ENDING_URL && $ending !== '/') {
                 return $url . '/';
             } else if (!HLEB_PROJECT_ENDING_URL && $ending == '/') {
                 return substr($url, 0, -1);
             }
         }
-        return ltrim($url, '?');
+        return $url;
     }
 
     // Redirect to URL from https:// third party site.
@@ -132,17 +136,17 @@ final class URL extends BaseSingleton
     // Returns a secure URL with a GET parameter containing a token. Not recommended for use!
     // Возвращает защищённый URL с GET-параметром, который содержит токен. Не рекомендуется к использованию!
     public static function getProtectUrl(string $url) {
-        $newUrl = explode('?', $url);
-        if (count($newUrl) === 1) {
-            return self::getStandard(self::endingUrl($newUrl[0])) . '?_token=' . ProtectedCSRF::key();
+        $newUrlParts = explode('?', $url);
+        if (count($newUrlParts) === 1) {
+            return self::getStandard(self::endingUrl($newUrlParts[0])) . '?_token=' . ProtectedCSRF::key();
         }
         $params = '';
-        foreach ($newUrl as $key => $param) {
+        foreach ($newUrlParts as $key => $param) {
             if ($key !== 0) {
                 $params .= '?' . str_replace(self::NEEDED_TAGS, self::REPLACING_TAGS, $param);
             }
         }
-        return self::getStandard(self::endingUrl($newUrl[0])) . $params . '&_token=' . ProtectedCSRF::key();
+        return self::getStandard(self::endingUrl($newUrlParts[0])) . $params . '&_token=' . ProtectedCSRF::key();
     }
 
     // Returns a standardized URL.
@@ -205,6 +209,23 @@ final class URL extends BaseSingleton
             }
         }
         hl_preliminary_exit();
+    }
+
+    // Multiple route handling.
+    // Обработка множественного маршрута.
+    protected static function getMultiple(array $addressParts, array $params = []) {
+        $endUrl = array_pop($addressParts);
+        $checkRange = (new RangeChecker(trim($endUrl, ' .')))->check(count($params));
+        if (!$checkRange) {
+            return false;
+        }
+        foreach ($params as $key => $value) {
+            if (!is_numeric($key)) {
+                return false;
+            }
+        }
+        ksort($params, SORT_NUMERIC);
+        return implode('/', $addressParts) . '/' . implode('/', $params);
     }
 }
 
