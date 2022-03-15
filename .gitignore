@@ -9,6 +9,7 @@
 # working files
 /storage/*
 !/storage/logs/.gitkeep
+!/storage/public/.gitkeep
 /storage/cache/routes/routes.txt
 !/storage/cache/routes/.gitkeep
 !/storage/cache/key/.gitkeep
