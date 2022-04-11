@@ -43,10 +43,9 @@ final class AddressBar
         $endElement = explode('/', $address);
         $fileUrl = stripos(end($endElement), '.') !== false;
         $relAddress = "";
-
         if (!empty($address)) {
             if (!$fileUrl) {
-                if ($address[strlen($address) - 1] == '/') {
+                if ($address[strlen($address) - 1] === '/') {
                     $relAddress = $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? $address : rtrim($address, "/");
                 } else {
                     $relAddress = $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? $address . '/' : $address;
@@ -87,6 +86,7 @@ final class AddressBar
         // Check if the URL is correct.
         // Проверка на корректность URL.
         $realUrl = $realProtocol . (preg_replace('/\/{2,}/', '/', $realHostWww . $relAddress)) . $realParameters;
+
         $partsOfActualUri = explode('?', $this->inputParameters['SERVER']['REQUEST_URI']);
         $firstActualUri = rawurldecode(array_shift($partsOfActualUri));
         $firstActualParams = count($partsOfActualUri) > 0 ? '?' . implode('?', $partsOfActualUri) : '';
@@ -96,7 +96,7 @@ final class AddressBar
             $realUrl =  rtrim($realUrl, '/');
             $actualUrl = rtrim($actualUrl, '/');
         }
-        if ($realUrl !== $actualUrl) {
+        if ($realUrl !== $actualUrl && $address !== '/') {
             $this->redirect($realUrl);
         }
         return $realUrl;
