@@ -550,18 +550,18 @@ final class Request extends BaseSingleton
 
     /**
      * Returns the request body converted from JSON.
-     * @return array
+     * @return array|false
      *//**
      * Возвращает преобразованное из JSON тело запроса.
-     * @return array
+     * @return array|false
      */
     public static function getJsonBodyList() {
         $body = (string)self::getInputBody();
-        if ($body === '') {
-            return [];
+        if (!$body) {
+            return false;
         }
-        $list = json_decode($body, true) ?? [];
-        return is_array($list) ? $list : [];
+        $list = json_decode($body, true);
+        return is_array($list) ? $list : false;
     }
 
     /**
