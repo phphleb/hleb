@@ -48,6 +48,8 @@ final class Request extends BaseSingleton
 
     private static $convertUri = null;
 
+    private static $inputBody = null;
+
     /**
      * Returns the current session data of $_SESSION.
      * @param mixed|null $name - parameter to get data by name.
@@ -530,6 +532,36 @@ final class Request extends BaseSingleton
     public static function getHead() {
         if (!isset(self::$head)) self::$head = new Head();
         return self::$head;
+    }
+
+    /**
+     * Returns request body, does not work with `multipart/form-data`.
+     * @return false|string
+     *//**
+     * Возвращает тело запроса, не работает с `multipart/form-data`.
+     * @return false|string
+     */
+    public static function getInputBody() {
+        if (!is_null(self::$inputBody)) {
+            return self::$inputBody;
+        }
+        return  self::$inputBody = file_get_contents('php://input');
+    }
+
+    /**
+     * Returns the request body converted from JSON.
+     * @return array
+     *//**
+     * Возвращает преобразованное из JSON тело запроса.
+     * @return array
+     */
+    public static function getJsonBodyList() {
+        $body = (string)self::getInputBody();
+        if ($body === '') {
+            return [];
+        }
+        $list = json_decode($body, true) ?? [];
+        return is_array($list) ? $list : [];
     }
 
     /**
