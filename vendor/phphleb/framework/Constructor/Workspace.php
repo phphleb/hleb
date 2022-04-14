@@ -51,7 +51,9 @@ final class Workspace
         $types = [];
         foreach ($actions as $key => $action) {
             if (isset($action['before'])) {
-                $this->allAction($action['before'], 'Before');
+                if ($this->allAction($action['before'], 'Before') === false) {
+                    hl_preliminary_exit();
+                }
                 $this->calculateTime('Class <i>' . $action['before'][0] . '</i>');
             }
             if (!empty($action['type'])) {
@@ -86,7 +88,9 @@ final class Workspace
         }
         foreach ($actions as $action) {
             if (isset($action['after'])) {
-                $this->allAction($action['after'], 'After');
+                if ($this->allAction($action['after'], 'After') === false) {
+                    hl_preliminary_exit();
+                }
             }
         }
     }
@@ -101,6 +105,9 @@ final class Workspace
                 if (isset($action['controller']) || isset($action['adminPanController'])) {
                     $params = isset($action['controller']) ? $this->getController($action['controller']) :
                         $this->getAdminPanController($action['adminPanController'], $block);
+                    if ($params === false) {
+                        hl_preliminary_exit();
+                    }
                     if (is_array($params)) {
                         if (isset($params[2]) && $params[2] == 'render') {
                             // render
@@ -213,11 +220,11 @@ final class Workspace
             return null;
         }
 
-        $initiatorObject->{$method}(...$arguments);
+        return $initiatorObject->{$method}(...$arguments);
     }
 
-    // Returns the initiated controller class.
-    // Возвращает инициированный класс контроллера.
+    // Returns the result of executing the method on the triggered controller class.
+    // Возвращает результат выполнения метода в инициированном классе контроллера.
     private function getController(array $action) {
         $arguments = $action[1] ?? [];
         $call = explode('@', $action[0]);
@@ -313,6 +320,9 @@ final class Workspace
         }
 
         $controller = $initiatorObject->{$method}(...$arguments);
+        if ($controller === false) {
+            return false;
+        }
         $admObj = new \Phphleb\Adminpan\Add\AdminPanHandler();
         $this->admFooter = $admObj->getFooter();
         echo $admObj->getHeader($block['number'], $block['_AdminPanelData']);
