@@ -79,6 +79,12 @@ Special tag _@_ for categories or users
 Route::get('/@{user}/', view('profile'));
 ```
 
+Get different query options
+
+```php
+Route::get('/example/...0-5/', '0 to 5 parts');
+```
+
 Groups of routes
 -----------------------------------
 
