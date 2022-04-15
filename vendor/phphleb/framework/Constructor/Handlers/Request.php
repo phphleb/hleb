@@ -558,7 +558,7 @@ final class Request extends BaseSingleton
      * @return array|false
      */
     public static function getJsonBodyList() {
-        $body = (string)self::getInputBody();
+        $body = self::getInputBody();
         if (!$body) {
             return false;
         }
