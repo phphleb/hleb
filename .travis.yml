@@ -4,7 +4,7 @@ dist: bionic
 language: php
 env:
   global:
-    - FRAMEWORK_VERSION=1.6.52 # <current version>
+    - FRAMEWORK_VERSION=1.6.53 # <current version>
     - PHPHUNIT_VERSION=>=9.0.0
 
 jobs:
