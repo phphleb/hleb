@@ -143,6 +143,7 @@ if ($arguments) {
                 " --list or -l      (forms a list of commands)" . PHP_EOL .
                 " --list <command> [--help] (command info)" . PHP_EOL .
                 " --logs or -lg     (prints multiple trailing lines from a log file)" . PHP_EOL .
+                " --find-route <url> [method] [domain] (route search by url)" . PHP_EOL .
                 " --new-task        (сreates a new command)" . PHP_EOL .
                 "                   --new-task example-task \"Short description\"" . PHP_EOL .
                 (HL_TWIG_CONNECTED ? " --clear-cache--twig or -cc-twig" . PHP_EOL . " --forced-cc-twig" . PHP_EOL : '');
@@ -170,6 +171,21 @@ if ($arguments) {
         case '--new-task':
             include_once HLEB_PROJECT_DIRECTORY . '/Main/Console/CreateTask.php';
             new \Hleb\Main\Console\CreateTask(strval($argv[2] ?? ''), strval($argv[3] ?? ''));
+            break;
+        case '--find-route':
+        case '-fr':
+            hlUploadAll();
+            if (class_exists('Phphleb\Rfinder\RouteFinder', true)) {
+                $address = $argv[2] ?? '';
+                if (!empty($address)) {
+                    $finder = (new \Phphleb\Rfinder\RouteFinder(strval($address), $argv[3] ?? 'GET', $argv[4] ?? null));
+                    echo $finder->getInfo() . PHP_EOL;
+                } else {
+                    echo 'Required URL not specified! php console --find-route <url> [method] [domain]'  . PHP_EOL;
+                }
+            } else {
+                echo  'You need to install the phphleb/rfinder library.' . PHP_EOL;
+            }
             break;
         default:
             $file = $fn->convertCommandToTask($arguments);
