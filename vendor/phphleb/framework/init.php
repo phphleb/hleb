@@ -328,6 +328,14 @@ function hleb_view_path() {
 }
 
 /**
+ * @return string
+ * @internal
+ */
+function hleb_project_path() {
+    return HLEB_GLOBAL_DIRECTORY;
+}
+
+/**
  * @internal
  */
 function hleb_page_404() {

@@ -45,20 +45,21 @@ if (!function_exists('data')) {
 
 if (!function_exists('csrf_field')) {
     /**
-     * The csrf_token() function returns the protected token for protection against CSRF attacks.
+     * The csrf_field() function displays the HTML content for protection against CSRF attacks.
      *
-     * Функция csrf_token() возвращает защищённый токен для защиты от CSRF-атак.
+     * Функция csrf_field() отображает HTML-контент для вставки в форму для защиты от CSRF-атак.
      */
     function csrf_field() {
         echo hleb_csrf_field();
     }
 }
 
+
 if (!function_exists('csrf_token')) {
     /**
-     * The csrf_field() function returns the HTML content for protection against CSRF attacks.
+     * The csrf_token() function returns the protected token for protection against CSRF attacks.
      *
-     * Функция csrf_field() возвращает HTML-контент для вставки в форму для защиты от CSRF-атак.
+     * Функция csrf_token() возвращает защищённый токен для защиты от CSRF-атак.
      */
     function csrf_token() {
         return hleb_csrf_token();
@@ -154,7 +155,7 @@ if (!function_exists('getUrlByName')) {
      *
      * @param string $name
      * @param array $args
-     * @return bool|false|string
+     * @return bool|string
      */
     function getUrlByName($name, $args = []) {
         return hleb_get_by_name($name, $args);
@@ -204,7 +205,7 @@ if (!function_exists('includeTemplate')) {
     }
 }
 
-if (!function_exists('includeCachedTemplate')) {
+    if (!function_exists('includeCachedTemplate')) {
     /**
      * The includeCachedTemplate( ... ) function enables to include the cashed content of another template into the template
      * and transfer parameters (variables).
@@ -236,12 +237,13 @@ if (!function_exists('includeOwnCachedTemplate')) {
     }
 }
 
-/**
- * The getRequestResources() function enables to get style data for output of them on the page (in its lower part).
- *
- * Функция getRequestResources() для получения данных стилей для вывода на странице (в нижней её части).
- */
+
 if (!function_exists('getRequestResources')) {
+    /**
+     * The getRequestResources() function enables to get style data for output of them on the page (in its lower part).
+     *
+     * Функция getRequestResources() для получения данных стилей для вывода на странице (в нижней её части).
+     */
     function getRequestResources() {
         return hleb_get_request_resources();
     }
@@ -296,10 +298,58 @@ if (!function_exists('view_path')) {
     /**
      * Full path to folder '/view'
      *
-     * Полный путь к папке '/view' *
+     * Полный путь к папке '/view'
      */
     function view_path() {
         return hleb_view_path();
+    }
+}
+
+if (!function_exists('project_path')) {
+    /**
+     * Full path to root folder '/'
+     *
+     * Полный путь к корневой папке '/'
+     */
+    function project_path() {
+        return hleb_project_path();
+    }
+}
+
+if (!function_exists('storagePath')) {
+    /**
+     * @see storage_path
+     */
+    function storagePath() {
+        return hleb_storage_public_path();
+    }
+}
+
+
+if (!function_exists('publicPath')) {
+    /**
+     * @see public_path()
+     */
+    function publicPath() {
+        return hleb_public_path();
+    }
+}
+
+if (!function_exists('viewPath')) {
+    /**
+     * @see view_path()
+     */
+    function viewPath() {
+        return hleb_view_path();
+    }
+}
+
+if (!function_exists('projectPath')) {
+    /**
+     * @see project_path()
+     */
+    function projectPath() {
+        return hleb_project_path();
     }
 }
 
@@ -317,3 +367,15 @@ if (!function_exists('insertTemplate')) {
     }
 }
 
+if (!function_exists('app')) {
+    /**
+     * Management from one place all the functions of the framework, for example app()->request()->getHead()->setTitle('Title');
+     *
+     * Управление из одного места всеми функциями фреймворка, например app()->request()->getHead()->setTitle('Title');
+     *
+     * @return Hleb\Main\Commands\App
+     */
+    function app() {
+        return Hleb\Main\Commands\App::getInstance();
+    }
+}
