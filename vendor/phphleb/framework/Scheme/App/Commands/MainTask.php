@@ -8,7 +8,7 @@ class MainTask
         if(method_exists($this, 'execute')) {
             $this->execute(...$arguments);
         } else {
-            error_log(PHP_EOL . "Method 'execute' not exists in Task!" . PHP_EOL);
+            hleb_system_log(PHP_EOL . "Method 'execute' not exists in Task!" . PHP_EOL);
         }
 
     }

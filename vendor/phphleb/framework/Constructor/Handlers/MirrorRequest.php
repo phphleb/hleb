@@ -5,6 +5,7 @@ namespace Hleb\Constructor\Handlers;
 
 
 use Hleb\Main\Insert\BaseSingleton;
+use Hleb\Main\Logger\Log;
 
 class MirrorRequest extends BaseSingleton
 {
@@ -133,6 +134,13 @@ class MirrorRequest extends BaseSingleton
     }
     public function getMainClearUrl() {
         return Request::getMainClearUrl();
+    }
+    public function getMainUrl() {
+        return Request::getMainUrl();
+    }
+    /** @return Log */
+    public function log() {
+        return Log::getInstance();
     }
 }
 

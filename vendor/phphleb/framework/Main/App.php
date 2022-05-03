@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Hleb\Main\Commands;
+namespace Hleb\Main;
 
 
 use Hleb\Constructor\Handlers\MirrorRequest;
 use Hleb\Main\Insert\BaseSingleton;
-use Hleb\Main\MirrorDB;
+use Hleb\Main\Logger\Log;
 
 
 class App extends BaseSingleton
@@ -78,9 +78,9 @@ class App extends BaseSingleton
     }
 
     /**
-     * Returns request data, similar to app()->request()->get()
+     * Returns request data, similar to App()->request()->get()
      *
-     * Возвращает данные запроса, аналогично app()->request()->get()
+     * Возвращает данные запроса, аналогично App()->request()->get()
      *
      * @param string|null $name
      * @return array|int|float|null
@@ -241,6 +241,17 @@ class App extends BaseSingleton
      */
     public function insertTemplate(string $path, array $params = []) {
         hleb_insert_template($path, $params);
+    }
+
+    /**
+     * Логирование по установленным уровням. App()->logger()->error('Message', []);
+     *
+     * Logging according to the established levels. App()->logger()->error('Message', []);
+     *
+     * @return Log
+     */
+    public function logger() {
+        return Log::getInstance();
     }
 }
 

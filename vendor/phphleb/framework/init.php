@@ -135,7 +135,7 @@ function hleb_render($render, $data = null) {
 function hleb_search_filenames($dir) {
     $handle = opendir($dir);
     if(!$handle) {
-        error_log("Can't open directory $dir");
+        hleb_system_log("Can't open directory $dir");
         return false;
     }
 

@@ -23,7 +23,7 @@ trait DeterminantStaticUncreated
         if (is_null(self::$instance)) {
             self::$instance = new static();
         } elseif (is_string(self::$instance)) {
-            error_log('Object is destruct');
+            hleb_system_log('Object is destruct');
         }
         return self::$instance;
     }

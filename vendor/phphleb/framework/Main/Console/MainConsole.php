@@ -310,26 +310,23 @@ final class MainConsole
             print "No logs found in the project." . PHP_EOL;
             return;
         }
-
+        $contentData = array_reverse($contentData);
         if (count($contentData) < 3) {
             print implode(PHP_EOL, $contentData);
             return;
         }
-
-        $contentData = array_reverse($contentData);
-        $result = ["..." . PHP_EOL];
         $max = 0;
+        $result = [];
         foreach ($contentData as $str) {
-            if ($str[0] === "[") {
-                $result[] = $str;
-                $max++;
-            }
-            if ($max > 2) {
+            if ($max > 3) {
                 break;
             }
+            if ($str[0] === "[") {
+                $max++;
+            }
+            $result[] = $str;
         }
-
-        print implode($result);
+        print "..." . PHP_EOL . implode(array_reverse($result));
     }
 
     private function domainCalc($data) {

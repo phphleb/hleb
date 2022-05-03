@@ -67,7 +67,6 @@ const HLEB_PROJECT_VERSION = '1';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 const HLEB_HTTP_TYPE_SUPPORT = ['get', 'post', 'delete', 'put', 'patch', 'options'];
 
 // Project root directory
@@ -131,7 +130,12 @@ if (isset($_GET["_token"])) {
 //To set a different directory name 'vendor' add HLEB_VENDOR_DIR_NAME to the constants
 define('HLEB_VENDOR_DIRECTORY', defined('HLEB_VENDOR_DIR_NAME') ? HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME : dirname(__DIR__, 2));
 
+defined('HLEB_STORAGE_DIRECTORY') or  define('HLEB_STORAGE_DIRECTORY', HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . "storage");
 define('HLEB_PROJECT_STORAGE_DIR', (defined('HLEB_STORAGE_DIRECTORY') ? rtrim(HLEB_STORAGE_DIRECTORY, '\\/ ') : HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage'));
+
+if (HLEB_PROJECT_LOG_ON) {
+    require __DIR__ . DIRECTORY_SEPARATOR . 'common.php';
+}
 
 //Full path to folder '/storage'
 if (!function_exists('hleb_system_storage_path')) {
@@ -151,15 +155,13 @@ function hleb_dc64d27da09bab7_storage_directory() {
     return hleb_system_storage_path();
 }
 
-if (!function_exists('hleb_system_log')) {
-    /**
-     * @param $message
-     *
-     * @internal
-     */
-    function hleb_system_log($message) {
-      error_log($message);
-    }
+/**
+ * @param $message
+ * @param string $level
+ * @internal
+ */
+function hleb_system_log($message, $level = 'error') {
+    \Hleb\Main\Logger\Log::getInstance()->log($level, $message);
 }
 
 define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/routes');
@@ -181,21 +183,6 @@ if (HLEB_PROJECT_CLASSES_AUTOLOAD) {
     require HLEB_PROJECT_DIRECTORY . '/Main/MainAutoloader.php';
 
     require HLEB_PROJECT_DIRECTORY . '/Main/HomeConnector.php';
-}
-
-if (HLEB_PROJECT_LOG_ON) {
-    $prefix = defined('HLEB_PROJECT_LOG_SORT_BY_DOMAIN') && HLEB_PROJECT_LOG_SORT_BY_DOMAIN ?
-        str_replace(['\\', '//', '@', '<', '>'], '',
-            str_replace('127.0.0.1', 'localhost' ,
-                str_replace( '.', '_',
-                    explode(':', $_SERVER['HTTP_HOST'])[0]
-                )
-            )
-        ) . '_' : '';
-
-    ini_set('log_errors', 'On');
-
-    ini_set('error_log', hleb_system_storage_path(DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . date('Y_m_d_') . $prefix . 'errors.log'));
 }
 
 ini_set('display_errors', HLEB_PROJECT_DEBUG ? '1' : '0');

@@ -367,15 +367,16 @@ if (!function_exists('insertTemplate')) {
     }
 }
 
-if (!function_exists('app')) {
+if (!function_exists('App')) {
     /**
-     * Management from one place all the functions of the framework, for example app()->request()->getHead()->setTitle('Title');
+     * Management from one place all the functions of the framework, for example App()->request()->getHead()->setTitle('Title');
      *
-     * Управление из одного места всеми функциями фреймворка, например app()->request()->getHead()->setTitle('Title');
+     * Управление из одного места всеми функциями фреймворка, например App()->request()->getHead()->setTitle('Title');
      *
-     * @return Hleb\Main\Commands\App
+     * @return Hleb\Main\App
      */
-    function app() {
-        return Hleb\Main\Commands\App::getInstance();
+    function App() {
+        return Hleb\Main\App::getInstance();
     }
 }
+

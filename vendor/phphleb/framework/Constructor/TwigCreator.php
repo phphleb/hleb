@@ -26,7 +26,7 @@ final class TwigCreator
             ]);
             echo $twig->render($path, hleb_data());
         } else {
-            error_log('Undefined Twig class on TwigCreator');
+            hleb_system_log('Undefined Twig class on TwigCreator');
         }
     }
 }

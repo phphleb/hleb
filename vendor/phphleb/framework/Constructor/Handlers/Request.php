@@ -567,6 +567,29 @@ class Request extends BaseSingleton
     }
 
     /**
+     * Checking the execution of the application from the console.
+     * @return bool
+     */
+    /**
+     * Проверка выполнения приложения из консоли.
+     * @return bool
+     */
+    public static function isConsoleMode() {
+       return !is_null(self::getConsoleCommand());
+    }
+
+    /**
+     * Returns the current console command when run from a terminal.
+     * @return string|null
+     *//**
+     * Возвращает текущую консольную команду при запуске из терминала.
+     * @return string|null
+     */
+    public static function getConsoleCommand() {
+        return defined('HLEB_CLI_COMMAND') ? HLEB_CLI_COMMAND : null;
+    }
+
+    /**
      * Returns an object for placing loaded resources at the bottom of the page.
      * @return Resources|null
      *//**
@@ -588,6 +611,17 @@ class Request extends BaseSingleton
     public static function getMainConvertUrl() {
         if (is_null(self::$convertUri)) self::$convertUri = self::getConvertUrl(urldecode($_SERVER['REQUEST_URI']));
         return self::$convertUri;
+    }
+
+    /**
+     * Returns the relative path of a URL with parameters.
+     * @return string
+     *//**
+     * Возвращает относительный путь URL с параметрами.
+     * @return string
+     */
+    public static function getMainUrl() {
+        return (string)self::clearData(urldecode($_SERVER['REQUEST_URI']));
     }
 
     /**

@@ -1,5 +1,8 @@
 <?php
-$arguments = $argv[1] ?? null;
+if (empty($argv) && isset($_SERVER['argv'])) {
+    $argv = $_SERVER['argv'];
+}
+$baseArgument = $argv[1] ?? null;
 
 // End of script execution (before starting the main project).
 if (!function_exists('hl_preliminary_exit')) {
@@ -12,6 +15,7 @@ if (!function_exists('hl_preliminary_exit')) {
         exit($text);
     }
 }
+define('HLEB_CLI_COMMAND', implode(' ', $argv));
 
 defined('HLEB_GLOBAL_DIRECTORY') or define('HLEB_GLOBAL_DIRECTORY', dirname(__DIR__, 3));
 
@@ -24,11 +28,7 @@ define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', rtrim(HLEB_STORAGE_DIRECTORY, '\\/
 
 defined('HLEB_PROJECT_LOG_ON') or define('HLEB_PROJECT_LOG_ON', true);
 
-if (HLEB_PROJECT_LOG_ON) {
-    ini_set('log_errors', 'On');
-    ini_set('display_errors', '1');
-    ini_set('error_log', HLEB_STORAGE_DIRECTORY. DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . date('Y_m_d_') . 'errors.cli.log');
-}
+ini_set('display_errors', HLEB_PROJECT_LOG_ON ? '0' : '1');
 
 define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'routes');
 
@@ -47,6 +47,10 @@ const HL_TWIG_CACHED_PATH = '/storage/cache/twig/compilation';
 define('HL_TWIG_CONNECTED', file_exists(HLEB_VENDOR_DIRECTORY . "/twig/twig"));
 
 defined('HLEB_PROJECT_CLASSES_AUTOLOAD') or define('HLEB_PROJECT_CLASSES_AUTOLOAD', true);
+
+if (HLEB_PROJECT_LOG_ON) {
+    require __DIR__ . DIRECTORY_SEPARATOR . 'common.php';
+}
 
 /**
  * @param string $path - file path.
@@ -68,9 +72,9 @@ function hleb_system_storage_path($subPath = '') {
 }
 
 // Auto update packages
-if (!empty($arguments) && strpos($arguments, 'phphleb/') !== false && file_exists(dirname(__DIR__, 2) . '/' . $arguments . '/' . 'start.php')) {
+if (!empty($baseArgument) && strpos($baseArgument, 'phphleb/') !== false && file_exists(dirname(__DIR__, 2) . '/' . $baseArgument . '/' . 'start.php')) {
     hlUploadAll();
-    require dirname(__DIR__, 2) . '/' . $arguments . '/' . 'start.php';
+    require dirname(__DIR__, 2) . '/' . $baseArgument . '/' . 'start.php';
     hl_preliminary_exit();
 }
 
@@ -81,12 +85,14 @@ define('HLEB_CONSOLE_PERMISSION_MESSAGE',  "Permission denied! It is necessary t
 $argumentsList = $argv;
 $setArguments = array_splice($argumentsList, 2);
 
-include_once HLEB_PROJECT_DIRECTORY . '/Main/Console/MainConsole.php';
+if (HLEB_PROJECT_LOG_ON) {
+    include_once HLEB_PROJECT_DIRECTORY . '/Main/Console/MainConsole.php';
+}
 
 $fn = new \Hleb\Main\Console\MainConsole();
 
-if ($arguments) {
-    switch ($arguments) {
+if ($baseArgument) {
+    switch ($baseArgument) {
         case '--version':
         case '-v':
             $ver = [hlGetFrameVersion(), hlGetFrameworkVersion()];
@@ -188,7 +194,7 @@ if ($arguments) {
             }
             break;
         default:
-            $file = $fn->convertCommandToTask($arguments);
+            $file = $fn->convertCommandToTask($baseArgument);
             if (file_exists(HLEB_GLOBAL_DIRECTORY . "/app/Commands/$file.php")) {
                 hlUploadAll();
                 if (end($argv) === '--help') {

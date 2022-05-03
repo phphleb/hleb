@@ -30,12 +30,12 @@ final class ErrorOutput extends BaseSingleton
         foreach ($messages as $key => $message) {
             if (isset($message)) {
                 self::$messages[] = $message;
-                error_log(" " . explode('~', $message)[0] . PHP_EOL);
+                hleb_system_log(" " . explode('~', $message)[0]);
                 // End of script execution before starting the main project.
                 if (!HLEB_PROJECT_DEBUG) hl_preliminary_exit();
             } else {
                 self::$messages[] = 'ErrorOutput:: Indefinite error.';
-                error_log(' ' . explode('~', $message)[0] . PHP_EOL);
+                hleb_system_log(' ' . explode('~', $message)[0] . PHP_EOL);
             }
         }
     }
