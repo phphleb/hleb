@@ -156,10 +156,10 @@ class Log extends BaseSingleton implements LoggerInterface
                 }
             }
         }
-        if (isset($context['type'])) {
-            $context['method'] = $context['type'];
+        if (isset($cells['type'])) {
+            $cells['method'] = $cells['type'];
         }
-        $context['type'] = $level;
+        $cells['type'] = $level;
 
         return array_merge($context, $cells);
     }

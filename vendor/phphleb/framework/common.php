@@ -7,7 +7,7 @@ function hl_user_log(int $errno, string $errstr, string $errfile = null, int $er
     }
     $path = HLEB_VENDOR_DIRECTORY . '/phphleb/framework';
     require_once $path . '/Main/Insert/BaseSingleton.php';
-    if (!class_exists('\Hleb\Main\Logger\Log')) {
+    if (!class_exists('\Hleb\Main\Logger\Log', false)) {
         require $path . '/Scheme/Home/Main/LoggerInterface.php';
         require $path . '/Main/Logger/LogLevel.php';
         require $path . '/Main/Logger/Log.php';
