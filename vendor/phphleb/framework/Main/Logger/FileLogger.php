@@ -129,3 +129,4 @@ class FileLogger implements LoggerInterface
     }
 
 }
+

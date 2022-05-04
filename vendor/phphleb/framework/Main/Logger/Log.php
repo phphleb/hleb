@@ -177,3 +177,4 @@ class Log extends BaseSingleton implements LoggerInterface
     }
 
 }
+
