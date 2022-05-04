@@ -97,7 +97,16 @@ class FileLogger implements LoggerInterface
         if (isset($context['ip'])) {
             $log[]= $context['ip'];
         }
+        $replace = [];
+        foreach ($context as $key => $val) {
+            if ((is_string($val) || is_numeric($val)) && strpos($message, '{' . $key . '}') !== false) {
+                $replace['{' . $key . '}'] = $val;
+                unset($context[$key]);
+            }
+        }
+        $log[2] = strtr($message, $replace);
         unset($context['class'], $context['function'], $context['type'], $context['method'], $context['ip'], $context['file'], $context['line'], $context['domain'], $context['url']);
+
         return implode(' ' , $log) . ' ' . json_encode($context);
     }
 
@@ -117,6 +126,20 @@ class FileLogger implements LoggerInterface
                 )
             ) . '_' : '';
         return  file_put_contents(HLEB_STORAGE_DIRECTORY . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . date('Y_m_d_') . $prefix . 'errors.log', $row . PHP_EOL, FILE_APPEND);
+    }
+
+    private static function prepareMessage(string $message, array $context) {
+        if(!$context) {
+            return $message;
+        }
+        $replace = [];
+        foreach ($context as $key => $val) {
+            if (is_string($val) || is_numeric($val)) {
+                $replace['{' . $key . '}'] = $val;
+            }
+        }
+
+        return strtr($message, $replace);
     }
 
 }
