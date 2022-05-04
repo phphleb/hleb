@@ -128,18 +128,4 @@ class FileLogger implements LoggerInterface
         return  file_put_contents(HLEB_STORAGE_DIRECTORY . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . date('Y_m_d_') . $prefix . 'errors.log', $row . PHP_EOL, FILE_APPEND);
     }
 
-    private static function prepareMessage(string $message, array $context) {
-        if(!$context) {
-            return $message;
-        }
-        $replace = [];
-        foreach ($context as $key => $val) {
-            if (is_string($val) || is_numeric($val)) {
-                $replace['{' . $key . '}'] = $val;
-            }
-        }
-
-        return strtr($message, $replace);
-    }
-
 }
