@@ -1,4 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
+/** Console command management. */
+
 if (empty($argv) && isset($_SERVER['argv'])) {
     $argv = $_SERVER['argv'];
 }

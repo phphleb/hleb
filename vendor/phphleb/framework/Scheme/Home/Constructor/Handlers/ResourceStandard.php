@@ -6,9 +6,10 @@ namespace Hleb\Scheme\Home\Constructor\Handlers;
 
 class ResourceStandard
 {
-
+    /** @internal */
     const NEEDED_TAGS = ["\"", "'", '<', '>'];
 
+    /** @internal */
     const REPLACING_TAGS = ['&quot;', '&apos;', '&lt;', '&gt;'];
 
 

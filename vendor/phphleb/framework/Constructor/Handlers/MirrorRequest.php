@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Hleb\Constructor\Handlers;
 
 
 use Hleb\Main\Insert\BaseSingleton;
-use Hleb\Main\Logger\Log;
+use Hleb\Scheme\Home\Constructor\Handlers\RequestInterface;
 
-class MirrorRequest extends BaseSingleton
+class MirrorRequest extends BaseSingleton implements RequestInterface
 {
     public function getSession($name = null) {
         return Request::getSession($name);
@@ -137,10 +138,6 @@ class MirrorRequest extends BaseSingleton
     }
     public function getMainUrl() {
         return Request::getMainUrl();
-    }
-    /** @return Log */
-    public function log() {
-        return Log::getInstance();
     }
 }
 

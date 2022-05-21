@@ -12,6 +12,7 @@ class BaseSingleton
 
     protected function __clone() {}
 
+    /** @internal */
     public static function getInstance() {
         $className = get_called_class();
         if (!isset(self::$instances[$className])) {

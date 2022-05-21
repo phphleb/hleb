@@ -1,14 +1,18 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Hleb\Main;
 
-
 use Hleb\Constructor\Handlers\MirrorRequest;
 use Hleb\Main\Insert\BaseSingleton;
+use Hleb\Main\Insert\Examples\ExampleApp;
 use Hleb\Main\Logger\Log;
+use Hleb\Scheme\Home\Constructor\Handlers\RequestInterface;
+use Hleb\Scheme\Home\Main\DBInterface;
+use Hleb\Scheme\Home\Main\LoggerInterface;
 
-
+/** @see ExampleApp for testing */
 class App extends BaseSingleton
 {
     /**
@@ -18,7 +22,7 @@ class App extends BaseSingleton
      *
      * @see \Hleb\Constructor\Handlers\Request;
      */
-    public function request(): MirrorRequest
+    public function request(): RequestInterface
     {
         return MirrorRequest::getInstance();
     }
@@ -29,12 +33,12 @@ class App extends BaseSingleton
      * Возвращает инициализированный объект PDO базы данных.
      *
      * @param array|null $configKey
-     * @return MirrorDB
+     * @return DBInterface
      * @see \Hleb\Main\MainDB;
      */
-    public function db($configKey = null): MirrorDB
+    public function db($configKey = null): DBInterface
     {
-        return MirrorDB::instance($configKey);
+        return MirrorDB::getInstance()->instance($configKey);
     }
 
     /**
@@ -250,7 +254,8 @@ class App extends BaseSingleton
      *
      * @return Log
      */
-    public function logger() {
+    public function logger(): LoggerInterface
+    {
         return Log::getInstance();
     }
 }

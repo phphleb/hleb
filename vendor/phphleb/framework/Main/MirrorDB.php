@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Hleb\Main;
 
-
 use Hleb\Main\Insert\BaseSingleton;
+use Hleb\Scheme\Home\Main\DBInterface;
 
-class MirrorDB extends BaseSingleton
+class MirrorDB extends BaseSingleton implements DBInterface
 {
     public function instance($configKey) {
        return MainDB::instance($configKey);

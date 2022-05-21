@@ -243,6 +243,8 @@ if (!function_exists('getRequestResources')) {
      * The getRequestResources() function enables to get style data for output of them on the page (in its lower part).
      *
      * Функция getRequestResources() для получения данных стилей для вывода на странице (в нижней её части).
+     *
+     * @see ExampleResources for testing.
      */
     function getRequestResources() {
         return hleb_get_request_resources();
@@ -254,6 +256,8 @@ if (!function_exists('getRequestHead')) {
      * The <head><?php getRequestHead()->output(); ?></head> displays all previous set Request::getHead() data.
      *
      * <head><?php getRequestHead()->output(); ?></head> отображает все предыдущие установленные данные Request::getHead().
+     *
+     * @see ExampleHead for testing.
      */
     function getRequestHead() {
         return hleb_request_head();
@@ -265,6 +269,8 @@ if (!function_exists('getRequest')) {
      * The getRequest( ... ) function outputs the class Request.
      *
      *  Через функцию getRequest( ... ) можно обращаться к классу Request. Например, getRequest()::getGet();
+     *
+     * @see ExampleMirrorRequest for testing.
      */
     function getRequest() {
         return hleb_get_request();
@@ -374,6 +380,8 @@ if (!function_exists('App')) {
      * Управление из одного места всеми функциями фреймворка, например App()->request()->getHead()->setTitle('Title');
      *
      * @return Hleb\Main\App
+     *
+     * @see ExampleApp for testing.
      */
     function App() {
         return Hleb\Main\App::getInstance();
