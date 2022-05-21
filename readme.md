@@ -235,6 +235,9 @@ Additional features
 
 + **Mutex**es [phphleb/conductor](https://github.com/phphleb/conductor)
 
++ **Tests** (for framework) [phphleb/tests](https://github.com/phphleb/tests)
+
+
 
 -----------------------------------
 
