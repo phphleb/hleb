@@ -17,10 +17,10 @@ class RotateLogsTask extends \Hleb\Scheme\App\Commands\MainTask
     /**
      * Delete earlier than this time in days.
      * Удаление ранее этого времени в днях.
-     * @param int $days
+     * @param string|int $days
      */
-    protected function execute(int $days = 3) {
-        $prescriptionForRotation = 60 * 60 * 24 * $days;
+    protected function execute($days = 3) {
+        $prescriptionForRotation = 60 * 60 * 24 * (int)$days;
 
         $total = 0;
         $logs = new \RecursiveIteratorIterator(
@@ -32,7 +32,7 @@ class RotateLogsTask extends \Hleb\Scheme\App\Commands\MainTask
             $logPath = $log->getRealPath();
             if(!is_writable($logPath)) {
                 $user = @exec('whoami');
-                echo "Permission denied! It is necessary to assign rights to the directory `sudo chmod -R 770 ./storage` and the current user " . ($user ? "`{$user}`" : '') . PHP_EOL;
+                echo "Permission denied! It is necessary to assign rights to the directory `sudo chmod -R 775 ./storage` and the current user " . ($user ? "`{$user}`" : '') . PHP_EOL;
                 break;
             }
             if ($log->isFile() && $log->getFileName() !== ".gitkeep" && filemtime($logPath) < (time() - $prescriptionForRotation)) {
