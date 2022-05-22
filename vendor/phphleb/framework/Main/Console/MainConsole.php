@@ -126,7 +126,7 @@ final class MainConsole
     public function searchStandardRoutes()
     {
         $file = HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt';
-        $data = [['SDOMAIN', 'PREFIX', 'ROUTE', 'TYPE', 'PROTECTED', 'CONTROLLER', 'NAME']];
+        $data = [['SDM', 'PREFIX', 'ROUTE', 'TYPE', 'PRO', 'CONTROLLER', 'NAME']];
         if (file_exists($file)) {
             $routes = json_decode(file_get_contents($file, true), true);
             if (!empty($routes)) {
@@ -185,7 +185,7 @@ final class MainConsole
             }
         }
         if (count($data) === 1) return "No cached routes in project." . PHP_EOL;
-        return $this->sortData($data);
+        return $this->sortData($data) . PHP_EOL . "  *SDM - SUBDOMAIN, *PRO - PROTECTED";
     }
 
     /**
