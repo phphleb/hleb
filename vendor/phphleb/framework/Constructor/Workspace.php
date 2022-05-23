@@ -51,8 +51,22 @@ final class Workspace
         $types = [];
         foreach ($actions as $key => $action) {
             if (isset($action['before'])) {
-                if ($this->allAction($action['before'], 'Before') === false) {
+                $beforeParams = $this->allAction($action['before'], 'Before');
+                if ($beforeParams === false) {
                     hl_preliminary_exit();
+                }
+                if (is_array($beforeParams)) {
+                    if (isset($beforeParams[HLEB_TAG_INTERNAL])) {
+                        ErrorOutput::get('HL055-MIDDLEWARE_ERROR: Warning in the ' . ($action['before'][0] ?? 'undefined') .
+                            '. From a preliminary class (middleware), the return of the view() and render() functions is not implied.' . '~' .
+                            ' Из предваритеьного класса (middleware) возврат функций view() и render() не подразумевается.');
+                    }
+                    $this->addJsonData($beforeParams);
+                }
+                if ($beforeParams !== null) {
+                    ErrorOutput::get('HL053-MIDDLEWARE_ERROR: Warning in the ' . ($action['before'][0] ?? 'undefined') .
+                        '. A value of an unsupported type was returned (possible without returning, false or an array).' . '~' .
+                        ' Возвращено значение не поддерживаемого типа (можно без возвращения, false или массив).');
                 }
                 $this->calculateTime('Class <i>' . $action['before'][0] . '</i>');
             }
@@ -103,10 +117,15 @@ final class Workspace
             $actions = $block['actions'];
             foreach ($actions as $action) {
                 if (isset($action['controller']) || isset($action['adminPanController'])) {
-                    $params = isset($action['controller']) ? $this->getController($action['controller']) :
+                    $params = $isController = isset($action['controller']) ? $this->getController($action['controller']) :
                         $this->getAdminPanController($action['adminPanController'], $block);
                     if ($params === false) {
                         hl_preliminary_exit();
+                    }
+                    if (is_object($params)) {
+                        ErrorOutput::get('HL054-CONTROLLER_ERROR: Warning in the ' . ($action['controller'][0] ?? 'undefined') .
+                            '. Returned value of unsupported type (object).' . '~' .
+                            ' Возвращено значение не поддерживаемого типа (объект).');
                     }
                     if (is_array($params)) {
                         if (isset($params[2]) && $params[2] == 'render') {
@@ -124,35 +143,39 @@ final class Workspace
             }
         }
         // data()
-        if (is_array($params) && !empty($params[1])) {
-            Data::createData($params[1]);
-        }
-        if (isset($params['text']) && is_string($params['text'])) {
-            echo $params['text'];
-        } else if (isset($params[2]) && $params[2] == 'views') {
-            //  view(...)
-            $this->selectableViewFile($params[0][0], 'view', 37);
-        } else if (isset($params[2]) && $params[2] == 'render') {
-            // render(...)
-            $allMaps = $params[0];
-            Info::add('RenderMap', $allMaps);
-            foreach ($allMaps as $originMap) {
-                $select = 0;
-                foreach ($this->map as $key => $initMaps) {
-                    if ($key === $originMap) {
-                        if (empty($key) || $key[0]  !== '#' || strpos($key, ' ') !== false) {
-                            ErrorOutput::get('HL052-RENDER_ERROR: Warning in the "renderMap()" method. The set name must begin with a "#" character and not contain spaces. For example "#Main_map".' . '~' .
-                                ' В методе renderMap() первый символ названия должен быть "#", а само название не содержать пробелов. Образец "#Main_map".');
-                        }
-                        $select++;
-                        foreach ($initMaps as $initPage) {
-                            $this->selectableViewFile($initPage, 'render', 27);
+        if (is_array($params)) {
+            if (!empty($params[1])) {
+                Data::createData($params[1]);
+            }
+            if (isset($params['text']) && is_string($params['text'])) {
+                echo $params['text'];
+            } else if (isset($params[2]) && $params[2] == 'views') {
+                //  view(...)
+                $this->selectableViewFile($params[0][0], 'view', 37);
+            } else if (isset($params[2]) && $params[2] == 'render') {
+                // render(...)
+                $allMaps = $params[0];
+                Info::add('RenderMap', $allMaps);
+                foreach ($allMaps as $originMap) {
+                    $select = 0;
+                    foreach ($this->map as $key => $initMaps) {
+                        if ($key === $originMap) {
+                            if (empty($key) || $key[0] !== '#' || strpos($key, ' ') !== false) {
+                                ErrorOutput::get('HL052-RENDER_ERROR: Warning in the "renderMap()" method. The set name must begin with a "#" character and not contain spaces. For example "#Main_map".' . '~' .
+                                    ' В методе renderMap() первый символ названия должен быть "#", а само название не содержать пробелов. Образец "#Main_map".');
+                            }
+                            $select++;
+                            foreach ($initMaps as $initPage) {
+                                $this->selectableViewFile($initPage, 'render', 27);
+                            }
                         }
                     }
+                    if (!$select) {
+                        $this->selectableViewFile($originMap, 'render', 27);
+                    }
                 }
-                if (!$select) {
-                    $this->selectableViewFile($originMap, 'render', 27);
-                }
+            } elseif (!empty($isController) && is_array($params) && !isset($params[HLEB_TAG_INTERNAL])) {
+                $this->addJsonData($params);
             }
         }
         if (!empty($this->admFooter)) echo $this->admFooter;
@@ -376,6 +399,17 @@ final class Workspace
             $result .= ucfirst($part);
         }
         return $result;
+    }
+
+    // Вывод массива в json-формате.
+    private function addJsonData(array $params) {
+        headers_sent() or header("Content-Type: application/json");
+        $json = json_encode($params);
+        if ($json === false) {
+            http_response_code(500);
+            $json = '{"error": "json_encode"}';
+        }
+        hl_preliminary_exit($json);
     }
 }
 

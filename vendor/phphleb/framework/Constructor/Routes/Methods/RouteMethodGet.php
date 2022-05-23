@@ -29,6 +29,7 @@ class RouteMethodGet extends MainRouteMethod
     function __construct(StandardRoute $instance, string $routePath, $params = []) {
         $this->methodTypeName = "get";
         $this->instance = $instance;
+        if (is_array($params)) {unset($params[HLEB_TAG_INTERNAL]);}
         $this->calc($routePath, $params);
     }
 

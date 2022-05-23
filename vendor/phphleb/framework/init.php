@@ -62,25 +62,28 @@ if (HL_TWIG_CONNECTED) {
     defined('HL_TWIG_OPTIMIZATIONS') or define('HL_TWIG_OPTIMIZATIONS', -1);
 }
 
+/** @internal */
+define('HLEB_TAG_INTERNAL', 'hl_internal_%{function}');
+
 /**
  * @see view()
  * @internal
  */
 function hleb_view($view = null, $data = null) {
     if (func_num_args() === 0) {
-        return [null, null, 'views'];
+        return [null, null, 'views', HLEB_TAG_INTERNAL => true];
     }
 
-    return [$view, $data, 'views'];
+    return [$view, $data, 'views', HLEB_TAG_INTERNAL => true];
 }
 
 /** @internal */
 function hleb_all($view = null, $data = null, $type = 'views') {
     if (func_num_args() === 0) {
-        return [null, null, $type];
+        return [null, null, $type, HLEB_TAG_INTERNAL => true];
     }
 
-    return [$view, $data, $type];
+    return [$view, $data, $type, HLEB_TAG_INTERNAL => true];
 }
 
 /**
