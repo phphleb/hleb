@@ -111,9 +111,6 @@ define(
     (HLEB_CONSOLE_USER_NAME ? "`" . HLEB_CONSOLE_USER_NAME . "`" : '')
 );
 
-$argumentsList = $argv;
-$setArguments = array_splice($argumentsList, 2);
-
 if ($baseArgument) {
     switch ($baseArgument) {
         case '--version':

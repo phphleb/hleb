@@ -434,7 +434,7 @@ final class MainConsole
     {
         $task = $this->createTaskClass($path, $class);
         if ($task) {
-            $task->createTask($this->arguments);
+            $task->createTask(count($this->arguments) ? array_slice($this->arguments, 2) : []);
         }
     }
 
