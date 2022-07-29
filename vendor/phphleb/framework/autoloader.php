@@ -8,6 +8,8 @@ require HLEB_PROJECT_DIRECTORY . '/Main/Info.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Commands/MainTask.php';
 
+require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Controllers/BaseController.php';
+
 require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Controllers/MainController.php';
 
 require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Middleware/MainMiddleware.php';
