@@ -34,12 +34,14 @@ class BaseController
      * Возвращает общие данные по ключу или целиком.
      *
      * @param string|null $attribute
-     * @return array
+     * @return mixed
      */
-   protected function getControllerData(string $attribute = null): array
-   {
-       return is_null($this->temporaryData) ? (empty($attribute) ? self::$persistentData : self::$persistentData[$attribute] ?? null) : $this->temporaryData;
-   }
+    protected function getControllerData(string $attribute = null)
+    {
+        return is_null($this->temporaryData) ?
+            (empty($attribute) ? self::$persistentData : self::$persistentData[$attribute] ?? null) :
+            (empty($attribute) ? $this->temporaryData : $this->temporaryData[$attribute] ?? null);
+    }
 
     /**
      * Sets data by key.
