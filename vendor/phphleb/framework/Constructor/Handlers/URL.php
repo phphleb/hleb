@@ -12,6 +12,7 @@ namespace Hleb\Constructor\Handlers;
 
 use Hleb\Main\Helpers\RangeChecker;
 use Hleb\Main\Insert\BaseSingleton;
+use Hleb\Main\Logger\Log;
 
 /**
  * @package Hleb\Constructor\Handlers *
@@ -66,24 +67,25 @@ final class URL extends BaseSingleton
         if (strpos(end($addressParts), '...') === 0) {
             return self::endingUrl(self::getMultiple($addressParts, $params));
         }
-        foreach ($addressParts as &$part) {
+        foreach ($addressParts as $key => $part) {
             $isTag = $part && $part[0] == '@' && $part[1] == '{';
             if ($isTag) {
-                $part = ltrim($part, '@');
+                $addressParts[$key] = ltrim($part, '@');
+                continue;
              }
-            if (strlen($part) > 2 && ($part[0] == '{')) {
+            if ($part && strlen($part) > 2 && ($part[0] == '{')) {
                 if (count($params)) {
                     foreach ($params as $k => $p) {
                         if (($part[strlen($part) - 2] == '?' && $part == '{' . $k . '?}') ||
                             $part == '{' . $k . '}') {
-                            $part = ($isTag ? '@' : '') . $p;
+                            $addressParts[$key] = ($isTag ? '@' : '') . $p;
                         } else if ($part[strlen($part) - 2] == '?') {
-                            $part = '';
+                            $addressParts[$key] = '';
                         }
                     }
                 } else {
                     if ($part[strlen($part) - 2] == '?') {
-                        $part = '';
+                        $addressParts[$key] = '';
                     }
                 }
             }

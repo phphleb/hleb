@@ -38,13 +38,12 @@ final class Key extends BaseSingleton
         if (isset($_SESSION['_SECURITY_TOKEN'])) {
             return $_SESSION['_SECURITY_TOKEN'];
         }
-        try {
-            $randomData = bin2hex(random_bytes(30));
-            $keygen = str_shuffle(md5(strval(random_int(100, 100000))) . $randomData);
-        } catch (\Exception $ex) {
-            $keygen = str_shuffle(md5(strval(rand()) . md5(strval(rand()))));
-        }
         if (!file_exists(self::$path)) {
+            try {
+                $keygen = str_shuffle(md5(strval(random_int(100, 100000))) . bin2hex(random_bytes(30)));
+            } catch (\Exception $ex) {
+                $keygen = str_shuffle(md5(strval(rand()) . md5(strval(rand()))));
+            }
             file_put_contents(self::$path, $keygen, LOCK_EX);
             $_SESSION['_SECURITY_TOKEN'] = $keygen;
             if (!file_exists(self::$path)) {
@@ -56,11 +55,8 @@ final class Key extends BaseSingleton
             return $keygen;
         }
         $key = trim(file_get_contents(self::$path));
-        if (empty($key)) {
-            $key = $keygen;
-        }
         $_SESSION['_SECURITY_TOKEN'] = $key;
         return $key;
     }
-}
+ }
 
