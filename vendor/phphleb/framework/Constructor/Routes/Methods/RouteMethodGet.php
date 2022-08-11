@@ -27,15 +27,28 @@ class RouteMethodGet extends MainRouteMethod
      * @param string|object|Closure|array $params
      */
     function __construct(StandardRoute $instance, string $routePath, $params = []) {
-        $this->methodTypeName = "get";
+        $this->methodTypeName = $this->getName();
+        $this->type = $this->getHttpMethodType();
         $this->instance = $instance;
         if (is_array($params)) {unset($params[HLEB_TAG_INTERNAL]);}
         $this->calc($routePath, $params);
     }
 
+    // The unique name of the route.
+    // Уникальный идентификатор роута.
+    protected function getName() {
+        return 'get';
+    }
+
+    // The request type for the route.
+    // Тип запроса для роута.
+    protected function getHttpMethodType() {
+        return ['get'];
+    }
+
     // Parsing and initial data validation.
     // Разбор и первоначальная проверка данных.
-    private function calc($routePath, $params) {
+    protected function calc($routePath, $params) {
         $this->dataPath = $routePath;
         if (is_array($params)) {
             if (count($params) == 0) {
@@ -54,9 +67,9 @@ class RouteMethodGet extends MainRouteMethod
                 $this->dataParams = [$this->calcArg($params[0]), $this->calcArg($params[1]), $params[2]];
                 return;
             }
-            $this->errors[] = "HL019-ROUTE_ERROR: Excess number of arguments on method ->get(arg1, arg2) ! " .
+            $this->errors[] = "HL019-ROUTE_ERROR: Excess number of arguments on method ->" . $this->getName() . "(arg1, arg2) ! " .
                 "In stock arg2: " . count($params) . " expected  0, 1 or 2 ~ " .
-                "Неправильное количество аргументов в методе ->get(arg1, arg2) ! Использовано в arg2:  " . count($params) . ", допускается 0, 1 или 2 аргумента.";
+                "Неправильное количество аргументов в методе ->" . $this->getName() . "(arg1, arg2) ! Использовано в arg2:  " . count($params) . ", допускается 0, 1 или 2 аргумента.";
             ErrorOutput::add($this->errors);
         } else {
             $this->dataParams = ["text" => $params];
@@ -65,7 +78,7 @@ class RouteMethodGet extends MainRouteMethod
 
     // Checking values.
     // Проверка значений.
-    private function calcArg($value) {
+    protected function calcArg($value) {
         if (is_string($value)) {
             return [$value];
         } else if (is_object($value)) {

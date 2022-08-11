@@ -37,10 +37,10 @@ class RouteMethodGetType extends MainRouteMethod
         if (is_string($types)) $types = [strtolower($types)];
         foreach ($types as $type) {
             $this->type[] = strtolower($type);
-            if (!in_array(strtolower($type), $this->types)) {
+            if (!in_array(strtolower($type), $this->httpTypes)) {
                 $this->errors[] = "HL009-ROUTE_ERROR: Wrong argument to method  ->getType() ! " .
-                    "In stock `" . $type . "` expected in `" . implode(",", array_unique($this->types)) . "`. ~ " .
-                    "Неправильный аргумент в методе ->getType() ! В наличии `" . $type . "`, ожидалось получить из `" . implode(",", array_unique($this->types)) . "`.";
+                    "In stock `" . $type . "` expected in `" . implode(",", array_unique($this->httpTypes)) . "`. ~ " .
+                    "Неправильный аргумент в методе ->getType() ! В наличии `" . $type . "`, ожидалось получить из `" . implode(",", array_unique($this->httpTypes)) . "`.";
                 ErrorOutput::add($this->errors);
             }
         }

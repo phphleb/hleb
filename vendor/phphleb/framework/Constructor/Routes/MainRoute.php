@@ -25,13 +25,19 @@ class MainRoute
 
     protected static $number = 1000;
 
+    /**
+     * @param string $name
+     * @param mixed $arguments
+     * @return array
+     * @internal
+     */
     public function __call($name, $arguments) {
         switch ($name) {
             case 'data':
                 return $this->data();
                 break;
-            case 'delete':
-                $this->delete();
+            case 'clear':
+                $this->clear();
                 break;
             case 'end':
                 $this->end();
@@ -41,18 +47,21 @@ class MainRoute
 
     // Returns the collected route data.
     // Возвращает собранные данные маршрутов.
+    /** @internal */
     protected function data() {
         return self::$dataMethods;
     }
 
     // Removes route information.
     // Удаляет информацию о маршрутах.
-    protected function delete() {
+    /** @internal */
+    protected function clear() {
         self::$instance = false;
     }
 
     // Finish parsing routes.
     // Завершает парсинг маршрутов.
+    /** @internal */
     protected function end() {
         if (!is_null(self::$instance)) {
             self::$dataMethods = (new RouteMethodEnd(self::$instance))->data();
@@ -76,7 +85,7 @@ class MainRoute
 
     // Returns the collected and prepared routes.
     // Возвращает собранные и подготовленные маршруты.
-    protected static function add(RouteMethodStandard $method) {
+    protected static function insert(RouteMethodStandard $method) {
         $data = $method->data();
         self::$number++;
         $data['number'] = self::$number;

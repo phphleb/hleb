@@ -12,7 +12,7 @@ abstract class DataRoute
 
     protected $type;
 
-    protected $types;
+    protected $httpTypes;
 
     protected $actions;
 

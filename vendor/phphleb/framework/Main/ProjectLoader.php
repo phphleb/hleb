@@ -34,7 +34,7 @@ final class ProjectLoader extends BaseSingleton
 
         unset($routesArray);
 
-        Route::instance()->delete();
+        Route::instance()->clear();
 
         if ($block) {
             if(HLEB_DEFAULT_SESSION_INIT || $_SERVER['REQUEST_METHOD'] !== 'GET') {

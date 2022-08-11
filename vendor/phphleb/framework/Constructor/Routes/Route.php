@@ -14,7 +14,15 @@ use Hleb\Scheme\Home\Constructor\Routes\{
     StandardRoute
 };
 use Hleb\Constructor\Routes\Methods\{
+    RouteMethodAdd,
+    RouteMethodAny,
+    RouteMethodDelete,
     RouteMethodGet,
+    RouteMethodMatch,
+    RouteMethodOptions,
+    RouteMethodPatch,
+    RouteMethodPost,
+    RouteMethodPut,
     RouteMethodType,
     RouteMethodName,
     RouteMethodController,
@@ -32,8 +40,7 @@ use Hleb\Constructor\Routes\Methods\{
     RouteMethodRenderMap,
     RouteMethodDomain,
     RouteMethodAdminPanController,
-    RouteMethodModule
-};
+    RouteMethodModule};
 
 final class Route extends MainRoute implements StandardRoute {
 
@@ -54,10 +61,10 @@ final class Route extends MainRoute implements StandardRoute {
      *
      * @param string $route
      * @param string|array $params
-     * @return static|null
+     * @return Route|null
      */
     public static function get(string $route, $params = []) {
-        return self::add(new RouteMethodGet(self::instance(), $route, $params));
+        return self::insert(new RouteMethodGet(self::instance(), $route, $params));
     }
 
     /**
@@ -66,10 +73,10 @@ final class Route extends MainRoute implements StandardRoute {
      * Обозначение начала группы. При указании названия группы образует именованную группу.
      *
      * @param string|null $name
-     * @return static|null
+     * @return Route|null
      */
     public static function getGroup($name = null) {
-        return self::add(new RouteMethodGetGroup(self::instance(), $name));
+        return self::insert(new RouteMethodGetGroup(self::instance(), $name));
     }
 
     /**
@@ -78,10 +85,10 @@ final class Route extends MainRoute implements StandardRoute {
      * Обозначение закрытия группы. При указании названия закрывает соответствующую именованную группу.
      *
      * @param string|null $name
-     * @return static|null
+     * @return Route|null
      */
     public static function endGroup($name = null) {
-        return self::add(new RouteMethodEndGroup(self::instance(), $name));
+        return self::insert(new RouteMethodEndGroup(self::instance(), $name));
     }
 
     /**
@@ -95,10 +102,10 @@ final class Route extends MainRoute implements StandardRoute {
      *
      * @param string $class_name
      * @param array $params
-     * @return static|null
+     * @return Route|null
      */
     public static function before(string $class_name, array $params = []) {
-        return self::add(new RouteMethodBefore(self::instance(), $class_name, $params));
+        return self::insert(new RouteMethodBefore(self::instance(), $class_name, $params));
     }
 
     /**
@@ -112,10 +119,10 @@ final class Route extends MainRoute implements StandardRoute {
      *
      * @param string $class_name
      * @param array $params
-     * @return static|null
+     * @return Route|null
      */
     public static function after(string $class_name, array $params = []) {
-        return self::add(new RouteMethodAfter(self::instance(), $class_name, $params));
+        return self::insert(new RouteMethodAfter(self::instance(), $class_name, $params));
     }
 
     /**
@@ -126,10 +133,10 @@ final class Route extends MainRoute implements StandardRoute {
      * Route::get('/ru/{version}/{page}/', 'Content')->where(['version' => '[a-z0-9]+', 'page' => '[a-z]+']);
      *
      * @param array $params
-     * @return static|null
+     * @return Route|null
      */
     public static function where(array $params) {
-        return self::add(new RouteMethodWhere(self::instance(), $params));
+        return self::insert(new RouteMethodWhere(self::instance(), $params));
     }
 
     /**
@@ -142,10 +149,10 @@ final class Route extends MainRoute implements StandardRoute {
      * Например, Route::type(['get', 'post'])->get( ... );
      *
      * @param string|array $types
-     * @return static|null
+     * @return Route|null
      */
     public static function type($types) {
-        return self::add(new RouteMethodType(self::instance(), $types));
+        return self::insert(new RouteMethodType(self::instance(), $types));
     }
 
     /**
@@ -158,10 +165,10 @@ final class Route extends MainRoute implements StandardRoute {
      * Например, Route::getType(['get', 'post']);
      *
      * @param string|array $types
-     * @return static|null
+     * @return Route|null
      */
     public static function getType($types) {
-        return self::add(new RouteMethodGetType(self::instance(), $types));
+        return self::insert(new RouteMethodGetType(self::instance(), $types));
     }
 
     /**
@@ -169,10 +176,10 @@ final class Route extends MainRoute implements StandardRoute {
      *
      * Завершает применение метода getType().
      *
-     * @return static|null
+     * @return Route|null
      */
     public static function endType() {
-        return self::add(new RouteMethodEndType(self::instance()));
+        return self::insert(new RouteMethodEndType(self::instance()));
     }
 
     /**
@@ -182,10 +189,10 @@ final class Route extends MainRoute implements StandardRoute {
      *
      * @param string $name
      * @param string|array $map
-     * @return static|null
+     * @return Route|null
      */
     public static function renderMap(string $name, $map) {
-        return self::add(new RouteMethodRenderMap(self::instance(), $name, $map));
+        return self::insert(new RouteMethodRenderMap(self::instance(), $name, $map));
     }
 
     /**
@@ -194,10 +201,10 @@ final class Route extends MainRoute implements StandardRoute {
      * Применяет защиту маршрута к последующему методу get( ... ).
      *
      * @param string $validate
-     * @return static|null
+     * @return Route|null
      */
     public static function protect(string $validate = 'CSRF') {
-        return self::add(new RouteMethodProtect(self::instance(), $validate));
+        return self::insert(new RouteMethodProtect(self::instance(), $validate));
     }
 
     /**
@@ -208,10 +215,10 @@ final class Route extends MainRoute implements StandardRoute {
      * Вложенными маршруты считаются до метода endProtect().
      *
      * @param string $validate
-     * @return static|null
+     * @return Route|null
      */
     public static function getProtect(string $validate = 'CSRF') {
-        return self::add(new RouteMethodGetProtect(self::instance(), $validate));
+        return self::insert(new RouteMethodGetProtect(self::instance(), $validate));
     }
 
     /**
@@ -219,10 +226,10 @@ final class Route extends MainRoute implements StandardRoute {
      *
      * Завершение применения защиты маршрутов getProtect().
      *
-     * @return static|null
+     * @return Route|null
      */
     public static function endProtect() {
-        return self::add(new RouteMethodEndProtect(self::instance()));
+        return self::insert(new RouteMethodEndProtect(self::instance()));
     }
 
     /**
@@ -236,10 +243,10 @@ final class Route extends MainRoute implements StandardRoute {
      *
      * @param array|string $name
      * @param int $level
-     * @return static|null
+     * @return Route|null
      */
     public static function domain($name, $level = 3) {
-        return self::add(new RouteMethodDomain(self::instance(), $name, $level, false));
+        return self::insert(new RouteMethodDomain(self::instance(), $name, $level, false));
     }
 
     /**
@@ -251,10 +258,10 @@ final class Route extends MainRoute implements StandardRoute {
      *
      * @param array|string $name
      * @param int $level
-     * @return static|null
+     * @return Route|null
      */
     public static function domainPattern($name, $level = 3) {
-        return self::add(new RouteMethodDomain(self::instance(), $name, $level, true));
+        return self::insert(new RouteMethodDomain(self::instance(), $name, $level, true));
     }
 
     /**
@@ -266,10 +273,10 @@ final class Route extends MainRoute implements StandardRoute {
      *
      * @param array|string $name
      * @param int $level
-     * @return static|null
+     * @return Route|null
      */
     public static function domainTemplate($name, $level = 3) {
-        return self::add(new RouteMethodDomain(self::instance(), $name, $level, true));
+        return self::insert(new RouteMethodDomain(self::instance(), $name, $level, true));
     }
 
     /**
@@ -278,10 +285,10 @@ final class Route extends MainRoute implements StandardRoute {
      * Задаёт имя маршрута.
      *
      * @param string $name
-     * @return static|null
+     * @return Route|null
      */
     public static function name(string $name) {
-        return self::add(new RouteMethodName(self::instance(), $name));
+        return self::insert(new RouteMethodName(self::instance(), $name));
     }
 
     /**
@@ -295,10 +302,10 @@ final class Route extends MainRoute implements StandardRoute {
      *
      * @param string $class_name
      * @param array $params
-     * @return static|null
+     * @return Route|null
      */
     public static function controller(string $class_name, array $params = []) {
-        return self::add(new RouteMethodController(self::instance(), $class_name, $params));
+        return self::insert(new RouteMethodController(self::instance(), $class_name, $params));
     }
 
     /**
@@ -311,10 +318,10 @@ final class Route extends MainRoute implements StandardRoute {
      * @param string $module_name
      * @param string $class_name
      * @param array $params
-     * @return static|null
+     * @return Route|null
      */
     public static function module(string $module_name, string $class_name = "Controller", array $params = []) {
-        return self::add(new RouteMethodModule(self::instance(), $module_name, $class_name, $params));
+        return self::insert(new RouteMethodModule(self::instance(), $module_name, $class_name, $params));
     }
 
     /**
@@ -325,10 +332,10 @@ final class Route extends MainRoute implements StandardRoute {
      * @param string $class_name
      * @param string|array $block_name
      * @param array $params
-     * @return static|null
+     * @return Route|null
      */
     public static function adminPanController(string $class_name, $block_name, array $params = []) {
-        return self::add(new RouteMethodAdminPanController(self::instance(), $class_name, $block_name, $params));
+        return self::insert(new RouteMethodAdminPanController(self::instance(), $class_name, $block_name, $params));
     }
 
     /**
@@ -337,11 +344,134 @@ final class Route extends MainRoute implements StandardRoute {
      * Установка префикса маршруту или группе маршрутов.
      *
      * @param string $add
-     * @return static|null
+     * @return Route|null
      */
     public static function prefix(string $add) {
-        return self::add(new RouteMethodPrefix(self::instance(), $add));
+        return self::insert(new RouteMethodPrefix(self::instance(), $add));
     }
+
+    /**
+     * An analogy to the 'get' method, used with type() replacing the original GET-method.
+     *
+     * Аналогия методу 'get', применяется вместе с type(), заменяющим изначальный GET-метод.
+     *
+     * @see \Hleb\Constructor\Routes\Route::get()
+     *
+     * @param string $route
+     * @param array $params
+     * @return Route|null
+     */
+    public static function add(string $route, $params = []) {
+        return self::insert(new RouteMethodAdd(self::instance(), $route, $params));
+    }
+
+    /**
+     * Similar to the 'get' method, but has a basic POST method.
+     *
+     * Аналогия методу 'get', но имеет базовый POST-метод.
+     *
+     * @see \Hleb\Constructor\Routes\Route::get()
+     *
+     * @param string $route
+     * @param array $params
+     * @return Route|null
+     */
+    public static function post(string $route, $params = []) {
+        return self::insert(new RouteMethodPost(self::instance(), $route, $params));
+    }
+
+    /**
+     * Similar to the 'get' method, but has a basic PUT method.
+     *
+     * Аналогия методу 'get', но имеет базовый PUT-метод.
+     *
+     * @see \Hleb\Constructor\Routes\Route::get()
+     *
+     * @param string $route
+     * @param array $params
+     * @return Route|null
+     */
+    public static function put(string $route, $params = []) {
+        return self::insert(new RouteMethodPut(self::instance(), $route, $params));
+    }
+
+    /**
+     * Similar to the 'get' method, but has a basic PATCH method.
+     *
+     * Аналогия методу 'get', но имеет базовый PATCH-метод.
+     *
+     * @see \Hleb\Constructor\Routes\Route::get()
+     *
+     * @param string $route
+     * @param array $params
+     * @return Route|null
+     */
+    public static function patch(string $route, $params = []) {
+        return self::insert(new RouteMethodPatch(self::instance(), $route, $params));
+    }
+
+    /**
+     * Similar to the 'get' method, but has a basic DELETE method.
+     *
+     * Аналогия методу 'get', но имеет базовый DELETE-метод.
+     *
+     * @see \Hleb\Constructor\Routes\Route::get()
+     *
+     * @param string $route
+     * @param array $params
+     * @return Route|null
+     */
+    public static function delete(string $route, $params = []) {
+        return self::insert(new RouteMethodDelete(self::instance(), $route, $params));
+    }
+
+    /**
+     * Similar to the 'get' method, but has a basic OPTIONS method.
+     * Used with controller only.
+     *
+     * Аналогия методу 'get', но имеет базовый OPTIONS-метод.
+     * Используется только с контроллером.
+     *
+     * @see \Hleb\Constructor\Routes\Route::get()
+     *
+     * @param string $route
+     * @return Route|null
+     */
+    public static function options(string $route) {
+        return self::insert(new RouteMethodOptions(self::instance(), $route, []));
+    }
+
+    /**
+     * Similar to the 'get' method, but uses all available HTTP methods.
+     *
+     * Аналогия методу 'get', только использует все доступные HTTP методы.
+     *
+     * @see \Hleb\Constructor\Routes\Route::get()
+     *
+     * @param string $route
+     * @param array $params
+     * @return Route|null
+     */
+    public static function any(string $route, $params = []) {
+        return self::insert(new RouteMethodAny(self::instance(), $route, $params));
+    }
+
+    /**
+     * Similar to the 'get' method, but uses the HTTP methods passed to 'types'.
+     *
+     * Аналогия методу 'get', только использует переданные в 'types' HTTP методы.
+     *
+     * @see \Hleb\Constructor\Routes\Route::get()
+     *
+     * @param array $types
+     * @param string $route
+     * @param array $params
+     * @return Route|null
+     */
+    public static function match(array $types, string $route, $params = []) {
+        return self::insert(new RouteMethodMatch(self::instance(), $types, $route, $params));
+    }
+
 
 }
 

@@ -37,10 +37,10 @@ class RouteMethodType extends MainRouteMethod
         if (is_string($types)) $types = [strtolower($types)];
         foreach ($types as $type) {
             $this->type[] = strtolower($type);
-            if (!in_array(strtolower($type), $this->types)) {
+            if (!in_array(strtolower($type), $this->httpTypes)) {
                 $this->errors[] = "HL018-ROUTE_ERROR: Wrong argument to method ->type() ! " .
-                    "In stock " . $type . " expected " . implode(",", $this->types) . " ~ " .
-                    "Неправильный аргумент в методе ->type() ! Введено `" . $type . "`, допустимые значения " . implode(",", $this->types);
+                    "In stock " . $type . " expected " . implode(",", $this->httpTypes) . " ~ " .
+                    "Неправильный аргумент в методе ->type() ! Введено `" . $type . "`, допустимые значения " . implode(",", $this->httpTypes);
                 ErrorOutput::add($this->errors);
             }
         }

@@ -97,7 +97,7 @@ class RouteMethodEnd extends MainRouteMethod
                 if (!empty($block['data_name'])) {
                     $namedBlocks[] = $block['data_name'];
                 }
-            } else if ($block['method_type_name'] == "get") {
+            } else if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add"])) {
                 $originBlocks[$key] = $block;
             } else if ($block['method_type_name'] == "renderMap") {
                 $this->render[$block['data_name']] = $block['data_params'];
@@ -128,7 +128,7 @@ class RouteMethodEnd extends MainRouteMethod
                         break;
                     }
                 }
-                if ($blocks[$i]['method_type_name'] === "get") {
+                if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add"])) {
                     $compilationBlocks[$key]['blocks'][] = $blocks[$i]['number'];
                 }
             }
@@ -187,14 +187,14 @@ class RouteMethodEnd extends MainRouteMethod
                 $mergeOnFirstPosition = $template["actions"]["previous"] ?? [];
                 array_unshift($mergeOnFirstPosition, $blocks[$i]);
                 $template["actions"]["previous"] = $mergeOnFirstPosition;
-            } else if (in_array($blocks[$i]['method_type_name'], ["get", "getGroup", "endGroup"])) {
+            } else if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "getGroup", "endGroup"])) {
                 break;
             }
         }
         for ($i = $end + 1; $i < count($blocks); $i++) {
             if (in_array($blocks[$i]['method_type_name'], ["after", "name", "where", "controller", "adminPanController"])) {
                 $template["actions"]["following"][] = $blocks[$i];
-            } else if (in_array($blocks[$i]['method_type_name'], ["get", "getGroup", "endGroup"])) {
+            } else if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "getGroup", "endGroup"])) {
                 break;
             }
         }
@@ -242,7 +242,7 @@ class RouteMethodEnd extends MainRouteMethod
     // Выявление метода запроса.
     private function globalMethodType($blocks) {
         $history = [];
-        $this->mainParams = ["get"];
+        $this->mainParams = [];
         foreach ($blocks as $key => $block) {
             if ($block['method_type_name'] == "getType") {
                 $this->mainParams = $block['type'];
@@ -250,8 +250,8 @@ class RouteMethodEnd extends MainRouteMethod
             } else if ($block['method_type_name'] == "endType") {
                 array_pop($history);
                 $this->mainParams = end($history);
-            } else if ($block['method_type_name'] == "get") {
-                $blocks[$key]['type'] = $this->mainParams;
+            } else if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add"])) {
+                $blocks[$key]['type'] =  $this->mainParams ?: $block['type'];
             }
         }
         return $blocks;
@@ -266,7 +266,7 @@ class RouteMethodEnd extends MainRouteMethod
                 $this->mainParams = $block['protect'];
             } else if ($block['method_type_name'] == "endProtect") {
                 $this->mainParams = [];
-            } else if ($block['method_type_name'] == "get") {
+            } else if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add"])) {
                 $blocks[$key]['protect'] = $this->mainParams;
             }
         }
@@ -356,7 +356,7 @@ class RouteMethodEnd extends MainRouteMethod
     private function checkMethodsBeforeAndAfterBlock($blocks) {
         foreach ($blocks as $key => $block) {
             $this->mainParams = [];
-            if ($block['method_type_name'] == "get") {
+            if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add"])) {
                 for ($i = $key - 1; $i >= 0; $i--) {
                     if (in_array($blocks[$i]['method_type_name'], ["name", "where", "controller", "adminPanController"])) {
                         $this->mainParams[] = $blocks[$i]['method_type_name'];
@@ -368,7 +368,7 @@ class RouteMethodEnd extends MainRouteMethod
                             ErrorOutput::add($this->errors);
                         }
                         break;
-                    } else if ($blocks[$i]['method_type_name'] == "get") {
+                    } else if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add"])) {
                         break;
                     }
                 }
@@ -385,13 +385,13 @@ class RouteMethodEnd extends MainRouteMethod
                             ErrorOutput::add($this->errors);
                         }
                         break;
-                    } else if ($blocks[$i]['method_type_name'] == "get") {
+                    } else if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add"])) {
                         break;
                     } else if (empty($block["data_params"]) && ($i == $key + 1) &&
                         ($blocks[$i]['method_type_name'] != "controller" && $blocks[$i]['method_type_name'] != "adminPanController")) {
                         $this->errors[] = "HL022-ROUTE_ERROR: Error in method ->get() ! " .
-                            "Missing controller() for get() method without parameters. ~ " .
-                            "Исключение в методе ->get() ! Отсутствует controller у метода get() без параметров.";
+                            "Missing controller() for " . $blocks[$i]['method_type_name'] . " method without parameters. ~ " .
+                            "Исключение в методе ->" . $blocks[$i]['method_type_name'] . "() ! Отсутствует controller у метода " . $blocks[$i]['method_type_name'] . "() без параметров.";
                         ErrorOutput::add($this->errors);
                     }
                 }
@@ -404,7 +404,7 @@ class RouteMethodEnd extends MainRouteMethod
     private function checkController() {
         $blocks = $this->result;
         foreach ($blocks as $block) {
-            if ($block['method_type_name'] === "get") {
+            if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add"])) {
                 $actions = $block["actions"];
                 $path = $block["data_path"];
                 $prefix = '';
@@ -428,9 +428,9 @@ class RouteMethodEnd extends MainRouteMethod
                         $array[] = $id;
                     }
                     $missingId = implode(", ", $missingId);
-                    $this->errors[] = "HL024-ROUTE_ERROR: Error in method ->get() ! " .
+                    $this->errors[] = "HL024-ROUTE_ERROR: Error in method ->" . $block['method_type_name'] . "() ! " .
                         "Duplicate names: " . $missingId . ". ~ " .
-                        "Исключение в методе ->get() ! Дублирование названий переменных: " . $missingId . ". Итоговый адрес " . str_replace("//", "/", $path);
+                        "Исключение в методе ->" . $block['method_type_name'] . "() ! Дублирование названий переменных: " . $missingId . ". Итоговый адрес " . str_replace("//", "/", $path);
                     ErrorOutput::add($this->errors);
                 }
             }
