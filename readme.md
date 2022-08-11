@@ -94,8 +94,8 @@ Methods located before a route or group:
 
 ```php
 Route::prefix('/lang/')->before('AuthClassBefore')->getGroup();
-  Route::get('/page/', "<h1>Page</h1>"); // /lang/page/
-  Route::protect()->type('post')->get('/ajax/', '{"connect":1}'); // /lang/ajax/
+  Route::get('/page/', "<h1>Page</h1>"); // GET /lang/page/
+  Route::protect()->post('/ajax/', '{"connect":1}'); // POST /lang/ajax/ 
 Route::endGroup();
 ```
 Methods located after a route or group:
