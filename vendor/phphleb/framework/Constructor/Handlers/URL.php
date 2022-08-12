@@ -63,7 +63,7 @@ final class URL extends BaseSingleton
         if (count($params) === 0 && (strpos(self::$addresses[$name], '?}') === false)) {
             return self::endingUrl(self::$addresses[$name]);
         }
-        $addressParts = explode('/', trim(self::$addresses[$name], '/\\ '));
+        $addressParts = explode('/', trim(self::$addresses[$name], '/\\ ?'));
         if (strpos(end($addressParts), '...') === 0) {
             return self::endingUrl(self::getMultiple($addressParts, $params));
         }
