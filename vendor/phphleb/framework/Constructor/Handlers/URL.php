@@ -69,6 +69,7 @@ final class URL extends BaseSingleton
         }
         foreach ($addressParts as $key => $part) {
             $isTag = $part && $part[0] == '@' && $part[1] == '{';
+
             if ($isTag) {
                 $part = ltrim($part, '@');
              }
