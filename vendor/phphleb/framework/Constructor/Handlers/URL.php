@@ -55,7 +55,7 @@ final class URL extends BaseSingleton
         return self::getByName($name, $perem);
     }
 
-    // Returns the address of the route by name with the replacement of variable values ​​in it with the required values.
+    // Returns the address of the route by name with the replacement of variable values in it with the required values.
     // Возвращает адрес роута по имени с заменой переменных значений в нём на необходимые значения.
     public static function getByName(string $name, array $params = []) {
         // Получение пути с префиксами по существующему имени роута
@@ -70,8 +70,7 @@ final class URL extends BaseSingleton
         foreach ($addressParts as $key => $part) {
             $isTag = $part && $part[0] == '@' && $part[1] == '{';
             if ($isTag) {
-                $addressParts[$key] = ltrim($part, '@');
-                continue;
+                $part = ltrim($part, '@');
              }
             if ($part && strlen($part) > 2 && ($part[0] == '{')) {
                 if (count($params)) {
