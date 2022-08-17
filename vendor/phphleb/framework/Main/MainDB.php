@@ -24,7 +24,7 @@ final class MainDB
 
     public static function instance($configKey)
     {
-        $config = self::getConfig($configKey);
+        $config = self::getConfigForce($configKey);
         if (!isset(self::$connectionList[$config])) {
             self::$connectionList[$config] = self::createConnection($config);
         }
@@ -75,7 +75,48 @@ final class MainDB
      */
     public static function getNewPdoInstance($configKey = null)
     {
-        return self::createConnection(self::getConfig($configKey));
+        return self::createConnection(self::getConfigForce($configKey));
+    }
+
+    /**
+     * @param string|null $configKey
+     * @return array|null
+     */
+    public static function getConfig(string $configKey = null) {
+        $key = self::getConfigForce($configKey);
+        $config = HLEB_PARAMETERS_FOR_DB[$key] ?? null;
+        if (is_null($config)) {
+            return null;
+        }
+        foreach($config as $key => $value) {
+            if (is_numeric($key)) {
+                foreach (['dbname', 'charset', 'port', 'host'] as $name) {
+                    self::updateConfigData($name, $value, $config);
+                }
+            }
+        }
+
+        return $config;
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @param array $config
+     */
+    protected static function updateConfigData(string $name, string $value, array &$config): void
+    {
+        if (!isset($config[$name]) && strpos($value, $name . '=') !== false) {
+            $params = explode(';', $value);
+            foreach ($params as $param) {
+                $parts = explode('=', $param);
+                if ($parts[0] === $name) {
+                    $config[$name] = $parts[1] ?? null;
+                }
+            }
+
+        }
+
     }
 
     protected static function setConfigKey($config)
@@ -103,7 +144,7 @@ final class MainDB
         return new PDO(implode(";", $condition), $user, $pass, $opt);
     }
 
-    private static function getConfig($configKey = null)
+    private static function getConfigForce($configKey = null)
     {
         if (!defined('HLEB_TYPE_DB')) {
             $configSearchDir = defined('HLEB_SEARCH_DBASE_CONFIG_FILE') ?

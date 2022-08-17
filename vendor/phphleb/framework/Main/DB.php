@@ -154,13 +154,34 @@ class DB
      |
      |--------------------------------------------------------------------------------------
     */
-    public static function getPdoInstance($configKey = null) {
+    public static function getPdoInstance(string $configKey = null) {
         return \Hleb\Main\MainDB::getPdoInstance($configKey);
     }
 
     /** @see \Hleb\Main\DB::getPdoInstance() */
-    public static function getNewPdoInstance($configKey = null) {
+    public static function getNewPdoInstance(string $configKey = null) {
         return \Hleb\Main\MainDB::getNewPdoInstance($configKey);
+    }
+
+    /*
+     |--------------------------------------------------------------------------------------
+     | An attempt to parse the current configuration and return the data.
+     |--------------------------------------------------------------------------------------
+     | $config = DB::getConfig();
+     | %dbName = $config['dbname] ?? null;
+     |
+     |
+     |--------------------------------------------------------------------------------------
+     | Попытка распарсить текущую конфигурацию и вернуть данные.
+     |--------------------------------------------------------------------------------------
+     | $config = DB::getConfig();
+     | %dbName = $config['dbname] ?? null;
+     |
+     |--------------------------------------------------------------------------------------
+    */
+    public static function getConfig(string $configKey = null): array
+    {
+        return \Hleb\Main\MainDB::getConfig($configKey);
     }
 }
 
