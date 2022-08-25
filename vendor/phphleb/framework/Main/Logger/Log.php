@@ -28,6 +28,11 @@ class Log extends BaseSingleton implements LoggerInterface
     private static $logger = null;
 
     /**
+     * @var int
+     */
+    private static $requestId = 0;
+
+    /**
      * @inheritDoc
      */
     public function emergency(string $message, array $context = [])
@@ -146,8 +151,8 @@ class Log extends BaseSingleton implements LoggerInterface
         if (isset($context['file'], $context['line'])) {
             return $context;
         }
+        $cells = ['request_id' => self::$requestId];
         $response = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-        $cells = [];
         $searchList = ['line' => 1, 'file' => 1, 'function' => 2, 'class' => 2, 'type' => 2];
         if ($response && isset($response[1])) {
             foreach ($searchList as $name => $num) {
@@ -173,6 +178,9 @@ class Log extends BaseSingleton implements LoggerInterface
     {
         if (is_null(self::$logger)) {
             class_exists(self::$defaultLogger) ? self::setLogger(new self::$defaultLogger()) : self::setLogger(new FileLogger());
+        }
+        if (!self::$requestId) {
+            self::$requestId = md5(rand());
         }
     }
 
