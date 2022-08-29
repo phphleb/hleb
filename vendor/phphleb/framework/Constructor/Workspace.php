@@ -404,6 +404,10 @@ final class Workspace
     // Вывод массива в json-формате.
     private function addJsonData(array $params) {
         headers_sent() or header("Content-Type: application/json");
+        // Очистка системных данных
+        if (isset($params[0]) && is_array($params[0]) && count($params[0]) === 1 && $params[0][0] === null) {
+            unset($params[0]);
+        }
         $json = json_encode($params);
         if ($json === false) {
             http_response_code(500);
