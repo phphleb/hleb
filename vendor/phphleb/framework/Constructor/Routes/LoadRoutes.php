@@ -41,6 +41,11 @@ final class LoadRoutes
     // Возвращает результат проверки на изменения в данных роутов.
     public function comparison() {
         if (file_exists($this->cacheRoutes)) {
+            if (defined('HLEB_AUTOMATIC_ROUTE_UPDATES') && !HLEB_AUTOMATIC_ROUTE_UPDATES) {
+                // If there is a cache, then only it is taken.
+                // Если есть кеш, то берётся только он.
+                return true;
+            }
             $time = filemtime($this->cacheRoutes);
             $fileInfo = new RecursiveIteratorIterator(
                 new RecursiveDirectoryIterator($this->routesDirectory)
