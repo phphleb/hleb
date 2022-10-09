@@ -130,7 +130,7 @@ final class Workspace
                     if (is_array($params)) {
                         if (isset($params[2]) && $params[2] == 'render') {
                             // render
-                        } else {
+                        } else if (isset($params[0])) {
                             $params[0] = [$params[0]];
                         }
                     } else {
