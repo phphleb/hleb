@@ -111,6 +111,14 @@ if (!defined('HLEB_PROJECT_VALIDITY_URL') || !is_string(HLEB_PROJECT_VALIDITY_UR
     hl_preliminary_exit("Incorrectly defined setting: ...VALIDITY_URL");
 }
 
+// Sets the effect of the URL ending constant on the selected methods.
+defined('HLEB_ENDING_URL_INCLUDING_METHODS') or define('HLEB_ENDING_URL_INCLUDING_METHODS', ['get']);
+
+if (!is_array(HLEB_ENDING_URL_INCLUDING_METHODS)) {
+    // End of script execution before starting the framework.
+    hl_preliminary_exit("Incorrectly defined setting: ...ENDING_URL_INCLUDING_METHODS");
+}
+
 define('HLEB_PROJECT_DEBUG_ON', (bool) (HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] === 'GET' && (empty($_GET['_debug']) || $_GET['_debug'] === 'on')) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') !== 'xmlhttprequest');
 
 
@@ -262,14 +270,16 @@ if(empty($radjaxIsActive)) {
         [
             'SERVER' => [
                 'REQUEST_URI' => $_SERVER['REQUEST_URI'],
-                'HTTP_HOST' => $_SERVER['HTTP_HOST']
+                'HTTP_HOST' => $_SERVER['HTTP_HOST'],
+                'REQUEST_METHOD' => $_SERVER['REQUEST_METHOD']
             ],
             'HTTPS' => hleb_actual_http_protocol(),
             'HLEB_PROJECT_ONLY_HTTPS' => HLEB_PROJECT_ONLY_HTTPS,
             'HLEB_PROJECT_ENDING_URL' => HLEB_PROJECT_ENDING_URL,
             'HLEB_PROJECT_DIRECTORY' => HLEB_PROJECT_DIRECTORY,
             'HLEB_PROJECT_GLUE_WITH_WWW' => HLEB_PROJECT_GLUE_WITH_WWW,
-            'HLEB_PROJECT_VALIDITY_URL' => HLEB_PROJECT_VALIDITY_URL
+            'HLEB_PROJECT_VALIDITY_URL' => HLEB_PROJECT_VALIDITY_URL,
+            'HLEB_ENDING_URL_INCLUDING_METHODS' => HLEB_ENDING_URL_INCLUDING_METHODS
         ]
     ));
 

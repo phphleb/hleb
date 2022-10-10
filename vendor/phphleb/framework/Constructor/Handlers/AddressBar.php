@@ -44,7 +44,7 @@ final class AddressBar
         $fileUrl = stripos(end($endElement), '.') !== false;
         $relAddress = "";
         if (!empty($address)) {
-            if (!$fileUrl) {
+            if (!$fileUrl && in_array(strtolower($this->inputParameters['SERVER']['REQUEST_METHOD']), $this->inputParameters['HLEB_ENDING_URL_INCLUDING_METHODS'])) {
                 if ($address[strlen($address) - 1] === '/') {
                     $relAddress = $this->inputParameters['HLEB_PROJECT_ENDING_URL'] ? $address : rtrim($address, "/");
                 } else {
