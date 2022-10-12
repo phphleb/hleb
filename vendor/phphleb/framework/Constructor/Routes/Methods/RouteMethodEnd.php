@@ -36,6 +36,7 @@ class RouteMethodEnd extends MainRouteMethod
         $this->result = $this->instance->data();
         $this->result = self::createGroups();
         $this->checkController();
+        $this->updateFallback();
         $this->result["render"] = $this->render;
         $this->result["addresses"] = $this->addresses;
         $this->result["update"] = date("r") . " / " . rand();
@@ -72,6 +73,22 @@ class RouteMethodEnd extends MainRouteMethod
         foreach ($blocks as $key => $block) {
             if (isset($block["data_path"])) {
                 if (strpos($block["data_path"], '...') !== false) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Finding and implementing fallback at the end.
+    // Поиск и внедрениее fallback в конец.
+    private function updateFallback() {
+        $blocks = $this->result;
+        foreach ($blocks as $key => $block) {
+            if (isset($block["data_path"])) {
+                if ($block["data_path"] === '*') {
+                    unset($this->result[$key]);
+                    $this->result[] = $block;
                     return true;
                 }
             }
