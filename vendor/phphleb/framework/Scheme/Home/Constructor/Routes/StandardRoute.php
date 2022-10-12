@@ -60,7 +60,7 @@ interface StandardRoute
 
     public static function match(array $types, string $route, $params = []);
 
-    public static function fallback(string $module_name);
+    public static function fallback($params = []);
 
 }
 

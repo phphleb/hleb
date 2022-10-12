@@ -481,7 +481,7 @@ final class Route extends MainRoute implements StandardRoute {
      *
      * @see \Hleb\Constructor\Routes\Route::get()
      *
-     * @param array $params
+     * @param array|string $params
      * @return Route|null
      */
     public static function fallback($params = []) {
