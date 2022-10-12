@@ -16,7 +16,7 @@ use Hleb\Scheme\Home\Constructor\Routes\StandardRoute;
 
 class RouteMethodFallback extends RouteMethodGet
 {
-    private static bool $isExists = false;
+    private static $isExists = false;
 
     public function __construct(StandardRoute $instance, $params) {
 
