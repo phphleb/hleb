@@ -70,7 +70,7 @@ class RouteMethodGet extends MainRouteMethod
             $this->errors[] = "HL019-ROUTE_ERROR: Excess number of arguments on method ->" . $this->getName() . "(arg1, arg2) ! " .
                 "In stock arg2: " . count($params) . " expected  0, 1 or 2 ~ " .
                 "Неправильное количество аргументов в методе ->" . $this->getName() . "(arg1, arg2) ! Использовано в arg2:  " . count($params) . ", допускается 0, 1 или 2 аргумента.";
-            ErrorOutput::add($this->errors);
+            ErrorOutput::get($this->errors);
         } else {
             $this->dataParams = ["text" => $params];
         }

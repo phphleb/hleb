@@ -62,6 +62,19 @@ final class HomeConnector implements Connector
         'Hleb\Constructor\Routes\Methods\RouteMethodEndProtect' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodEndProtect.php',
         'Hleb\Constructor\Routes\Methods\RouteMethodEndType' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodEndType.php',
         'Hleb\Constructor\Routes\Methods\RouteMethodEnd' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodEnd.php',
+        'Hleb\Constructor\Routes\Methods\RouteMethodAdd' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodAdd.php',
+        'Hleb\Constructor\Routes\Methods\RouteMethodAdminPanController' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodAdminPanController.php',
+        'Hleb\Constructor\Routes\Methods\RouteMethodAny' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodAny.php',
+        'Hleb\Constructor\Routes\Methods\RouteMethodDelete' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodDelete.php',
+        'Hleb\Constructor\Routes\Methods\RouteMethodDomain' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodDomain.php',
+        'Hleb\Constructor\Routes\Methods\RouteMethodFallback' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodFallback.php',
+        'Hleb\Constructor\Routes\Methods\RouteMethodMatch' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodMatch.php',
+        'Hleb\Constructor\Routes\Methods\RouteMethodModule' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodModule.php',
+        'Hleb\Constructor\Routes\Methods\RouteMethodOptions' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodOptions.php',
+        'Hleb\Constructor\Routes\Methods\RouteMethodPatch' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodPatch.php',
+        'Hleb\Constructor\Routes\Methods\RouteMethodPost' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodPost.php',
+        'Hleb\Constructor\Routes\Methods\RouteMethodPut' => '/phphleb/framework/Constructor/Routes/Methods/RouteMethodPut.php',
+
         'Phphleb\Debugpan\DPanel' => '/phphleb/debugpan/DPanel.php',
         'XdORM\Shell\XdHelper' => '/phphleb/xdorm/Shell/XdHelper.php',
         'XdORM\XD' => '/phphleb/xdorm/XD.php',
@@ -93,7 +106,12 @@ final class HomeConnector implements Connector
         'Hleb\Main\MirrorDB' => '/phphleb/framework/Main/MirrorDB.php',
         'Hleb\Main\App' => '/phphleb/framework/Main/App.php',
         'Hleb\Constructor\Handlers\MirrorRequest' => '/phphleb/framework/Constructor/Handlers/MirrorRequest.php',
-        'Hleb\Scheme\Home\Main\LoggerInterface' => '/phphleb/framework/Scheme/Home/Main/LoggerInterface.php'
+        'Hleb\Scheme\Home\Main\LoggerInterface' => '/phphleb/framework/Scheme/Home/Main/LoggerInterface.php',
+        'Phphleb\ApiMultitool\BaseApiTrait' => '/phphleb/api-multitool/BaseApiTrait.php',
+        'Phphleb\ApiMultitool\Src\ApiHandlersTrait' => '/phphleb/api-multitool/Src/ApiHandlersTrait.php',
+        'Phphleb\ApiMultitool\Src\ApiMethodWrapperTrait' => '/phphleb/api-multitool/Src/ApiMethodWrapperTrait.php',
+        'Phphleb\ApiMultitool\Src\ApiPageManagerTrait' => '/phphleb/api-multitool/Src/ApiPageManagerTrait.php',
+        'Phphleb\ApiMultitool\Src\ApiRequestDataManagerTrait' => '/phphleb/api-multitool/Src/ApiRequestDataManagerTrait.php',
     ];
 
     public function add() {

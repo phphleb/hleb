@@ -17,6 +17,7 @@ use Hleb\Constructor\Routes\Methods\{
     RouteMethodAdd,
     RouteMethodAny,
     RouteMethodDelete,
+    RouteMethodFallback,
     RouteMethodGet,
     RouteMethodMatch,
     RouteMethodOptions,
@@ -40,7 +41,8 @@ use Hleb\Constructor\Routes\Methods\{
     RouteMethodRenderMap,
     RouteMethodDomain,
     RouteMethodAdminPanController,
-    RouteMethodModule};
+    RouteMethodModule
+};
 
 final class Route extends MainRoute implements StandardRoute {
 
@@ -470,6 +472,20 @@ final class Route extends MainRoute implements StandardRoute {
      */
     public static function match(array $types, string $route, $params = []) {
         return self::insert(new RouteMethodMatch(self::instance(), $types, $route, $params));
+    }
+
+    /**
+     * Intercepts all unmatched paths for all HTTP methods.
+     *
+     * Перехватывает все несопоставленные пути для всех HTTP методов.
+     *
+     * @see \Hleb\Constructor\Routes\Route::get()
+     *
+     * @param array $params
+     * @return Route|null
+     */
+    public static function fallback($params = []) {
+        return self::insert(new RouteMethodFallback(self::instance(), $params));
     }
 
 

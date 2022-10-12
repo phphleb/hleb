@@ -37,7 +37,7 @@ class RouteMethodBefore extends MainRouteMethod
             $this->errors[] = "HL011-ROUTE_ERROR: Does not match in method ->before() ! " .
                 "Class `" . $className . "` ( file `" . $fileName . ".php` ) not found in folder `/app/Middleware/Before/*` ~" .
                 "Исключение в методе ->before() ! Класс `" . $className . "` ( предполагаемый файл `" . $fileName . ".php` ) не обнаружен в папке `/app/Middleware/Before/*` ";
-            ErrorOutput::add($this->errors);
+            ErrorOutput::get($this->errors);
         }
     }
 

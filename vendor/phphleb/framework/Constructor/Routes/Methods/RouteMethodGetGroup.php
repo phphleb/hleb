@@ -40,7 +40,7 @@ class RouteMethodGetGroup extends MainRouteMethod
                 $this->errors[] = "HL015-ROUTE_ERROR: Wrong argument to method ->getGroup() ! " .
                     "Group name duplication: " . $name . "~" .
                     "Исключение в методе ->getGroup() ! Такое имя группы уже используется: " . $name;
-                ErrorOutput::add($this->errors);
+                ErrorOutput::get($this->errors);
             }
         }
     }

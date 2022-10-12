@@ -45,7 +45,7 @@ class RouteMethodEndGroup extends MainRouteMethod
             $this->errors[] = "HL012-ROUTE_ERROR: Error in method ->endGroup() ! " .
                 "Closing group without opening group. ~ " .
                 "Ошибка в методе ->endGroup() ! Закрытие тега группы до его открытия.";
-            ErrorOutput::add($this->errors);
+            ErrorOutput::get($this->errors);
         }
     }
 
@@ -60,7 +60,7 @@ class RouteMethodEndGroup extends MainRouteMethod
                 $this->errors[] = "HL013-ROUTE_ERROR: Wrong argument to method ->endGroup() ! " .
                     "Group name duplication: " . $name . " ~ " .
                     "Ошибка в методе ->endGroup() ! Такое имя группы уже используется: " . $name;
-                ErrorOutput::add($this->errors);
+                ErrorOutput::get($this->errors);
             }
 
             if ($inst["data_name"] == $name && $inst["method_type_name"] == "getGroup") {
@@ -71,7 +71,7 @@ class RouteMethodEndGroup extends MainRouteMethod
             $this->errors[] = "HL014-ROUTE_ERROR: Wrong argument to method ->endGroup() ! " .
                 "Closing tag for named group `" . $name . "` without open tag ~ " .
                 "Ошибка в методе ->endGroup() ! Закрытый тег именованной группы `" . $name . "` без открытого тега. ";
-            ErrorOutput::add($this->errors);
+            ErrorOutput::get($this->errors);
         }
     }
 }

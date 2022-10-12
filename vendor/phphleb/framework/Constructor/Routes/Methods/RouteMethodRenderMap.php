@@ -43,7 +43,7 @@ class RouteMethodRenderMap extends MainRouteMethod
                 $this->errors[] = "HL020-ROUTE_ERROR: Wrong argument to method ->renderMap() ! " .
                     "Name duplication: `" . $name . "` ~ " .
                     "Неправильный аргумент у метода ->renderMap() !  Такое название (`" . $name . "`) уже используется.";
-                ErrorOutput::add($this->errors);
+                ErrorOutput::get($this->errors);
             }
         }
     }

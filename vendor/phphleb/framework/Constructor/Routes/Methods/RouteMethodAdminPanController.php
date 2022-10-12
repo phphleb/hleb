@@ -43,7 +43,7 @@ class RouteMethodAdminPanController extends MainRouteMethod
             $this->errors[] = "HL029-ROUTE_ERROR: Does not match in method ->adminPanController() ! " .
                 "Class `" . $className . "` ( file `" . $fileName . ".php` ) not found in folder `/app/Controllers/*` ~ " .
                 "Класс `" . $className . "` ( предполагаемый файл `" . $fileName . ".php` ) не обнаружен в папке `/app/Controllers/*`";
-            ErrorOutput::add($this->errors);
+            ErrorOutput::get($this->errors);
         }
     }
 

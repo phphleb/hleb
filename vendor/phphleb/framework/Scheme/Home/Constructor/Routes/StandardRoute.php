@@ -46,5 +46,21 @@ interface StandardRoute
 
     public static function adminPanController(string $class_name, $block_name);
 
+    public static function add(string $route, $params = []);
+
+    public static function post(string $route, $params = []);
+
+    public static function patch(string $route, $params = []);
+
+    public static function delete(string $route, $params = []);
+
+    public static function options(string $route);
+
+    public static function any(string $route, $params = []);
+
+    public static function match(array $types, string $route, $params = []);
+
+    public static function fallback(string $module_name);
+
 }
 

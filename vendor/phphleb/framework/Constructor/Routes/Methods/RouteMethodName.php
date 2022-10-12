@@ -36,7 +36,7 @@ class RouteMethodName extends MainRouteMethod
                 $this->errors[] = "HL017-ROUTE_ERROR: Wrong argument to method ->name() ! " .
                     "Name duplication: " . $name . " ~ " .
                     "Исключение в методе ->name() ! Такое название уже используется: " . $name;
-                ErrorOutput::add($this->errors);
+                ErrorOutput::get($this->errors);
             }
         }
     }

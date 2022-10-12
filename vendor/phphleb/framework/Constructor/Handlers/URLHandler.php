@@ -153,6 +153,7 @@ final class URLHandler
     private function matchSearchAllPath(array &$blocks, string $resultUrl, array $adminPanData = [], bool $multiple = false) {
         $resultUrlParts = array_reverse(explode('/', trim($resultUrl, ' \\/')));
         $url = $this->trimEndSlash($resultUrl);
+        $fallback = null;
         foreach ($blocks as $key => &$block) {
             $result = $this->matchSearchPath($block, $url, $resultUrlParts, $multiple);
             if ($result !== false) {
@@ -178,13 +179,14 @@ final class URLHandler
                 }
             }
         }
+        $dataPath = $block['data_path'] ?? '';
         if ($multiple) {
-            $originUrl = $this->generateUrlFromFacetsRange($url, $block['data_path'] ?? '', $resultUrlParts);
+            $originUrl = $this->generateUrlFromFacetsRange($url, $dataPath, $resultUrlParts);
             if (is_bool($originUrl)) {
                 return $originUrl ? $block : false;
             }
         } else {
-            $originUrl = $this->compoundUrl([$url, $block['data_path'] ?? '']);
+            $originUrl = $this->compoundUrl([$url, $dataPath]);
         }
         $url = $this->trimEndSlash($originUrl);
         $urlParts = array_reverse(explode('/', $url));
@@ -192,7 +194,7 @@ final class URLHandler
 
         // /.../.../ or /.../...?/
         if ($resultUrl == trim($url, '?') ||
-            (strlen($resultShift) && $resultShift[strlen($resultShift) - 1] === '?' && implode($resultUrlParts) === implode($urlParts))) {
+            (strlen($resultShift) && $resultShift[strlen($resultShift) - 1] === '?' && implode($resultUrlParts) === implode($urlParts)) || $dataPath === '*') {
             // Direct match.
             // Прямое совпадение.
             return $block;

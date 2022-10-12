@@ -41,7 +41,7 @@ class RouteMethodMatch extends RouteMethodGet
             $this->errors[] = "HL057-ROUTE_ERROR: 'types' value must not be empty on method ->match(types, path, params) ! " .
                 "Expected values: " . implode(', ', HLEB_HTTP_TYPE_SUPPORT) . " ~ " .
                 "Значение 'types' не должно быть пустым в методе ->match(types, path, params) ! Ожидались возможные значения:  " . implode(', ', HLEB_HTTP_TYPE_SUPPORT);
-            ErrorOutput::add($this->errors);
+            ErrorOutput::get($this->errors);
         }
 
         foreach ($types as $key => $type) {
@@ -53,7 +53,7 @@ class RouteMethodMatch extends RouteMethodGet
                 $this->errors[] = "HL056-ROUTE_ERROR: Wrong composition of 'types' argument on method ->match(types, path, params) ! " .
                     "Expected values: " . implode(', ', HLEB_HTTP_TYPE_SUPPORT) . " ~ " .
                     "Неправильное значение аргумента 'types' в методе ->match(types, path, params) ! Ожидались возможные значения:  " . implode(', ', HLEB_HTTP_TYPE_SUPPORT);
-                ErrorOutput::add($this->errors);
+                ErrorOutput::get($this->errors);
             }
 
         }

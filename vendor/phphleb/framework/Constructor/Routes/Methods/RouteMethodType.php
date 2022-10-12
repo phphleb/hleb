@@ -41,7 +41,7 @@ class RouteMethodType extends MainRouteMethod
                 $this->errors[] = "HL018-ROUTE_ERROR: Wrong argument to method ->type() ! " .
                     "In stock " . $type . " expected " . implode(",", $this->httpTypes) . " ~ " .
                     "Неправильный аргумент в методе ->type() ! Введено `" . $type . "`, допустимые значения " . implode(",", $this->httpTypes);
-                ErrorOutput::add($this->errors);
+                ErrorOutput::get($this->errors);
             }
         }
     }

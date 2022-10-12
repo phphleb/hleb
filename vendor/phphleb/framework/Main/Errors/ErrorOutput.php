@@ -17,10 +17,35 @@ final class ErrorOutput extends BaseSingleton
 
     protected static $firstType = true;
 
-    // Add a message to the queue.
-    // Добавление сообщения в очередь.
+    private const ERROR_CONTENT = "<div style='color:%s; margin: 5px; font-family: \"PT Sans\", \"Arial\", serif!important; box-shadow: 6px 3px 2px #f0f0f0; padding: 10px 15px; border: 2px solid %s; background-color: %s;'><h4><span style='font-size: 20px'>&#8855;</span> %s</h4></div>";
+
+    // Display the collected messages and exit the script.
+    // Вывод собранных сообщений и выход из скрипта.
+    /** @internal  */
+    public static function run() {
+        $errors = self::$messages;
+        $content = '';
+        if (count(self::$messages) > 0) {
+            foreach ($errors as $key => $value) {
+                if (HLEB_PROJECT_DEBUG_ON) $value = str_replace('~', '<br><br>', $value);
+                if ($key == 0 && self::$firstType) {
+                    $content .= self::firstContent($value);
+                } else {
+                    $content .= self::content($value);
+                }
+            }
+            if (HLEB_PROJECT_DEBUG) {
+                // End of script execution before starting the main project.
+                hl_preliminary_exit($content);
+            }
+        }
+    }
+
+    // Add a messages to the queue.
+    // Добавление сообщений в очередь.
     /**
      * @param string|array $messages
+     * @internal
      */
     public static function add($messages) {
         if (is_string($messages)) $messages = [$messages];
@@ -34,35 +59,15 @@ final class ErrorOutput extends BaseSingleton
                 // End of script execution before starting the main project.
                 if (!HLEB_PROJECT_DEBUG) hl_preliminary_exit();
             } else {
-                self::$messages[] = 'ErrorOutput:: Indefinite error.';
+                self::$messages[] = 'ErrorOutput:: Unidentified error.';
                 hleb_system_log(' ' . explode('~', $message)[0] . PHP_EOL);
-            }
-        }
-    }
-
-    // Display the collected messages and exit the script.
-    // Вывод собранных сообщений и выход из скрипта.
-    public static function run() {
-        $errors = self::$messages;
-        $content = '';
-        if (count(self::$messages) > 0) {
-            foreach ($errors as $key => $value) {
-                if (HLEB_PROJECT_DEBUG_ON) $value = str_replace('~', '<br><br>', $value);
-                if ($key == 0 && self::$firstType) {
-                    $content .= self::first_content($value);
-                } else {
-                    $content .= self::content($value);
-                }
-            }
-            if (HLEB_PROJECT_DEBUG) {
-                // End of script execution before starting the main project.
-                hl_preliminary_exit($content);
             }
         }
     }
 
     // Simultaneous display of the message with the exit from the script.
     // Одновременный вывод сообщения с выходом из скрипта.
+    /** @internal  */
     public static function get($message, $first_type = true) {
         self::$firstType = $first_type;
         self::add($message);
@@ -72,13 +77,14 @@ final class ErrorOutput extends BaseSingleton
     // Output the standard message.
     // Вывод стандартного сообщения.
     private static function content(string $message) {
-        return "<div style='color:#c17840; margin: 5px; padding: 10px; border: 1px solid #f5f8c9; background-color: #f5f8c9;'><h4>$message</h4></div>";
+
+        return sprintf(self::ERROR_CONTENT, '#c17840','#f5f8c9', '#f5f8c9', $message);
     }
 
     // Display the main message.
     // Вывод основного сообщения.
-    private static function first_content(string $message) {
-        return "<div style='color:#d24116; margin: 5px; padding: 10px; border: 1px solid #f28454; background-color: seashell;'><h4>$message</h4></div>";
+    private static function firstContent(string $message) {
+        return sprintf(self::ERROR_CONTENT, '#d24116','#f28454', 'seashell', $message);
     }
 
 }

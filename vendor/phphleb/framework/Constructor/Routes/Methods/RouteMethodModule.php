@@ -45,7 +45,7 @@ class RouteMethodModule extends MainRouteMethod
                 "Класс-контроллер `" . $className . "`  не обнаружен в папке `/modules/" . $moduleName . "/`";
         }
         if (count($this->errors)) {
-            ErrorOutput::add($this->errors);
+            ErrorOutput::get($this->errors);
         }
     }
 

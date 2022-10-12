@@ -20,13 +20,7 @@ abstract class DataRoute
 
     protected $methodTypeName;
 
-    protected $methodData;
-
     protected $errors;
-
-    protected $controllerPath;
-
-    protected function createMethodData(){}
 
 }
 

@@ -37,7 +37,7 @@ class RouteMethodAfter extends MainRouteMethod
             $this->errors[] = "HL010-ROUTE_ERROR: Does not match in method ->after() ! " .
                 "Class `" . $className . "` ( file `" . $fileName . ".php` ) not found in folder `/app/Middleware/After/*` ~" .
                 "Исключение в методе ->after() ! Класс `" . $className . "` ( предполагаемый файл `" . $fileName . ".php` ) не обнаружен в папке `/app/Middleware/After/*` ";
-            ErrorOutput::add($this->errors);
+            ErrorOutput::get($this->errors);
         }
     }
 
