@@ -331,6 +331,19 @@ if (!function_exists('storagePath')) {
     }
 }
 
+if (!function_exists('systemStoragePath')) {
+    /**
+     * The full path to the `storage` folder or a subfolder in this directory if one is specified.
+     *
+     * Полный путь к папке `storage` или подпапке в этой директории, если она указана.
+     * @param string $folder
+     * @return string
+     */
+    function systemStoragePath($folder = '') {
+        return hleb_system_storage_path($folder);
+    }
+}
+
 
 if (!function_exists('publicPath')) {
     /**
