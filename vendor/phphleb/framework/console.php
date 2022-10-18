@@ -121,6 +121,10 @@ if ($baseArgument) {
         case '-routes-cc':
             echo $consoleHelper->clearRoutesCache();
             break;
+        case '--update-routes-cache':
+        case '-routes-upd':
+            echo $consoleHelper->generateRouteCache();
+            break;
         case '--clear-cache':
         case '-cc':
             $consoleHelper->clearCache(HLEB_TEMPLATE_CACHED_PATH, 'cache');
@@ -145,7 +149,8 @@ if ($baseArgument) {
             echo " --version or -v   (displays the version of the framework)" . PHP_EOL .
                 " --clear-cache or -cc (clears the templates)" . PHP_EOL .
                 " --forced-cc       (forcefully clears the templates)" . PHP_EOL .
-                " --clear-routes-cache or -routes-cc (clear routes cache)" . PHP_EOL .
+                " --clear-routes-cache or -routes-cc (clear route cache)" . PHP_EOL .
+                " --update-routes-cache or -routes-upd (update route cache)" . PHP_EOL .
                 " --info or -i      (displays the values of the main settings)" . PHP_EOL .
                 " --help or -h      (displays a list of default console actions)" . PHP_EOL .
                 " --routes or -r    (forms a list of routes)" . PHP_EOL .

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hleb\Main\Console;
 
 
+use Hleb\Constructor\Cache\CacheRoutes;
 use Hleb\Scheme\App\Commands\MainTask;
 
 final class MainConsole
@@ -347,7 +348,9 @@ final class MainConsole
      */
     public function findRoute()
     {
-        if (class_exists('Phphleb\Rfinder\RouteFinder', true)) {
+        if (!file_exists(HLEB_STORAGE_CACHE_ROUTES_DIRECTORY . '/routes.txt')) {
+            echo 'Route cache not found, update with command `php console --update-routes-cache`' . PHP_EOL;
+        } else if (class_exists('Phphleb\Rfinder\RouteFinder', true)) {
             $address = $this->arguments[2] ?? '';
             if (!empty($address)) {
                 $finder = (new \Phphleb\Rfinder\RouteFinder(strval($address), $this->arguments[3] ?? 'GET', $this->arguments[4] ?? null));
@@ -547,6 +550,25 @@ final class MainConsole
         fwrite(STDOUT, $str);
     }
 
+    /**
+     * Recalculates the cache for routing.
+     *
+     * Перерасчитывает кэш для роутинга.
+     *
+     * @internal
+     */
+    public function generateRouteCache()
+    {
+        $this->downloadSimulator();
+        $generate = (new CacheRoutes())->load();
+        if (is_string($generate)) {
+            return strip_tags($generate) . PHP_EOL;
+        }
+        return 'Route cache updated successfully!' . PHP_EOL;
+    }
+
+
+
     private function forcedClearCacheFiles(string $path)
     {
         $standardPath = str_replace('\\', '/', $path);
@@ -728,6 +750,36 @@ final class MainConsole
             return new $className();
         }
         return null;
+    }
+
+    /**
+     * Имитация загрузки фреймворка.
+     */
+    private function downloadSimulator()
+    {
+        foreach (
+            [
+                '/Scheme/Home/Main/Connector.php',
+                '/Main/Insert/DeterminantStaticUncreated.php',
+                '/Main/HomeConnector.php',
+                '/Main/MainAutoloader.php'
+            ] as $file
+        ) {
+            hleb_require(HLEB_PROJECT_DIRECTORY . $file);
+        }
+
+        hleb_require(HLEB_GLOBAL_DIRECTORY . "/app/Optional/MainConnector.php");
+
+        function hl_main_autoloader($class)
+        {
+            \Hleb\Main\MainAutoloader::get($class);
+        }
+
+        spl_autoload_register('Hleb\Main\Console\hl_main_autoloader', true, true);
+
+        hleb_require(HLEB_PROJECT_DIRECTORY . DIRECTORY_SEPARATOR . "init.php");
+        hleb_require(HLEB_PROJECT_DIRECTORY . DIRECTORY_SEPARATOR . "functions.php");
+        hleb_require(HLEB_GLOBAL_DIRECTORY . "/app/Optional/aliases.php");
     }
 
 }
