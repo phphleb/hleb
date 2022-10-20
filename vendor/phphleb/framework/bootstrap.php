@@ -292,6 +292,9 @@ if(empty($radjaxIsActive)) {
         hl_preliminary_exit();
     }
 
+    define('HLEB_ENDING_URL_ON', in_array(strtolower($_SERVER['REQUEST_METHOD']), HLEB_ENDING_URL_INCLUDING_METHODS));
+    define('HLEB_SYSTEM_ENDING_URL', HLEB_ENDING_URL_ON ? HLEB_PROJECT_ENDING_URL : $address[strlen($address) - 1] === '/');
+
     unset($addressBar, $address, $pathToStartFileDir, $radjaxIsActive);
 
     require HLEB_VENDOR_DIRECTORY . '/phphleb/framework/init.php';

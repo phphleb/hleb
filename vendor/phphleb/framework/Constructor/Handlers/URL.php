@@ -97,7 +97,9 @@ final class URL extends BaseSingleton
     // Handles URL ending depending on settings.
     // Обрабатывает окончание URL в зависимости от настроек.
     protected static function endingUrl(string $url) {
-        if ($url !== '' && defined('HLEB_PROJECT_ENDING_URL')) {
+        if ($url !== '' && defined('HLEB_PROJECT_ENDING_URL') &&
+            (!defined('HLEB_ENDING_URL_ON') || HLEB_ENDING_URL_ON)
+        ) {
             $ending = $url[strlen($url) - 1];
             $element = explode('/', $url);
             $endElement = end($element);
