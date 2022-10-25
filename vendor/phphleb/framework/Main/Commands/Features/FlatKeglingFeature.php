@@ -113,8 +113,8 @@ class FlatKeglingFeature implements MainFeatureInterface
             if ($this->data['attempt'] === 1) {
                 $this->data['attempt'] = 2;
                 $this->data['data'] = $s;
-                $this->data['frame']++;
             } else {
+                $this->data['frame']++;
                 $this->data['attempt'] = 1;
                 $this->data['data'] = self::POSITION;
                 $this->data['stat'][] = $this->data['count'] . '/' . $actualScore;
