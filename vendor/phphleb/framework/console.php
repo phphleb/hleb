@@ -192,9 +192,9 @@ if ($baseArgument) {
             $consoleHelper->findRoute();
             break;
         default:
+            hleb_require(__DIR__ . DIRECTORY_SEPARATOR . "autoloader.php");
             $file = $consoleHelper->convertCommandToTask($baseArgument);
             if (file_exists(HLEB_GLOBAL_DIRECTORY . "/app/Commands/$file.php")) {
-                hleb_require(__DIR__ . DIRECTORY_SEPARATOR . "autoloader.php");
                 if (end($argv) === '--help') {
                     $consoleHelper->showCommandHelp(HLEB_GLOBAL_DIRECTORY, $file);
                 } else {
