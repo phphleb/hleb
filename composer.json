@@ -19,7 +19,7 @@
     }
   ],
   "require": {
-    "php": ">=7.0.0",
+    "php": ">=7.1.0",
     "ext-json": "*",
     "ext-pdo": "*",
     "phphleb/framework": ">=1.6.64",

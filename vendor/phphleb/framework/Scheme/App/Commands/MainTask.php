@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hleb\Scheme\App\Commands;
 
 use ErrorException;
+use Hleb\Main\Helpers\StrToList;
 
 class MainTask
 {
@@ -111,8 +112,8 @@ class MainTask
      *
      * @see MainTask::getOption()
      */
-    public function getListOption($value, $default = []) {
-        return $this->isOption($value) ? array_map('trim', explode(',', $this->arguments[$value] ?? [])) : $default;
+    public function getListOption($value, $default = [], $type = StrToList::STRING_TYPE) {
+        return $this->isOption($value) ? StrToList::convert((string)$this->arguments[$value], $type) : $default;
     }
 
     /**
