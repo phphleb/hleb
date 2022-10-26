@@ -128,29 +128,30 @@ class MainTask
     // Parsing argument types, both enum and --Name=Value
     // Разбор типов ввода аргументов, как перечислением, так и в виде --Name=Value
     private function parsing(array $arguments): bool {
-        $named = null;
+        $named = [];
         $result = [];
         foreach ($arguments as $key => $arg) {
             $arg = trim($arg);
-            if (strpos($arg, '--') === 0 && $named !== 0) {
-                $named = 1;
-                $combs = explode('=', $arg);
-                if (count($combs) < 2) {
-                    throw new ErrorException('Invalid argument, missing separator \'=\'');
+            if (strpos($arg, '--') === 0 && strpos($arg, '=') !== false) {
+                if (in_array(0, $named)) {
+                    throw new ErrorException('There are mixed types of arguments');
                 }
+                $named[] = 1;
+                $combs = explode('=', $arg);
                 $name = array_shift($combs);
                 $value = trim(implode('=', $combs), '"');
                 $result[trim($name, '-')] = $value;
-            } else if ($named !== 1) {
-                $named = 0;
-                $result[]= $arg;
             } else {
-                throw new ErrorException('There are mixed types of arguments');
+                if (in_array(1, $named)) {
+                    throw new ErrorException('There are mixed types of arguments');
+                }
+                $named[] = 0;
+                $result[]= $arg;
             }
         }
         $this->arguments = $result;
 
-        return (bool)$named;
+        return in_array(1, $named);
     }
 
 }
