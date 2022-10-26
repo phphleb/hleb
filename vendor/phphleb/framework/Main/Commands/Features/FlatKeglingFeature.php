@@ -26,7 +26,7 @@ class FlatKeglingFeature implements MainFeatureInterface
 
     private const CONFIG_FILE = 'config.json';
 
-    private array $data = [];
+    private $data = [];
 
     public function run(array $a = []): void
     {

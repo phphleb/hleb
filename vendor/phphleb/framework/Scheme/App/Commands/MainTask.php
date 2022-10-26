@@ -8,7 +8,7 @@ use ErrorException;
 
 class MainTask
 {
-    private array $arguments = [];
+    private $arguments = [];
 
     /**
      * @param array $arguments
