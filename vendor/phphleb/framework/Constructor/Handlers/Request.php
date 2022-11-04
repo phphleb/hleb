@@ -1,4 +1,7 @@
 <?php
+/**
+ * @author  Foma Tuturov <fomiash@yandex.ru>
+ */
 
 declare(strict_types=1);
 
