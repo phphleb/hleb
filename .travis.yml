@@ -6,6 +6,7 @@ env:
   global:
     - FRAMEWORK_VERSION=1.6.81 # <current version>
     - PHPHUNIT_VERSION=>=9.0.0
+    - API_MULTITOOL_VERSION=1.0.0 # <latest version>
 
 jobs:
   fast_finish: true
@@ -27,7 +28,10 @@ install:
   - composer require phphleb/framework $FRAMEWORK_VERSION
   - composer require phpunit/phpunit $PHPHUNIT_VERSION
   - composer require phphleb/tests
+  - composer require phphleb/api-multitool $API_MULTITOOL_VERSION
+  - composer require phphleb/api-tests $API_MULTITOOL_VERSION
 
 script:
   - vendor/bin/phpunit vendor/phphleb/tests/
+  - vendor/bin/phpunit vendor/phphleb/api-tests/
   - php console --version
