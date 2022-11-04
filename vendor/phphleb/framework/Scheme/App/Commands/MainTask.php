@@ -11,6 +11,8 @@ class MainTask
 {
     private $arguments = [];
 
+    private $verbosity = true;
+
     /**
      * @param array $arguments
      * @throws ErrorException
@@ -18,11 +20,14 @@ class MainTask
      */
     public function createTask(array $arguments) {
         if(method_exists($this, 'execute')) {
+            $arguments = $this->searchSystemParams($arguments);
+            $this->verbosity or ob_start();
             if ($this->parsing($arguments)) {
                 $this->execute();
             } else {
                 $this->execute(...array_values($this->arguments));
             }
+            $this->verbosity or ob_end_clean();
         } else {
             hleb_system_log(PHP_EOL . "Method 'execute' not exists in Task!" . PHP_EOL);
         }
@@ -39,8 +44,11 @@ class MainTask
         if(method_exists($this, 'execute')) {
             // Преобразование в строку, чтобы синхронизировать с консольным запросом.
             $arguments = array_map('strval', $arg);
+            $arguments = $this->searchSystemParams($arguments);
             $this->arguments = $arguments;
+            $this->verbosity or ob_start();
             $this->execute(...array_values($arguments));
+            $this->verbosity or ob_end_clean();
         } else {
             hleb_system_log(PHP_EOL . "Method 'execute' not exists in Task!" . PHP_EOL);
         }
@@ -152,6 +160,19 @@ class MainTask
         $this->arguments = $result;
 
         return in_array(1, $named);
+    }
+
+    // Adding the "--quiet" argument removes all output from the command.
+    // Добавление аргумента "--quiet" убирает весь вывод команды.
+    private function searchSystemParams(array $arguments) {
+        foreach ($arguments as $key => $arg) {
+            $arg = trim($arg);
+            if ($arg === '--quiet') {
+                $this->verbosity = false;
+                unset($arguments[$key]);
+            }
+        }
+        return $arguments;
     }
 
 }
