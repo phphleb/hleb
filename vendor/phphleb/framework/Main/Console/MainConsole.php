@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hleb\Main\Console;
 
 
+use Hleb\Constructor\Cache\CacheRoutes;
 use Hleb\Scheme\App\Commands\MainTask;
 
 final class MainConsole
@@ -434,6 +435,7 @@ final class MainConsole
      *
      * @param string $path
      * @param string $class
+     * @throws \ErrorException
      * @internal
      */
     public function createUsersTask(string $path, string $class)
@@ -551,6 +553,53 @@ final class MainConsole
         }
         fwrite(STDOUT, "\r");
         fwrite(STDOUT, $str);
+    }
+
+    /**
+     * Recalculates the cache for routing.
+     *
+     * Перерасчитывает кэш для роутинга.
+     *
+     * @internal
+     */
+    public function generateRouteCache()
+    {
+        $this->downloadSimulator();
+        $generate = (new CacheRoutes())->load();
+        if (is_string($generate)) {
+            return strip_tags($generate) . PHP_EOL;
+        }
+        return 'Route cache updated successfully!' . PHP_EOL;
+    }
+
+    /**
+     * Имитация загрузки фреймворка.
+     */
+    private function downloadSimulator()
+    {
+        foreach (
+            [
+                '/Scheme/Home/Main/Connector.php',
+                '/Main/Insert/DeterminantStaticUncreated.php',
+                '/Main/HomeConnector.php',
+                '/Main/MainAutoloader.php'
+            ] as $file
+        ) {
+            hleb_require(HLEB_PROJECT_DIRECTORY . $file);
+        }
+
+        hleb_require(HLEB_GLOBAL_DIRECTORY . "/app/Optional/MainConnector.php");
+
+        function hl_main_autoloader($class)
+        {
+            \Hleb\Main\MainAutoloader::get($class);
+        }
+
+        spl_autoload_register('Hleb\Main\Console\hl_main_autoloader', true, true);
+
+        hleb_require(HLEB_PROJECT_DIRECTORY . DIRECTORY_SEPARATOR . "init.php");
+        hleb_require(HLEB_PROJECT_DIRECTORY . DIRECTORY_SEPARATOR . "functions.php");
+        hleb_require(HLEB_GLOBAL_DIRECTORY . "/app/Optional/aliases.php");
     }
 
     private function forcedClearCacheFiles(string $path)
