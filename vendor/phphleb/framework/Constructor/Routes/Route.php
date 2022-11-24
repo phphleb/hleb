@@ -16,9 +16,9 @@ namespace Hleb\Constructor\Routes;
 use Hleb\Scheme\Home\Constructor\Routes\{
     StandardRoute
 };
-use Hleb\Constructor\Routes\Methods\{
-    RouteMethodAdd,
+use Hleb\Constructor\Routes\Methods\{RouteMethodAdd,
     RouteMethodAny,
+    RouteMethodBottleneck,
     RouteMethodDelete,
     RouteMethodFallback,
     RouteMethodGet,
@@ -44,8 +44,7 @@ use Hleb\Constructor\Routes\Methods\{
     RouteMethodRenderMap,
     RouteMethodDomain,
     RouteMethodAdminPanController,
-    RouteMethodModule
-};
+    RouteMethodModule};
 
 final class Route extends MainRoute implements StandardRoute {
 
@@ -489,6 +488,20 @@ final class Route extends MainRoute implements StandardRoute {
      */
     public static function fallback($params = []) {
         return self::insert(new RouteMethodFallback(self::instance(), $params));
+    }
+
+    /**
+     * Intercepts all paths for all HTTP methods.
+     *
+     * Перехватывает все пути для всех HTTP методов.
+     *
+     * @see \Hleb\Constructor\Routes\Route::get()
+     *
+     * @param array|string $params
+     * @return Route|null
+     */
+    public static function bottleneck(string $route, bool $active, $params = []) {
+        return self::insert(new RouteMethodBottleneck(self::instance(), $route, $active, $params));
     }
 
 

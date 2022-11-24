@@ -10,9 +10,7 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Routes\Methods;
 
-use Hleb\Scheme\Home\Constructor\Routes\{
-    StandardRoute
-};
+use Hleb\Scheme\Home\Constructor\Routes\{DataRoute, StandardRoute};
 use Hleb\Constructor\Routes\MainRouteMethod;
 use Hleb\Main\Errors\ErrorOutput;
 
@@ -37,6 +35,7 @@ class RouteMethodEnd extends MainRouteMethod
         $this->result = self::createGroups();
         $this->checkController();
         $this->updateFallback();
+        $this->result["bottleneck"] = $this->updateBottleneck();
         $this->result["render"] = $this->render;
         $this->result["addresses"] = $this->addresses;
         $this->result["update"] = date("r") . " / " . rand();
@@ -96,6 +95,20 @@ class RouteMethodEnd extends MainRouteMethod
         return false;
     }
 
+    // Finding and implementing bottleneck at the start.
+    // Поиск и внедрениее bottleneck в начало.
+    private function updateBottleneck() {
+        $blocks = $this->result;
+        foreach ($blocks as $key => $block) {
+            if (isset($block['add']['redirect'])) {
+                unset($this->result[$key]);
+                array_unshift($this->result, $block);
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Parse blocks nested in groups.
     // Разбор вложенных в группы блоков.
     private function createGroups() {
@@ -114,7 +127,7 @@ class RouteMethodEnd extends MainRouteMethod
                 if (!empty($block['data_name'])) {
                     $namedBlocks[] = $block['data_name'];
                 }
-            } else if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback"])) {
+            } else if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback", "bottleneck"])) {
                 $originBlocks[$key] = $block;
             } else if ($block['method_type_name'] == "renderMap") {
                 $this->render[$block['data_name']] = $block['data_params'];
@@ -145,7 +158,7 @@ class RouteMethodEnd extends MainRouteMethod
                         break;
                     }
                 }
-                if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback"])) {
+                if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback", "bottleneck"])) {
                     $compilationBlocks[$key]['blocks'][] = $blocks[$i]['number'];
                 }
             }
@@ -204,14 +217,14 @@ class RouteMethodEnd extends MainRouteMethod
                 $mergeOnFirstPosition = $template["actions"]["previous"] ?? [];
                 array_unshift($mergeOnFirstPosition, $blocks[$i]);
                 $template["actions"]["previous"] = $mergeOnFirstPosition;
-            } else if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "getGroup", "endGroup", "fallback"])) {
+            } else if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "getGroup", "endGroup", "fallback", "bottleneck"])) {
                 break;
             }
         }
         for ($i = $end + 1; $i < count($blocks); $i++) {
             if (in_array($blocks[$i]['method_type_name'], ["after", "name", "where", "controller", "adminPanController"])) {
                 $template["actions"]["following"][] = $blocks[$i];
-            } else if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "getGroup", "endGroup", "fallback"])) {
+            } else if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "getGroup", "endGroup", "fallback", "bottleneck"])) {
                 break;
             }
         }
@@ -267,7 +280,7 @@ class RouteMethodEnd extends MainRouteMethod
             } else if ($block['method_type_name'] == "endType") {
                 array_pop($history);
                 $this->mainParams = end($history);
-            } else if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback"])) {
+            } else if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback", "bottleneck"])) {
                 $blocks[$key]['type'] =  $this->mainParams ?: $block['type'];
             }
         }
@@ -283,7 +296,7 @@ class RouteMethodEnd extends MainRouteMethod
                 $this->mainParams = $block['protect'];
             } else if ($block['method_type_name'] == "endProtect") {
                 $this->mainParams = [];
-            } else if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback"])) {
+            } else if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback", "bottleneck"])) {
                 $blocks[$key]['protect'] = $this->mainParams;
             }
         }
@@ -373,7 +386,7 @@ class RouteMethodEnd extends MainRouteMethod
     private function checkMethodsBeforeAndAfterBlock($blocks) {
         foreach ($blocks as $key => $block) {
             $this->mainParams = [];
-            if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback"])) {
+            if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback", "bottleneck"])) {
                 for ($i = $key - 1; $i >= 0; $i--) {
                     if (in_array($blocks[$i]['method_type_name'], ["name", "where", "controller", "adminPanController"])) {
                         $this->mainParams[] = $blocks[$i]['method_type_name'];
@@ -385,7 +398,7 @@ class RouteMethodEnd extends MainRouteMethod
                             ErrorOutput::get($this->errors);
                         }
                         break;
-                    } else if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback"])) {
+                    } else if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback", "bottleneck"])) {
                         break;
                     }
                 }
@@ -402,7 +415,7 @@ class RouteMethodEnd extends MainRouteMethod
                             ErrorOutput::get($this->errors);
                         }
                         break;
-                    } else if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback"])) {
+                    } else if (in_array($blocks[$i]['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback", "bottleneck"])) {
                         break;
                     } else if (empty($block["data_params"]) && ($i == $key + 1) &&
                         ($blocks[$i]['method_type_name'] != "controller" && $blocks[$i]['method_type_name'] != "adminPanController")) {
@@ -421,7 +434,7 @@ class RouteMethodEnd extends MainRouteMethod
     private function checkController() {
         $blocks = $this->result;
         foreach ($blocks as $block) {
-            if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback"])) {
+            if (in_array($block['method_type_name'], ["get", "post", "put", "patch", "delete", "options", "any", "match", "add", "fallback", "bottleneck"])) {
                 $actions = $block["actions"];
                 $path = $block["data_path"];
                 $prefix = '';

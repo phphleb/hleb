@@ -25,13 +25,18 @@ class RouteMethodGet extends MainRouteMethod
      * @param StandardRoute $instance
      * @param string $routePath
      * @param string|object|Closure|array $params
+     * @param array $dopActions
      */
-    function __construct(StandardRoute $instance, string $routePath, $params = []) {
+    function __construct(StandardRoute $instance, string $routePath, $params = [], $dopActions = []) {
         $this->methodTypeName = $this->getName();
         $this->type = $this->getHttpMethodType();
         $this->instance = $instance;
+        foreach ($dopActions as $key => $action) {
+            $this->$key = $action;
+        }
         if (is_array($params)) {unset($params[HLEB_TAG_INTERNAL]);}
         $this->calc($routePath, $params);
+
     }
 
     // The unique name of the route.

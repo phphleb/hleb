@@ -23,9 +23,10 @@ final class URLHandler
     public function page(array &$blocks, string $url = null, string $method = null, string $domain = null) {
         $searchDomains = $blocks['domains'] ?? false;
         $searchMultiple = $blocks['multiple'] ?? false;
+        $searchBottleneck = $blocks['bottleneck'] ?? false;
         // Clearing incoming data.
         // Очистка входящих данных.
-        unset($blocks['domains'], $blocks['update'], $blocks['render'], $blocks['addresses'], $blocks['multiple']);
+        unset($blocks['domains'], $blocks['update'], $blocks['render'], $blocks['addresses'], $blocks['multiple'], $blocks['bottleneck']);
 
         !$searchDomains or $this->matchSubdomains($blocks, $domain ?? hleb_get_host());
         if (!count($blocks)) {
@@ -40,7 +41,7 @@ final class URLHandler
             // Подходящего роута по типу REQUEST_METHOD не найдено.
             return false;
         }
-        return $this->matchSearchAllPath($blocks, $url ?? $this->getMainClearUrl(), $adminPanData, (bool)$searchMultiple);
+        return $this->matchSearchAllPath($blocks, $url ?? $this->getMainClearUrl(), $adminPanData, (bool)$searchMultiple, (bool)$searchBottleneck);
     }
 
     // Returns the relative current URL without GET parameters.
@@ -150,12 +151,12 @@ final class URLHandler
 
     // Returns the matching route, or `false` if not found.
     // Возвращает совпавший роут или `false` если не найден.
-    private function matchSearchAllPath(array &$blocks, string $resultUrl, array $adminPanData = [], bool $multiple = false) {
+    private function matchSearchAllPath(array &$blocks, string $resultUrl, array $adminPanData = [], bool $multiple = false, bool $searchBottleneck = false) {
         $resultUrlParts = array_reverse(explode('/', trim($resultUrl, ' \\/')));
         $url = $this->trimEndSlash($resultUrl);
 
         foreach ($blocks as $key => &$block) {
-            $result = $this->matchSearchPath($block, $url, $resultUrlParts, $multiple);
+            $result = $this->matchSearchPath($block, $url, $resultUrlParts, $multiple, $searchBottleneck);
             if ($result !== false) {
                 $result['_AdminPanelData'] = $adminPanData;
                 return $result;
@@ -166,7 +167,7 @@ final class URLHandler
 
     // Returns data if the route matches the URL, otherwise `false`.
     // Возвращает данные, если роут подходит под URL, иначе `false`.
-    private function matchSearchPath(array $block, string $resultUrl, array $resultUrlParts, bool $multiple) {
+    private function matchSearchPath(array $block, string $resultUrl, array $resultUrlParts, bool $multiple, bool $searchBottleneck) {
         $url = '';
         $actions = $block['actions'] ?? [];
         $mat = [];
@@ -180,6 +181,16 @@ final class URLHandler
             }
         }
         $dataPath = $block['data_path'] ?? '';
+
+        if ($searchBottleneck) {
+            if (isset($block['add']['redirect'])) {
+                if ($this->trimEndSlash($dataPath) === $resultUrl) {
+                    return $block;
+                }
+                hleb_redirect(Url::getStandardUrl($dataPath), $block['add']['redirect']);
+            }
+            return false;
+        }
         if ($multiple) {
             $originUrl = $this->generateUrlFromFacetsRange($url, $dataPath, $resultUrlParts);
             if (is_bool($originUrl)) {

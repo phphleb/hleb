@@ -18,7 +18,6 @@ use Hleb\Scheme\Home\Constructor\Routes\{
 
 class MainRouteMethod extends DataRoute implements RouteMethodStandard
 {
-
     protected $dataName = null;
 
     protected $dataPath = null;
@@ -38,6 +37,10 @@ class MainRouteMethod extends DataRoute implements RouteMethodStandard
     protected $errors = [];
 
     protected $domain = [];
+
+    protected $methodData = null;
+
+    protected $add = [];
 
     /**
      * @param object|Closure|string $obj
@@ -87,6 +90,7 @@ class MainRouteMethod extends DataRoute implements RouteMethodStandard
                 'protect' => array_unique($this->protect),
                 'method_type_name' => $this->methodTypeName,
                 'domain' => $this->domain,
+                'add' => $this->add
             ];
     }
 }
