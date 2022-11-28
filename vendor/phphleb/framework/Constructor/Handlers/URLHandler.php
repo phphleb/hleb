@@ -18,9 +18,11 @@ use Hleb\Main\Helpers\RangeChecker;
  */
 final class URLHandler
 {
+    protected $method = null;
     // Parse the array with routes.
     // Разбор массива с маршрутами.
     public function page(array &$blocks, string $url = null, string $method = null, string $domain = null) {
+        $this->method = strtolower($method ?? $_SERVER['REQUEST_METHOD']);
         $searchDomains = $blocks['domains'] ?? false;
         $searchMultiple = $blocks['multiple'] ?? false;
         $searchBottleneck = $blocks['bottleneck'] ?? false;
@@ -35,7 +37,7 @@ final class URLHandler
             return false;
         }
 
-        $adminPanData = $this->matchSearchType($blocks, $method ?? $_SERVER['REQUEST_METHOD']);
+        $adminPanData = $this->matchSearchType($blocks);
         if (!count($blocks)) {
             // No suitable route of type REQUEST_METHOD found.
             // Подходящего роута по типу REQUEST_METHOD не найдено.
@@ -108,8 +110,8 @@ final class URLHandler
 
     // Sort the list of routes and filter by the appropriate type.
     // Сортировка списка роутов и отбор по подходящему типу.
-    private function matchSearchType(&$blocks, $method) {
-        $realType = strtolower($method);
+    private function matchSearchType(&$blocks) {
+        $realType = $this->method;
         if (!in_array($realType, HLEB_HTTP_TYPE_SUPPORT)) {
             if (!headers_sent()) {
                 http_response_code(405);
@@ -188,7 +190,7 @@ final class URLHandler
                 if ($this->trimEndSlash($redirectUrl) === $resultUrl) {
                     return $block;
                 }
-                hleb_redirect(Url::getStandardUrl($redirectUrl), $block['add']['redirect']);
+                hleb_redirect(Url::getStandardUrl($redirectUrl . ($this->method === 'get' ? '' : '?method=' . $this->method)), $block['add']['redirect']);
             }
             return false;
         }
