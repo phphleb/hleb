@@ -193,6 +193,7 @@ if ($baseArgument) {
             break;
         default:
             hleb_require(__DIR__ . DIRECTORY_SEPARATOR . "autoloader.php");
+            hleb_require(HLEB_GLOBAL_DIRECTORY . "/app/Optional/aliases.php");
             $file = $consoleHelper->convertCommandToTask($baseArgument);
             if (file_exists(HLEB_GLOBAL_DIRECTORY . "/app/Commands/$file.php")) {
                 if (end($argv) === '--help') {
