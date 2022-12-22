@@ -35,7 +35,7 @@ require HLEB_PROJECT_DIRECTORY . '/Constructor/VCreator.php';
 require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/Data.php';
 
 
-define('HL_TWIG_CONNECTED', file_exists(HLEB_VENDOR_DIRECTORY . '/twig'));
+defined('HL_TWIG_CONNECTED') or define('HL_TWIG_CONNECTED', file_exists(HLEB_VENDOR_DIRECTORY . '/twig'));
 
 if (HL_TWIG_CONNECTED) {
 
@@ -61,6 +61,8 @@ if (HL_TWIG_CONNECTED) {
     // Optimize data with Twig
     defined('HL_TWIG_OPTIMIZATIONS') or define('HL_TWIG_OPTIMIZATIONS', -1);
 }
+
+defined('HLEB_FRAME_VERSION') or define('HLEB_FRAME_VERSION', HLEB_PROJECT_FULL_VERSION);
 
 /** @internal */
 define('HLEB_TAG_INTERNAL', 'hl_internal_%{function}');
@@ -390,7 +392,6 @@ function hleb_deprecated_info(string $name) {
         trigger_error("Warning about using deprecated function `{$name}`. It is necessary to remove this function in the `/app/Optional/shell.php` file according to the latest version of the framework.", E_USER_NOTICE);
     }
 }
-
 
 $GLOBALS['HLEB_PROJECT_UPDATES'] = ['phphleb/hleb' => HLEB_FRAME_VERSION, 'phphleb/framework' => HLEB_PROJECT_FULL_VERSION];
 
