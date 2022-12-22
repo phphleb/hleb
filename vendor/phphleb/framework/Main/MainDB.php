@@ -146,7 +146,7 @@ final class MainDB
             return new PDO(implode(";", $condition), $user, $pass, $opt);
 
         } catch (\PDOException $e) {
-            throw new \ErrorException($e->getMessage(), (int)$e->getCode());
+            throw new \PDOException($e->getMessage(), (int)$e->getCode());
         }
     }
 
