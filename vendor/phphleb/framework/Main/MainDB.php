@@ -72,6 +72,7 @@ final class MainDB
     /**
      * @param string|null $configKey
      * @return PDO
+     * @throws \ErrorException
      */
     public static function getNewPdoInstance($configKey = null)
     {
@@ -141,7 +142,12 @@ final class MainDB
                 $condition [] = preg_replace('/\s+/', '', $prm);
             }
         }
-        return new PDO(implode(";", $condition), $user, $pass, $opt);
+        try {
+            return new PDO(implode(";", $condition), $user, $pass, $opt);
+
+        } catch (\PDOException $e) {
+            throw new \ErrorException($e->getMessage(), (int)$e->getCode());
+        }
     }
 
     private static function getConfigForce($configKey = null)
