@@ -51,7 +51,8 @@
   },
   "scripts": {
     "post-root-package-install": [
-      "@php -r \"@unlink('.travis.yml');\""
+      "@php -r \"@unlink('.travis.yml');\"",
+      "@php -r \"@unlink('./public/requirements.php');\""
     ]
   },
   "minimum-stability": "dev",

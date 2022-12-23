@@ -16,9 +16,9 @@ if (!function_exists('hl_preliminary_exit')) {
     }
 }
 
-if (intval(explode('.', phpversion())[0]) < 7) {
+if (!version_compare(phpversion(), '7.1.0', ">=")) {
     // End of script execution before starting the framework.
-    hl_preliminary_exit("The application requires PHP version higher than 7.0 (Current version " . phpversion() . ")");
+    hl_preliminary_exit("The application requires PHP version equal to or higher than 7.1 (Current version " . phpversion() . ")");
 }
 
 if (empty($_SERVER['REQUEST_METHOD'])) {
