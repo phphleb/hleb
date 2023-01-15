@@ -321,8 +321,13 @@ class MainLaunchTask extends MainTask
      * @return bool
      */
     private function run($commands) {
+
         if (is_string($commands)) {
-            return $this->executeCommand($commands);
+            try {
+                return $this->executeCommand($commands);
+            } catch (\Throwable $e) {
+                Logger()->error($e->getCode() . ' ' . $e->getMessage());
+            }
         }
         if (is_array($commands)) {
             $success = true;
@@ -330,20 +335,27 @@ class MainLaunchTask extends MainTask
                 $commands = [[$commands[0], $commands[1] ?? []]];
             }
             foreach ($commands as $cmd) {
-                if (is_array($cmd) && class_exists($cmd[0])) {
-                    $task = new $cmd[0];
-                    if ($task instanceof MainTask) {
-                        $this->executeDirectlyCommand($task, $cmd[1] ?? []);
-                    } else {
-                        Logger()->error("The class $cmd[0] is not a command");
+                try {
+                    if (is_array($cmd) && class_exists($cmd[0])) {
+                        $task = new $cmd[0];
+                        if ($task instanceof MainTask) {
+                            $this->executeDirectlyCommand($task, $cmd[1] ?? []);
+                        } else {
+                            throw new \ErrorException("The class $cmd[0] is not a command");
+                        }
+                    } else if (is_string($cmd)) {
+                        if (!$this->executeCommand($cmd)) {
+                            $success = false;
+                            throw new \ErrorException("`$cmd` command failed");
+                        }
                     }
-
-                } else if (is_string($cmd)) {
-                    if (!$this->executeCommand($cmd)){ $success = false;}
+                } catch (\Throwable $e) {
+                    Logger()->error($e->getCode() . ' ' . $e->getMessage());
                 }
             }
             return $success;
         }
+
         return false;
     }
 
