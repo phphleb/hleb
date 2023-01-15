@@ -335,7 +335,7 @@ class MainLaunchTask extends MainTask
                     if ($task instanceof MainTask) {
                         $this->executeDirectlyCommand($task, $cmd[1] ?? []);
                     } else {
-                        die(PHP_EOL . "The class $cmd[0] is not a command" . PHP_EOL);
+                        Logger()->error("The class $cmd[0] is not a command");
                     }
 
                 } else if (is_string($cmd)) {
