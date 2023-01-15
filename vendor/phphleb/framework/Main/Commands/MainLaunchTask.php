@@ -326,12 +326,29 @@ class MainLaunchTask extends MainTask
         }
         if (is_array($commands)) {
             $success = true;
+            if (!empty($commands[0]) && is_string($commands[0]) && class_exists($commands[0])) {
+                $commands = [[$commands[0], $commands[1] ?? []]];
+            }
             foreach ($commands as $cmd) {
-                if (!$this->executeCommand($cmd)) $success = false;
+                if (is_array($cmd) && class_exists($cmd[0])) {
+                    $task = new $cmd[0];
+                    if ($task instanceof MainTask) {
+                        $this->executeDirectlyCommand($task, $cmd[1] ?? []);
+                    } else {
+                        throw new \ErrorException("The class {$cmd[0]} is not a command");
+                    }
+
+                } else if (is_string($cmd)) {
+                    if (!$this->executeCommand($cmd)){ $success = false;}
+                }
             }
             return $success;
         }
         return false;
+    }
+
+    private function executeDirectlyCommand(MainTask $command, array $params = []) {
+        $command->call($params);
     }
 
     private function executeCommand(string $commands) {
