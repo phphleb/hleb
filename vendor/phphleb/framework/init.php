@@ -1,38 +1,41 @@
 <?php
 
-define('HLEB_PROJECT_FULL_VERSION', '1.6.87');
+define('HLEB_PROJECT_FULL_VERSION', '1.6.88');
 
-require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Controllers/MainController.php';
+if (!class_exists('Hleb\Scheme\App\Controllers\MainController', false)) {
 
-require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Middleware/MainMiddleware.php';
+    require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Controllers/MainController.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Models/MainModel.php';
+    require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Middleware/MainMiddleware.php';
 
-require HLEB_PROJECT_DIRECTORY . "/Constructor/Routes/MainRoute.php";
+    require HLEB_PROJECT_DIRECTORY . '/Scheme/App/Models/MainModel.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Scheme/Home/Constructor/Routes/StandardRoute.php';
+    require HLEB_PROJECT_DIRECTORY . "/Constructor/Routes/MainRoute.php";
 
-require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/Route.php';
+    require HLEB_PROJECT_DIRECTORY . '/Scheme/Home/Constructor/Routes/StandardRoute.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Main/ProjectLoader.php';
+    require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/Route.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Constructor/Cache/CacheRoutes.php';
+    require HLEB_PROJECT_DIRECTORY . '/Main/ProjectLoader.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/LoadRoutes.php';
+    require HLEB_PROJECT_DIRECTORY . '/Constructor/Cache/CacheRoutes.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/URL.php';
+    require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/LoadRoutes.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/URLHandler.php';
+    require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/URL.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/ProtectedCSRF.php';
+    require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/URLHandler.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Constructor/Workspace.php';
+    require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/ProtectedCSRF.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Main/TryClass.php';
+    require HLEB_PROJECT_DIRECTORY . '/Constructor/Workspace.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Constructor/VCreator.php';
+    require HLEB_PROJECT_DIRECTORY . '/Main/TryClass.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/Data.php';
+    require HLEB_PROJECT_DIRECTORY . '/Constructor/VCreator.php';
+
+    require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/Data.php';
+}
 
 
 defined('HL_TWIG_CONNECTED') or define('HL_TWIG_CONNECTED', file_exists(HLEB_VENDOR_DIRECTORY . '/twig'));
