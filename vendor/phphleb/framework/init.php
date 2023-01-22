@@ -1,6 +1,6 @@
 <?php
 
-define('HLEB_PROJECT_FULL_VERSION', '1.6.88');
+define('HLEB_PROJECT_FULL_VERSION', '1.6.89');
 
 if (!class_exists('Hleb\Scheme\App\Controllers\MainController', false)) {
 
