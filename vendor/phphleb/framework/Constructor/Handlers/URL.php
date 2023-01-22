@@ -12,7 +12,6 @@ namespace Hleb\Constructor\Handlers;
 
 use Hleb\Main\Helpers\RangeChecker;
 use Hleb\Main\Insert\BaseSingleton;
-use Hleb\Main\Logger\Log;
 
 /**
  * @package Hleb\Constructor\Handlers *

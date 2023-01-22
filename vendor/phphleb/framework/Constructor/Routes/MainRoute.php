@@ -56,7 +56,7 @@ class MainRoute
     // Удаляет информацию о маршрутах.
     /** @internal */
     protected function clear() {
-        self::$instance = false;
+        self::$instance = null;
     }
 
     // Finish parsing routes.

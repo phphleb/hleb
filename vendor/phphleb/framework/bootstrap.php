@@ -2,7 +2,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-defined('HLEB_START') or  define('HLEB_START', microtime(true));
+defined('HLEB_START') or define('HLEB_START', microtime(true));
+
+//To set a different directory name 'vendor' add HLEB_VENDOR_DIR_NAME to the constants
+define('HLEB_VENDOR_DIRECTORY', defined('HLEB_VENDOR_DIR_NAME') ? HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME : dirname(__DIR__, 2));
 
 // End of script execution (before starting the main project).
 if (!function_exists('hl_preliminary_exit')) {
@@ -11,8 +14,9 @@ if (!function_exists('hl_preliminary_exit')) {
      *
      * @internal
      */
-    function hl_preliminary_exit($text = '') {
-        exit(strval($text));
+    function hl_preliminary_exit($text = '')
+    {
+        exit($text);
     }
 }
 
@@ -53,38 +57,44 @@ if (empty($_SERVER['HTTP_HOST'])) {
     hl_preliminary_exit('Undefined $_SERVER[\'HTTP_HOST\']');
 }
 
-/** @internal */
-function hleb_get_host() {
-    return  $_SERVER['HTTP_HOST'];
+if (!function_exists('hleb_get_host')) {
+    /** @internal */
+    function hleb_get_host()
+    {
+        return $_SERVER['HTTP_HOST'];
+    }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-define('HLEB_PROJECT_DIRECTORY', __DIR__);
+defined('HLEB_PROJECT_DIRECTORY') or define('HLEB_PROJECT_DIRECTORY', __DIR__);
 
-const HLEB_PROJECT_VERSION = '1';
+defined('HLEB_PROJECT_VERSION') or define('HLEB_PROJECT_VERSION', '1');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const HLEB_HTTP_TYPE_SUPPORT = ['get', 'post', 'delete', 'put', 'patch', 'options'];
+defined('HLEB_HTTP_TYPE_SUPPORT') or define('HLEB_HTTP_TYPE_SUPPORT', ['get', 'post', 'delete', 'put', 'patch', 'options']);
 
 // Project root directory
 defined('HLEB_GLOBAL_DIRECTORY') or define('HLEB_GLOBAL_DIRECTORY', realpath(HLEB_PUBLIC_DIR . '/../'));
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * @param string $path
- *
- * @internal
- */
-function hleb_require(string $path) {
-    require_once "$path";
+if (!function_exists('hleb_require')) {
+    /**
+     * @param string $path
+     *
+     * @internal
+     */
+    function hleb_require(string $path)
+    {
+        require_once "$path";
+    }
 }
 
 $pathToStartFileDir = rtrim(defined('HLEB_SEARCH_START_CONFIG_FILE') ? HLEB_SEARCH_START_CONFIG_FILE : HLEB_GLOBAL_DIRECTORY, '\\/ ');
-hleb_require( $pathToStartFileDir .  '/' . (file_exists($pathToStartFileDir . '/start.hleb.php') ? '' : 'default.') . 'start.hleb.php');
+hleb_require($pathToStartFileDir . '/' . (file_exists($pathToStartFileDir . '/start.hleb.php') ? '' : 'default.') . 'start.hleb.php');
 
 if (!defined('HLEB_PROJECT_DEBUG') || !is_bool(HLEB_PROJECT_DEBUG)) {
     // End of script execution before starting the framework.
@@ -119,7 +129,7 @@ if (!is_array(HLEB_ENDING_URL_INCLUDING_METHODS)) {
     hl_preliminary_exit("Incorrectly defined setting: ...ENDING_URL_INCLUDING_METHODS");
 }
 
-define('HLEB_PROJECT_DEBUG_ON', (bool) (HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] === 'GET' && (empty($_GET['_debug']) || $_GET['_debug'] === 'on')) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') !== 'xmlhttprequest');
+defined('HLEB_PROJECT_DEBUG_ON') or define('HLEB_PROJECT_DEBUG_ON', (bool)(HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] === 'GET' && (empty($_GET['_debug']) || $_GET['_debug'] === 'on')) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') !== 'xmlhttprequest');
 
 
 // Demo redirection from "http" to "https"
@@ -135,10 +145,7 @@ if (isset($_GET["_token"])) {
     header("Referrer-Policy: origin-when-cross-origin");
 }
 
-//To set a different directory name 'vendor' add HLEB_VENDOR_DIR_NAME to the constants
-define('HLEB_VENDOR_DIRECTORY', defined('HLEB_VENDOR_DIR_NAME') ? HLEB_GLOBAL_DIRECTORY . '/' . HLEB_VENDOR_DIR_NAME : dirname(__DIR__, 2));
-
-defined('HLEB_STORAGE_DIRECTORY') or  define('HLEB_STORAGE_DIRECTORY', HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . "storage");
+defined('HLEB_STORAGE_DIRECTORY') or define('HLEB_STORAGE_DIRECTORY', HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . "storage");
 define('HLEB_PROJECT_STORAGE_DIR', (defined('HLEB_STORAGE_DIRECTORY') ? rtrim(HLEB_STORAGE_DIRECTORY, '\\/ ') : HLEB_GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR . 'storage'));
 
 if (HLEB_PROJECT_LOG_ON) {
@@ -158,39 +165,43 @@ if (!function_exists('hleb_system_storage_path')) {
     }
 }
 // For compatibility
-/** @internal */
-function hleb_dc64d27da09bab7_storage_directory() {
-    return hleb_system_storage_path();
+if (!function_exists('hleb_dc64d27da09bab7_storage_directory')) {
+    /** @internal */
+    function hleb_dc64d27da09bab7_storage_directory() {
+        return hleb_system_storage_path();
+    }
 }
 
-/**
- * @param $message
- * @param string $level
- * @internal
- */
-function hleb_system_log($message, $level = 'error') {
-    \Hleb\Main\Logger\Log::getInstance()->log($level, $message);
+if (!function_exists('hleb_system_log')) {
+    /**
+     * @param $message
+     * @param string $level
+     * @internal
+     */
+    function hleb_system_log($message, $level = 'error') {
+        \Hleb\Main\Logger\Log::getInstance()->log($level, $message);
+    }
 }
 
-define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/routes');
+defined('HLEB_LOAD_ROUTES_DIRECTORY') or define('HLEB_LOAD_ROUTES_DIRECTORY', HLEB_GLOBAL_DIRECTORY . '/routes');
 
-define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', hleb_system_storage_path('cache' . DIRECTORY_SEPARATOR . 'routes'));
+defined('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY') or define('HLEB_STORAGE_CACHE_ROUTES_DIRECTORY', hleb_system_storage_path('cache' . DIRECTORY_SEPARATOR . 'routes'));
 
 require_once HLEB_PROJECT_DIRECTORY . '/Main/Insert/DeterminantStaticUncreated.php';
 
 require_once HLEB_PROJECT_DIRECTORY . '/Main/Insert/BaseSingleton.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Main/Info.php';
+require_once HLEB_PROJECT_DIRECTORY . '/Main/Info.php';
 
-require HLEB_PROJECT_DIRECTORY . '/Scheme/Home/Main/Connector.php';
+require_once HLEB_PROJECT_DIRECTORY . '/Scheme/Home/Main/Connector.php';
 
-require HLEB_GLOBAL_DIRECTORY . '/app/Optional/MainConnector.php';
+require_once HLEB_GLOBAL_DIRECTORY . '/app/Optional/MainConnector.php';
 
 if (HLEB_PROJECT_CLASSES_AUTOLOAD) {
 
-    require HLEB_PROJECT_DIRECTORY . '/Main/MainAutoloader.php';
+    require_once HLEB_PROJECT_DIRECTORY . '/Main/MainAutoloader.php';
 
-    require HLEB_PROJECT_DIRECTORY . '/Main/HomeConnector.php';
+    require_once HLEB_PROJECT_DIRECTORY . '/Main/HomeConnector.php';
 }
 
 ini_set('display_errors', HLEB_PROJECT_DEBUG ? '1' : '0');
@@ -200,23 +211,25 @@ if (file_exists(HLEB_VENDOR_DIRECTORY . '/autoload.php')) {
     require_once HLEB_VENDOR_DIRECTORY . '/autoload.php';
 }
 
-//Own autoloader
-/**
- * @param $class
- *
- * @internal
- */
-function hl_main_autoloader($class) {
-    if (HLEB_PROJECT_CLASSES_AUTOLOAD) {
-        \Hleb\Main\MainAutoloader::get($class);
+if (!function_exists('hl_main_autoloader')) {
+    //Own autoloader
+    /**
+     * @param $class
+     *
+     * @internal
+     */
+    function hl_main_autoloader($class) {
+        if (HLEB_PROJECT_CLASSES_AUTOLOAD) {
+            \Hleb\Main\MainAutoloader::get($class);
+        }
+        if (HLEB_PROJECT_DEBUG_ON) {
+            $class = class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false) ? '<b title="HLEB Autoloader">&#10004;</b> ' . $class : '&#9745; ' . $class;
+            \Hleb\Main\Info::insert('Autoload', $class);
+        }
     }
-    if (HLEB_PROJECT_DEBUG_ON) {
-        $class = class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false) ? '<b title="HLEB Autoloader">&#10004;</b> ' . $class : '&#9745; ' . $class;
-        \Hleb\Main\Info::insert('Autoload', $class);
-    }
-}
 
-spl_autoload_register('hl_main_autoloader', true, true);
+    spl_autoload_register('hl_main_autoloader', true, true);
+}
 
 if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 
@@ -228,17 +241,17 @@ if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 
         defined("HLEB_RADJAX_PATHS_TO_ROUTE_PATHS") or define("HLEB_RADJAX_PATHS_TO_ROUTE_PATHS", [HLEB_LOAD_ROUTES_DIRECTORY . '/radjax.php']);
 
-        require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Route.php';
+        require_once HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Route.php';
 
-        require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Src/RCreator.php';
+        require_once HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Src/RCreator.php';
 
-        require HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Src/App.php';
+        require_once HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/Src/App.php';
 
         $radjaxIsActive = (new Radjax\Src\App(HLEB_RADJAX_PATHS_TO_ROUTE_PATHS))->get();
     }
 
-    if(HLEB_ONLY_RADJAX_ROUTES) {
-        if( !$radjaxIsActive) {
+    if (HLEB_ONLY_RADJAX_ROUTES) {
+        if (!$radjaxIsActive) {
             include HLEB_GLOBAL_DIRECTORY . '/app/Optional/404.php';
             hl_preliminary_exit();
         } else {
@@ -250,20 +263,22 @@ if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const HLEB_TEMPLATE_CACHED_PATH = '/storage/cache/templates';
+defined('HLEB_TEMPLATE_CACHED_PATH') or define('HLEB_TEMPLATE_CACHED_PATH', '/storage/cache/templates');
 
-if(empty($radjaxIsActive)) {
+if (empty($radjaxIsActive)) {
 
-    require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/AddressBar.php';
+    require_once HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/AddressBar.php';
 
-    /**
-     * @param bool $complete - full protocol.
-     * @return string
-     *
-     * @internal
-     */
-    function hleb_actual_http_protocol($complete = true) {
-        return ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http') . ($complete ? '://' : '');
+    if (!function_exists('hleb_actual_http_protocol')) {
+        /**
+         * @param bool $complete - full protocol.
+         * @return string
+         *
+         * @internal
+         */
+        function hleb_actual_http_protocol($complete = true) {
+            return ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http') . ($complete ? '://' : '');
+        }
     }
 
     $addressBar = (new \Hleb\Constructor\Handlers\AddressBar(
@@ -292,12 +307,12 @@ if(empty($radjaxIsActive)) {
         hl_preliminary_exit();
     }
 
-    define('HLEB_ENDING_URL_ON', in_array(strtolower($_SERVER['REQUEST_METHOD']), HLEB_ENDING_URL_INCLUDING_METHODS));
-    define('HLEB_SYSTEM_ENDING_URL', HLEB_ENDING_URL_ON ? HLEB_PROJECT_ENDING_URL : $address[strlen($address) - 1] === '/');
+    defined('HLEB_ENDING_URL_ON') or define('HLEB_ENDING_URL_ON', in_array(strtolower($_SERVER['REQUEST_METHOD']), HLEB_ENDING_URL_INCLUDING_METHODS));
+    defined('HLEB_SYSTEM_ENDING_URL') or define('HLEB_SYSTEM_ENDING_URL', HLEB_ENDING_URL_ON ? HLEB_PROJECT_ENDING_URL : $address[strlen($address) - 1] === '/');
 
     unset($addressBar, $address, $pathToStartFileDir, $radjaxIsActive);
 
-    require HLEB_VENDOR_DIRECTORY . '/phphleb/framework/init.php';
+    require_once HLEB_VENDOR_DIRECTORY . '/phphleb/framework/init.php';
 
     if (file_exists(HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php')) {
         hleb_require(HLEB_GLOBAL_DIRECTORY . '/app/Optional/aliases.php');
@@ -310,5 +325,6 @@ if(empty($radjaxIsActive)) {
     \Hleb\Main\ProjectLoader::start();
 
 }
+
 
 
