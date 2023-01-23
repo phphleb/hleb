@@ -32,6 +32,18 @@ final class Key extends BaseSingleton
         return self::$key;
     }
 
+    /**
+     * System reset method for asynchronous requests.
+     *
+     * Системный метод приведения в первоначальный вид для асинхронных запросов.
+     *
+     * @internal
+     */
+    public static function clear(): void
+    {
+        self::$key = null;
+    }
+
     // Returns the existing or generated secure key.
     // Возвращает имеющийся или созданный защищённый ключ.
     private static function set() {

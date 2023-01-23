@@ -31,5 +31,11 @@ final class Data extends BaseSingleton
     public static function return_data() {
         return self::returnData();
     }
+
+    /** @internal */
+    public static function clear(): void
+    {
+        self::$data = null;
+    }
 }
 

@@ -32,5 +32,11 @@ final class Info extends BaseSingleton
             self::$data[$name][] = $data;
     }
 
+    /** @internal */
+    public static function clear(): void
+    {
+        self::$data = [];
+    }
+
 }
 

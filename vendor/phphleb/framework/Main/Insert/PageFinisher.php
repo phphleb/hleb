@@ -51,6 +51,22 @@ final class PageFinisher extends BaseSingleton
         self::$showTypes[$name] = $isShow;
     }
 
+    /**
+     * System reset method for asynchronous requests.
+     *
+     * Системный метод приведения в первоначальный вид для асинхронных запросов.
+     *
+     * @internal
+     */
+    public static function clear(): void
+    {
+        self::$data = '';
+
+        self::$dynamicData = [];
+
+        self::$showTypes = [];
+    }
+
 }
 
 

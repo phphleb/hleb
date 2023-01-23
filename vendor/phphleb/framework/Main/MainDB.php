@@ -101,6 +101,23 @@ final class MainDB
     }
 
     /**
+     * System reset method for asynchronous requests.
+     *
+     * Системный метод приведения в первоначальный вид для асинхронных запросов.
+     *
+     * @internal
+     */
+    public static function clear(): void
+    {
+        foreach(self::$connectionList as $key => &$conn) {
+            $conn = null;
+            unset(self::$connectionList[$key]);
+        }
+        self::$connectionList = [];
+    }
+
+
+    /**
      * @param string $name
      * @param string $value
      * @param array $config

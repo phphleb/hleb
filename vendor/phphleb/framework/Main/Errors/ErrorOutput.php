@@ -74,6 +74,20 @@ final class ErrorOutput extends BaseSingleton
         self::run();
     }
 
+    /**
+     * System reset method for asynchronous requests.
+     *
+     * Системный метод приведения в первоначальный вид для асинхронных запросов.
+     *
+     * @internal
+     */
+    public static function clear(): void
+    {
+        self::$messages = [];
+
+        self::$firstType = true;
+    }
+
     // Output the standard message.
     // Вывод стандартного сообщения.
     private static function content(string $message) {

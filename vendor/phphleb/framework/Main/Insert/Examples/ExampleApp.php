@@ -204,5 +204,17 @@ class ExampleApp extends BaseSingleton
     {
         return self::$app['logger'];
     }
+
+    /**
+     * System reset method for asynchronous requests.
+     *
+     * Системный метод приведения в первоначальный вид для асинхронных запросов.
+     *
+     * @internal
+     */
+    public static function clear(): void
+    {
+        self::$app = [];
+    }
 }
 

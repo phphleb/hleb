@@ -56,6 +56,18 @@ final class ProtectedCSRF extends BaseSingleton
         }
     }
 
+    /**
+     * System reset method for asynchronous requests.
+     *
+     * Системный метод приведения в первоначальный вид для асинхронных запросов.
+     *
+     * @internal
+     */
+    public static function clear(): void
+    {
+        self::$secretKey = null;
+    }
+
     // Safe key verification.
     // Безопасная проверка ключа.
     private static function checkKey(string $key) {

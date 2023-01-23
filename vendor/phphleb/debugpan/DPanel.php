@@ -66,7 +66,15 @@ class DPanel extends BaseSingleton
 
         $debugActualRoute = self::actualBlock($info["block"]);
         $debugUpdates = self::myLinks();
-        require_once "panels/block.php";
+        require "panels/block.php";
+    }
+
+    /** @internal */
+    public static function clear(): void
+    {
+        self::$queries = false;
+
+        self::$initPanel = false;
     }
 
     // Gather information for output

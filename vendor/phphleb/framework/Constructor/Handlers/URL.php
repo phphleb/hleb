@@ -93,6 +93,20 @@ final class URL extends BaseSingleton
         return self::endingUrl(preg_replace('|([/]+)|s', '/', '/' . implode('/', $addressParts) . '/'));
     }
 
+    /**
+     * System reset method for asynchronous requests.
+     *
+     * Системный метод приведения в первоначальный вид для асинхронных запросов.
+     *
+     * @internal
+     */
+    public static function clear(): void
+    {
+        self::$standardUrlList = [];
+
+        self::$addresses = null;
+    }
+
     // Handles URL ending depending on settings.
     // Обрабатывает окончание URL в зависимости от настроек.
     protected static function endingUrl(string $url) {

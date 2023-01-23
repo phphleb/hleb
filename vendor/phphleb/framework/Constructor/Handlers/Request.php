@@ -645,6 +645,31 @@ class Request extends BaseSingleton
         return null;
     }
 
+    /**
+     * System reset method for asynchronous requests.
+     *
+     * Системный метод приведения в первоначальный вид для асинхронных запросов.
+     *
+     * @internal
+     */
+    public static function clear() {
+        self::$request = [];
+        self::$post = null;
+        self::$get = null;
+        self::$req = null;
+        self::$cookie = null;
+        self::$head = null;
+        self::$uri = null;
+        self::$lang = null;
+        self::$url = null;
+        self::$domain = null;
+        self::$address = null;
+        self::$referer = null;
+        self::$resources = null;
+        self::$convertUri = null;
+        self::$inputBody = null;
+    }
+
     // Adds a parameter by name and value.
     // Добавляет параметр по имени и значению.
     /**

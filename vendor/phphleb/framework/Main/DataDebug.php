@@ -56,6 +56,18 @@ final class DataDebug extends BaseSingleton
         }
     }
 
+    /**
+     * System reset method for asynchronous requests.
+     *
+     * Системный метод приведения в первоначальный вид для асинхронных запросов.
+     *
+     * @internal
+     */
+    public static function clear(): void
+    {
+        self::$data = [];
+    }
+
     private static function time_about($sql): string {
         return stripos(trim($sql), 'select') == 0 ? '&asymp;' : '';
     }

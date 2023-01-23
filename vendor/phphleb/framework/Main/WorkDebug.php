@@ -35,6 +35,18 @@ final class WorkDebug extends BaseSingleton
         return self::$data;
     }
 
+    /**
+     * System reset method for asynchronous requests.
+     *
+     * Системный метод приведения в первоначальный вид для асинхронных запросов.
+     *
+     * @internal
+     */
+    public static function clear(): void
+    {
+        self::$data = [];
+    }
+
 }
 
 
