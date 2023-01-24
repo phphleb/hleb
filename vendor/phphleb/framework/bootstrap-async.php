@@ -11,7 +11,7 @@ use Hleb\Main\Errors\HlebExitException;
 use Hleb\Main\ProjectLoader;
 
 // Casting to the original global array.
-foreach ($GLOBALS ?? [] as $key => $gv) { unset($GLOBALS[$key], $key, $gv); }
+// foreach ($GLOBALS ?? [] as $key => $gv) { unset($GLOBALS[$key], $key, $gv); }
 
 // For asynchronous counting.
 $GLOBALS['HLEB_START'] = microtime(true);
