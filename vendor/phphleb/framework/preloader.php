@@ -121,7 +121,7 @@ if (!is_array(HLEB_ENDING_URL_INCLUDING_METHODS)) {
     hl_preliminary_exit("Incorrectly defined setting: ...ENDING_URL_INCLUDING_METHODS");
 }
 
-defined('HLEB_PROJECT_DEBUG_ON') or define('HLEB_PROJECT_DEBUG_ON', (bool)(HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] === 'GET' && (empty($_GET['_debug']) || $_GET['_debug'] === 'on')) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') !== 'xmlhttprequest');
+$GLOBALS['HLEB_PROJECT_DEBUG_ON'] = (bool)(HLEB_PROJECT_DEBUG && $_SERVER['REQUEST_METHOD'] === 'GET' && (empty($_GET['_debug']) || $_GET['_debug'] === 'on')) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') !== 'xmlhttprequest';
 
 
 // Demo redirection from "http" to "https"
@@ -214,7 +214,7 @@ if (!function_exists('hl_main_autoloader')) {
         if (HLEB_PROJECT_CLASSES_AUTOLOAD) {
             MainAutoloader::get($class);
         }
-        if (HLEB_PROJECT_DEBUG_ON) {
+        if ($GLOBALS['HLEB_PROJECT_DEBUG_ON']) {
             $class = class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false) ? '<b title="HLEB Autoloader">&#10004;</b> ' . $class : '&#9745; ' . $class;
             Info::insert('Autoload', $class);
         }
@@ -253,7 +253,6 @@ if (is_dir(HLEB_VENDOR_DIRECTORY . '/phphleb/radjax/')) {
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 defined('HLEB_TEMPLATE_CACHED_PATH') or define('HLEB_TEMPLATE_CACHED_PATH', '/storage/cache/templates');
 
@@ -300,8 +299,8 @@ if (empty($radjaxIsActive)) {
         hl_preliminary_exit();
     }
 
-    defined('HLEB_ENDING_URL_ON') or define('HLEB_ENDING_URL_ON', in_array(strtolower($_SERVER['REQUEST_METHOD']), HLEB_ENDING_URL_INCLUDING_METHODS));
-    defined('HLEB_SYSTEM_ENDING_URL') or define('HLEB_SYSTEM_ENDING_URL', HLEB_ENDING_URL_ON ? HLEB_PROJECT_ENDING_URL : $address[strlen($address) - 1] === '/');
+    $GLOBALS['HLEB_ENDING_URL_ON'] = in_array(strtolower($_SERVER['REQUEST_METHOD']), HLEB_ENDING_URL_INCLUDING_METHODS);
+    $GLOBALS['HLEB_SYSTEM_ENDING_URL'] = ($GLOBALS['HLEB_ENDING_URL_ON'] ? HLEB_PROJECT_ENDING_URL : $address[strlen($address) - 1] === '/');
 
     unset($addressBar, $address, $pathToStartFileDir, $radjaxIsActive);
 

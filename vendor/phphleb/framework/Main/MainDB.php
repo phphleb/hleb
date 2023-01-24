@@ -37,7 +37,7 @@ final class MainDB
         $stmt = self::instance($config)->prepare($sql);
         $stmt->execute($args);
         $time = microtime(true) - $time;
-        if (defined('HLEB_PROJECT_DEBUG_ON') && HLEB_PROJECT_DEBUG_ON) {
+        if (!empty($GLOBALS['HLEB_PROJECT_DEBUG_ON'])) {
             \Hleb\Main\DataDebug::add($sql, $time, self::setConfigKey($config), true);
         }
         if (defined('HLEB_DB_LOG_ENABLED') && HLEB_DB_LOG_ENABLED) {

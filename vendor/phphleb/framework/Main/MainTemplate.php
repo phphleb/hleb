@@ -17,7 +17,7 @@ final class MainTemplate
     private $content = null;
 
     public function __construct(string $path, array $template = [], bool $return = false ) {
-        if (HLEB_PROJECT_DEBUG_ON) {
+        if ($GLOBALS['HLEB_PROJECT_DEBUG_ON']) {
             $time = microtime(true);
             $backtrace = $this->debugBacktrace();
         }
@@ -28,9 +28,9 @@ final class MainTemplate
         } else {
             (new TCreator($templateDirectory, $template))->include();
         }
-        if (HLEB_PROJECT_DEBUG_ON) {
+        if ($GLOBALS['HLEB_PROJECT_DEBUG_ON']) {
             $time = microtime(true) - $time;
-            Info::insert('Templates', (defined('HLEB_MODULE_NAME') ? ' module `' . HLEB_MODULE_NAME . '` ' : '') . $templateName . $backtrace . ' (includeTemplate) load: ' . (round($time, 4) * 1000) . ' ms');
+            Info::insert('Templates', (isset($GLOBALS['HLEB_MODULE_NAME']) ? ' module `' . $GLOBALS['HLEB_MODULE_NAME'] . '` ' : '') . $templateName . $backtrace . ' (includeTemplate) load: ' . (round($time, 4) * 1000) . ' ms');
         }
     }
 
@@ -49,11 +49,11 @@ final class MainTemplate
     // Finds and returns the directory of the content file. The search depends on the module matching the condition.
     // Ищет и возвращает директорию файла с контентом. Поиск зависит от подходящего под условие модуля.
     private function getTemplateDirectory($templateName) {
-        if (defined('HLEB_OPTIONAL_MODULE_SELECTION') && HLEB_OPTIONAL_MODULE_SELECTION) {
+        if (!empty($GLOBALS['HLEB_OPTIONAL_MODULE_SELECTION'])) {
             if (file_exists(HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName)) {
                 return HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName;
             }
-            return HLEB_GLOBAL_DIRECTORY . '/modules/' . HLEB_MODULE_NAME . "/" . $templateName;
+            return HLEB_GLOBAL_DIRECTORY . '/modules/' . $GLOBALS['HLEB_MODULE_NAME'] . "/" . $templateName;
         }
         return HLEB_GLOBAL_DIRECTORY . '/resources/views/' . $templateName;
     }

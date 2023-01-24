@@ -42,7 +42,7 @@ const HLEB_PROJECT_DIRECTORY = HLEB_VENDOR_DIRECTORY . '/phphleb/framework';
 
 const HLEB_PROJECT_DEBUG = false;
 
-const HLEB_PROJECT_DEBUG_ON = false;
+$GLOBALS['HLEB_PROJECT_DEBUG_ON'] = false;
 
 const HLEB_HTTP_TYPE_SUPPORT = ['get', 'post', 'delete', 'put', 'patch', 'options'];
 

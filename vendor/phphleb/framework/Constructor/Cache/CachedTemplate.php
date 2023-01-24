@@ -51,7 +51,7 @@ class CachedTemplate
     public function __construct(string $path, array $templateParams = []) {
         $backtrace = null;
         $time = 0;
-        if (HLEB_PROJECT_DEBUG_ON) {
+        if ($GLOBALS['HLEB_PROJECT_DEBUG_ON']) {
             $backtrace = $this->debugBacktrace();
             $time = microtime(true);
         }
@@ -72,7 +72,7 @@ class CachedTemplate
             $this->data = $this->content;
         }
         $this->addContent();
-        if (HLEB_PROJECT_DEBUG_ON) {
+        if ($GLOBALS['HLEB_PROJECT_DEBUG_ON']) {
             $time = microtime(true) - $time;
             Info::insert('Templates', trim($path, '/') . $backtrace . $this->infoCache() . ' load: ' .
                 (round($time, 4) * 1000) . ' ms , ' . $this->infoTemplateName() . '(...)');
@@ -212,11 +212,11 @@ class CachedTemplate
     // Finds and returns the directory of the content file. The search depends on the module matching the condition.
     // Ищет и возвращает директорию файла с контентом. Поиск зависит от подходящего под условие модуля.
     private function getTemplateDirectory($templateName) {
-        if (defined('HLEB_OPTIONAL_MODULE_SELECTION') && HLEB_OPTIONAL_MODULE_SELECTION) {
+        if (!empty($GLOBALS['HLEB_OPTIONAL_MODULE_SELECTION'])) {
             if (file_exists(HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName)) {
                 return HLEB_GLOBAL_DIRECTORY . '/modules/' . $templateName;
             }
-            return HLEB_GLOBAL_DIRECTORY . '/modules/' . HLEB_MODULE_NAME . "/" . $templateName;
+            return HLEB_GLOBAL_DIRECTORY . '/modules/' . $GLOBALS['HLEB_MODULE_NAME'] . "/" . $templateName;
         }
         return HLEB_GLOBAL_DIRECTORY . '/resources/views/' . $templateName;
     }

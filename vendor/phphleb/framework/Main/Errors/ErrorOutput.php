@@ -27,7 +27,7 @@ final class ErrorOutput extends BaseSingleton
         $content = '';
         if (count(self::$messages) > 0) {
             foreach ($errors as $key => $value) {
-                if (HLEB_PROJECT_DEBUG_ON) $value = str_replace('~', '<br><br>', $value);
+                if ($GLOBALS['HLEB_PROJECT_DEBUG_ON']) $value = str_replace('~', '<br><br>', $value);
                 if ($key == 0 && self::$firstType) {
                     $content .= self::firstContent($value);
                 } else {
