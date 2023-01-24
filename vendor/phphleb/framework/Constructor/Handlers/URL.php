@@ -102,6 +102,8 @@ final class URL extends BaseSingleton
      */
     public static function clear(): void
     {
+        if (HLEB_ASYNC_MODE !== 1) return;
+
         self::$standardUrlList = [];
 
         self::$addresses = null;

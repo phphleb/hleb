@@ -44,6 +44,8 @@ final class WorkDebug extends BaseSingleton
      */
     public static function clear(): void
     {
+        if (HLEB_ASYNC_MODE !== 1) return;
+
         self::$data = [];
     }
 

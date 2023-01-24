@@ -72,6 +72,8 @@ class DPanel extends BaseSingleton
     /** @internal */
     public static function clear(): void
     {
+        if (HLEB_ASYNC_MODE !== 1) return;
+
         self::$queries = false;
 
         self::$initPanel = false;

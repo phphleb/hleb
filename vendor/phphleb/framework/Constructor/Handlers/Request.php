@@ -653,6 +653,7 @@ class Request extends BaseSingleton
      * @internal
      */
     public static function clear() {
+        if (HLEB_ASYNC_MODE !== 1) return;
         self::$request = [];
         self::$post = null;
         self::$get = null;

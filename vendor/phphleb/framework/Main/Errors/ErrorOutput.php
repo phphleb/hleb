@@ -83,6 +83,8 @@ final class ErrorOutput extends BaseSingleton
      */
     public static function clear(): void
     {
+        if (HLEB_ASYNC_MODE !== 1) return;
+
         self::$messages = [];
 
         self::$firstType = true;

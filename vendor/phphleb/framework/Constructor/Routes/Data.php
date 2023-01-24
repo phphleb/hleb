@@ -35,6 +35,8 @@ final class Data extends BaseSingleton
     /** @internal */
     public static function clear(): void
     {
+        if (HLEB_ASYNC_MODE !== 1) return;
+
         self::$data = null;
     }
 }
