@@ -224,8 +224,11 @@ final class URL extends BaseSingleton
             } else {
                 header('Location: ' . self::getStandardUrl($url), true, $code);
             }
+        } else {
+            throw new \ErrorException('Failed to redirect due to previously sent headers');
         }
-        hl_preliminary_exit();
+        sleep(2);
+        throw new \ErrorException('Failed to redirect');
     }
 
     // Multiple route handling.

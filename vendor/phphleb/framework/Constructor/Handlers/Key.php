@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor\Handlers;
 
-use Hleb\Main\Errors\ErrorOutput;
 use Hleb\Main\Insert\BaseSingleton;
 
 final class Key extends BaseSingleton
@@ -59,10 +58,8 @@ final class Key extends BaseSingleton
             file_put_contents(self::$path, $keygen, LOCK_EX);
             $_SESSION['_SECURITY_TOKEN'] = $keygen;
             if (!file_exists(self::$path)) {
-                ErrorOutput::add("HL028-KEY_ERROR: No write permission '/storage/cache/key/' ! " .
-                    "Failed to save file to folder `/storage/*`.  You need to change permissions for the web server in this folder. ~ " .
-                    "Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права веб-сервера для этой папки и вложений.");
-                ErrorOutput::run();
+                throw new \ErrorException("HL028-KEY_ERROR: No write permission '/storage/cache/key/' ! " .
+                "Failed to save file to folder `/storage/*`.  You need to change permissions for the web server in this folder.");
             }
             return $keygen;
         }
