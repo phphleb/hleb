@@ -10,6 +10,9 @@ use Hleb\Main\AsyncClearConnector;
 use Hleb\Main\Errors\HlebExitException;
 use Hleb\Main\ProjectLoader;
 
+// Casting to the original global array.
+foreach ($GLOBALS ?? [] as $key => $gv) { unset($GLOBALS[$key], $key, $gv); }
+
 // For asynchronous counting.
 $GLOBALS['HLEB_START'] = microtime(true);
 
@@ -33,24 +36,6 @@ if (!function_exists('hl_preliminary_exit')) {
 }
 
 defined('HLEB_ASYNC_MODE') or define('HLEB_ASYNC_MODE', 1);
-
-// Casting to the original global array.
-foreach ([
-     'HLEB_CACHED_TEMPLATES_CLEARED',
-     'HLEB_PROJECT_PROTOCOL',
-     'HLEB_MAIN_DOMAIN',
-     'HLEB_PROJECT_UPDATES',
-     'HLEB_MAIN_DEBUG_RADJAX',
-     'HLEB_PROJECT_UPDATES',
-     'HLEB_MODULE_NAME',
-     'HLEB_OPTIONAL_MODULE_SELECTION',
-     'HLEB_PROJECT_DEBUG_ON',
-     'HLEB_SYSTEM_ENDING_URL',
-     'HLEB_ENDING_URL_ON'] as $key => $gv
-) {
-    unset($GLOBALS[$key], $key, $gv);
-}
-
 
 try {
 
