@@ -17,7 +17,7 @@ final class DataDebug extends BaseSingleton
     protected static $data = [];
 
     public static function add(string $sql, $time, string $dbname, bool $exec = false) {
-        if ($GLOBALS['HLEB_PROJECT_DEBUG_ON']) {
+        if ($GLOBALS['HLEB']['PROJECT_DEBUG_ON']) {
             $timeAbout = $exec ? self::time_about($sql) : '';
             self::$data[] = [$sql, $time, $dbname, $timeAbout];
         }

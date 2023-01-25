@@ -25,7 +25,7 @@ final class WorkDebug extends BaseSingleton
      * @param string|null $desc
      */
     public static function add($data, string $desc = null) {
-        if ($GLOBALS['HLEB_PROJECT_DEBUG_ON']) {
+        if ($GLOBALS['HLEB']['PROJECT_DEBUG_ON']) {
             self::$data[] = [$data, $desc];
         }
     }

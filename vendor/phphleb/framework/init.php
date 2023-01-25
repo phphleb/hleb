@@ -22,7 +22,9 @@ if (!class_exists('Hleb\Scheme\App\Controllers\MainController', false)) {
 
     require HLEB_PROJECT_DIRECTORY . '/Constructor/Routes/LoadRoutes.php';
 
-    require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/URL.php';
+    if (!class_exists('Hleb\Constructor\Handlers\URL', false)) {
+        require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/URL.php';
+    }
 
     require HLEB_PROJECT_DIRECTORY . '/Constructor/Handlers/URLHandler.php';
 
@@ -362,15 +364,15 @@ function hleb_page_404() {
  */
 function hleb_insert_template(string $hlTemplatePath, array $hlTemplateData = []) {
     extract($hlTemplateData);
-    !$GLOBALS['HLEB_PROJECT_DEBUG_ON'] or $hlCacheTime = microtime(true);
+    !$GLOBALS['HLEB']['PROJECT_DEBUG_ON'] or $hlCacheTime = microtime(true);
     unset($hlTemplateData);
     $hlTemplatePath = trim($hlTemplatePath, '/\\') . '.php';
-    if (!empty($GLOBALS['HLEB_OPTIONAL_MODULE_SELECTION'])) {
-        require HLEB_GLOBAL_DIRECTORY . '/modules/' . (file_exists(HLEB_GLOBAL_DIRECTORY . '/modules/' . $hlTemplatePath) ? '' : $GLOBALS['HLEB_MODULE_NAME'] . '/') . $hlTemplatePath;
+    if (!empty($GLOBALS['HLEB']['OPTIONAL_MODULE_SELECTION'])) {
+        require HLEB_GLOBAL_DIRECTORY . '/modules/' . (file_exists(HLEB_GLOBAL_DIRECTORY . '/modules/' . $hlTemplatePath) ? '' : $GLOBALS['HLEB']['MODULE_NAME'] . '/') . $hlTemplatePath;
     } else {
         require HLEB_GLOBAL_DIRECTORY . '/resources/views/' . $hlTemplatePath;
     }
-    !$GLOBALS['HLEB_PROJECT_DEBUG_ON'] or Hleb\Main\Info::insert('Templates', (isset($GLOBALS['HLEB_MODULE_NAME']) ? ' module `' . $GLOBALS['HLEB_MODULE_NAME'] . '` ' : '') . trim($hlTemplatePath, '/') . hleb_debug_bugtrace(2) . ' (insertTemplate)' . ' load: ' . (round(microtime(true) - $hlCacheTime, 4) * 1000) . ' ms');
+    !$GLOBALS['HLEB']['PROJECT_DEBUG_ON'] or Hleb\Main\Info::insert('Templates', (isset($GLOBALS['HLEB']['MODULE_NAME']) ? ' module `' . $GLOBALS['HLEB']['MODULE_NAME'] . '` ' : '') . trim($hlTemplatePath, '/') . hleb_debug_bugtrace(2) . ' (insertTemplate)' . ' load: ' . (round(microtime(true) - $hlCacheTime, 4) * 1000) . ' ms');
 }
 
 /**
@@ -391,20 +393,20 @@ function hleb_debug_bugtrace(int $level) {
 
 /** @internal */
 function hleb_deprecated_info(string $name) {
-    if ($GLOBALS['HLEB_PROJECT_DEBUG_ON']) {
+    if ($GLOBALS['HLEB']['PROJECT_DEBUG_ON']) {
         trigger_error("Warning about using deprecated function `{$name}`. It is necessary to remove this function in the `/app/Optional/shell.php` file according to the latest version of the framework.", E_USER_NOTICE);
     }
 }
 
-$GLOBALS['HLEB_PROJECT_UPDATES'] = ['phphleb/hleb' => HLEB_FRAME_VERSION, 'phphleb/framework' => HLEB_PROJECT_FULL_VERSION];
+$GLOBALS['HLEB']['PROJECT_UPDATES'] = ['phphleb/hleb' => HLEB_FRAME_VERSION, 'phphleb/framework' => HLEB_PROJECT_FULL_VERSION];
 
-if ($GLOBALS['HLEB_PROJECT_DEBUG_ON'] && (new Hleb\Main\TryClass('XdORM\XD'))->is_connect() &&
+if ($GLOBALS['HLEB']['PROJECT_DEBUG_ON'] && (new Hleb\Main\TryClass('XdORM\XD'))->is_connect() &&
     file_exists(HLEB_VENDOR_DIRECTORY . '/phphleb/xdorm')) {
 
-    $GLOBALS['HLEB_PROJECT_UPDATES']['phphleb/xdorm'] = 'dev';
+    $GLOBALS['HLEB']['PROJECT_UPDATES']['phphleb/xdorm'] = 'dev';
 }
-if ($GLOBALS['HLEB_PROJECT_DEBUG_ON'] && (file_exists(HLEB_VENDOR_DIRECTORY . '/phphleb/adminpan'))) {
-    $GLOBALS['HLEB_PROJECT_UPDATES']['phphleb/adminpan'] = 'dev';
+if ($GLOBALS['HLEB']['PROJECT_DEBUG_ON'] && (file_exists(HLEB_VENDOR_DIRECTORY . '/phphleb/adminpan'))) {
+    $GLOBALS['HLEB']['PROJECT_UPDATES']['phphleb/adminpan'] = 'dev';
 }
 
 

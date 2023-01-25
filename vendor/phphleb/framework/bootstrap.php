@@ -7,6 +7,8 @@ define('HLEB_VENDOR_DIRECTORY', defined('HLEB_VENDOR_DIR_NAME') ? HLEB_GLOBAL_DI
 
 define('HLEB_ASYNC_MODE', 0);
 
+defined('HLEB_START') or define('HLEB_START', microtime(true));
+
 require 'preloader.php';
 
 if (empty($radjaxIsActive)) {

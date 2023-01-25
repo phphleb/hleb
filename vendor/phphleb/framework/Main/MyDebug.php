@@ -69,7 +69,7 @@ final class MyDebug extends BaseSingleton
      * @param $data
      */
     public static function insert_to_array(string $name, $data) {
-        if ($GLOBALS['HLEB_PROJECT_DEBUG_ON']) {
+        if ($GLOBALS['HLEB']['PROJECT_DEBUG_ON']) {
             if (isset(self::$data[$name]) && !is_array(self::$data[$name])) {
                 self::errorType($name, 'array');
             }
@@ -89,7 +89,7 @@ final class MyDebug extends BaseSingleton
      * @param string $data
      */
     public static function insert_to_string(string $name, string $data) {
-        if ($GLOBALS['HLEB_PROJECT_DEBUG_ON']) {
+        if ($GLOBALS['HLEB']['PROJECT_DEBUG_ON']) {
             if (!in_array($name, self::$error)) {
                 if (!isset(self::$data[$name]))
                     self::$data[$name] = '';

@@ -113,7 +113,7 @@ final class URL extends BaseSingleton
     // Обрабатывает окончание URL в зависимости от настроек.
     protected static function endingUrl(string $url) {
         if ($url !== '' && defined('HLEB_PROJECT_ENDING_URL') &&
-            (!isset($GLOBALS['HLEB_ENDING_URL_ON']) || $GLOBALS['HLEB_ENDING_URL_ON'])
+            (!isset($GLOBALS['HLEB']['ENDING_URL_ON']) || $GLOBALS['HLEB']['ENDING_URL_ON'])
         ) {
             $ending = $url[strlen($url) - 1];
             $element = explode('/', $url);
@@ -196,7 +196,7 @@ final class URL extends BaseSingleton
     private static function getStandard(string $url) {
         if (self::ifHttp($url)) {
             $arr_url = array_slice(explode('/', $url), 3);
-            return $GLOBALS['HLEB_PROJECT_PROTOCOL'] . $GLOBALS['HLEB_MAIN_DOMAIN'] . ($url[0] == '/' ? '' : '/') . (implode('/', $arr_url));
+            return $GLOBALS['HLEB']['PROJECT_PROTOCOL'] . $GLOBALS['HLEB']['MAIN_DOMAIN'] . ($url[0] == '/' ? '' : '/') . (implode('/', $arr_url));
         }
         return rawurldecode($url);
     }
@@ -212,7 +212,7 @@ final class URL extends BaseSingleton
     // Возвращает полный адрес url.
     public static function getFullUrl(string $url) {
         if (!self::ifHttp($url)) {
-            return $GLOBALS['HLEB_PROJECT_PROTOCOL'] . $GLOBALS['HLEB_MAIN_DOMAIN'] . ($url[0] == '/' ? '' : '/') . self::getStandardUrl($url);
+            return $GLOBALS['HLEB']['PROJECT_PROTOCOL'] . $GLOBALS['HLEB']['MAIN_DOMAIN'] . ($url[0] == '/' ? '' : '/') . self::getStandardUrl($url);
         }
         return self::getStandardUrl($url);
     }
