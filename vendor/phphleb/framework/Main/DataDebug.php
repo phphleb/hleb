@@ -17,7 +17,7 @@ final class DataDebug extends BaseSingleton
     protected static $data = [];
 
     public static function add(string $sql, $time, string $dbname, bool $exec = false) {
-        if ($GLOBALS['HLEB']['PROJECT_DEBUG_ON']) {
+        if (HLEB_PROJECT_DEBUG_ON) {
             $timeAbout = $exec ? self::time_about($sql) : '';
             self::$data[] = [$sql, $time, $dbname, $timeAbout];
         }
@@ -54,20 +54,6 @@ final class DataDebug extends BaseSingleton
             default:
                 return "<span style='color: #4c8442'>" . htmlentities($param) . "</span>";
         }
-    }
-
-    /**
-     * System reset method for asynchronous requests.
-     *
-     * Системный метод приведения в первоначальный вид для асинхронных запросов.
-     *
-     * @internal
-     */
-    public static function clear(): void
-    {
-        if (HLEB_ASYNC_MODE !== 1) return;
-
-        self::$data = [];
     }
 
     private static function time_about($sql): string {

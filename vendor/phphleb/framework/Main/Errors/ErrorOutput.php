@@ -27,7 +27,7 @@ final class ErrorOutput extends BaseSingleton
         $content = '';
         if (count(self::$messages) > 0) {
             foreach ($errors as $key => $value) {
-                if ($GLOBALS['HLEB']['PROJECT_DEBUG_ON']) $value = str_replace('~', '<br><br>', $value);
+                if (HLEB_PROJECT_DEBUG_ON) $value = str_replace('~', '<br><br>', $value);
                 if ($key == 0 && self::$firstType) {
                     $content .= self::firstContent($value);
                 } else {
@@ -72,22 +72,6 @@ final class ErrorOutput extends BaseSingleton
         self::$firstType = $first_type;
         self::add($message);
         self::run();
-    }
-
-    /**
-     * System reset method for asynchronous requests.
-     *
-     * Системный метод приведения в первоначальный вид для асинхронных запросов.
-     *
-     * @internal
-     */
-    public static function clear(): void
-    {
-        if (HLEB_ASYNC_MODE !== 1) return;
-
-        self::$messages = [];
-
-        self::$firstType = true;
     }
 
     // Output the standard message.

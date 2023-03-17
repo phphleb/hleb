@@ -37,7 +37,7 @@ final class MainDB
         $stmt = self::instance($config)->prepare($sql);
         $stmt->execute($args);
         $time = microtime(true) - $time;
-        if (!empty($GLOBALS['HLEB']['PROJECT_DEBUG_ON'])) {
+        if (defined('HLEB_PROJECT_DEBUG_ON') && HLEB_PROJECT_DEBUG_ON) {
             \Hleb\Main\DataDebug::add($sql, $time, self::setConfigKey($config), true);
         }
         if (defined('HLEB_DB_LOG_ENABLED') && HLEB_DB_LOG_ENABLED) {
@@ -99,23 +99,6 @@ final class MainDB
 
         return $config;
     }
-
-    /**
-     * System reset method for asynchronous requests.
-     *
-     * Системный метод приведения в первоначальный вид для асинхронных запросов.
-     *
-     * @internal
-     */
-    public static function clear(): void
-    {
-        foreach(self::$connectionList as $key => &$conn) {
-            $conn = null;
-            unset(self::$connectionList[$key]);
-        }
-        self::$connectionList = [];
-    }
-
 
     /**
      * @param string $name

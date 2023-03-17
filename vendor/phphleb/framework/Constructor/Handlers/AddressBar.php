@@ -22,6 +22,7 @@ final class AddressBar
     /** @internal */
     public $realUrl = null;
 
+
     // Initialization with input parameters.
     // Инициализация с вводными параметрами.
     /** @internal */
@@ -38,7 +39,7 @@ final class AddressBar
         $realParameters = count($partsOfAddress) > 0 ? '?' . implode('?', $partsOfAddress) : ''; // params
         $actualProtocol = $this->inputParameters['HTTPS'];
         $realProtocol = $this->inputParameters['HLEB_PROJECT_ONLY_HTTPS'] ? 'https://' : $actualProtocol; // protocol
-        $GLOBALS['HLEB']['PROJECT_PROTOCOL'] = $realProtocol;
+        define('HLEB_PROJECT_PROTOCOL', $realProtocol);
         $endElement = explode('/', $address);
         $fileUrl = stripos(end($endElement), '.') !== false;
         $relAddress = "";
@@ -58,6 +59,7 @@ final class AddressBar
         // Обработка доменов с кириллицей.
         $host = $this->inputParameters['SERVER']['HTTP_HOST'];
         $idn = null;
+        define('HLEB_MAIN_DOMAIN_ORIGIN', $host);
         if (stripos($host, 'xn--') !== false) {
             require $this->inputParameters['HLEB_PROJECT_DIRECTORY'] . '/Idnaconv/IdnaConvert.php';
             $idn = new IdnaConvert();
@@ -71,7 +73,7 @@ final class AddressBar
             if ($partsOfHost[0] != 'www') $partsOfHost = array_merge(['www'], $partsOfHost);
         }
         $realHostWww = implode('.', $partsOfHost); // host
-        $GLOBALS['HLEB']['MAIN_DOMAIN'] = $host;
+        define("HLEB_MAIN_DOMAIN", $host);
 
         // Check if the address is valid.
         // Проверка на валидность адреса.

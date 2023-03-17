@@ -41,8 +41,6 @@ final class TCreator
         $this->hlCacheTime =  $seconds;
     }
 
-    // Assigns route parameters to class variables and properties with content display.
-    // Назначает параметры маршрута в переменные и свойства класса с выводом контента.
     /**
      * @return integer
      *
@@ -52,7 +50,7 @@ final class TCreator
         extract($this->hlTemplateData);
         require $this->templatePath();
 
-        return  !defined('HLEB_TEMPLATE_CACHE') || (defined('HLEB_TEMPLATE_CACHE') && HLEB_TEMPLATE_CACHE) ? $this->hlCacheTime : 0;
+        return !defined('HLEB_TEMPLATE_CACHE') || (defined('HLEB_TEMPLATE_CACHE') && HLEB_TEMPLATE_CACHE) ? $this->hlCacheTime : 0;
     }
 
     // Returns the path to the content file.

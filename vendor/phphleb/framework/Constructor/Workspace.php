@@ -38,8 +38,8 @@ final class Workspace
     // Расчёт времени выполнения для панели отладки.
     private function calculateTime($name) {
         $num = count($this->debugTime) + 1;
-        if(isset($GLOBALS['HLEB_START']) || defined('HLEB_START')) {
-            $this->debugTime[$num . ' ' . $name] = round((microtime(true) - $GLOBALS['HLEB_START'] ?? HLEB_START), 4);
+        if(defined('HLEB_START')) {
+            $this->debugTime[$num . ' ' . $name] = round((microtime(true) - HLEB_START), 4);
         }
     }
 
@@ -96,7 +96,7 @@ final class Workspace
         }
         $this->renderGetMethod($block);
         $this->calculateTime('Create Project');
-        if ($GLOBALS['HLEB']['PROJECT_DEBUG_ON'] &&
+        if (HLEB_PROJECT_DEBUG_ON &&
             (new TryClass('Phphleb\Debugpan\DPanel'))->is_connect()) {
             DPanel::init(['time' => $this->debugTime, 'block' => $block]);
         }
@@ -263,16 +263,16 @@ final class Workspace
         }
 
         if (isset($action[2]) && $action[2] == 'module') {
-            isset($GLOBALS['HLEB']['OPTIONAL_MODULE_SELECTION']) or ($GLOBALS['HLEB']['OPTIONAL_MODULE_SELECTION'] = file_exists(HLEB_GLOBAL_DIRECTORY . "/modules/"));
+            defined('HLEB_OPTIONAL_MODULE_SELECTION') or define('HLEB_OPTIONAL_MODULE_SELECTION', file_exists(HLEB_GLOBAL_DIRECTORY . "/modules/"));
 
-            if (empty($GLOBALS['HLEB']['OPTIONAL_MODULE_SELECTION'])) {
+            if (!HLEB_OPTIONAL_MODULE_SELECTION) {
                 ErrorOutput::get('HL044-ROUTE_ERROR: Error in method ->module() ! ' . 'The `/modules` directory is not found, you must create it. ~' .
                     ' Директория `/modules` не обнаружена, необходимо её создать.');
             }
             $this->controllerForepart = 'Modules\\';
             $searchToModule = explode("/", trim($className, '/\\'));
-            if (count($searchToModule) && !isset($GLOBALS['HLEB']['MODULE_NAME'])) {
-                $GLOBALS['HLEB']['MODULE_NAME'] = $searchToModule[0];
+            if (count($searchToModule) && !defined('HLEB_MODULE_NAME')) {
+                define('HLEB_MODULE_NAME', $searchToModule[0]);
             }
             $this->viewPath = '/modules/' . implode('/', array_slice($searchToModule, 0, count($searchToModule) - 1)) . '/';
             $className = implode("\\", array_map('ucfirst', $searchToModule));

@@ -25,7 +25,7 @@ final class WorkDebug extends BaseSingleton
      * @param string|null $desc
      */
     public static function add($data, string $desc = null) {
-        if ($GLOBALS['HLEB']['PROJECT_DEBUG_ON']) {
+        if (HLEB_PROJECT_DEBUG_ON) {
             self::$data[] = [$data, $desc];
         }
     }
@@ -33,20 +33,6 @@ final class WorkDebug extends BaseSingleton
     /** @internal */
     public static function get(): array {
         return self::$data;
-    }
-
-    /**
-     * System reset method for asynchronous requests.
-     *
-     * Системный метод приведения в первоначальный вид для асинхронных запросов.
-     *
-     * @internal
-     */
-    public static function clear(): void
-    {
-        if (HLEB_ASYNC_MODE !== 1) return;
-
-        self::$data = [];
     }
 
 }

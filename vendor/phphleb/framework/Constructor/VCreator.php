@@ -22,6 +22,7 @@ final class VCreator
      */
     public function __construct(string $includePath) {
         $this->hlTemplatePath = $includePath;
+        $data = hleb_data();
     }
 
     // Returns the path to the content file.
