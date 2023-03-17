@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor;
 
-#[AllowDynamicProperties]
 final class TCreator
 {
     /** @internal */
@@ -51,11 +50,6 @@ final class TCreator
      */
     public function include() {
         extract($this->hlTemplateData);
-        foreach ($this->hlTemplateData as $key => $value) {
-            if (!in_array($key, ['hlTemplatePath', 'hlTemplateData', 'hlCacheTime'])) {
-                $this->$key = $value;
-            }
-        }
         require $this->templatePath();
 
         return  !defined('HLEB_TEMPLATE_CACHE') || (defined('HLEB_TEMPLATE_CACHE') && HLEB_TEMPLATE_CACHE) ? $this->hlCacheTime : 0;

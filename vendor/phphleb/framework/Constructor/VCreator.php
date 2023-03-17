@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Hleb\Constructor;
 
-#[AllowDynamicProperties]
 final class VCreator
 {
     /** @internal */
@@ -23,12 +22,6 @@ final class VCreator
      */
     public function __construct(string $includePath) {
         $this->hlTemplatePath = $includePath;
-        $data = hleb_data();
-        foreach ($data as $key => $value) {
-            if (!in_array($key, ['hlTemplatePath', 'hlTemplateData', 'hlCacheTime'])) {
-                $this->$key = $value;
-            }
-        }
     }
 
     // Returns the path to the content file.
