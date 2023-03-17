@@ -93,27 +93,11 @@ final class URL extends BaseSingleton
         return self::endingUrl(preg_replace('|([/]+)|s', '/', '/' . implode('/', $addressParts) . '/'));
     }
 
-    /**
-     * System reset method for asynchronous requests.
-     *
-     * Системный метод приведения в первоначальный вид для асинхронных запросов.
-     *
-     * @internal
-     */
-    public static function clear(): void
-    {
-        if (HLEB_ASYNC_MODE !== 1) return;
-
-        self::$standardUrlList = [];
-
-        self::$addresses = null;
-    }
-
     // Handles URL ending depending on settings.
     // Обрабатывает окончание URL в зависимости от настроек.
     protected static function endingUrl(string $url) {
         if ($url !== '' && defined('HLEB_PROJECT_ENDING_URL') &&
-            (!isset($GLOBALS['HLEB']['ENDING_URL_ON']) || $GLOBALS['HLEB']['ENDING_URL_ON'])
+            (!defined('HLEB_ENDING_URL_ON') || HLEB_ENDING_URL_ON)
         ) {
             $ending = $url[strlen($url) - 1];
             $element = explode('/', $url);
@@ -196,7 +180,7 @@ final class URL extends BaseSingleton
     private static function getStandard(string $url) {
         if (self::ifHttp($url)) {
             $arr_url = array_slice(explode('/', $url), 3);
-            return $GLOBALS['HLEB']['PROJECT_PROTOCOL'] . $GLOBALS['HLEB']['MAIN_DOMAIN'] . ($url[0] == '/' ? '' : '/') . (implode('/', $arr_url));
+            return HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN . ($url[0] == '/' ? '' : '/') . (implode('/', $arr_url));
         }
         return rawurldecode($url);
     }
@@ -212,7 +196,7 @@ final class URL extends BaseSingleton
     // Возвращает полный адрес url.
     public static function getFullUrl(string $url) {
         if (!self::ifHttp($url)) {
-            return $GLOBALS['HLEB']['PROJECT_PROTOCOL'] . $GLOBALS['HLEB']['MAIN_DOMAIN'] . ($url[0] == '/' ? '' : '/') . self::getStandardUrl($url);
+            return HLEB_PROJECT_PROTOCOL . HLEB_MAIN_DOMAIN . ($url[0] == '/' ? '' : '/') . self::getStandardUrl($url);
         }
         return self::getStandardUrl($url);
     }
@@ -226,11 +210,8 @@ final class URL extends BaseSingleton
             } else {
                 header('Location: ' . self::getStandardUrl($url), true, $code);
             }
-        } else {
-            throw new \ErrorException('Failed to redirect due to previously sent headers');
         }
-        sleep(2);
-        throw new \ErrorException('Failed to redirect');
+        hl_preliminary_exit();
     }
 
     // Multiple route handling.

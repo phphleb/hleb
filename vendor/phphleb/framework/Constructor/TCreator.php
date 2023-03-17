@@ -50,7 +50,7 @@ final class TCreator
         extract($this->hlTemplateData);
         require $this->templatePath();
 
-        return !defined('HLEB_TEMPLATE_CACHE') || (defined('HLEB_TEMPLATE_CACHE') && HLEB_TEMPLATE_CACHE) ? $this->hlCacheTime : 0;
+        return  !defined('HLEB_TEMPLATE_CACHE') || (defined('HLEB_TEMPLATE_CACHE') && HLEB_TEMPLATE_CACHE) ? $this->hlCacheTime : 0;
     }
 
     // Returns the path to the content file.
