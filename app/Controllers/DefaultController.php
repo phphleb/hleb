@@ -2,11 +2,13 @@
 
 namespace App\Controllers;
 
-class DefaultController extends \MainController
+use Hleb\Base\Controller;
+use Hleb\Constructor\Data\View;
+
+class DefaultController extends Controller
 {
-    public function index() {
+    public function index(): View
+    {
         return view("default");
     }
-
 }
-

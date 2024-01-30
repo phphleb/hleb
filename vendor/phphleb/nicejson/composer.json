@@ -1,0 +1,22 @@
+{
+    "name": "phphleb/nicejson",
+    "description": "Convert json to readable form",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Foma Tuturov",
+            "email": "fomiash@yandex.ru"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Phphleb\\Nicejson\\": "/"
+        }
+    },
+    "require": {
+        "php": ">=8.2.0",
+        "ext-json": "*"
+    },
+    "minimum-stability": "dev"
+}

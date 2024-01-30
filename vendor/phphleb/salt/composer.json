@@ -1,0 +1,21 @@
+{
+  "name": "phphleb/salt",
+  "description": "Setting up autocomplete for PHP Framework HLEB2",
+  "type": "library",
+  "keywords": [
+    "hleb2",
+    "autocomplete",
+    "php"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Foma Tuturov",
+      "email": "fomiash@yandex.ru"
+    }
+  ],
+  "require": {
+    "php": ">=8.2.0"
+  },
+  "minimum-stability": "dev"
+}

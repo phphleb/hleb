@@ -8,18 +8,18 @@
 
 # working files
 /storage/*
-!/storage/logs/.gitkeep
-!/storage/public/.gitkeep
-/storage/cache/routes/routes.txt
-!/storage/cache/routes/.gitkeep
-!/storage/cache/key/.gitkeep
-!/storage/cache/templates/.gitkeep
+!/storage/*.gitsavethequeen
 
 # database settings to production
-/database/dbase.config.php
+/config/database-*.php
+/modules/*/config/database-*.php
 
 # framework settings to production
-/start.hleb.php
+/config/common-*.php
+
+# custom settings for production
+/config/main-*.php
+/modules/*/config/main-*.php
 
 # phpunit itself is not needed
 phpunit.phar
@@ -31,7 +31,7 @@ phpunit.phar
 # docker-compose config
 docker-compose.override.yml
 
-# windows thumbnail cache
+# Windows thumbnail cache
 Thumbs.db
 
 # Mac DS_Store Files

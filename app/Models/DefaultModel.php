@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-class DefaultModel extends \MainModel
+use Hleb\Base\Model;
+
+class DefaultModel extends Model
 {
     // ... //
 }
-

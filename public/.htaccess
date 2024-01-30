@@ -16,3 +16,4 @@ AddDefaultCharset UTF-8
     ExpiresByType image/x-icon "access plus 1 day"
     ExpiresByType image/svg "access plus 1 hour"
 </ifModule>
+

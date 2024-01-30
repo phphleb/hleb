@@ -1,99 +1,195 @@
 <?php
 
-declare(strict_types=1);
-
-/*
- * Caching routemap to file.
- *
- * Кеширование карты маршрутов в файл.
- */
+/*declare(strict_types=1);*/
 
 namespace Hleb\Constructor\Cache;
 
-use Hleb\Main\Info;
-use Hleb\Constructor\Routes\LoadRoutes;
-use Hleb\Constructor\Routes\Route;
-use Hleb\Main\Errors\ErrorOutput;
+use Hleb\Constructor\Data\SystemSettings;
+use Hleb\Main\Routes\Prepare\Defender;
+use Hleb\RouteColoredException;
+use Hleb\Main\Routes\Prepare\FileChecker;
+use Hleb\Main\Routes\Prepare\Handler;
+use Hleb\Main\Routes\Prepare\Optimizer;
+use Hleb\Main\Routes\Prepare\Verifier;
+use Hleb\Main\Routes\StandardRoute;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 
-class CacheRoutes
+/**
+ * @internal
+ */
+final class CacheRoutes
 {
-    /** @var LoadRoutes|null */
-    private $opt = null;
+    private const DIR = '@storage/cache/routes';
 
-    // Returns an array with data about routes.
-    // Возвращает массив с данными о роутах.
-    /** @return array */
-    public function load() {
-        $this->opt = new LoadRoutes();
-        if ($this->opt->comparison()) {
-            $cache = $this->opt->loadCache();
-            if ($cache === false) {
-                $this->createRoutes();
-                Info::add('CacheRoutes', true);
-                return $this->check($this->opt->update(Route::instance()->data()));
-            }
-            Info::add('CacheRoutes', false);
-            return $cache;
-        }
-        $this->createRoutes();
-        Info::add('CacheRoutes', true);
-        return $this->check($this->opt->update(Route::instance()->data()));
+    private string $dir;
+
+    private ClassWithDataCreator $creator;
+
+    public function __construct(private readonly array $rawData)
+    {
+        $this->dir = SystemSettings::getPath(self::DIR);
+        $this->creator = new ClassWithDataCreator();
     }
 
-    // Check the availability of the file with the cache of routes. The contents of the file are returned or an error is displayed.
-    // Проверка доступнсти файла с кешем роутов. Возвращается содержимое файла или выводится ошибка.
-    private function check($data) {
-        if (!is_null($this->opt)) {
-            $cache = $this->opt->loadCache();
-            if (json_encode($cache) !== json_encode($data)) {
-                $userAndGroup = $this->getFpmUserName();
-                $user = explode(':', $userAndGroup)[0];
+    /**
+     * @throws RouteColoredException
+     */
+    public function save(): bool
+    {
+        // Saving the original configuration.
+        // Сохранение первоначальной конфигурации.
+        if (!$this->updateDefaultInfo()) {
+            return false;
+        }
 
-                $errors = 'HL021-CACHE_ERROR: No write permission ! ' .
-                    'Failed to save file to folder `/storage/*`.  You need to change the web server permissions in this folder. ~ ' .
-                    'Не удалось сохранить кэш !  Ошибка при записи файла в папку `/storage/*`. Необходимо расширить права веб-сервера для этой папки и вложений. <br>Например, выполнить в терминале ';
+        $this->recursiveRemoveDir(SystemSettings::getPath(self::DIR . '/Map'));
+        $this->recursiveRemoveDir(SystemSettings::getPath(self::DIR . '/Preview'));
 
-                if (!empty($user) && !empty($userAndGroup) && substr_count($userAndGroup, ':') === 1) {
-                    $errors .= '<span style="color:grey;background-color:#f4f7e4"><code>sudo chown -R ' . $user . ' ./storage</code></span> из корневой директории проекта, здесь <code>' . $userAndGroup . '</code> - это предполагаемый пользователь и группа, под которыми работает веб-сервер.';
-                } else {
-                    $errors .= '<span style="color:grey;background-color:#f4f7e4"><code>sudo chown -R www-data ./storage</code></span> из корневой директории проекта, здесь <code>www-data</code> - это предполагаемый пользователь, под которым работает Apache.';
-                }
-                ErrorOutput::get($errors, false);
+        (new FileChecker($this->rawData))->isCheckedOrError();
+
+        $sortRoutes = (new Handler($this->rawData))->sort();
+        $optimizer = (new Optimizer($sortRoutes))->update();
+
+        $list = $optimizer->getRoutesList();
+        // Save the preliminary list of routes.
+        // Сохранение предварительного списка маршрутов.
+        $this->savePreviewData($list);
+
+        $routes = $optimizer->getRoutesByMethod();
+
+        (new Verifier($routes))->isCheckedOrError();
+        // Save data for each route.
+        // Сохранение данных для каждого маршрута.
+        $this->saveSortData($routes);
+
+        $info = $optimizer->getRoutesInfo();
+        $info['time'] = \time();
+        $info['update_status'] = 0;
+        // Save global route information.
+        // Сохранение глобальной информации о маршрутах.
+        $this->updateInfo($info);
+
+        return true;
+    }
+
+    /**
+     * Saving minimized preliminary route data.
+     *
+     * Сохранение минимизированных предварительных данных маршрутов.
+     */
+    private function savePreviewData(array $data): void
+    {
+        (new Defender())->handle($data);
+
+        foreach ($data as $method => $items) {
+            if ($method === 'head') {
+                continue;
             }
+            $method = \ucfirst($method);
+            $class = RouteMark::getRouteClassName(RouteMark::PREVIEW_PREFIX . $method);
+            $this->creator->saveContent(
+                $class,
+                $this->dir . "/Preview/$class.php",
+                $items,
+            );
+        }
+    }
+
+    /**
+     * Deleting files in a directory.
+     * The files may have been deleted by another process.
+     *
+     * Удаление файлов в директории.
+     * Файлы могут быть удалены другим процессом.
+     */
+    private function recursiveRemoveDir(string $dir): void
+    {
+        $includes = \glob($dir . '/*');
+        foreach ($includes as $include) {
+            \is_dir($include) ? $this->recursiveRemoveDir($include) : @\unlink($include);
+        }
+        \clearstatcache();
+        \is_dir($dir) and \rmdir($dir);
+    }
+
+    public function updateDefaultInfo(): bool
+    {
+        if (!RouteMark::generateHash($this->rawData)) {
+            return false;
+        }
+        $className = RouteMark::getRouteClassName(RouteMark::INFO_CLASS_NAME);
+        return $this->creator->saveContent(
+            $className,
+            $this->dir . "/$className.php",
+            [
+                'time' => 0,
+                'index_page' => 0,
+                'update_status' => \microtime(true),
+            ],
+        );
+    }
+
+    public function updateInfo(array $data, ?string $className = null): void
+    {
+        $className = $className ?? RouteMark::getRouteClassName(RouteMark::INFO_CLASS_NAME);
+        $this->creator->saveContent(
+            $className,
+            $this->dir . "/$className.php",
+            $data,
+        );
+    }
+
+    /**
+     * Saving a cache with data of specific routes.
+     *
+     * Сохранение кеша с данными конкретных маршрутов.
+     */
+    private function saveSortData(array $list): void
+    {
+        (new Defender())->handle($list);
+        foreach ($list as $method => $items) {
+            if ($method === 'head') {
+                continue;
+            }
+            foreach ($items as $key => $data) {
+                $method = \ucfirst($method);
+                $class = RouteMark::getRouteClassName(RouteMark::DATA_PREFIX . $method . $key);
+                $this->creator->saveContent(
+                    $class,
+                    $this->dir . "/Map/$method/$class.php",
+                    $this->prepare($data),
+                );
+            }
+        }
+    }
+
+    /**
+     * Cleaning up unnecessary data.
+     *
+     * Очистка ненужных данных.
+     */
+    private function prepare(array $data): array
+    {
+        foreach($data['actions'] ?? [] as $key => $value) {
+            if ($value['method'] === StandardRoute::CONTROLLER_TYPE) {
+                $data['controller'] = $value;
+            }
+            if ($value['method'] === StandardRoute::PAGE_TYPE) {
+                $data['page'] = $value;
+            }
+            if ($value['method'] === StandardRoute::MODULE_TYPE) {
+                $data['module'] = $value;
+            }
+            if ($value['method'] === StandardRoute::MIDDLEWARE_TYPE) {
+                $data['middlewares'][]= $value;
+            }
+            if ($value['method'] === StandardRoute::AFTER_TYPE) {
+                $data['middleware-after'][]= $value;
+            }
+            unset($data['actions'][$key]);
         }
         return $data;
     }
-
-    // Output and compile the route map.
-    // Вывод и компиляция карты роутов.
-    private function createRoutes() {
-        hleb_require(HLEB_LOAD_ROUTES_DIRECTORY . '/main.php');
-
-        // Reserved file name is used /routes/.../main.php
-        // Используется зарезервированное название файла /routes/.../main.php
-        $this->addRoutesFromLibs();
-
-        Route::instance()->end();
-    }
-
-    // Returns the result of trying to determine the username on Linux-like systems.
-    // Возвращает результат попытки определения имени пользователя в Linux-подобных системах.
-    private function getFpmUserName() {
-        return preg_replace('|[\s]+|s', ':', strval(exec('ps -p ' . getmypid() . ' -o user,group')));
-    }
-
-    // Including all main.php files from nested directories.
-    // Подключение всех файлов main.php из вложенных директорий.
-    private function addRoutesFromLibs() {
-        $dir = opendir(HLEB_LOAD_ROUTES_DIRECTORY);
-        while ($file = readdir($dir)) {
-            $searchFile = DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . 'main.php';
-            if ($file != '.' && $file != '..' && is_dir(HLEB_LOAD_ROUTES_DIRECTORY . DIRECTORY_SEPARATOR . $file) &&
-                file_exists(HLEB_LOAD_ROUTES_DIRECTORY . $searchFile)) {
-                require_once HLEB_LOAD_ROUTES_DIRECTORY . $searchFile;
-            }
-        }
-    }
-
 }
-

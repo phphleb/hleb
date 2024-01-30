@@ -1,0 +1,33 @@
+{
+    "name": "phphleb/framework",
+    "description": "Engine for Framework HLEB2",
+    "type": "library",
+    "homepage": "https://hleb2framework.ru",
+    "keywords": [
+        "hleb2",
+        "phphleb",
+        "framework",
+        "php framework",
+        "php"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Foma Tuturov",
+            "email": "fomiash@yandex.ru"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Hleb\\": "/"
+        }
+    },
+    "require": {
+        "php": ">=8.2.0",
+        "phphleb/debugpan": "^2.0.0",
+        "phphleb/nicejson": "*",
+        "phphleb/salt": "*"
+    },
+    "minimum-stability": "dev"
+
+}

@@ -1,36 +1,42 @@
 <?php
 
+declare(strict_types=1);
+
 /*
- * Executing your own console command.
- * Execute `php console --list` to get a list of all commands.
+ * Own console command.
+ * By executing `php console --list` you can get a list of all commands.
  *
- * Выполнение собственной консольной команды.
- * При выполнении `php console --list` получить список всех команд.
+ * Собственная консольная команда.
+ * При выполнении `php console --list` можно получить список всех команд.
  */
 
 namespace App\Commands;
 
-class DefaultTask extends \Hleb\Scheme\App\Commands\MainTask
+use Hleb\Base\Task;
+
+class DefaultTask extends Task
 {
-    /* Console command name comes from class name */
-    /* Название консольной команды складывается из названия класса */
     /** php console default-task [arg] **/
 
-    /* Short name of the action for the command */
-    /* Короткое название действия для команды */
-    const DESCRIPTION = "Default task";
-
     /**
-     * @param string|int|null $arg - argument description
+     * <The first line from the command description will be the info in the command list.>
+     * Console command name comes from class name: `php console default-task`.
+     *
+     * Первая строчка из описания команды будет описанием команды в перечне команд.
+     * Название консольной команды складывается из названия класса: `php console default-task`.
+     *
+     * @param string|null $arg - demo unnamed argument, default null.
+     *                         - демонстрационный неименованный аргумент, по умолчанию null.
+     *
+     * @return int - returns the numeric command execution code.
+     *             - возвращает числовой код выполнения команды.
      */
-    protected function execute($arg = null) {
-
+    protected function run(?string $arg = null): int
+    {
         // Your code here.
         // Разместите здесь свой код.
+        // ... //
 
-        echo PHP_EOL . __CLASS__ . " done." . PHP_EOL;
+        return self::SUCCESS_CODE;
     }
-
 }
-
-

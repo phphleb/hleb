@@ -4,16 +4,6 @@
  * All service commands: php console --help
  */
 
-define('HLEB_GLOBAL_DIRECTORY', __DIR__);
-define('HLEB_PUBLIC_DIR', realpath(HLEB_GLOBAL_DIRECTORY . '/public'));
-
-// Additional structural paths
-/*
- define('HLEB_SEARCH_START_CONFIG_FILE', HLEB_GLOBAL_DIRECTORY);
- define('HLEB_SEARCH_DBASE_CONFIG_FILE', realpath(HLEB_GLOBAL_DIRECTORY . '/database'));
- define('HLEB_STORAGE_DIRECTORY', realpath(HLEB_GLOBAL_DIRECTORY . '/storage'));
-*/
+define('HLEB_PUBLIC_DIR', realpath(__DIR__ . '/public'));
 
 require realpath(__DIR__ . '/vendor/phphleb/framework/console.php');
-
-

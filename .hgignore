@@ -1,0 +1,41 @@
+# phpstorm project files
+\.idea
+\.idea/*
+
+# visualstudio files
+\.vscode
+\.vscode/*
+
+# working files
+storage/*
+^storage/*.gitsavethequeen
+
+# database settings to production
+config/database-*.php
+modules/*/config/database-*.php
+
+# framework settings to production
+config/common-*.php
+
+# custom settings for production
+config/main-*.php
+modules/*/config/main-*.php
+
+# phpunit itself is not needed
+phpunit.phar
+
+# local phpunit config
+phpunit.xml
+\.phpunit.result.cache
+
+# docker-compose config
+docker-compose.override.yml
+
+# Windows thumbnail cache
+Thumbs.db
+
+# Mac DS_Store Files
+\.DS_Store
+
+# Composer authentication credentials
+auth.json

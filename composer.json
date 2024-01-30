@@ -1,60 +1,55 @@
 {
-  "name": "phphleb/hleb",
-  "description": "PHP Micro-Framework HLEB",
-  "type": "project",
-  "keywords": [
-    "framework",
-    "hleb",
-    "phphleb",
-    "microframework",
-    "micro-framework",
-    "php"
-  ],
-  "homepage": "https://phphleb.ru",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Foma Tuturov",
-      "email": "fomiash@yandex.ru"
-    }
-  ],
-  "require": {
-    "php": ">=7.1.0",
-    "ext-json": "*",
-    "ext-pdo": "*",
-    "phphleb/framework": ">=1.6.64",
-    "phphleb/debugpan": "1.*"
-  },
-  "autoload": {
-    "classmap": [
-      "app/",
-      "database/",
-      "vendor/phphleb"
+    "name": "phphleb/hleb",
+    "description": "PHP Framework HLEB2 is the foundation of the web application. Provides ease of development and application performance.",
+    "type": "project",
+    "keywords": [
+        "framework",
+        "hleb",
+        "hleb2",
+        "phphleb",
+        "php"
     ],
-    "psr-4": {
-      "App\\": "app/",
-      "Phphleb\\": "vendor/phphleb/",
-      "Hleb\\": "vendor/phphleb/framework/"
+    "homepage": "https://hleb2framework.ru",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Foma Tuturov",
+            "email": "fomiash@yandex.ru"
+        }
+    ],
+    "require": {
+        "php": ">=8.2.0",
+        "phphleb/framework": "^2.0.0"
     },
-    "exclude-from-classmap": [
-      "**/DraftInstances/"
-    ]
-  },
-  "suggest": {
-    "phphleb/xdorm": "XD ORM is a compact shell over PHP PDO",
-    "phphleb/adminpan": "Simple and adaptive Admin Panel",
-    "phphleb/conductor": "Special mutexes",
-    "phphleb/hlogin": "User registration module"
-  },
-  "config": {
-    "optimize-autoloader": true
-  },
-  "scripts": {
-    "post-root-package-install": [
-      "@php -r \"@unlink('.travis.yml');\"",
-      "@php -r \"@unlink('./public/requirements.php');\""
-    ]
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+    "autoload": {
+        "classmap": [
+            "app/",
+            "vendor/phphleb"
+        ],
+        "psr-4": {
+            "Phphleb\\": "vendor/phphleb/",
+            "Phphleb\\Hlogin\\": "vendor/phphleb/hlogin/",
+            "Hleb\\": "vendor/phphleb/framework/",
+            "App\\": "app/"
+        },
+        "exclude-from-classmap": [
+            "/storage/",
+            "/config/",
+            "/routes/",
+            "/vendor/phphleb/tests/",
+            "/vendor/phphleb/framework/Optional/",
+            "/vendor/phphleb/hlogin/Optional",
+            "/vendor/phphleb/hlogin/hleb-project",
+            "/vendor/phphleb/docs/match-directory"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "@php console project-setup-task --clear"
+        ]
+    },
+    "minimum-stability": "dev"
 }

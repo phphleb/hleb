@@ -1,0 +1,25 @@
+{
+    "name": "phphleb/debugpan",
+    "description": "Debug Panel for PHP Framework HLEB2",
+    "type": "library",
+    "homepage": "https://hleb2framework.ru",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Foma Tuturov",
+            "email": "fomiash@yandex.ru"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "phphleb/framework": ">=2.0.0",
+        "phphleb/nicejson": "dev-main"
+    },
+    "autoload": {
+        "psr-4": {
+            "Phphleb\\Debugpan\\": "/"
+        }
+    },
+    "minimum-stability": "dev"
+
+}

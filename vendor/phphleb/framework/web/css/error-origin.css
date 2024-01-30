@@ -1,0 +1,49 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+}
+
+.hl-error-page-content {
+    position: fixed;
+    pointer-events: none;
+    text-align: center;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.hl-error-page-message {
+    position: absolute;
+    top: calc(50% - 40px);
+    left: 50%;
+    transform: translate(-50%);
+    max-width: 90%;
+    color: #B4ACA6;
+    font-family: "PT Sans", "Arial", serif;
+    font-size: 30px;
+    opacity: 0.6;
+    white-space: nowrap;
+}
+
+.hl-error-page-code {
+    display: inline-block;
+    font-size: 36px;
+    position: relative;
+    top: 2px;
+    right: 5px;
+}
+
+@media only screen and (max-width: 400px) {
+    .hl-error-page-message {
+        font-size: 15px
+    }
+    .hl-error-page-code {
+        font-size: 15px;
+        top: 0;
+        right: 0;
+    }
+}
