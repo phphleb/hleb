@@ -21,8 +21,5 @@
 *.ico  binary
 
 # Ignoring files when archiving a project
-/.github           export-ignore
-/.gitattributes    export-ignore
-/.gitignore        export-ignore
 /storage/logs      export-ignore
 /storage/cache     export-ignore
