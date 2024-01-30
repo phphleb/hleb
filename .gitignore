@@ -9,7 +9,6 @@
 # working files
 /storage/*
 !/storage/*.gitsavethequeen
-!*.gitsavethequeen
 
 # database settings to production
 /config/database-*.php
