@@ -8,14 +8,15 @@
 [![Total Downloads](https://poser.pugx.org/phphleb/hleb/downloads)](https://packagist.org/packages/phphleb/hleb)
 [![License: MIT](https://img.shields.io/badge/License-MIT%20(Free)-brightgreen.svg)](https://github.com/phphleb/hleb/blob/master/LICENSE)
 ![PHP](https://img.shields.io/badge/PHP-^8.2-blue)
-![build](https://github.com/phphleb/framework/actions/workflows/build.yml/badge.svg?event=push)
+![build](https://github.com/phphleb/framework/actions/workflows/build.yml/badge.svg?event=push)(https://github.com/phphleb/framework/actions/workflows/build.yml)
 
-Supports PHP 8.2+
 
 A distinctive feature of the framework **HLEB2** is the minimalism of the code and the speed of work.
 The choice of this framework allows you to launch a full-fledged product with minimal time costs and appeals to [documentation](https://hleb2framework.ru); it is easy, simple and fast.
 At the same time, it solves typical tasks, such as routing, shifting actions to controllers, model support, so, the basic MVC implementation.
 This is the very minimum you need to quickly launch an application.
+
+Supports PHP 8.2+
 
 Basic features of the framework:
 
