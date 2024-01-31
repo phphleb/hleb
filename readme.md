@@ -1,6 +1,6 @@
 # HLEB2
 
-[![HLEB LOGO](https://raw.githubusercontent.com/phphleb/hleb/c380ba767901c1a925f26c96d39de4993ce4d1fc/public/images/logo.png)](https://github.com/phphleb/hleb)
+[![HLEB LOGO](https://raw.githubusercontent.com/phphleb/hleb/61b20d9135d372c610bb38a49ad383aa5a069964/public/images/logo.png)](https://github.com/phphleb/hleb)
 
 ## PHP Framework
 
