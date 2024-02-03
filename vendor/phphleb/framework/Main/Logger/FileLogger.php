@@ -149,10 +149,10 @@ class FileLogger extends BaseLogger implements LoggerInterface
             }
         }
         $dbPrefix = $level === LogLevel::STATE && \str_contains($row, SystemDB::DB_PREFIX) ? '.db' : '';
+        if (!\file_exists($dir)) {
+            @\mkdir($dir, 0766, true);
+        }
         if ($this->isConsoleMode) {
-            if (!\file_exists($dir)) {
-                \hl_create_directory($dir);
-            }
             \file_put_contents($dir . $I . \date('Y_m_d') . $dbPrefix . '.system.log', $row . PHP_EOL, FILE_APPEND|LOCK_EX);
             return;
         }
