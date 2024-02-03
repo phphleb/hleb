@@ -563,13 +563,8 @@ final class ConsoleHandler
         if (\end($this->arguments) === '--help') {
             return '[HELP] Creating a project section with nested directories and files.' . PHP_EOL;
         }
-        if (\end($this->arguments) === 'module') {
-            if ($this->thirdArgument === '--help') {
-                return '[HELP] Create a new module structure in a project with default files.' . PHP_EOL;
-            }
-            if ($this->thirdArgument) {
-                return (new ModuleCreator())->run($this->thirdArgument);
-            }
+        if ($this->secondArgument === 'module' && $this->thirdArgument) {
+            return (new ModuleCreator())->run($this->thirdArgument);
         }
         return false;
     }
