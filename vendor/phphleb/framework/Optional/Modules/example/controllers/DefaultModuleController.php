@@ -12,7 +12,11 @@ use Hleb\Constructor\Data\View;
  * Шаблон для контроллера модуля.
  * Назначить его в маршруте можно следующим образом:
  *
- * Route::get(...)->module('module_base_name_template', 'DefaultModuleController');
+ * ```php
+ * use Modules\Admin\Controllers\DefaultModuleController;
+ *
+ * Route::get(...)->module('module_base_name_template', DefaultModuleController::class);
+ * ```
  */
 class DefaultModuleController extends Module
 {
