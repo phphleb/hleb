@@ -66,7 +66,7 @@ This means that debug mode is active, which needs to be disabled for a public pr
 
 Greetings
 -----------------------------------
-Project routes are compiled by the developer in the "/routes/map.php" file.
+Project routes are assigned by the developer in the file “/routes/map.php”.
 
 ```php
 Route::get('/', 'Hello, world!');
