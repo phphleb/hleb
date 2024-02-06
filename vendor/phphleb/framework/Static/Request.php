@@ -487,6 +487,22 @@ final class Request extends BaseAsyncSingleton
     }
 
     /**
+     * Returns the result of comparing the current URN (the address from the URL without parameters) with $uri.
+     * The trailing slash is ignored.
+     *
+     * Возвращает результат сравнения текущего URN (адрес из URL без параметров) с $uri.
+     * Завершающая косая черта игнорируется.
+     */
+    public static function isCurrent(string $uri): bool
+    {
+        if (self::$replace) {
+            return self::$replace->isCurrent($uri);
+        }
+
+        return BaseContainer::instance()->get(RequestInterface::class)->isCurrent($uri);
+    }
+
+    /**
      * Get the corresponding headers as a string.
      * For example, for `Accept-Encoding: gzip, deflate` will return:
      *

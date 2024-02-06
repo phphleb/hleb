@@ -308,7 +308,16 @@ interface RequestInterface
      *
      * Возвращает данные из $_SERVER по названию.
      */
-    public static function server($name): mixed;
+    public function server($name): mixed;
+
+    /**
+     * Returns the result of comparing the current URN (the address from the URL without parameters) with $uri.
+     * The trailing slash is ignored.
+     *
+     * Возвращает результат сравнения текущего URN (адрес из URL без параметров) с $uri.
+     * Завершающая косая черта игнорируется.
+     */
+    public function isCurrent(string $uri): bool;
 
     /**
      * In exceptional cases, it is necessary to process the download stream.

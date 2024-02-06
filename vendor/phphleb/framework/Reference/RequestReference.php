@@ -233,10 +233,18 @@ class RequestReference extends ContainerUniqueItem implements RequestInterface, 
 
     /** @inheritDoc */
     #[\Override]
-    public static function server($name): mixed
+    public function server($name): mixed
     {
         return $_SERVER[$name] ?? null;
     }
+
+    /** @inheritDoc */
+    #[\Override]
+    public function isCurrent(string $uri): bool
+    {
+        return \trim($uri, '/') === \trim($this->getUri()->getPath(), '/');
+    }
+
 
     /** @inheritDoc */
     #[\Override]
