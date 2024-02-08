@@ -34,16 +34,14 @@ use Hleb\Static\Script;
  */
 final class ErrorLog
 {
-    private function __construct()
-    {
-    }
-
     /**
      * A third-party logging method with an interface.
      *
      * Сторонний способ логирования с интерфейсом.
      */
     protected static ?LoggerInterface $logger = null;
+
+    private static $config = [];
 
     /**
      * If the logging method differs from the standard one,
@@ -133,8 +131,10 @@ final class ErrorLog
                     $log->error($errstr, $params);
                     break;
             }
+            self::$config and SystemSettings::setData(self::$config);
         } catch (\Throwable $t) {
             \error_log((string)$t);
+            self::$config = [];
             return false;
         }
 
@@ -238,6 +238,7 @@ final class ErrorLog
         if (!\function_exists('get_env')) {
             require __DIR__ . '/../Init/Review/basic.php';
         }
+        self::$config = SystemSettings::getData();
         SystemSettings::init(HLEB_LOAD_MODE);
         $config = self::getMinConfig();
         $common = $config['common'];
@@ -271,7 +272,7 @@ final class ErrorLog
                 'global' => $dir,
                 'storage' => $dir . '/storage',
                 'public' => \defined("HLEB_PUBLIC_DIR") ? HLEB_PUBLIC_DIR : $dir . '/public',
-                ],
+            ],
             'common' => $c,
         ];
     }
