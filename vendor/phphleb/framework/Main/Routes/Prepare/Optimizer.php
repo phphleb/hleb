@@ -185,6 +185,7 @@ final class Optimizer
      */
     private function createRouteRequest(string $address, array $route, int $key): array
     {
+        $address !== '/' and $address = \rtrim($address, '/');
         $result = ['a' => $address, 'k' => $key];
         $domain = [];
         $result['f'] = \str_contains($address, '/') ? $this->withIndex(\strstr($address, '/', true)) : $address;
