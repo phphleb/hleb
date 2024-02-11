@@ -909,7 +909,7 @@ class HlebBootstrap
             }
             \class_exists(ErrorLog::class, false) or require __DIR__ . '/Init/ErrorLog.php';
 
-            if ($level !== -1 && ErrorLog::compareLevel($errno, $level)) {
+            if ($level !== -1 && !ErrorLog::compareLevel($errno, $level)) {
                 return true;
             }
             ErrorLog::setLogger($logger);
