@@ -34,26 +34,6 @@ use Hleb\Static\Script;
  */
 final class ErrorLog
 {
-    private const E_LEVEL = [
-        E_CORE_ERROR,
-        E_ERROR,
-        E_USER_ERROR,
-        E_PARSE,
-        E_COMPILE_ERROR,
-        E_RECOVERABLE_ERROR,
-        E_USER_WARNING,
-        E_WARNING,
-        E_CORE_WARNING,
-        E_COMPILE_WARNING,
-        E_USER_NOTICE,
-        E_NOTICE,
-        E_STRICT,
-        E_DEPRECATED,
-        E_USER_DEPRECATED,
-        E_ALL,
-    ];
-
-
     /**
      * A third-party logging method with an interface.
      *
@@ -121,13 +101,13 @@ final class ErrorLog
                 $params['line'] = $errline;
             }
             $log = self::$logger ?? Log::instance();
-            $errorText = SystemSettings::isCli() === false ? $errstr : '';
+
             $debug = DynamicParams::isDebug();
             switch ($errno) {
                 case E_CORE_ERROR:
                     self::outputNotice();
                     $log->critical($errstr, $params);
-                    \async_exit($debug ? $errorText : '', 500);
+                    \async_exit($debug ? (SystemSettings::isCli() ?  '' : $errstr) : '', 500);
                     break;
                 case E_ERROR:
                 case E_USER_ERROR:
@@ -136,7 +116,7 @@ final class ErrorLog
                 case E_RECOVERABLE_ERROR:
                     self::outputNotice();
                     $log->error($errstr, $params);
-                    \async_exit($debug ? $errorText : '', 500);
+                    \async_exit($debug ? (SystemSettings::isCli() ?  '' : $errstr) : '', 500);
                     break;
                 case E_USER_WARNING:
                 case E_WARNING:
@@ -144,7 +124,7 @@ final class ErrorLog
                 case E_COMPILE_WARNING:
                     self::outputNotice();
                     $log->warning($errstr, $params);
-                    $errorText && $debug and print PHP_EOL . "Warning: $errorText in $errfile:$errline" . PHP_EOL;
+                    $debug and print PHP_EOL . "Warning: $errstr in $errfile:$errline" . PHP_EOL;
                     break;
                 case E_USER_NOTICE:
                 case E_NOTICE:
@@ -152,12 +132,12 @@ final class ErrorLog
                 case E_DEPRECATED:
                 case E_USER_DEPRECATED:
                     $log->notice($errstr, $params);
-                    $errorText && $debug and self::$notices[] = PHP_EOL . "Notice: $errorText in $errfile:$errline" . PHP_EOL;
+                    $debug and self::$notices[] = PHP_EOL . "Notice: $errstr in $errfile:$errline" . PHP_EOL;
                     break;
                 default:
                     self::outputNotice();
                     $log->error($errstr, $params);
-                    \async_exit($debug ? $errorText : '', 500);
+                    \async_exit($debug ? (SystemSettings::isCli() ?  '' : $errstr) : '', 500);
                     break;
             }
             self::$config and SystemSettings::setData(self::$config);
@@ -177,18 +157,6 @@ final class ErrorLog
     {
         self::$config = [];
         self::$notices = [];
-    }
-
-    /**
-     * Returns the result of comparing the current error level with the internal significance hierarchy.
-     *
-     * Возвращает результат сравнения текущего уровня ошибок с внутренней иерархией значимости.
-     */
-    public static function compareLevel($actualLevel, int $errorLevel = E_ALL): bool
-    {
-        $lv = \array_flip(self::E_LEVEL);
-
-        return ($lv[$actualLevel] ?? \count($lv) - 1) <= ($lv[$errorLevel] ?? \count($lv) - 1);
     }
 
     /**
