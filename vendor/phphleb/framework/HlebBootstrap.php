@@ -107,7 +107,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.4');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.5');
 
         $this->logger = $logger;
 
@@ -170,7 +170,7 @@ class HlebBootstrap
             $this->scriptExitEmulation($e);
 
         } catch (HttpException $e) {
-          $this->scriptHttpError($e);
+            $this->scriptHttpError($e);
 
         } catch (Throwable $t) {
             $this->getPreviousErrorControl($t) or $this->scriptErrorHandling($t);
@@ -268,7 +268,7 @@ class HlebBootstrap
             \spl_autoload_unregister('Hleb\agentLoader');
 
             if (\file_exists($vendorDir = \constant('HLEB_VENDOR_DIR') . '/autoload.php')) {
-               require_once $vendorDir;
+                require_once $vendorDir;
             }
             \spl_autoload_call($class);
             \spl_autoload_unregister('Hleb\reqLoadFunc');
@@ -507,6 +507,8 @@ class HlebBootstrap
                 'custom.function.files' => ['array'],
             ],
         ];
+        // The following errors that occur at this level can be displayed without taking into account the settings and debug mode.
+        // Следующие ошибки, возникающие на данном уровне, могут быть отображены без учёта настроек и режима отладки.
         foreach ($map as $key => $rule) {
             if (empty($config[$key])) {
                 throw new \DomainException("Configuration not found for `$key`");
@@ -903,8 +905,9 @@ class HlebBootstrap
                 return false;
             }
             \class_exists(ErrorLog::class, false) or require __DIR__ . '/Init/ErrorLog.php';
+            ErrorLog::setLogger($logger);
 
-            return ErrorLog::execute($errno, $errstr, $errfile, $errline, $logger);
+            return ErrorLog::execute($errno, $errstr, $errfile, $errline);
         }
 
         \set_error_handler('Hleb\hl_user_log');

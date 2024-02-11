@@ -409,7 +409,8 @@ class HlebAsyncBootstrap extends HlebBootstrap
                      Path::class, Redirect::class, Arr::class, Converter::class, Debug::class,
                      Cache::class, RouteMark::class, MainLogLevel::class, Command::class,
                      ContainerFactory::class, DI::class, Container::class, Router::class,
-                     Session::class, Settings::class, System::class, WebConsole::class] as $class) {
+                     Session::class, Settings::class, System::class, WebConsole::class, ErrorLog::class
+                 ] as $class) {
             \class_exists($class, false) && $class::rollback();
         }
     }

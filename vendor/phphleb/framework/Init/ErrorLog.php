@@ -41,7 +41,9 @@ final class ErrorLog
      */
     protected static ?LoggerInterface $logger = null;
 
-    private static $config = [];
+    private static array $config = [];
+
+    private static array $notices = [];
 
     /**
      * If the logging method differs from the standard one,
@@ -50,7 +52,7 @@ final class ErrorLog
      * Если способ логирования отличается от стандартного,
      * то можно указать его здесь.
      */
-    public static function setLogger(LoggerInterface $logger): void
+    public static function setLogger(?LoggerInterface $logger): void
     {
         self::$logger = $logger;
     }
@@ -86,9 +88,8 @@ final class ErrorLog
      *
      * Вывод ошибок в механизм логирования даже если часть классов не загружена.
      */
-    public static function execute(int $errno, string $errstr, string $errfile = null, int $errline = null, ?LoggerInterface $logger): bool
+    public static function execute(int $errno, string $errstr, string $errfile = null, int $errline = null): bool
     {
-        self::$logger = $logger;
         try {
             self::loadBaseClasses();
 
@@ -99,26 +100,31 @@ final class ErrorLog
             if ($errline) {
                 $params['line'] = $errline;
             }
-            $log = Log::instance();
+            $log = self::$logger ?? Log::instance();
             $errorText = SystemSettings::isCli() === false ? $errstr : '';
+            $debug = DynamicParams::isDebug();
             switch ($errno) {
                 case E_CORE_ERROR:
+                    self::outputNotice();
                     $log->critical($errstr, $params);
-                    \async_exit(DynamicParams::isDebug() ? $errorText : '', 500);
+                    \async_exit($debug ? $errorText : '', 500);
                     break;
                 case E_ERROR:
                 case E_USER_ERROR:
                 case E_PARSE:
                 case E_COMPILE_ERROR:
                 case E_RECOVERABLE_ERROR:
+                    self::outputNotice();
                     $log->error($errstr, $params);
-                    \async_exit(DynamicParams::isDebug() ? $errorText : '', 500);
+                    \async_exit($debug ? $errorText : '', 500);
                     break;
                 case E_USER_WARNING:
                 case E_WARNING:
                 case E_CORE_WARNING:
                 case E_COMPILE_WARNING:
+                    self::outputNotice();
                     $log->warning($errstr, $params);
+                    $errorText && $debug and print PHP_EOL . "Warning: $errorText in $errfile:$errline" . PHP_EOL;
                     break;
                 case E_USER_NOTICE:
                 case E_NOTICE:
@@ -126,9 +132,12 @@ final class ErrorLog
                 case E_DEPRECATED:
                 case E_USER_DEPRECATED:
                     $log->notice($errstr, $params);
+                    $errorText && $debug and self::$notices[] = PHP_EOL . "Notice: $errorText in $errfile:$errline" . PHP_EOL;
                     break;
                 default:
+                    self::outputNotice();
                     $log->error($errstr, $params);
+                    \async_exit($debug ? $errorText : '', 500);
                     break;
             }
             self::$config and SystemSettings::setData(self::$config);
@@ -142,14 +151,23 @@ final class ErrorLog
     }
 
     /**
+     * @internal
+     */
+    public static function rollback(): void
+    {
+        self::$config = [];
+        self::$notices = [];
+    }
+
+    /**
      * Parsing and logging errors.
      *
      * Разбор и логирование ошибки.
      */
-    private static function make(\Throwable $t): \Throwable
+    private static function make(\Throwable $t, int $error = E_USER_WARNING): \Throwable
     {
         try {
-            self::execute(0, $t->getMessage() . ' ' . $t->getTraceAsString(), $t->getFile(), $t->getLine(), self::$logger);
+            self::execute($error, $t->getMessage() . ' ' . $t->getTraceAsString(), $t->getFile(), $t->getLine());
         } catch (\Throwable) {
         }
         return $t;
@@ -275,5 +293,18 @@ final class ErrorLog
             ],
             'common' => $c,
         ];
+    }
+
+    /**
+     * Notification output is close to natural output.
+     *
+     * Вывод notice, приближённый к естественному отображению.
+     */
+    private static function outputNotice(): void
+    {
+        if (self::$notices) {
+            print \implode(PHP_EOL, self::$notices);
+            self::$notices = [];
+        }
     }
 }
