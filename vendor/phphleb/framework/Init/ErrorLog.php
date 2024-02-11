@@ -34,6 +34,26 @@ use Hleb\Static\Script;
  */
 final class ErrorLog
 {
+    private const E_LEVEL = [
+        E_CORE_ERROR,
+        E_ERROR,
+        E_USER_ERROR,
+        E_PARSE,
+        E_COMPILE_ERROR,
+        E_RECOVERABLE_ERROR,
+        E_USER_WARNING,
+        E_WARNING,
+        E_CORE_WARNING,
+        E_COMPILE_WARNING,
+        E_USER_NOTICE,
+        E_NOTICE,
+        E_STRICT,
+        E_DEPRECATED,
+        E_USER_DEPRECATED,
+        E_ALL,
+    ];
+
+
     /**
      * A third-party logging method with an interface.
      *
@@ -157,6 +177,18 @@ final class ErrorLog
     {
         self::$config = [];
         self::$notices = [];
+    }
+
+    /**
+     * Returns the result of comparing the current error level with the internal significance hierarchy.
+     *
+     * Возвращает результат сравнения текущего уровня ошибок с внутренней иерархией значимости.
+     */
+    public static function compareLevel($actualLevel, int $errorLevel = E_ALL): bool
+    {
+        $lv = \array_flip(self::E_LEVEL);
+
+        return ($lv[$actualLevel] ?? \count($lv) - 1) <= ($lv[$errorLevel] ?? \count($lv) - 1);
     }
 
     /**

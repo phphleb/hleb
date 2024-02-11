@@ -726,6 +726,7 @@ class HlebBootstrap
         $this->vendorDirectory = \rtrim($this->searchVendorDirectory(), '/\\');
 
         $this->config = $this->getConfig();
+        \error_reporting($this->config['common']['error.reporting']);
 
         $this->loadBaseClasses(); // #1
         SystemSettings::init($this->mode);
@@ -823,7 +824,7 @@ class HlebBootstrap
                 }
                 return (bool)$load;
             }
-            spl_autoload_register('Hleb\otherLoadFunc');
+            \spl_autoload_register('Hleb\otherLoadFunc');
         }
     }
 
@@ -838,7 +839,7 @@ class HlebBootstrap
         if ($urlValidator->check()->isUrlCompare()) {
             return;
         }
-        async_exit('', 301, array_merge(Response::getHeaders(), ['Location' => $urlValidator->getResultUrl()]));
+        async_exit('', 301, \array_merge(Response::getHeaders(), ['Location' => $urlValidator->getResultUrl()]));
     }
 
     /**
@@ -890,7 +891,7 @@ class HlebBootstrap
             return;
         }
         $logger = $this->logger;
-
+        $config = $this->config;
         /**
          * Outputting errors to the logger even if some of the classes are not loaded.
          *
@@ -901,10 +902,16 @@ class HlebBootstrap
         function hl_user_log(int $errno, string $errstr, string $errfile = null, int $errline = null): bool
         {
             global $logger;
-            if (!\error_reporting()) {
-                return false;
+
+            $level = \error_reporting();
+            if ($level === 0) {
+                return true;
             }
             \class_exists(ErrorLog::class, false) or require __DIR__ . '/Init/ErrorLog.php';
+
+            if ($level !== -1 && ErrorLog::compareLevel($errno, $level)) {
+                return true;
+            }
             ErrorLog::setLogger($logger);
 
             return ErrorLog::execute($errno, $errstr, $errfile, $errline);

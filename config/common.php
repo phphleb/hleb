@@ -140,6 +140,8 @@ return [
     │ which of them will be displayed.
     │ Add all PHP errors to the report: 'error.reporting' => -1
     │ Disable error logging: 'error.reporting' => 0
+    │ You can set the upper logging level using one of the constants:
+    │ https://www.php.net/manual/en/errorfunc.constants.php
     │ Default: E_ALL
     │
     │
@@ -150,6 +152,8 @@ return [
     │ В PHP много уровней ошибок, здесь определяется какие из них будут выведены.
     │ Добавлять в отчет все ошибки PHP: 'error.reporting' => -1
     │ Выключение протоколирования ошибок: 'error.reporting' => 0
+    │ Задать верхний уровень протоколирования можно через одну из констант:
+    │ https://www.php.net/manual/ru/errorfunc.constants.php
     │ Изначально: E_ALL (Все ошибки)
     │
     */

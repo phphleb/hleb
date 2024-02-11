@@ -127,8 +127,8 @@ final class ReflectionMethod
     public function getDocComment(): string
     {
         $result = [];
-        foreach(\explode(PHP_EOL, (string)$this->method->getDocComment()) as $str) {
-           $result[]= \trim(\ltrim($str, '/* '));
+        foreach(\preg_split("/\r\n|\r|\n/", (string)$this->method->getDocComment()) as $str) {
+            $result[]= \trim(\ltrim($str, '/* '));
         }
         return \implode(PHP_EOL, $result);
     }
