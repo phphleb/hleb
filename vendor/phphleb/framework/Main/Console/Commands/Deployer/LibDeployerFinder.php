@@ -15,7 +15,7 @@ final class LibDeployerFinder
      *
      * Единый простой способ определения, что библиотека может быть развёртываемой.
      */
-    public function isExists(string $command): string|false
+    public function isExists(string $command): bool
     {
         return (bool)SystemSettings::getRealPath("@vendor/$command/updater.json");
     }

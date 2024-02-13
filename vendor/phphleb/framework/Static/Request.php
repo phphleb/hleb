@@ -235,20 +235,21 @@ final class Request extends BaseAsyncSingleton
     }
 
     /**
-     * Returns the converted request body, for example if it is in JSON format.
+     * Returns the request body converted to an array, for example if it is in JSON format.
+     * (!) The data is returned in its original form,
+     * so you need to check it for vulnerabilities yourself.
      *
-     * Возвращает преобразованное тело запроса, например, если оно в формате JSON.
-     *
-     * @param bool $cleared - clean data.
-     *                      - производить очистку данных.
+     * Возвращает преобразованное в массив тело запроса, например, если оно в формате JSON.
+     * (!) Данные возвращаются в исходном виде, поэтому нужно
+     * самостоятельно проверить их на уязвимости.
      */
-    public static function getParsedBody(bool $cleared = true): null|array
+    public static function getParsedBody(): array
     {
         if (self::$replace) {
-            return self::$replace->getParsedBody($cleared);
+            return self::$replace->getParsedBody();
         }
 
-        return BaseContainer::instance()->get(RequestInterface::class)->getParsedBody($cleared);
+        return BaseContainer::instance()->get(RequestInterface::class)->getParsedBody();
     }
 
     /**

@@ -98,13 +98,7 @@ class RequestReference extends ContainerUniqueItem implements RequestInterface, 
     #[\Override]
     public function input(): array
     {
-        if (\array_key_exists('input', self::$cachedParams)) {
-            return self::$cachedParams['input'];
-        }
-
-        $data = \hl_clear_tags((array)self::getParsedBody());
-
-        return self::$cachedParams['input'] = $data;
+        return DynamicParams::getRequest()->getParsedBody(cleared: true) ?? [];
     }
 
     /** @inheritDoc */
@@ -116,9 +110,9 @@ class RequestReference extends ContainerUniqueItem implements RequestInterface, 
 
     /** @inheritDoc */
     #[\Override]
-    public function getParsedBody(bool $cleared = true): null|array
+    public function getParsedBody(): array
     {
-        return DynamicParams::getRequest()->getParsedBody($cleared);
+        return DynamicParams::getRequest()->getParsedBody(cleared: false) ?? [];
     }
 
     /** @inheritDoc */

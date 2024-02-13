@@ -559,8 +559,6 @@ class HlebBootstrap
             null,
             null,
             $_SERVER['REQUEST_METHOD'],
-            $_GET,
-            $_POST,
             \hl_convert_standard_headers(\getallheaders()),
             $protocol,
             new RequestUri(

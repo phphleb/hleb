@@ -301,8 +301,6 @@ class HlebAsyncBootstrap extends HlebBootstrap
             $parsedBody,
             $streamBody,
             $_SERVER['REQUEST_METHOD'],
-            (array)$_GET,
-            $_POST,
             $headers,
             $protocol,
             new RequestUri(

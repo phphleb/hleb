@@ -62,7 +62,7 @@ final class FindRoute
        $method = \strtoupper($method);
        $oldRequest = DynamicParams::getBaseRequest();
        $uri = new RequestUri($domain, $url, '', 80, 'https', '127.0.0.1');
-       $request = new SystemRequest([], null, null, null, $method, [], [], [], '1.1', $uri);
+       $request = new SystemRequest([], null, null, null, $method, [], '1.1', $uri);
        DynamicParams::setDynamicRequest($request);
        try {
            $search = new RouteFileManager();

@@ -19,8 +19,6 @@ final class SystemRequest
         private null|array           $parsedBody,
         private readonly ?object     $streamBody,
         private readonly string      $method,
-        private readonly array       $getParams,
-        private readonly array       $postParams,
         private readonly array       $headers,
         private readonly string      $protocol,
         private readonly RequestUri  $uri,
@@ -116,13 +114,13 @@ final class SystemRequest
     }
 
     /**
-     * Returns the GET request parameters ($_GET) set when the framework was initialized.
+     * Returns the GET request parameters ($_GET).
      *
-     * Возвращает GET-параметры запроса ($_GET), установленные при инициализации фреймворка.
+     * Возвращает GET-параметры запроса ($_GET).
      */
     public function getGetParams(): array
     {
-        return $this->getParams;
+        return $_GET;
     }
 
     /**
@@ -132,17 +130,17 @@ final class SystemRequest
      */
     public function getGetParam(string|int|float $name): null|array|string|int|float
     {
-        return $this->getParams[$name] ?? null;
+        return $_GET[$name] ?? null;
     }
 
     /**
-     * Returns the POST request parameters ($_POST) set when the framework was initialized.
+     * Returns the POST request parameters ($_POST).
      *
-     * Возвращает POST-параметры запроса ($_POST), установленные при инициализации фреймворка.
+     * Возвращает POST-параметры запроса ($_POST).
      */
     public function getPostParams(): array
     {
-        return $this->postParams;
+        return $_POST;
     }
 
     /**
@@ -152,7 +150,7 @@ final class SystemRequest
      */
     public function getPostParam(string|int|float $name): null|array|string|int|float
     {
-        return $this->postParams[$name] ?? null;
+        return $_POST[$name] ?? null;
     }
 
     /**
