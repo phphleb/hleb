@@ -107,7 +107,7 @@ final class ErrorLog
                 case E_CORE_ERROR:
                     self::outputNotice();
                     $log->critical($errstr, $params);
-                    \async_exit($debug ? (SystemSettings::isCli() ?  '' : $errstr) : '', 500);
+                    \async_exit($debug ? (SystemSettings::isCli() ?  '' : self::format($errstr)) : '', 500);
                     break;
                 case E_ERROR:
                 case E_USER_ERROR:
@@ -116,7 +116,7 @@ final class ErrorLog
                 case E_RECOVERABLE_ERROR:
                     self::outputNotice();
                     $log->error($errstr, $params);
-                    \async_exit($debug ? (SystemSettings::isCli() ?  '' : $errstr) : '', 500);
+                    \async_exit($debug ? (SystemSettings::isCli() ?  '' : self::format($errstr)) : '', 500);
                     break;
                 case E_USER_WARNING:
                 case E_WARNING:
@@ -124,7 +124,7 @@ final class ErrorLog
                 case E_COMPILE_WARNING:
                     self::outputNotice();
                     $log->warning($errstr, $params);
-                    $debug and print PHP_EOL . "Warning: $errstr in $errfile:$errline" . PHP_EOL;
+                    $debug and print self::format( "Warning: $errstr in $errfile:$errline");
                     break;
                 case E_USER_NOTICE:
                 case E_NOTICE:
@@ -132,12 +132,12 @@ final class ErrorLog
                 case E_DEPRECATED:
                 case E_USER_DEPRECATED:
                     $log->notice($errstr, $params);
-                    $debug and self::$notices[] = PHP_EOL . "Notice: $errstr in $errfile:$errline" . PHP_EOL;
+                    $debug and self::$notices[] = self::format("Notice: $errstr in $errfile:$errline");
                     break;
                 default:
                     self::outputNotice();
                     $log->error($errstr, $params);
-                    \async_exit($debug ? (SystemSettings::isCli() ?  '' : $errstr) : '', 500);
+                    \async_exit($debug ? (SystemSettings::isCli() ?  '' : self::format($errstr)) : '', 500);
                     break;
             }
             self::$config and SystemSettings::setData(self::$config);
@@ -306,5 +306,19 @@ final class ErrorLog
             print \implode(PHP_EOL, self::$notices);
             self::$notices = [];
         }
+    }
+
+    /**
+     * Formatting the error output.
+     *
+     * Форматирование выводимой ошибки.
+     */
+    private static function format(string $message): string
+    {
+        if (SystemSettings::isCli()) {
+            return $message . PHP_EOL . PHP_EOL;
+        }
+
+        return PHP_EOL . "<pre>$message</pre>" . PHP_EOL;
     }
 }

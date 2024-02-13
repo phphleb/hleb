@@ -140,6 +140,7 @@ return [
     │ which of them will be displayed.
     │ Add all PHP errors to the report: 'error.reporting' => -1
     │ Disable error logging: 'error.reporting' => 0
+    │ Value from php.ini: 'error.reporting' => error_reporting()
     │ Default: E_ALL
     │
     │
@@ -150,6 +151,7 @@ return [
     │ В PHP много уровней ошибок, здесь определяется какие из них будут выведены.
     │ Добавлять в отчет все ошибки PHP: 'error.reporting' => -1
     │ Выключение протоколирования ошибок: 'error.reporting' => 0
+    │ Значение из php.ini: 'error.reporting' => error_reporting()
     │ Изначально: E_ALL (Все ошибки)
     │
     */
