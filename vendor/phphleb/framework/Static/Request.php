@@ -77,6 +77,23 @@ final class Request extends BaseAsyncSingleton
     }
 
     /**
+     * Returns $_GET parameters.
+     *
+     * Возвращает параметры $_GET.
+     *
+     * @param bool $cleared - clean data.
+     *                      - производить очистку данных.
+     */
+    public static function allGet(bool $cleared = true): array
+    {
+        if (self::$replace) {
+            return self::$replace->allGet($cleared);
+        }
+
+        return BaseContainer::instance()->get(RequestInterface::class)->allGet($cleared);
+    }
+
+    /**
      * Returns the value of the POST parameter given the parameter name.
      * Request::post('test')->value;   - direct value acquisition.
      * Request::post('test')->value(); - direct value acquisition.
@@ -104,6 +121,23 @@ final class Request extends BaseAsyncSingleton
         }
 
         return BaseContainer::instance()->get(RequestInterface::class)->post($name);
+    }
+
+    /**
+     * Returns $_POST parameters.
+     *
+     * Возвращает параметры $_POST.
+     *
+     * @param bool $cleared - clean data.
+     *                      - производить очистку данных.
+     */
+    public static function allPost(bool $cleared = true): array
+    {
+        if (self::$replace) {
+            return self::$replace->allPost($cleared);
+        }
+
+        return BaseContainer::instance()->get(RequestInterface::class)->allPost($cleared);
     }
 
     /**
@@ -202,22 +236,19 @@ final class Request extends BaseAsyncSingleton
 
     /**
      * Returns the converted request body, for example if it is in JSON format.
-     * Does not work with `multipart/form-data`.
-     * (!) The data is returned in its original form,
-     * so you need to check it for vulnerabilities yourself.
      *
      * Возвращает преобразованное тело запроса, например, если оно в формате JSON.
-     * Не работает с `multipart/form-data`.
-     * (!) Данные возвращаются в исходном виде, поэтому нужно
-     * самостоятельно проверить их на уязвимости.
+     *
+     * @param bool $cleared - clean data.
+     *                      - производить очистку данных.
      */
-    public static function getParsedBody(): null|array
+    public static function getParsedBody(bool $cleared = true): null|array
     {
         if (self::$replace) {
-            return self::$replace->getParsedBody();
+            return self::$replace->getParsedBody($cleared);
         }
 
-        return BaseContainer::instance()->get(RequestInterface::class)->getParsedBody();
+        return BaseContainer::instance()->get(RequestInterface::class)->getParsedBody($cleared);
     }
 
     /**

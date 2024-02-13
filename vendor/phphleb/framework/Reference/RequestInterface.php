@@ -51,6 +51,17 @@ interface RequestInterface
      */
     public function get(string|int $name): ?DataType;
 
+
+    /**
+     * Returns $_GET parameters.
+     *
+     * Возвращает параметры $_GET.
+     *
+     * @param bool $cleared - clean data.
+     *                      - производить очистку данных.
+     */
+    public function allGet(bool $cleared = true): array;
+
     /**
      * Returns the value of the POST parameter given the parameter name.
      * $this->request()->post('test')->value;   - direct value acquisition.
@@ -73,6 +84,17 @@ interface RequestInterface
      *               - все возвращаемые варианты.
      */
     public function post(string|int $name): DataType;
+
+
+    /**
+     * Returns $_POST parameters.
+     *
+     * Возвращает параметры $_POST.
+     *
+     * @param bool $cleared - clean data.
+     *                      - производить очистку данных.
+     */
+    public function allPost(bool $cleared = true): array;
 
     /**
      * Returns an object with dynamic query data by parameter name with a choice of value format.
@@ -146,8 +168,11 @@ interface RequestInterface
      * Returns the converted request body, for example if it is in JSON format.
      *
      * Возвращает преобразованное тело запроса, например, если оно в формате JSON.
+     *
+     * @param bool $cleared - clean data.
+     *                      - производить очистку данных.
      */
-    public function getParsedBody(): null|array;
+    public function getParsedBody(bool $cleared = true): null|array;
 
     /**
      * Returns an object containing the URL data from the request.

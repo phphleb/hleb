@@ -40,19 +40,13 @@ final class SystemRequest
 
     /**
      * Returns the converted request body, for example if it is in JSON format.
-     * Does not work with `multipart/form-data`.
-     * (!) The data is returned in its original form,
-     * so you need to check it for vulnerabilities yourself.
      *
      * Возвращает преобразованное тело запроса, например, если оно в формате JSON.
-     * Не работает с `multipart/form-data`.
-     * (!) Данные возвращаются в исходном виде, поэтому нужно
-     * самостоятельно проверить их на уязвимости.
      */
-    public function getParsedBody(): null|array
+    public function getParsedBody(bool $cleared = true): null|array
     {
         if (!empty($_POST)) {
-            return \hl_clear_tags($_POST);
+            return $cleared ? \hl_clear_tags($_POST) : $_POST;
         }
         if ($this->parsedBody === null) {
             $rawBody = $this->getRawBody();
@@ -65,7 +59,7 @@ final class SystemRequest
                 try {
                     $this->parsedBody = \json_decode($body, true, 512, JSON_THROW_ON_ERROR | JSON_BIGINT_AS_STRING);
                 } catch(\JsonException $e) {
-                   throw new ParseException($e);
+                    throw new ParseException($e);
                 }
             } else if (\str_contains($body, '=')) {
                 \parse_str($body, $this->parsedBody);
@@ -73,7 +67,7 @@ final class SystemRequest
             (\is_array($this->parsedBody) || \is_object($this->parsedBody)) or $this->parsedBody = null;
         }
         if (is_object($this->parsedBody)) {
-            return \hl_clear_tags((array)$this->parsedBody);
+            return $cleared ? \hl_clear_tags((array)$this->parsedBody) : (array)$this->parsedBody;
         }
 
         return $this->parsedBody;

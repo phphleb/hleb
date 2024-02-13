@@ -46,6 +46,20 @@ class RequestReference extends ContainerUniqueItem implements RequestInterface, 
 
     /** @inheritDoc */
     #[\Override]
+    public function allGet(bool $cleared = true): array
+    {
+        return $cleared ? \hl_clear_tags($_GET ?? []) : $_GET ?? [];
+    }
+
+    /** @inheritDoc */
+    #[\Override]
+    public function allPost(bool $cleared = true): array
+    {
+        return $cleared ? \hl_clear_tags($_POST ?? []) : $_POST ?? [];
+    }
+
+    /** @inheritDoc */
+    #[\Override]
     public function post(string|int $name): DataType
     {
         if (\array_key_exists($name, self::$cachedParams['post'] ?? [])) {
@@ -102,9 +116,9 @@ class RequestReference extends ContainerUniqueItem implements RequestInterface, 
 
     /** @inheritDoc */
     #[\Override]
-    public function getParsedBody(): null|array
+    public function getParsedBody(bool $cleared = true): null|array
     {
-        return DynamicParams::getRequest()->getParsedBody();
+        return DynamicParams::getRequest()->getParsedBody($cleared);
     }
 
     /** @inheritDoc */
