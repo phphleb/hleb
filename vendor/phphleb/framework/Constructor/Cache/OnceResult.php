@@ -41,8 +41,6 @@ final class OnceResult
     }
 
     /**
-     * @inheritDoc
-     *
      * @internal
      */
     public static function rollback(): void
