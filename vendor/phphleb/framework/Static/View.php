@@ -9,7 +9,6 @@ use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
 use Hleb\Reference\ViewInterface;
 
-#[Accessible]
 final class View
 {
     private static ViewInterface|null $replace = null;

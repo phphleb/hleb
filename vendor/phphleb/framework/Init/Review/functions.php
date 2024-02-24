@@ -9,6 +9,7 @@ use Hleb\Main\Console\Specifiers\ArgType;
 use Hleb\Reference\LogInterface;
 use Hleb\Static\Cache;
 use Hleb\Static\Debug;
+use Hleb\Static\Once;
 use Hleb\Static\Path;
 use Hleb\Static\Redirect;
 use Hleb\Static\Request;
@@ -598,5 +599,30 @@ if (!function_exists('is_empty')) {
     function is_empty(mixed $value): bool
     {
         return $value === null || $value === [] || $value === '';
+    }
+}
+
+if (!function_exists('once')) {
+    /**
+     * The once() function allows you to execute a piece of code only once for one request,
+     * and when accessed again, it returns the same result.
+     * The execution result is stored in RAM throughout the entire request.
+     * In this scenario, the anonymous function passed to once will be executed the first time once is called:
+     *
+     * Функция once() позволяет выполнять часть кода только единожды для одного запроса,
+     * а при повторном обращении возвращает прежний результат.
+     * Результат выполнения хранится в оперативной памяти в течении всего запроса.
+     * В этом сценарии анонимная функция, переданная в once, будет выполнена при первом вызове once:
+     *
+     * ```php
+     * $value = once(function () {
+     *     // An example of a resource-intensive operation.
+     *     return ExampleStorage::getData();
+     * });
+     * ```
+     */
+    function once(callable $func): mixed
+    {
+        return Once::get($func);
     }
 }

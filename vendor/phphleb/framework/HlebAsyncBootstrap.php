@@ -34,6 +34,7 @@ use Hleb\Static\DI;
 use Hleb\Static\Debug;
 use Hleb\Static\Dto;
 use Hleb\Static\Log;
+use Hleb\Static\Once;
 use Hleb\Static\Path;
 use Hleb\Static\Redirect;
 use Hleb\Static\Request;
@@ -406,8 +407,8 @@ class HlebAsyncBootstrap extends HlebBootstrap
                      \Hleb\Static\Csrf::class,  Template::class, Dto::class,  AsyncCookies::class,
                      Path::class, Redirect::class, Arr::class, Converter::class, Debug::class,
                      Cache::class, RouteMark::class, MainLogLevel::class, Command::class,
-                     ContainerFactory::class, DI::class, Container::class, Router::class,
-                     Session::class, Settings::class, System::class, WebConsole::class, ErrorLog::class
+                     ContainerFactory::class, DI::class, Container::class, Router::class, Once::class,
+                     Session::class, Settings::class, System::class, WebConsole::class, ErrorLog::class,
                  ] as $class) {
             \class_exists($class, false) && $class::rollback();
         }

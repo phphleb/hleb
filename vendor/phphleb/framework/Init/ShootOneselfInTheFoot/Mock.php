@@ -42,6 +42,7 @@ final class Mock extends BaseMockAddOn
                      ViewForTest::class,
                      ConverterForTest::class,
                      DiForTest::class,
+                     OnceForTest::class,
                  ] as $item) {
             $item::cancel();
         }
