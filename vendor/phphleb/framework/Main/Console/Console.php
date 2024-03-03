@@ -126,9 +126,11 @@ abstract class Console
      * случае   вывод результатов выполнения команды не производится.
      * Например (аналогично для default-task `php console default-task 1 --Name=Admin --quiet`):
      *
-     * if ((new DefaultTask)->call([1, 'Name' => 'Admin', `--quiet`])) {
+     * ```php
+     * if ((new DefaultTask)->call([1, 'Name' => 'Admin', '--quiet'])) {
      *    // Completed successfully.
      * }
+     * ```
      *
      * @var array $arguments - an array with arguments for the command.
      *                       - массив с аргументами для команды.

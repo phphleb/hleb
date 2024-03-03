@@ -380,6 +380,7 @@ final class HlebConnector
      */
     public static array $formattedMap = [
         'Hleb\HlebConsoleBootstrap' => '/HlebConsoleBootstrap.php',
+        'Hleb\HlebQueueBootstrap' => '/HlebQueueBootstrap.php',
         'Hleb\HlebBootstrap' => '/HlebBootstrap.php',
         'Hleb\HlebAsyncBootstrap' => '/HlebAsyncBootstrap.php',
         'Route' => '/Main/Routes/Route.php',

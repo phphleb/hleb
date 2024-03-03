@@ -37,6 +37,8 @@ abstract class Task extends Console
      * Direct command execution from code as a standard object method.
      *
      * Непосредственное выполнение команды из кода как через обычный метод объекта.
+     *
+     * @inheritDoc
      */
     #[\Override]
     final public function call(array $arguments = [], ?bool $strictVerbosity = null): bool
