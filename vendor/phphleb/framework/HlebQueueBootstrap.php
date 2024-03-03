@@ -17,9 +17,17 @@ use Hleb\Constructor\Attributes\AvailableAsParent;
 /**
  * Framework loader for executing individual commands from a queue.
  * Installed similarly to the console.php file.
+ * Can be executed by a worker in various modes, since commands may have restrictive attributes.
  *
  * Загрузчик фреймворка для выполнения отдельных команд из очереди.
  * Инсталлируется аналогично файлу console.php
+ * Может выполнятся воркером в различных режимах, так как у команд могут быть ограничительные атрибуты.
+ *
+ * ```php
+ *
+ * (new Hleb\HlebQueueBootstrap(__DIR__))->load(\App\Commands\DefaultTask::class, ['value']);
+ *
+ * ```
  */
 #[Accessible] #[AvailableAsParent]
 class HlebQueueBootstrap extends HlebBootstrap
@@ -28,7 +36,7 @@ class HlebQueueBootstrap extends HlebBootstrap
 
     protected mixed $result = null;
 
-    protected string $content = '';
+    protected bool $verbosity = true;
 
     /**
      * A constructor for executing commands from a queue by the framework.
@@ -56,6 +64,8 @@ class HlebQueueBootstrap extends HlebBootstrap
         ?LoggerInterface $logger = null,
         int              $mode = self::STANDARD_MODE,
     ) {
+        \defined('HLEB_IS_QUEUE') or \define('HLEB_IS_QUEUE', 'on');
+
         if (!\in_array($mode, self::SUPPORTED_MODES)) {
             throw new \ErrorException('Unsupported mode');
         }
@@ -77,14 +87,13 @@ class HlebQueueBootstrap extends HlebBootstrap
     }
 
     /**
+     * Sets whether data should be output as content when executing a task.
      *
-     * In asynchronous mode, returns the command output as a string.
-     *
-     * В асинхронном режиме возвращает вывод команды в виде строки.
+     * Устанавливает, нужно ли выводить данные при выполнении задачи как контент.
      */
-    public function getContent(): string
+    public function setVerbosity(bool $value): void
     {
-        return $this->content;
+        $this->verbosity = $value;
     }
 
     /**
@@ -120,13 +129,10 @@ class HlebQueueBootstrap extends HlebBootstrap
 
         $status = true;
 
-        if (self::ASYNC_MODE) {
-            \ob_start();
-        }
         try {
             $command = new $commandClass();
 
-            $status = $command->call($arguments);
+            $status = $command->call($arguments, strictVerbosity: $this->verbosity);
 
             $this->result = $command->getResult();
 
@@ -134,10 +140,8 @@ class HlebQueueBootstrap extends HlebBootstrap
             echo $e->getMessage();
         }
 
-        if (self::ASYNC_MODE) {
-            $this->content = \ob_get_contents();
-            \ob_end_clean();
-        }
+        HlebAsyncBootstrap::prepareAsyncRequestData();
+
         return (int)($status != 0);
     }
 }

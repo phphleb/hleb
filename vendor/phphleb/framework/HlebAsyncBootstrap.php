@@ -181,7 +181,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
 
         $_GET = $_POST = $_SERVER = $_SESSION = $_COOKIE = $_REQUEST = $_FILES = [];
 
-        $this->prepareAsyncRequestData();
+        self::prepareAsyncRequestData();
 
         // Periodically clean up used memory and call GC.
         // Периодическая очистка используемой памяти и вызов GC.
@@ -248,6 +248,27 @@ class HlebAsyncBootstrap extends HlebBootstrap
         } catch (\Throwable $t) {
             \error_log((string)$e);
             \error_log((string)$t);
+        }
+    }
+
+    /**
+     * Preparing data to use an asynchronous request.
+     *
+     * Подготовка данных к использованию асинхронного запроса.
+     *
+     * @internal
+     */
+    public static function prepareAsyncRequestData(): void
+    {
+        foreach ([DebugAnalytics::class, DynamicParams::class, Request::class, BaseRoute::class,
+                     Response::class, Cookies::class, Log::class, Csrf::class, Registrar::class,
+                     \Hleb\Static\Csrf::class,  Template::class, Dto::class,  AsyncCookies::class,
+                     Path::class, Redirect::class, Arr::class, Converter::class, Debug::class,
+                     Cache::class, RouteMark::class, MainLogLevel::class, Command::class,
+                     ContainerFactory::class, DI::class, Container::class, Router::class, Once::class,
+                     Session::class, Settings::class, System::class, WebConsole::class, ErrorLog::class,
+                 ] as $class) {
+            \class_exists($class, false) && $class::rollback();
         }
     }
 
@@ -393,25 +414,6 @@ class HlebAsyncBootstrap extends HlebBootstrap
         $headers = (new $class())->update($headers);
 
         return array_change_key_case($headers, CASE_LOWER);
-    }
-
-    /**
-     * Preparing data to use an asynchronous request.
-     *
-     * Подготовка данных к использованию асинхронного запроса.
-     */
-    private function prepareAsyncRequestData(): void
-    {
-        foreach ([DebugAnalytics::class, DynamicParams::class, Request::class, BaseRoute::class,
-                     Response::class, Cookies::class, Log::class, Csrf::class, Registrar::class,
-                     \Hleb\Static\Csrf::class,  Template::class, Dto::class,  AsyncCookies::class,
-                     Path::class, Redirect::class, Arr::class, Converter::class, Debug::class,
-                     Cache::class, RouteMark::class, MainLogLevel::class, Command::class,
-                     ContainerFactory::class, DI::class, Container::class, Router::class, Once::class,
-                     Session::class, Settings::class, System::class, WebConsole::class, ErrorLog::class,
-                 ] as $class) {
-            \class_exists($class, false) && $class::rollback();
-        }
     }
 
     /**

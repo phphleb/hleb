@@ -250,6 +250,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     private static function prepareContext(string $level, array $context = []): array
     {
         $cells = [];
+        $context['is_queue'] = (int)\defined('HLEB_IS_QUEUE');
         try {
             $cells = ['request-id' => DynamicParams::getDynamicRequestId()];
             if (SystemSettings::isCli()) {

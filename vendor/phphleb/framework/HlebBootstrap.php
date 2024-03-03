@@ -77,6 +77,8 @@ class HlebBootstrap
 
     protected ?SystemResponse $response = null;
 
+    protected static bool $loadResources = false;
+
     /**
      * Constructor with initialization.
      *
@@ -733,13 +735,16 @@ class HlebBootstrap
         // Registration of autoload (will be done in reverse order).
         // Регистрация автозагрузки (будет выполнена в обратном порядке).
         Autoloader::init($this->vendorDirectory, $this->globalDirectory, $this->mode !== self::CONSOLE_MODE);
-        $this->loadOtherClasses(); // #4
-        $this->setDefaultAutoloader(); // #3
-        $this->loadRequiredClasses(); // #2
 
-        // Allows you to disable the container testing mechanism outside of tests in the project.
-        // Позволяет запретить вне тестов в проекте механизм тестирования контейнеров.
-        \define('HLEB_CONTAINER_MOCK_ON', $this->config['common']['container.mock.allowed']);
+        if (!\function_exists('Hleb\agentLoader')) {
+            $this->loadOtherClasses(); // #4
+            $this->setDefaultAutoloader(); // #3
+            $this->loadRequiredClasses(); // #2
+
+            // Allows you to disable the container testing mechanism outside of tests in the project.
+            // Позволяет запретить вне тестов в проекте механизм тестирования контейнеров.
+            \define('HLEB_CONTAINER_MOCK_ON', $this->config['common']['container.mock.allowed']);
+        }
 
         (new Functions())->create();
     }
@@ -754,6 +759,9 @@ class HlebBootstrap
      */
     private function loadBaseClasses(): void
     {
+        if (self::$loadResources) {
+            return;
+        }
         $dir = $this->vendorDirectory . '/phphleb/framework/';
         foreach (
             [BaseSingleton::class => 'Main/Insert/BaseSingleton.php',
@@ -769,6 +777,7 @@ class HlebBootstrap
             ] as $name => $path) {
             \class_exists($name, false) or require $dir . $path;
         }
+        self::$loadResources = true;
         if ($this->config['common']['debug']) {
             \class_exists(DebugAnalytics::class, false) or require $dir . 'Constructor/Data/DebugAnalytics.php';
         }

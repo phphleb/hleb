@@ -74,8 +74,11 @@ class BaseLogger
     protected function createStandardLog(string $level, string $message, array $context): string
     {
         $timezone = $this->getTimezone();
-        $log = ['[' . \date('H:i:s.') . (new \DateTime())->format('u') . \date(' d.m.Y') . " UTC$timezone]",
-            (!empty($context['is_console']) ? 'System:' : 'Web:') . \strtoupper($level)];
+        $type = !empty($context['is_queue']) ? 'Command:' : (!empty($context['is_console']) ? 'System:' : 'Web:');
+        $log = [
+            '[' . \date('H:i:s.') . (new \DateTime())->format('u') . \date(' d.m.Y') . " UTC$timezone]",
+            $type . \strtoupper($level),
+        ];
 
         $log[] = $message;
         if (isset($context['file'], $context['line'])) {
@@ -105,7 +108,7 @@ class BaseLogger
         }
         $log[2] = strtr($message, $replace);
         unset($context['class'], $context['function'], $context['type'], $context['method'], $context['is_console'],
-            $context['ip'], $context['file'], $context['line'], $context['http_method'],
+            $context['ip'], $context['file'], $context['line'], $context['http_method'], $context['is_queue'],
             $context['domain'], $context['url'], $context['scheme'], $context['query']
         );
         !empty($context['request-id']) or $context['request-id'] = \sha1(\microtime() . \rand());
