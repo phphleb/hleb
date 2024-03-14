@@ -75,13 +75,7 @@ class ProjectSetupTask extends Task
         foreach (['database', 'common', 'main'] as $name) {
             $dir = $this->settings()->getPath("@/config");
             if (!file_exists("$dir/$name-local.php")) {
-                $data = (array)file("$dir/$name.php");
-                foreach($data as $key => $row) {
-                    if (str_contains($row, "'/$name-local.php'")) {
-                        unset($data[$key]);
-                    }
-                }
-                $content = implode($data);
+                 $content = $this->getPreparedData((array)file("$dir/$name.php"));
                 if ($name === 'common') {
                     $content = str_replace("'debug' => false,", "'debug' => true,", $content);
                 }
@@ -138,5 +132,28 @@ class ProjectSetupTask extends Task
         $content = trim(preg_replace('/(\r\n|\n)+(?=(\r\n|\n)+)/u', '', $content));
 
         file_put_contents($path, $content);
+    }
+
+    /**
+     * Removing the link to the replacement file.
+     *
+     * Удаление ссылки на файл замены.
+     */
+    private function getPreparedData(array $lines): string
+    {
+        $search = false;
+        $output = [];
+        foreach ($lines as $line) {
+            if (preg_match('/if\s*\(.*local\.php\'.*\{/', $line)) {
+                $search = true;
+            } elseif ($search && preg_match('/\}/', $line)) {
+                $search = false;
+                continue;
+            }
+            if (!$search) {
+                $output[] = $line;
+            }
+        }
+        return implode('', $output);
     }
 }
