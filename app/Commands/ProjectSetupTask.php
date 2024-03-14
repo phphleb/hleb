@@ -144,9 +144,10 @@ class ProjectSetupTask extends Task
         $search = false;
         $output = [];
         foreach ($lines as $line) {
-            if (preg_match('/if\s*\(.*local\.php\'.*\{/', $line)) {
+            if (preg_match('/if\s*\(.*local\.php/', $line)) {
                 $search = true;
-            } elseif ($search && preg_match('/\}/', $line)) {
+            }
+            if ($search && preg_match('/\}/', $line)) {
                 $search = false;
                 continue;
             }
