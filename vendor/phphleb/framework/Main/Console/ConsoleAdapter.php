@@ -51,7 +51,7 @@ final class ConsoleAdapter
      * Возвращает проверку на совпадение URL с картой маршрутов, при этом
      * ошибки запроса и блокировка сайта считаются как не найденный вариант.
      */
-   public function searchRoute(string $url, $method = 'GET', string $domain = null): bool
+   public function searchRoute(string $url, $method = 'GET', ?string $domain = null): bool
    {
        $handler = (new FindRoute($url));
        $search = (bool)$handler->one($method, $domain);

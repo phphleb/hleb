@@ -116,7 +116,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
      * Параметр $cookies действует аналогично внешним сессиям для Cookies.
      */
     #[\Override]
-    public function load(?object $request = null, ?array $session = null, array $cookie = null): HlebAsyncBootstrap
+    public function load(?object $request = null, ?array $session = null, ?array $cookie = null): HlebAsyncBootstrap
     {
         $this->session = $session;
         $this->cookies = $cookie;

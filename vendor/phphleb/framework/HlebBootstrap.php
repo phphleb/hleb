@@ -905,7 +905,7 @@ class HlebBootstrap
          *
          * @internal
          */
-        function hl_user_log(int $errno, string $errstr, string $errfile = null, int $errline = null): bool
+        function hl_user_log(int $errno, string $errstr, ?string $errfile = null, ?int $errline = null): bool
         {
             global $logger;
 

@@ -88,7 +88,7 @@ final class ErrorLog
      *
      * Вывод ошибок в механизм логирования даже если часть классов не загружена.
      */
-    public static function execute(int $errno, string $errstr, string $errfile = null, int $errline = null): bool
+    public static function execute(int $errno, string $errstr, ?string $errfile = null, ?int $errline = null): bool
     {
         try {
             self::loadBaseClasses();
