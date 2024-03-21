@@ -402,6 +402,10 @@ final class Workspace
 
                 $event and $this->updateControllerAfterEvent($initiatorObject::class, $method, $event, $type, $result);
 
+                if(\is_null($result)) {
+                    $result = '';
+                }
+
                 return $result;
             }
         }
