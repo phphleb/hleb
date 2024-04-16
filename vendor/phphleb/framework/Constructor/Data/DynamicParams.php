@@ -243,11 +243,18 @@ final class DynamicParams extends BaseAsyncSingleton
     {
         // Fast generation of RFC 4211 UUID v4 similarity
         // Быстрая генерация подобия RFC 4211 UUID v4
-        $hash = \substr(\sha1(\microtime() . \rand()), 0, 36);
-        $hash[8] = '-';
-        $hash[13] = '-';
-        $hash[18] = '-';
-        $hash[23] = '-';
+        try {
+            $data = \random_bytes(16);
+            $data[6] = \chr(\ord($data[6]) & 0x0f | 0x40);
+            $data[8] = \chr(\ord($data[8]) & 0x3f | 0x80);
+            $hash = \vsprintf('%s%s-%s-%s-%s-%s%s%s', \str_split(\bin2hex($data), 4));
+        } catch (\Exception) {
+            $hash = \substr(\sha1(\microtime() . \rand()), 0, 36);
+            $hash[8] = '-';
+            $hash[13] = '-';
+            $hash[18] = '-';
+            $hash[23] = '-';
+        }
 
         self::$dynamicRequestId = $hash;
     }
