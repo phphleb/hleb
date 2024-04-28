@@ -100,6 +100,7 @@ final class ErrorLog
             if ($errline) {
                 $params['line'] = $errline;
             }
+            $params['request-id'] = DynamicParams::getDynamicRequestId();
             $log = self::$logger ?? Log::instance();
 
             $debug = DynamicParams::isDebug();
