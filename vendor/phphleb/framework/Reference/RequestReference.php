@@ -178,7 +178,9 @@ class RequestReference extends ContainerUniqueItem implements RequestInterface, 
     {
         $uri = DynamicParams::getRequest()->getUri();
 
-        return $uri->getScheme() . '://' . $uri->getHost() . $uri->getPath();
+        $path = $uri->getPath();
+
+        return $uri->getScheme() . '://' . $uri->getHost() . ($path === '/' ? '' : $path);
     }
 
     /** @inheritDoc */
