@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Hleb;
 
-use App\Bootstrap\Events\KernelEvent;
 use AsyncExitException;
 use Exception;
 use Functions;
@@ -21,6 +20,7 @@ use Hleb\Static\Response;
 use Hleb\Main\Logger\{Log, LoggerInterface, LogLevel};
 use Hleb\Main\ProjectLoader;
 use Phphleb\Idnaconv\IdnaConvert;
+use App\Bootstrap\Events\KernelEvent;
 use Hleb\HttpMethods\External\SystemRequest;
 use Hleb\HttpMethods\External\Response as SystemResponse;
 use Throwable;
@@ -104,7 +104,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.12');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.13');
 
         $this->logger = $logger;
 
