@@ -349,7 +349,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
         $body = method_exists($req, 'getBody') ? (string)$req->getBody() : '';
         empty($_GET) and $_GET = (array)$req->getQueryParams();
         empty($_FILES) and $_FILES = $req->getUploadedFiles();
-        isset($_SERVER['REQUEST_METHOD']) or $_SERVER['REQUEST_METHOD'] = $req->getMethod();
+        isset($_SERVER['REQUEST_METHOD']) or $_SERVER['REQUEST_METHOD'] = \strtoupper((string)$req->getMethod());
         $headers = $req->getHeaders();
         if (\method_exists($req, 'getProtocolVersion')) {
             $_SERVER["SERVER_PROTOCOL"] = 'HTTP/' . $req->getProtocolVersion();
@@ -388,7 +388,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
         $_FILES = $req->files ?? [];
         $_SERVER['HTTP_HOST'] = $server['remote_addr'] ?? $headers['host'];
         $_SERVER['REMOTE_ADDR'] = $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'];
-        $_SERVER['REQUEST_METHOD'] = $server['request_method'];
+        $_SERVER['REQUEST_METHOD'] = \strtoupper((string)$server['request_method']);
         $_SERVER['DOCUMENT_URI'] = $server['path_info'] ?? '';
         $_SERVER['SERVER_PORT'] = $server['server_port'] ?? null;
         $_SERVER['QUERY_STRING'] = $server['query_string'] ?? '';

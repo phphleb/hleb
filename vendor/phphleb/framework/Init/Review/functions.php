@@ -393,6 +393,24 @@ if (!function_exists('print_r2')) {
     }
 }
 
+if (!function_exists('var_dump2')) {
+    /**
+     * Improved var_dump() output.
+     *
+     * Улучшенный вывод var_dump().
+     */
+    function var_dump2(mixed $data): void
+    {
+        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
+            echo '<pre>' . PHP_EOL;
+            var_dump($data);
+            echo PHP_EOL . '</pre>';
+            return;
+        }
+        var_dump($data);
+    }
+}
+
 if (!function_exists('route_name')) {
     /**
      * Returns the name of the current route, or null if none has been assigned.
