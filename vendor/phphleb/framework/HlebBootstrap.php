@@ -42,18 +42,14 @@ use Throwable;
 #[Accessible] #[AvailableAsParent]
 class HlebBootstrap
 {
-    final public const HTTP_TYPES = ['GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'OPTIONS', 'HEAD'];
+    public const HTTP_TYPES = ['GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'OPTIONS', 'HEAD'];
 
     final public const STANDARD_MODE = 1;
 
     final public const CONSOLE_MODE = 2;
 
     final public const ASYNC_MODE = 3;
-    /**
-     * Available since PHP version >= 8.2.0
-     *
-     * Доступно с версии PHP >= 8.2.0
-     */
+
     protected ?int $mode = null;
 
     protected array $config = [];
