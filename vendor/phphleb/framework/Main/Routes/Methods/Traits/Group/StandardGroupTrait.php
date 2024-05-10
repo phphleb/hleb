@@ -10,4 +10,5 @@ trait StandardGroupTrait
     use GroupBeforeTrait;
     use GroupDomainTrait;
     use GroupWhereTrait;
+    use GroupTrait;
 }

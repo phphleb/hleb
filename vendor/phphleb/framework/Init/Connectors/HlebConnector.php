@@ -148,6 +148,7 @@ final class HlebConnector
         'Hleb\Main\Routes\Methods\Traits\Group\GroupProtectTrait' => '/Main/Routes/Methods/Traits/Group/GroupProtectTrait.php',
         'Hleb\Main\Routes\Methods\Traits\Group\GroupWhereTrait' => '/Main/Routes/Methods/Traits/Group/GroupWhereTrait.php',
         'Hleb\Main\Routes\Methods\Traits\Group\StandardGroupTrait' => '/Main/Routes/Methods/Traits/Group/StandardGroupTrait.php',
+        'Hleb\Main\Routes\Methods\Traits\Group\GroupTrait' => '/Main/Routes/Methods/Traits/Group/GroupTrait.php',
         'Hleb\Main\Routes\Methods\Traits\InsertControllerTrait' => '/Main/Routes/Methods/Traits/InsertControllerTrait.php',
         'Hleb\Main\Routes\Methods\Traits\Group\GroupPlainTrait' => '/Main/Routes/Methods/Traits/Group/GroupPlainTrait.php',
         'Hleb\Main\Routes\Methods\Traits\InsertPlainTrait' => '/Main/Routes/Methods/Traits/InsertPlainTrait.php',

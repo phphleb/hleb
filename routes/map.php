@@ -12,3 +12,11 @@
  */
 
 Route::get('/', view('default'))->name('homepage');
+
+
+Route::toGroup()
+    ->prefix('/example/')
+    ->group(function () {
+        Route::get('/first/', '111');
+        Route::get('/second/', '222');
+    });
