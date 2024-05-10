@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hleb\Main\Routes\Methods\Traits\Group;
 
+use Hleb\Route\Group\EndGroup;
 use Route;
 
 trait GroupTrait
@@ -23,10 +24,10 @@ trait GroupTrait
      *
      * ```
      */
-    public function group(callable $fn): void
+    public function group(callable $fn): EndGroup
     {
         $fn();
 
-        Route::endGroup();
+        return new EndGroup();
     }
 }
