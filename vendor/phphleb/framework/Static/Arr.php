@@ -35,8 +35,10 @@ final class Arr extends BaseAsyncSingleton
 
     /**
      * Checking if an array is associative.
+     * If the array is empty, returns false.
      *
      * Проверка, что массив ассоциативный.
+     * При пустом массиве возвращает false.
      */
     public static function isAssoc(array $array): bool
     {
