@@ -258,6 +258,18 @@ class SystemReference extends ContainerUniqueItem implements SystemInterface, In
     }
 
     /** @inheritDoc */
+    public function createCustomLog(
+        #[\SensitiveParameter] string $sql,
+        float $microtime,
+        array $params = [],
+        ?string $dbname = null,
+        ?string $driver = null,
+    ): void
+    {
+        SystemDB::createCustomLog($sql, $microtime, $params, $dbname, $driver);
+    }
+
+    /** @inheritDoc */
     #[\Override]
     public static function rollback(): void
     {

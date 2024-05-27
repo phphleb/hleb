@@ -192,22 +192,18 @@ class SystemDB extends BaseAsyncSingleton
         string $status = 'exec',
         bool $previously = false,
         ?string $driver = null,
-    ): void
-    {
+    ): void {
         $time = \microtime(true) - $time;
         $time = $time > 0 ? (float)\number_format($time, 5, ".", "") : 0;
 
         if (DynamicParams::isDebug()) {
-            DebugAnalytics::addData(
-                DebugAnalytics::DB_DEBUG,
-                [
-                    'sql' => $sql,
-                    'time' => $time,
-                    'dbname' => self::getConfigKey($config),
-                    'type' => $driver ?? self::getPdoInstance()->getAttribute(PDO::ATTR_DRIVER_NAME),
-                    'stat' => $status,
-                    'previously' => (int)$previously,
-                ]
+            self::setAnalyticsLogData(
+                $sql,
+                $time,
+                self::getConfigKey($config),
+                $driver ?? self::getPdoInstance()->getAttribute(PDO::ATTR_DRIVER_NAME),
+                $status,
+                $previously,
             );
         }
         if (SystemSettings::getValue('main', 'db.log.enabled')) {
@@ -223,6 +219,42 @@ class SystemDB extends BaseAsyncSingleton
         }
         if (SystemSettings::getCommonValue('log.db.excess') > 0) {
             DbExcessLog::set($time);
+        }
+    }
+
+    /**
+     * Saving data to the log and debug information.
+     *
+     * Сохранение данных в лог и отладочную информацию.
+     *
+     * @internal
+     */
+    final public static function createCustomLog(
+        #[\SensitiveParameter] string $sql,
+        float $microtime,
+        array $params = [],
+        ?string $dbname = null,
+        ?string $driver = null,
+    ): void {
+        $microtime = $microtime > 0 ? (float)\number_format($microtime, 5, ".", "") : 0;
+
+        if (DynamicParams::isDebug()) {
+            self::setAnalyticsLogData($sql, $microtime, $dbname, $driver, 'exec', false);
+        }
+
+        if (SystemSettings::getValue('main', 'db.log.enabled')) {
+            Log::log(
+                LogLevel::STATE,
+                self::DB_PREFIX . ' ' . $microtime . ' sec] (exec) ' . \rtrim($sql, ' ;') . ';',
+                array_merge([
+                    'db.name' => $dbname,
+                    'db.driver' => $driver,
+                    \Hleb\Main\Logger\Log::B7E_NAME => \Hleb\Main\Logger\Log::DB_B7E,
+                ], $params),
+            );
+        }
+        if (SystemSettings::getCommonValue('log.db.excess') > 0) {
+            DbExcessLog::set($microtime);
         }
     }
 
@@ -334,4 +366,22 @@ class SystemDB extends BaseAsyncSingleton
         }
         return $config;
     }
-}
+
+    /**
+     * Отправка данных в аналитику.
+     */
+    private static function setAnalyticsLogData(string $sql, float $time, string $dbname, string $driver, string $status, bool $previously): void
+    {
+        DebugAnalytics::addData(
+            DebugAnalytics::DB_DEBUG,
+            [
+                'sql' => $sql,
+                'time' => $time,
+                'dbname' => $dbname,
+                'type' => $driver,
+                'stat' => $status,
+                'previously' => (int)$previously,
+            ]
+        );
+    }
+  }

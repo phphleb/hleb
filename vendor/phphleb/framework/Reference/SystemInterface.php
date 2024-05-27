@@ -269,6 +269,31 @@ interface SystemInterface
     ): void;
 
     /**
+     * @param string $sql - the string of the SQL query placed in the log (without data substitution).
+     *                    - строка помещаемого в лог SQL-запроса (без подстановки данных).
+     *
+     * @param float $microtime - execution time in milliseconds.
+     *                         - время выполнения в миллисекундах.
+     *
+     * @param array $params - additional parameters for logging.
+     *                      - дополнительные параметры для вывода в лог.
+     *
+     * @param string|null $dbname - name of the database.
+     *                            - название базы данных.
+     *
+     * @param string|null $driver - the database driver used, for example 'mysql'.
+     *                            - используемый драйвер БД, например 'mysql'.
+     * @return void
+     */
+    public function createCustomLog(
+        #[\SensitiveParameter] string $sql,
+        float $microtime,
+        array $params = [],
+        ?string $dbname = null,
+        ?string $driver = null,
+    ): void;
+
+    /**
      * Used if you need to rollback data
      * for an asynchronous request.
      *
