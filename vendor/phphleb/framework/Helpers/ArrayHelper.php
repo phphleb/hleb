@@ -30,10 +30,9 @@ final class ArrayHelper
     #[Pure]
     public static function isAssoc(array $array): bool
     {
-        if (!$array) {
-            return false;
-        }
-        return \array_is_list($array);
+        $keys = \array_keys($array);
+
+        return \array_keys($keys) !== $keys;
     }
 
     /**
