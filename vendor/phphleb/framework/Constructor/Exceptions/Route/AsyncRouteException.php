@@ -95,7 +95,7 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
         ],
         self::HL02_ERROR => [
             'en' => 'Route compilation error. The number of open and closed group tags in routes does not match.',
-            'ru' => 'Ошибка составления маршрутов. Не совпадает количество открытых и закрытых тегов групп в моршрутах.'
+            'ru' => 'Ошибка составления маршрутов. Не совпадает количество открытых и закрытых тегов групп в маршрутах.'
         ],
         self::HL03_ERROR => [
             'en' => 'Route compilation error. The end tag endGroup was not found for the route group.',
