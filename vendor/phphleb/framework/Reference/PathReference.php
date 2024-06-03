@@ -35,7 +35,7 @@ class PathReference extends ContainerUniqueItem implements PathInterface, Interf
 
     /** @inheritDoc */
     #[\Override]
-    public function createDirectory(string $path, int $permissions = 0766): bool
+    public function createDirectory(string $path, int $permissions = 0777): bool
     {
         $path = \str_replace('\\', '/', $path);
         $parts = \explode('/', $path);

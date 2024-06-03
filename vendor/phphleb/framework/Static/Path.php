@@ -43,7 +43,7 @@ final class Path extends BaseAsyncSingleton
      *
      * Создаёт рекурсивно директорию для файлового пути.
      */
-    public static function createDirectory(string $path, int $permissions = 0766): bool
+    public static function createDirectory(string $path, int $permissions = 0777): bool
     {
         if (self::$replace) {
             return self::$replace->createDirectory($path, $permissions);

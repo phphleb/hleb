@@ -58,7 +58,7 @@ final class Functions
              *
              * @see PathInfoDoc::special()
              */
-            function hl_create_directory(string $path, int $permissions = 0766): bool
+            function hl_create_directory(string $path, int $permissions = 0777): bool
             {
                 return Path::createDirectory($path, $permissions);
             }

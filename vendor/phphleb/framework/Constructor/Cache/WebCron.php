@@ -46,7 +46,7 @@ final class WebCron
       $I = DIRECTORY_SEPARATOR;
       $dir = Path::get(self::DIR);
       if (!\file_exists($dir)) {
-          @\mkdir($dir, 0776, true);
+          @\mkdir($dir, 0777, true);
       }
       $file = Path::get(self::DIR . $I . $key . '_' . $period . '.txt');
       $time = Settings::getParam('system', 'start.unixtime');

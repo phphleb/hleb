@@ -26,7 +26,7 @@ interface PathInterface
      *
      * Создаёт рекурсивно директорию для файлового пути.
      */
-    public function createDirectory(string $path, int $permissions = 0766): bool;
+    public function createDirectory(string $path, int $permissions = 0777): bool;
 
     /**
      * Similar to the file_exists function, but can additionally
