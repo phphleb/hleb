@@ -53,6 +53,7 @@ final class ClearingComments implements FeatureInterface
             $content = $helper->clearOneLiner($content);
 
             \file_put_contents($path, $content);
+            @\chmod($path, 0664);
             $count++;
         }
 

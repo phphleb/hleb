@@ -60,6 +60,7 @@ final class MainLogLevel extends BaseAsyncSingleton
         }
         \hl_create_directory(self::getPath());
         \file_put_contents(self::getPath(), $level);
+        @\chmod(self::getPath(), 0664);
 
         return self::get();
     }

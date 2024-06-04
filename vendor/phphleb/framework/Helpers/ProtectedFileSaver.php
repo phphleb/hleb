@@ -26,6 +26,7 @@ final class ProtectedFileSaver
            // Если по какой-то причине записать файл не удается, то он записывается без блокировки.
            \file_put_contents($path, $data);
            $fp and \fclose($fp);
+           @\chmod($path, 0664);
            return;
        }
        \ftruncate($fp, 0);
@@ -36,5 +37,6 @@ final class ProtectedFileSaver
        \flock($fp, LOCK_UN);
 
        \fclose($fp);
+        @\chmod($path, 0664);
    }
 }

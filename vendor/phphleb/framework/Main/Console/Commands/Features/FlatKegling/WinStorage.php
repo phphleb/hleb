@@ -59,6 +59,7 @@ final class WinStorage
         } catch (\JsonException $e) {
             throw new ParseException($e->getMessage());
         }
+        @\chmod($this->configDir . self::CONFIG_FILE, 0664);
     }
 
     public function defaultConfig(): array

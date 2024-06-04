@@ -46,7 +46,7 @@ final class WebCron
       $I = DIRECTORY_SEPARATOR;
       $dir = Path::get(self::DIR);
       if (!\file_exists($dir)) {
-          @\mkdir($dir, 0777, true);
+          @\mkdir($dir, 0775, true);
       }
       $file = Path::get(self::DIR . $I . $key . '_' . $period . '.txt');
       $time = Settings::getParam('system', 'start.unixtime');
@@ -57,6 +57,7 @@ final class WebCron
           }
       }
       @\file_put_contents($file, $time) and $func();
+      @\chmod($file, 0664);
 
       return true;
   }

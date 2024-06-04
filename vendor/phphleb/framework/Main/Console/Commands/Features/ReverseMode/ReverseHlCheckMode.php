@@ -98,6 +98,7 @@ final class ReverseHlCheckMode implements FeatureInterface
         }
         if ($search) {
             \file_put_contents($file, \implode($rows));
+            @\chmod($file, 0664);
         }
     }
 
@@ -137,6 +138,7 @@ final class ReverseHlCheckMode implements FeatureInterface
         }
         if ($search) {
             \file_put_contents($file, \implode($rows));
+            @\chmod($file, 0664);
         }
     }
 

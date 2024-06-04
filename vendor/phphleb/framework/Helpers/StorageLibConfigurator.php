@@ -83,6 +83,10 @@ final readonly class StorageLibConfigurator
         $converter = new JsonConverter();
         $path = $this->path . DIRECTORY_SEPARATOR . \rtrim($file, '\\/');
 
-        return \file_put_contents($path, $converter->get($config)) !== false;
+        $result = \file_put_contents($path, $converter->get($config)) !== false;
+
+        @\chmod($path, 0664);
+
+        return $result;
     }
 }

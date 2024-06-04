@@ -77,5 +77,6 @@ final class ConsoleAdapter
        $file = SystemSettings::getRealPath('@storage/cache/routes/lock-status.info');
        \hl_create_directory($file);
        \file_put_contents($file, (int)$lockStatus);
+       @\chmod($file, 0664);
    }
 }

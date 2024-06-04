@@ -38,6 +38,7 @@ final class Key extends BaseSingleton
             self::$key = Abracadabra::generate();
             \hl_create_directory($path);
             \file_put_contents($path, self::$key, LOCK_EX);
+            @\chmod($path, 0664);
 
             if (!SystemSettings::getRealPath('@' . self::$path)) {
                 throw new CoreProcessException('Failed to save key to folder `/storage/*`. You need to change permissions for the web server in this folder.');

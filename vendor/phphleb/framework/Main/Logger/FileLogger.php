@@ -150,10 +150,12 @@ class FileLogger extends BaseLogger implements LoggerInterface
         }
         $dbPrefix = $level === LogLevel::STATE && \str_contains($row, SystemDB::DB_PREFIX) ? '.db' : '';
         if (!\file_exists($dir)) {
-            @\mkdir($dir, 0777, true);
+            @\mkdir($dir, 0775, true);
         }
         if ($this->isConsoleMode) {
-            \file_put_contents($dir . $I . \date('Y_m_d') . $dbPrefix . '.system.log', $row . PHP_EOL, FILE_APPEND|LOCK_EX);
+            $file = $dir . $I . \date('Y_m_d') . $dbPrefix . '.system.log';
+            \file_put_contents($file, $row . PHP_EOL, FILE_APPEND|LOCK_EX);
+            @\chmod($file, 0664);
             return;
         }
         $prefix = $this->sortByDomain ?
@@ -165,7 +167,9 @@ class FileLogger extends BaseLogger implements LoggerInterface
                 )
             ) ?: 'handler') : 'project';
 
-        \file_put_contents($dir . $I . \date('Y_m_d_') . $prefix . $dbPrefix . '.log', $row . PHP_EOL, FILE_APPEND);
+        $file = $dir . $I . \date('Y_m_d_') . $prefix . $dbPrefix . '.log';
+        \file_put_contents($file, $row . PHP_EOL, FILE_APPEND);
+        @\chmod($file, 0664);
     }
 
     /**

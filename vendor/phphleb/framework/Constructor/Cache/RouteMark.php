@@ -60,12 +60,14 @@ final class RouteMark extends BaseAsyncSingleton
         $dataHash = self::createHash($data);
         $dir = SystemSettings::getRealPath('storage') . '/cache/routes/';
         \hl_create_directory($dir);
-        \file_put_contents($dir . self::FILE_NAME, $dataHash, LOCK_EX);
-        if (empty(\file_get_contents($dir . self::FILE_NAME))) {
+        $path = $dir . self::FILE_NAME;
+        \file_put_contents($path, $dataHash, LOCK_EX);
+        @\chmod($path, 0664);
+        if (empty(\file_get_contents($path))) {
             throw new CoreProcessException('Failed to save route cache key.');
         }
 
-        return \file_exists($dir . self::FILE_NAME);
+        return \file_exists($path);
     }
 
     /**

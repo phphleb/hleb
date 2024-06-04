@@ -92,6 +92,7 @@ final class ReverseStrictMode implements FeatureInterface
            if (\trim($row) === $replacement[0]) {
                $row = \str_replace($replacement[0], $replacement[1], $row);
                \file_put_contents($file, \implode($rows));
+               @\chmod($file, 0664);
                return;
            }
        }

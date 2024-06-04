@@ -551,6 +551,7 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
         $file = self::getExpirePath($cacheKey);
         \hl_create_directory($file);
         \file_put_contents($file, $time);
+        @\chmod($file, 0664);
 
         return \file_exists($file);
     }
@@ -638,6 +639,7 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
         $path = self::getExpirePath($cacheKey);
         \hl_create_directory($path);
         \file_put_contents($path, self::BLOCKED_PROCESS_TAG, LOCK_EX);
+        @\chmod($path, 0664);
 
         $prefix = \substr($cacheKey, 0, self::FIRST_PREFIX_LEN);
         $secondPrefix = \substr($cacheKey, 0, self::SECOND_PREFIX_LEN);

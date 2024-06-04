@@ -79,10 +79,12 @@ class ProjectSetupTask extends Task
                 if ($name === 'common') {
                     $content = str_replace("'debug' => false,", "'debug' => true,", $content);
                 }
-                if (!file_put_contents("$dir/$name-local.php", $content)) {
+                $localPath = "$dir/$name-local.php";
+                if (!file_put_contents($localPath, $content)) {
                     echo "Failed to copy config/$name.php. ";
                 }
-                $this->clearComments("$dir/$name-local.php");
+                $this->clearComments($localPath);
+                @\chmod($localPath, 0664);
             }
         }
         echo 'Creation of configuration files for local development.' . PHP_EOL;
