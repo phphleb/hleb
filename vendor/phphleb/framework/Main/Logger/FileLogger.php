@@ -150,7 +150,9 @@ class FileLogger extends BaseLogger implements LoggerInterface
         }
         $dbPrefix = $level === LogLevel::STATE && \str_contains($row, SystemDB::DB_PREFIX) ? '.db' : '';
         if (!\file_exists($dir)) {
+            \defined('HL_UNCHANGEABLE_UMASK') or $oldUmask = @\umask(0000);
             @\mkdir($dir, 0775, true);
+            \defined('HL_UNCHANGEABLE_UMASK') or @\umask($oldUmask);
         }
         if ($this->isConsoleMode) {
             $file = $dir . $I . \date('Y_m_d') . $dbPrefix . '.system.log';

@@ -52,7 +52,9 @@ class PathReference extends ContainerUniqueItem implements PathInterface, Interf
         }
 
         if (!\file_exists($dir)) {
+            \defined('HL_UNCHANGEABLE_UMASK') or $oldUmask = @\umask(0000);
             @\mkdir($dir, $permissions, true);
+            \defined('HL_UNCHANGEABLE_UMASK') or @\umask($oldUmask);
         }
         if (!\is_writable($dir)) {
             throw new FileResourceModificationException("The directory `$path` is not available for writing files.");
