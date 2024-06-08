@@ -356,7 +356,7 @@ final class Workspace
 
                     $event and $this->updateControllerAfterEvent($initiatorObject::class, $method, $event, $type, $result);
 
-                    return $result;
+                    return $this->checkControllerResultType($initiator, $method, $result);
                 }
                 $data = [];
                 if ($params) {
@@ -406,7 +406,7 @@ final class Workspace
                     $result = '';
                 }
 
-                return $result;
+                return $this->checkControllerResultType($initiator, $method, $result);
             }
         }
         if ($countTags > 0) {
@@ -534,6 +534,39 @@ final class Workspace
             $event = new $eventClass();
         }
         return $event ?? null;
+    }
+
+    /**
+     * Checking the correctness of the return type in the controller and generating a detailed error.
+     *
+     * Проверка правильности возвращаемого типа в контроллере с формированием подробной ошибки.
+     *
+     * @throws RouteColoredException
+     */
+    private function checkControllerResultType(string $controller, string $method, mixed $result): mixed
+    {
+        if (
+            $result instanceof View ||
+            \is_array($result) ||
+            \is_string($result) ||
+            \is_bool($result) ||
+            \is_int($result) ||
+            \is_float($result) ||
+            $result instanceof SystemResponse ||
+            $result instanceof ResponseInterface ||
+            $result instanceof PsrResponseInterface
+        ) {
+            return $result;
+        }
+        $types = \implode(', ', [
+            'array', 'int', 'string', 'bool', 'float',
+            View::class,
+            SystemResponse::class,
+            ResponseInterface::class,
+            PsrResponseInterface::class,
+        ]);
+
+        $this->error(AsyncRouteException::HL37_ERROR, ['class' => $controller, 'method' => $method, 'types' => $types]);
     }
 
 }

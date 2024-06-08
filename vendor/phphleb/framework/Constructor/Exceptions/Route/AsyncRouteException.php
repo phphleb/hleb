@@ -84,6 +84,8 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
 
     final public const HL36_ERROR = 'HL36_ERROR';
 
+    final public const HL37_ERROR = 'HL37_ERROR';
+
     private const ALL = [
         self::HL00_ERROR => [
             'en' => 'Sample error output number %value%',
@@ -236,6 +238,10 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
         self::HL36_ERROR => [
             'en' => 'Route compilation error. The module name (%name%) must consist of lowercase Latin letters, numbers, a hyphen and the \'/\' symbol and can be converted into a class name.',
             'ru' => 'Ошибка составления маршрутов. Название модуля (%name%) должно состоять из из латинских букв в нижнем регистре, цифр, дефиса и символа \'/\' и иметь возможность быть преобразованным в название класса.'
+        ],
+        self::HL37_ERROR => [
+            'en' => 'The `%method%` method of the controller `%class%` returned an unsupported data type. Available types: %types%',
+            'ru' => 'Метод `%method% контроллера `%class%` вернул неподдерживаемый тип данных. Доступные типы: %types%'
         ],
     ];
 
