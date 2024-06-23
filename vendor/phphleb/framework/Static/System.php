@@ -7,7 +7,6 @@ namespace Hleb\Static;
 use App\Bootstrap\BaseContainer;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
-use Hleb\Constructor\Data\DebugAnalytics;
 use Hleb\CoreProcessException;
 use Hleb\Database\PdoManager;
 use Hleb\Main\Insert\BaseAsyncSingleton;
@@ -516,6 +515,35 @@ class System extends BaseAsyncSingleton
         } else {
             BaseContainer::instance()->get(SystemInterface::class)->createCustomLog($sql, $microtime, $params, $dbname, $driver);
         }
+    }
+
+    /**
+     * Checks the command to see if it can be run in different modes and returns a list of available modes.
+     *
+     * Проверяет команду на возможность запуска в различных режимах и возвращает список доступных режимов.
+     *
+     * ```php
+     * use Hleb\HlebBootstrap;
+     * use Hleb\Static\System;
+     * use App\Commands\DefaultTask;
+     *
+     * $permissions = System::getTaskPermissions(DefaultTask::class);
+     *
+     * if (in_array(HlebBootstrap::CONSOLE_MODE, $permissions)) {
+     *     // ...
+     * }
+     * ```
+     *
+     * @param string $taskClass - the class being checked.
+     *                          - проверяемый класс.
+     * @return array
+     */
+    public static function getTaskPermissions(string $taskClass): array
+    {
+        if (self::$replace) {
+            return self::$replace->getTaskPermissions($taskClass);
+        }
+        return BaseContainer::instance()->get(SystemInterface::class)->getTaskPermissions($taskClass);
     }
 
 

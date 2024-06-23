@@ -10,6 +10,7 @@ use App\Bootstrap\Events\TaskEvent;
 use Hleb\Constructor\Attributes\Disabled;
 use Hleb\Constructor\Attributes\Task\Purpose;
 use Hleb\Constructor\DI\DependencyInjection;
+use Hleb\DomainException;
 use Hleb\Helpers\AttributeHelper;
 use Hleb\InvalidArgumentException;
 use Hleb\Reference\SettingInterface;
@@ -153,7 +154,7 @@ abstract class Console
             throw new DynamicStateException('Missing required `run` method for ' . static::class);
         }
         if ($this->attributeHelper->hasClassAttribute(Disabled::class)) {
-            return true;
+            throw new DomainException('Execution is disabled by the presence of the #[Disabled] attribute.');
         }
         if (!$this->checkAttributes()) {
             throw new DynamicStateException('Forbidden by an attribute for a class ' . static::class);

@@ -2,8 +2,11 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\Task;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
+use Hleb\Constructor\Attributes\Disabled;
+use Hleb\Constructor\Attributes\Task\Purpose;
 use Hleb\Constructor\Cache\RouteMark;
 use Hleb\Constructor\Data\DebugAnalytics;
 use Hleb\Constructor\Data\DynamicParams;
@@ -12,12 +15,16 @@ use Hleb\Constructor\Data\SystemSettings;
 use Hleb\Database\PdoManager;
 use Hleb\Database\StandardDB;
 use Hleb\Database\SystemDB;
+use Hleb\Helpers\AttributeHelper;
+use Hleb\HlebBootstrap;
+use Hleb\InvalidArgumentException;
 use Hleb\Main\Console\ConsoleHandler;
 use Hleb\Main\Console\WebConsole;
 use Hleb\Main\Insert\ContainerUniqueItem;
 use Hleb\Main\Logger\LogLevel;
 use Hleb\Main\System\LibraryServiceAddress;
 use Hleb\Static\Settings;
+
 
 /**
  * Various system calls for use by native framework libraries.
@@ -267,6 +274,41 @@ class SystemReference extends ContainerUniqueItem implements SystemInterface, In
     ): void
     {
         SystemDB::createCustomLog($sql, $microtime, $params, $dbname, $driver);
+    }
+
+    /** @inheritDoc */
+    public static function getTaskPermissions(string $taskClass): array
+    {
+        $parentClass = Task::class;
+        if (!\is_subclass_of($taskClass, $parentClass)) {
+            throw new InvalidArgumentException("{$taskClass} is not a subclass of {$parentClass}.");
+        }
+        $allPermissions = [HlebBootstrap::CONSOLE_MODE, HlebBootstrap::ASYNC_MODE, HlebBootstrap::STANDARD_MODE];
+
+        $helper = new AttributeHelper($taskClass);
+
+        if ($helper->hasClassAttribute(Disabled::class)) {
+            return [];
+        }
+        if (!$helper->hasClassAttribute(Purpose::class)) {
+            return $allPermissions;
+        }
+
+        $status = $helper->getClassValue(Purpose::class, 'status');
+
+        if ($status === Purpose::FULL) {
+            return $allPermissions;
+        }
+
+        if ($status === Purpose::CONSOLE) {
+            return [HlebBootstrap::CONSOLE_MODE];
+        }
+
+        if ($status === Purpose::EXTERNAL) {
+            return [HlebBootstrap::ASYNC_MODE, HlebBootstrap::STANDARD_MODE];
+        }
+
+        return [];
     }
 
     /** @inheritDoc */

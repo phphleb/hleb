@@ -294,6 +294,29 @@ interface SystemInterface
     ): void;
 
     /**
+     * Checks the command to see if it can be run in different modes and returns a list of available modes.
+     *
+     * Проверяет команду на возможность запуска в различных режимах и возвращает список доступных режимов.
+     *
+     * ```php
+     * use Hleb\HlebBootstrap;
+     * use Hleb\Static\System;
+     * use App\Commands\DefaultTask;
+     *
+     * $permissions = System::getTaskPermissions(DefaultTask::class);
+     *
+     * if (in_array(HlebBootstrap::CONSOLE_MODE, $permissions)) {
+     *     // ...
+     * }
+     * ```
+     *
+     * @param string $taskClass - the class being checked.
+     *                          - проверяемый класс.
+     * @return array
+     */
+    public static function getTaskPermissions(string $taskClass): array;
+
+    /**
      * Used if you need to rollback data
      * for an asynchronous request.
      *
