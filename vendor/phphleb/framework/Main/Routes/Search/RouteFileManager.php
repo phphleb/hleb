@@ -116,7 +116,7 @@ final class RouteFileManager
         }
         /** @see hl_check() - createBlockDataNumber completed */
 
-        return $this->getBlockById($blockNumber);
+        return $this->getBlockById($blockNumber, $block->getIsCompleteAddress());
     }
 
     /**
@@ -183,6 +183,8 @@ final class RouteFileManager
      * Getting a block to be placed in place of mismatched routes.
      *
      * Получение блока размещаемого вместо не совпавших маршрутов.
+     *
+     * @throws RouteColoredException
      */
     public function getFallbackBlock(): array|false
     {
@@ -196,8 +198,10 @@ final class RouteFileManager
      * Search for block data by ID.
      *
      * Поиск данных блока по идентификатору.
+     *
+     * @throws RouteColoredException
      */
-    private function getBlockById($blockNumber): false|array
+    private function getBlockById($blockNumber, bool $isComplete = true): false|array
     {
         $method = $this->method;
         // Search for a block with route data.
@@ -208,7 +212,15 @@ final class RouteFileManager
             return false;
         }
 
-        return $this->getFromCache($path, $class);
+        $data = $this->getFromCache($path, $class);
+
+        if ($data) {
+            $default = $data['data']['default'] ?? [];
+            if ($default) {
+                $this->data += $this->checkKeysAndUpdateData($default, $data['full-address'] ?? 'undefined', $isComplete);
+            }
+        }
+        return $data;
     }
 
     /**
@@ -217,6 +229,8 @@ final class RouteFileManager
      *
      * Возвращает преобразованные в массив данные из файла.
      * Возвращает false если файл не был найден или преобразование не удалось.
+     *
+     * @throws RouteColoredException
      */
     private function getFromCache(string $path, string $class): array|false
     {
@@ -236,6 +250,8 @@ final class RouteFileManager
      * An attempt to get data for the main page bypassing the search among other routes.
      *
      * Попытка получения данных для главной страницы минуя поиск среди остальных маршрутов.
+     *
+     * @throws RouteColoredException
      */
     private function searchIndexPage(int $page, SystemRequest $request): false|array
     {
@@ -254,6 +270,8 @@ final class RouteFileManager
      * Checking the blocking of the site by a special stub page.
      *
      * Проверка блокировки сайта специальной страницей-заглушкой.
+     *
+     * @throws RouteColoredException
      */
     private function siteStubSearch(array $info): array|bool
     {
@@ -315,6 +333,8 @@ final class RouteFileManager
      * Get configuration from cache.
      *
      * Получить конфигурацию из кеша.
+     *
+     * @throws RouteColoredException
      */
     private function getInfoFromCache(): array
     {
@@ -331,6 +351,8 @@ final class RouteFileManager
      * Checking readiness to update the configuration file.
      *
      * Проверка готовности к обновлению файла конфигурации.
+     *
+     * @throws RouteColoredException
      */
     private function validateInfoFromUpdate(array $firstInfo, array $secondInfo): bool
     {
@@ -353,6 +375,8 @@ final class RouteFileManager
      * If another process is processing changes, then you need to wait for them.
      *
      * Если другой процесс обрабатывает изменения, то нужно их подождать.
+     *
+     * @throws RouteColoredException
      */
     private function updateRounds(array $info): bool
     {
@@ -382,6 +406,8 @@ final class RouteFileManager
      * Returns the data of the matched block according to the data of the current request.
      *
      * Возвращает данные совпавшего блока согласно данным текущего запроса.
+     *
+     * @throws RouteColoredException
      */
     private function getDataByRequest(SystemRequest $request): SearchBlock|false
     {
@@ -414,6 +440,29 @@ final class RouteFileManager
         $this->data = $block->getData();
 
         return $blockNumber;
+    }
+
+    /**
+     * Returns default values from dynamic routes.
+     *
+     * Возвращает дефолтные значения из динамических маршрутов.
+     *
+     * @throws RouteColoredException
+     */
+    public function checkKeysAndUpdateData(array $data, string $address, bool $isComplete): array
+    {
+        $defaultList = [];
+        foreach ($data as $subarray) {
+            $key = $subarray[0];
+            if (isset($defaultList[$key]) || isset($this->data[$key])) {
+                throw (new RouteColoredException(AsyncRouteException::HL38_ERROR))->complete(DynamicParams::isDebug(), ['key' => $key, 'value' => $subarray[1], 'address' => $address]);
+            }
+            if (!$isComplete && \str_contains($subarray[1], '?')) {
+                continue;
+            }
+            $defaultList[$key] = \rtrim($subarray[1], '?');
+        }
+        return $defaultList;
     }
 
 }

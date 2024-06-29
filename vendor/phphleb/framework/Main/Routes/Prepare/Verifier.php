@@ -176,7 +176,9 @@ final readonly class Verifier
                     $this->error(AsyncRouteException::HL09_ERROR);
                 }
             }
-            if (\str_contains($address, '?') && !\str_ends_with(\trim($address, '/'), '?}')) {
+            if (\str_contains($address, '?') &&
+                (\substr_count($address, '?') > 1 || !\str_ends_with(\rtrim($address, '/}'), '?'))
+            ) {
                 $this->error(AsyncRouteException::HL10_ERROR);
             }
             $uriParts = \explode('/', trim($address, '/'));

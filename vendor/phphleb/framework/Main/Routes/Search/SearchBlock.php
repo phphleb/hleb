@@ -22,6 +22,8 @@ final class SearchBlock
 
     private ?bool $isPlain = null;
 
+    private bool $isCompleteAddress = true;
+
     public function __construct(
         readonly private SystemRequest $request,
         readonly private array         $list
@@ -77,6 +79,16 @@ final class SearchBlock
     public function getIsPlain(): null|bool
     {
         return $this->isPlain;
+    }
+
+    /**
+     * Returns an indication whether the found route has or does not have a trailing part.
+     *
+     * Возвращает признак того, что найденный маршрут имеет или не имеет конечную часть.
+     */
+    public function getIsCompleteAddress(): bool
+    {
+        return $this->isCompleteAddress;
     }
 
     /**
@@ -174,15 +186,17 @@ final class SearchBlock
             $countRouteParts = \count($routeParts);
             $countAddressParts = \count($addressParts);
 
+            $this->isCompleteAddress = $countRouteParts === $countAddressParts;
+
             // If the route has a fixed length, but the number of parts is not the same.
             // Если маршрут неизменяемой длины, но количество частей не одинаково.
-            if (empty($route['v']) && $countRouteParts !== $countAddressParts) {
+            if (empty($route['v']) && !$this->isCompleteAddress) {
                 continue;
             }
 
             // If the route is variable length, but the number of parts is not in the likely range.
             // Если маршрут изменяемой длины, но количество частей не входит в вероятный диапазон.
-            if (!empty($route['v']) && ($countRouteParts !== $countAddressParts && $countRouteParts !== $countAddressParts + 1)) {
+            if (!empty($route['v']) && (!$this->isCompleteAddress && $countRouteParts !== $countAddressParts + 1)) {
                 continue;
             }
 
@@ -230,7 +244,7 @@ final class SearchBlock
                     // Gather dynamic address matches.
                     // Сбор совпадений с динамическим адресом.
                     $data[$param] = $addressPart;
-                } else if ($addressPart !== $part) {
+                } else if (\rtrim($part, '?') !== $addressPart) {
                     $search = false;
                     break;
                 }

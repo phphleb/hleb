@@ -140,4 +140,29 @@ abstract class StandardRoute
         }
         return \str_replace('\\', '/', $address);
     }
+
+    /**
+     * Parses by changing the route address and returns default values.
+     *
+     * Разбирает изменяя адрес маршрута и возвращает значения по умолчанию.
+     */
+    protected function getDefaultValues(string &$address): array
+    {
+        if (!\str_contains($address, ':')) {
+            return [];
+        }
+        $parts = \explode('/', $address);
+        $values = [];
+        foreach ($parts as &$part) {
+            $clearedValue = \trim($part, '{}');
+            if (\substr_count($part, ':') === 1 && $part === "{{$clearedValue}}") {
+                $params = \explode(':', $clearedValue);
+                $values[] = $params;
+                $part = $params[1];
+            }
+        }
+        $address = \implode('/', $parts);
+
+        return $values;
+    }
 }

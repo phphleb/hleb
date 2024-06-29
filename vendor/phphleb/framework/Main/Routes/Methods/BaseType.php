@@ -25,14 +25,24 @@ abstract class BaseType extends StandardRoute
         }
         $types = \array_unique(\array_map('strtoupper', $this->types()));
 
+        $route = $this->updateRouteAddress($route);
+
+        $default = $this->getDefaultValues($route);
+
+        $data = [
+            'route' => $route,
+            'view' => $params,
+        ];
+
+        if ($default) {
+            $data['default'] = $default;
+        }
+
         $this->register([
             'method' => self::ADD_TYPE,
             'name' => $this->methodName(),
             'types' => $types,
-            'data' => [
-                'route' => $this->updateRouteAddress($route),
-                'view' => $params,
-            ]
+            'data' => $data,
         ]);
     }
 
