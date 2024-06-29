@@ -86,6 +86,8 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
 
     final public const HL37_ERROR = 'HL37_ERROR';
 
+    final public const HL38_ERROR = 'HL38_ERROR';
+
     private const ALL = [
         self::HL00_ERROR => [
             'en' => 'Sample error output number %value%',
@@ -242,6 +244,10 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
         self::HL37_ERROR => [
             'en' => 'The `%method%` method of the controller `%class%` returned an unsupported data type. Available types: %types%',
             'ru' => 'Метод `%method% контроллера `%class%` вернул неподдерживаемый тип данных. Доступные типы: %types%'
+        ],
+        self::HL38_ERROR => [
+            'en' => 'Route compilation error. Duplicate {%key%:%value%} key for dynamic address %address%.',
+            'ru' => 'Ошибка составления маршрутов. Дублирование ключа {%key%:%value%} для динамического адреса %address%.'
         ],
     ];
 

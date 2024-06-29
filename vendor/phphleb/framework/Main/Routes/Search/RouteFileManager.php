@@ -457,10 +457,7 @@ final class RouteFileManager
             if (isset($defaultList[$key]) || isset($this->data[$key])) {
                 throw (new RouteColoredException(AsyncRouteException::HL38_ERROR))->complete(DynamicParams::isDebug(), ['key' => $key, 'value' => $subarray[1], 'address' => $address]);
             }
-            if (!$isComplete && \str_contains($subarray[1], '?')) {
-                continue;
-            }
-            $defaultList[$key] = \rtrim($subarray[1], '?');
+            $defaultList[$key] = !$isComplete && \str_contains($subarray[1], '?') ? null : \rtrim($subarray[1], '?');
         }
         return $defaultList;
     }
