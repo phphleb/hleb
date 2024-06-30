@@ -68,6 +68,9 @@ if (typeof hlDPan.terminal === 'undefined') hlDPan.terminal = {
     initCursor: function() {
         this.cursorInterval = setInterval(function() {
             var cursor = document.getElementById('hl-DEBUGPAN-menu-terminal-cursor');
+            if (!cursor) {
+                return;
+            }
             if (cursor.style.opacity == 1) {
                 cursor.style.opacity = '0';
             } else {
