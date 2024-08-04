@@ -81,7 +81,7 @@ final class RouteList
                 }
                 $search[] = $data;
                 if ($matches) {
-                    $tag = \implode(', ', $keys);
+                    $tag = \implode(', ', \array_unique($keys));
                     if (isset($result[$tag])) {
                         $result[$tag] = \array_merge($result[$tag], $matches);
                     } else {
