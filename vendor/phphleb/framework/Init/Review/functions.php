@@ -644,3 +644,68 @@ if (!function_exists('once')) {
         return Once::get($func);
     }
 }
+
+if (!function_exists('array_find')) {
+    /**
+     * Returns the first array element that matches a condition.
+     * Similar to array_find() in PHP 8.4
+     */
+    function array_find(array $array, callable $callback): mixed
+    {
+        foreach ($array as $value) {
+            if ($callback($value)) {
+                return $value;
+            }
+        }
+        return null;
+    }
+}
+
+if (!function_exists('array_find_key')) {
+    /**
+     * Returns the key of the first element of an array that matches a condition.
+     * Similar to array_find_key() in PHP 8.4
+     */
+    function array_find_key(array $array, callable $callback): int|string|null
+    {
+        foreach ($array as $key => $value) {
+            if ($callback($value, $key)) {
+                return $key;
+            }
+        }
+        return null;
+    }
+}
+
+if (!function_exists('array_all')) {
+    /**
+     * Checks whether each element of the array matches a condition.
+     * Similar to array_all() in PHP 8.4
+     */
+    function array_all(array $array, callable $callback): bool
+    {
+        foreach ($array as $value) {
+            if (!$callback($value)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+if (!function_exists('array_any')) {
+    /**
+     * Checks whether at least one array element matches a condition.
+     * Similar to array_any() in PHP 8.4
+     */
+    function array_any(array $array, callable $callback): bool
+    {
+        foreach ($array as $value) {
+            if ($callback($value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
