@@ -468,6 +468,21 @@ if (!function_exists('config')) {
     }
 }
 
+if (!function_exists('get_config_or_fail')) {
+    /**
+     * A wrapper for receiving settings parameters. If not present or equal to null, throws an error.
+     *
+     * Обёртка для получения параметров настроек. При отсутствии или равном null выбрасывает ошибку.
+     *
+     * @throws InvalidArgumentException
+     * @see config()
+     */
+    function get_config_or_fail(string $name, string $key): mixed
+    {
+        return config($name, $key) ?? throw new InvalidArgumentException("Failed to get `{$key}` parameter from `{$name}` configuration");
+    }
+}
+
 if (!function_exists('hl_redirect')) {
     /**
      * Replacing the internal redirect for normal and asynchronous requests.
@@ -645,10 +660,14 @@ if (!function_exists('once')) {
     }
 }
 
+
 if (!function_exists('array_find')) {
     /**
      * Returns the first array element that matches a condition.
      * Similar to array_find() in PHP 8.4
+     *
+     * Возвращает первый элемент массива, соответствующий условию.
+     * Аналогично array_find() в PHP 8.4
      */
     function array_find(array $array, callable $callback): mixed
     {
@@ -665,6 +684,9 @@ if (!function_exists('array_find_key')) {
     /**
      * Returns the key of the first element of an array that matches a condition.
      * Similar to array_find_key() in PHP 8.4
+     *
+     * Возвращает ключ первого элемента массива, соответствующего условию.
+     * Аналогично array_find_key() в PHP 8.4
      */
     function array_find_key(array $array, callable $callback): int|string|null
     {
@@ -681,6 +703,9 @@ if (!function_exists('array_all')) {
     /**
      * Checks whether each element of the array matches a condition.
      * Similar to array_all() in PHP 8.4
+     *
+     * Проверяет, соответствует ли каждый элемент массива условию.
+     * Аналогично array_all() в PHP 8.4
      */
     function array_all(array $array, callable $callback): bool
     {
@@ -697,6 +722,9 @@ if (!function_exists('array_any')) {
     /**
      * Checks whether at least one array element matches a condition.
      * Similar to array_any() in PHP 8.4
+     *
+     * Проверяет, соответствует ли условию хотя бы один элемент массива.
+     * Аналогично array_any() в PHP 8.4
      */
     function array_any(array $array, callable $callback): bool
     {
