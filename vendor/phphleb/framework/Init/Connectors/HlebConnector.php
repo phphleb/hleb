@@ -164,6 +164,7 @@ final class HlebConnector
         'Hleb\Main\Routes\BaseRoute' => '/Main/Routes/BaseRoute.php',
         'Hleb\Main\Routes\Methods\BaseType' => '/Main/Routes/Methods/BaseType.php',
         'Hleb\Main\Info\PathInfoDoc' => '/Main/Info/PathInfoDoc.php',
+        'Hleb\Main\Console\Colorizer' => '/Main/Console/Colorizer.php',
         'Hleb\Main\Routes\Prepare\Defender' => '/Main/Routes/Prepare/Defender.php',
         'Hleb\Main\Routes\Prepare\FileChecker' => '/Main/Routes/Prepare/FileChecker.php',
         'Hleb\Main\Routes\Prepare\Handler' => '/Main/Routes/Prepare/Handler.php',

@@ -7,6 +7,7 @@ namespace Hleb\Main\Console\Commands;
 use Hleb\CoreProcessException;
 use Hleb\Helpers\ReflectionMethod;
 use Hleb\Helpers\TaskHelper;
+use Hleb\Main\Console\Colorizer;
 
 /**
  * @internal
@@ -21,6 +22,7 @@ final class ShortList
     public function run(): false|string
     {
         $nameHelper = new TaskHelper();
+        $color = new Colorizer();
 
         $titles = ['COMMAND', 'DESCRIPTION'];
         $interval = 0;
@@ -78,6 +80,7 @@ final class ShortList
                 }
                 $blocks[] = $block;
             }
+            $row[1] = $color->yellow($row[1]);
             $result .= ' ' . \implode(\str_repeat(' ', $interval - \strlen($command) + $defaultInterval), $row);
         }
         $title = $titles[0] . \str_repeat(' ', $interval - $defaultInterval) . $titles[1];

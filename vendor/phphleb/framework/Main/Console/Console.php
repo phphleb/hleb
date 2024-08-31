@@ -75,6 +75,8 @@ abstract class Console
 
     private bool $fromCli;
 
+    private ?Colorizer $colorizer = null;
+
     private AttributeHelper $attributeHelper;
 
     /**
@@ -288,6 +290,16 @@ abstract class Console
     protected function settings(): SettingInterface
     {
         return $this->container->settings();
+    }
+
+    /**
+     * Returns an object with text coloring methods for the terminal.
+     *
+     * Возвращает объект с методами раскраски текста для терминала.
+     */
+    protected function color(): Colorizer
+    {
+       return $this->colorizer ?? ($this->colorizer = new Colorizer());
     }
 
     private function convertArguments(array $arguments): array

@@ -63,6 +63,8 @@ final class ConsoleHandler
 
     private readonly ?string $fifthArgument;
 
+    private readonly Colorizer $color;
+
     private int $code = 0;
 
     /**
@@ -81,6 +83,7 @@ final class ConsoleHandler
         $this->thirdArgument = $this->arguments[2] ?? null;
         $this->fourthArgument = $this->arguments[3] ?? null;
         $this->fifthArgument = $this->arguments[4] ?? null;
+        $this->color = new Colorizer();
     }
 
     /**
@@ -149,9 +152,8 @@ final class ConsoleHandler
         if (\end($this->arguments) === '--help') {
             return '[HELP] This command displays the formatted output of the current version of the framework.' . PHP_EOL;
         }
-        $frameworkVersion = (\defined('HLEB_CORE_VERSION') ? HLEB_CORE_VERSION : '2.x.x');
-        $spaces = \str_repeat(' ', 10 - \strlen($frameworkVersion));
-        return PHP_EOL . "  HLEB Micro-Framework v" . $frameworkVersion . $spaces . PHP_EOL .
+        $frameworkVersion = \defined('HLEB_CORE_VERSION') ? HLEB_CORE_VERSION : '2.x.x';
+        return PHP_EOL . "  " . $this->color->yellow("HLEB2 Framework ") . " " . $this->color->green("v" . $frameworkVersion) .
             "  (c)2019 - " . \date("Y") . " Foma Tuturov" . PHP_EOL . PHP_EOL;
     }
 

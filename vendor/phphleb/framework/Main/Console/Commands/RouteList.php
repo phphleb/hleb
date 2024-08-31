@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hleb\Main\Console\Commands;
 
 use Hleb\Helpers\RouteHelper;
+use Hleb\Main\Console\Colorizer;
 use JsonException;
 
 /**
@@ -37,9 +38,10 @@ final class RouteList
         unset($values);
 
         $routes = $this->sortNestedArrays($routes);
+        $color = new Colorizer();
 
         foreach ($routes as $key => $values) {
-            $result .= \strtoupper($key) . PHP_EOL;
+            $result .= $color->yellow(\strtoupper($key)) . PHP_EOL;
             foreach ($values as $v) {
                 try {
                     $domainData = \json_encode($v['h'] ?? [], JSON_THROW_ON_ERROR);

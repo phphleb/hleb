@@ -10,7 +10,7 @@ namespace Hleb\Base;
 use App\Bootstrap\BaseContainer;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Reference\SettingInterface;
-use Hleb\Main\Console\{Console, Specifiers\ArgType, Specifiers\LightDataType};
+use Hleb\Main\Console\{Colorizer, Console, Specifiers\ArgType, Specifiers\LightDataType};
 
 /**
  * The base class for the console command, all console commands must be inherited from it.
@@ -107,5 +107,26 @@ abstract class Task extends Console
     protected function rules(): array
     {
         return [];
+    }
+
+    /**
+     * Returns an object with text coloring methods for the terminal.
+     * The terminal you are using must support basic colors.
+     *
+     * Возвращает объект с методами раскраски текста для терминала.
+     * Используемый терминал должен поддерживать базовые цвета.
+     *
+     * ```php
+     * echo $this->color()->green('text') . PHP_EOL;
+     * // or
+     * $c = $this->color();
+     * echo $c->green('text') . PHP_EOL;
+     * ```
+     *
+     * @see Colorizer
+     */
+    protected function color(): Colorizer
+    {
+        return parent::color();
     }
 }
