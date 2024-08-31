@@ -40,5 +40,5 @@ final class MiddlewareEvent extends Event
      */
     // public function before(string $class, string $method, array $arguments, bool $after): array|false { return $arguments; }
 
-   // public function after(string $class, string $method, bool $after, mixed &$result): bool { }
+    // public function after(string $class, string $method, bool $after, mixed &$result): bool { }
 }
