@@ -69,7 +69,7 @@ final class DB extends BaseAsyncSingleton
      * ```php
      * $arr = [1,2,3];
      * $in  = str_repeat('?,', count($arr) - 1) . '?';
-     * $row = DB::run("SELECT * FROM table_name WHERE column IN ($in)", $in)->fetch();
+     * $row = DB::run("SELECT * FROM table_name WHERE column IN ($in)", $arr)->fetch();
      *```
      *
      * ## Примеры обращения
@@ -116,7 +116,7 @@ final class DB extends BaseAsyncSingleton
      * ```php
      * $arr = [1,2,3];
      * $in  = str_repeat('?,', count($arr) - 1) . '?';
-     * $row = DB::run("SELECT * FROM table_name WHERE column IN ($in)", $in)->fetch();
+     * $row = DB::run("SELECT * FROM table_name WHERE column IN ($in)", $arr)->fetch();
      *```
      * @param string|null $configKey - select the type of connection.
      *                               - выбор типа соединения.

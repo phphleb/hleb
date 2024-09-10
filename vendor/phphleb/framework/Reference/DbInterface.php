@@ -59,7 +59,7 @@ interface DbInterface
      * ```php
      * $arr = [1,2,3];
      * $in  = str_repeat('?,', count($arr) - 1) . '?';
-     * $row = $db->run("SELECT * FROM table_name WHERE column IN ($in)", $in)->fetch();
+     * $row = $db->run("SELECT * FROM table_name WHERE column IN ($in)", $arr)->fetch();
      *```
      *
      * ## Примеры обращения
@@ -106,7 +106,7 @@ interface DbInterface
      * ```php
      * $arr = [1,2,3];
      * $in  = str_repeat('?,', count($arr) - 1) . '?';
-     * $row = $db->run("SELECT * FROM table_name WHERE column IN ($in)", $in)->fetch();
+     * $row = $db->run("SELECT * FROM table_name WHERE column IN ($in)", $arr)->fetch();
      *```
      * @param string|null $configKey - select the type of connection.
      *                               - выбор типа соединения.
