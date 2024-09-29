@@ -125,7 +125,20 @@ final class UrlManager
     private function getFromDynamicRouteAssoc(string $address, array $replacements, ?bool $endPart, ?array $condition): string
     {
         if (!$this->checkPartCount($address, $replacements, $endPart)) {
-            throw new InvalidArgumentException('Wrong number of replacement parts for URL.');
+            $error = 'Wrong number of replacement parts for URL.';
+            if (\str_contains($address, '?')) {
+                $found = false;
+                foreach ($replacements as $key => $value) {
+                    if (\str_contains($address, "{{$key}?}")) {
+                        $found = true;
+                        break;
+                    }
+                }
+                if (!$found) {
+                    $error .= ' It is possible that the last part `endPart: false` is missing.';
+                }
+            }
+            throw new InvalidArgumentException($error);
         }
         $address = \str_replace('?', '', $address);
 
@@ -153,7 +166,11 @@ final class UrlManager
         // If it is a variable length route.
         // Если это маршрут непостоянной длины.
         if (!$this->checkPartCount($address, $replacements, $endPart)) {
-            throw new InvalidArgumentException('Wrong number of replacement parts for URL.');
+            $error = 'Wrong number of replacement parts for URL.';
+            if (\str_contains($address, '?')) {
+                $error .= ' It is possible that the last part `endPart: false` is missing.';
+            }
+            throw new InvalidArgumentException($error);
         }
         $isUnstable = \str_contains($address, '?');
         if ($isUnstable) {
