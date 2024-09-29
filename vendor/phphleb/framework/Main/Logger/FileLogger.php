@@ -59,7 +59,7 @@ class FileLogger extends BaseLogger implements LoggerInterface
     #[\Override]
     public function emergency(string|\Stringable $message, array $context = []): void
     {
-        $this->saveFile($this->createLog('emergency', $message, $context));
+        $this->saveFile($this->createLog('emergency', $message, $context), 'emergency');
     }
 
     /**
@@ -68,7 +68,7 @@ class FileLogger extends BaseLogger implements LoggerInterface
     #[\Override]
     public function alert(string|\Stringable $message, array $context = []): void
     {
-        $this->saveFile($this->createLog('alert', $message, $context));
+        $this->saveFile($this->createLog('alert', $message, $context), 'alert');
     }
 
     /**
@@ -77,7 +77,7 @@ class FileLogger extends BaseLogger implements LoggerInterface
     #[\Override]
     public function critical(string|\Stringable $message, array $context = []): void
     {
-        $this->saveFile($this->createLog('critical', $message, $context));
+        $this->saveFile($this->createLog('critical', $message, $context), 'critical');
     }
 
     /**
@@ -86,7 +86,7 @@ class FileLogger extends BaseLogger implements LoggerInterface
     #[\Override]
     public function error(string|\Stringable $message, array $context = []): void
     {
-        $this->saveFile($this->createLog('error', $message, $context));
+        $this->saveFile($this->createLog('error', $message, $context), 'error');
     }
 
     /**
@@ -95,7 +95,7 @@ class FileLogger extends BaseLogger implements LoggerInterface
     #[\Override]
     public function warning(string|\Stringable $message, array $context = []): void
     {
-        $this->saveFile($this->createLog('warning', $message, $context));
+        $this->saveFile($this->createLog('warning', $message, $context), 'warning');
     }
 
     /**
@@ -104,7 +104,7 @@ class FileLogger extends BaseLogger implements LoggerInterface
     #[\Override]
     public function notice(string|\Stringable $message, array $context = []): void
     {
-        $this->saveFile($this->createLog('notice', $message, $context));
+        $this->saveFile($this->createLog('notice', $message, $context), 'notice');
     }
 
     /**
@@ -113,7 +113,7 @@ class FileLogger extends BaseLogger implements LoggerInterface
     #[\Override]
     public function info(string|\Stringable $message, array $context = []): void
     {
-        $this->saveFile($this->createLog('info', $message, $context));
+        $this->saveFile($this->createLog('info', $message, $context), 'info');
     }
 
     /**
@@ -122,7 +122,7 @@ class FileLogger extends BaseLogger implements LoggerInterface
     #[\Override]
     public function debug(string|\Stringable $message, array $context = []): void
     {
-        $this->saveFile($this->createLog('debug', $message, $context));
+        $this->saveFile($this->createLog('debug', $message, $context), 'debug');
     }
 
     /**
@@ -146,7 +146,7 @@ class FileLogger extends BaseLogger implements LoggerInterface
      * Отложенное сохранение логов частями в зависимости от уровня.
      * Для консольных команд и ошибок логи сохраняются напрямую.
      */
-    protected function delayedSave(string $level, string $file, string $row): void
+    protected function delayedSave(?string $level, string $file, string $row): void
     {
         self::$memCache[$file][] = $row;
 
@@ -165,10 +165,10 @@ class FileLogger extends BaseLogger implements LoggerInterface
      * @param string $row - formed string for logging.
      *                    - сформированная строка для логирования.
      *
-     * @param null $level
+     * @param string|null $level
      * @return void
      */
-    private function saveFile(string $row, $level = null): void
+    private function saveFile(string $row, ?string $level = null): void
     {
         $this->init();
         $I = DIRECTORY_SEPARATOR;
