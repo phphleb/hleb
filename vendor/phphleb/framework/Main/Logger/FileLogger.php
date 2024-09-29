@@ -232,7 +232,7 @@ class FileLogger extends BaseLogger implements LoggerInterface
      */
     private static function saveText(string $file, string $text): void
     {
-        \file_put_contents($file, $text, FILE_APPEND);
+        @\file_put_contents($file, $text, FILE_APPEND);
         @\chmod($file, 0664);
     }
 
