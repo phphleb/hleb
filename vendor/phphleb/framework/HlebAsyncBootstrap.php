@@ -150,6 +150,8 @@ class HlebAsyncBootstrap extends HlebBootstrap
         }
         \ob_end_clean();
 
+        $this->logsPostProcessing();
+
         $this->afterRequest();
 
         return $this;

@@ -19,9 +19,13 @@ use Hleb\Static\System;
 #[Accessible] #[AvailableAsParent]
 class FileLogger extends BaseLogger implements LoggerInterface
 {
+    protected const CACHE_LOGS_NUM = 100;
+
     private static ?string $requestId = null;
 
     private static bool $checkSize = false;
+
+    private static array $memCache = [];
 
     public function __construct(
         readonly private string $storageDir,
@@ -32,6 +36,21 @@ class FileLogger extends BaseLogger implements LoggerInterface
     )
     {
         $this->isDebug = $isDebug;
+    }
+
+    /**
+     * Remnants of accumulated logs are saved.
+     *
+     * Сохраняются остатки накопившихся логов.
+     *
+     * @internal
+     */
+    public static function finished(): void
+    {
+        foreach(self::$memCache as $file => $logs) {
+            self::saveText($file, \implode($logs));
+        }
+        self::$memCache = [];
     }
 
     /**
@@ -119,6 +138,25 @@ class FileLogger extends BaseLogger implements LoggerInterface
         $this->saveFile($this->createLog($level, $message, $context), $level);
     }
 
+
+    /**
+     * Delayed saving of logs in parts depending on the level.
+     * For console commands and errors, logs are saved directly.
+     *
+     * Отложенное сохранение логов частями в зависимости от уровня.
+     * Для консольных команд и ошибок логи сохраняются напрямую.
+     */
+    protected function delayedSave(string $level, string $file, string $row): void
+    {
+        self::$memCache[$file][] = $row;
+
+        if (\in_array($level, ['emergency', 'alert', 'critical', 'error']) ||
+            \count(self::$memCache) >= self::CACHE_LOGS_NUM
+        ) {
+            self::finished();
+        }
+    }
+
     /**
      * Output a line with a log to a file.
      *
@@ -170,8 +208,7 @@ class FileLogger extends BaseLogger implements LoggerInterface
             ) ?: 'handler') : 'project';
 
         $file = $dir . $I . \date('Y_m_d_') . $prefix . $dbPrefix . '.log';
-        \file_put_contents($file, $row . PHP_EOL, FILE_APPEND);
-        @\chmod($file, 0664);
+        $this->delayedSave($level, $file, $row . PHP_EOL);
     }
 
     /**
@@ -186,6 +223,17 @@ class FileLogger extends BaseLogger implements LoggerInterface
         WebCron::offer('hl_file_logger_cache', function() use ($dir) {
             (new LogCleaner())->run($dir, 'Y_m_d');
         }, 3600);
+    }
+
+    /**
+     * Saving logs to a file.
+     *
+     * Сохранение логов в файл.
+     */
+    private static function saveText(string $file, string $text): void
+    {
+        \file_put_contents($file, $text, FILE_APPEND);
+        @\chmod($file, 0664);
     }
 
     private function init(): void
