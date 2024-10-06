@@ -58,26 +58,32 @@ if (!function_exists('hl_db_config')) {
 if (!function_exists('hl_realpath')) {
     /**
      * Returns the full path to the folder according to the project settings.
+     * Can accept special paths with '@' at the beginning.
+     *
+     * Возвращает полный путь до папки согласно настройкам проекта.
+     * Может принимать специальные пути с '@' в начале.
+     *
+     * @see hl_realpath()
+     * @see PathInfoDoc::special()
+     */
+    /*
      * For example:
-     * '@' or `@global` - the path to the project`s root directory.
-     * '@public' - path to the public folder of the project.
-     * '@storage' - path to the project data folder.
-     * '@views' - path to folder with file templates.
-     * '@modules' - path to the `modules' folder (if it exists).
+     * @ or @global - the path to the project`s root directory.
+     * @public - path to the public folder of the project.
+     * @storage - path to the project data folder.
+     * @views - path to folder with file templates.
+     * @modules - path to the `modules' folder (if it exists).
      * It is also possible to supplement this request by specifying a continuation to an EXISTING folder
      * or file. For example: hl_realpath('@global/resources') or hl_realpath('@public/favicon.ico').
      *
-     * Возвращает полный путь до папки согласно настройкам проекта.
      * Например:
-     * '@' или `@global` - путь до корневой директории проекта.
-     * '@public' - путь до публичной папки проекта.
-     * '@storage' - путь до папки с данными проекта.
-     * '@views' - путь до папки с шаблонами файлов.
-     * '@modules' - путь до папки с модулями (при её существовании).
+     * @ или @global - путь до корневой директории проекта.
+     * @public - путь до публичной папки проекта.
+     * @storage - путь до папки с данными проекта.
+     * @views - путь до папки с шаблонами файлов.
+     * @modules - путь до папки с модулями (при её существовании).
      * Также можно дополнить этот запрос, указав продолжение к СУЩЕСТВУЮЩЕЙ папке
      * или файлу. Например: hl_realpath('@global/resources') или hl_realpath('@public/favicon.ico').
-     *
-     * @see PathInfoDoc::special()
      */
     function hl_realpath(string $keyOrPath): string|false
     {
@@ -88,8 +94,10 @@ if (!function_exists('hl_realpath')) {
 if (!function_exists('hl_path')) {
     /**
      * Similar to the hl_realpath() function, but returns the path without checking for existence.
+     * Can accept special paths with '@' at the beginning.
      *
      * Аналог функции hl_realpath(), но возвращает путь без проверки на существование.
+     * Может принимать специальные пути с '@' в начале.
      *
      * @see hl_realpath()
      * @see PathInfoDoc::special()

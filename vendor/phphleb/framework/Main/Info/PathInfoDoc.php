@@ -17,15 +17,25 @@ final class PathInfoDoc
      * Дополнительные пути могут быть назначены в конфигурации `system`.
      *
      * '@' => '/',
+     *
      * 'global' => '/',
+     *
      * 'app' => '/app',
+     *
      * 'public' => "/%public%",
+     *
      * 'storage' => '/storage',
+     *
      * 'resources' => '/resources',
+     *
      * 'views' => '/resources/views',
+     *
      * 'modules' => '/modules',
+     *
      * 'vendor' => "/%vendor%",
+     *
      * 'library' => "/%vendor%/phphleb",
+     *
      * 'framework' => "/%vendor%/phphleb/framework",
      */
     public static function special(string $public = 'public', string $vendor = 'vendor'): array
