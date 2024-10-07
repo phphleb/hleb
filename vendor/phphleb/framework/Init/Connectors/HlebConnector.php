@@ -22,6 +22,7 @@ final class HlebConnector
         'Hleb\Main\Insert\BaseSingleton' => '/Main/Insert/BaseSingleton.php',
         'Hleb\Main\Routes\StandardRoute' => '/Main/Routes/StandardRoute.php',
         'Hleb\Base\Container' => '/Base/Container.php',
+        'Hleb\Base\RollbackInterface' => '/Base/RollbackInterface.php',
         'Hleb\Base\Controller' => '/Base/Controller.php',
         'Hleb\Base\Middleware' => '/Base/Middleware.php',
         'Hleb\Base\Model' => '/Base/Model.php',
