@@ -11,6 +11,7 @@ use AsyncExitException;
 use Exception;
 use Functions;
 use Hleb\Constructor\Data\{DebugAnalytics, DynamicParams, SystemSettings};
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\HttpMethods\External\RequestUri;
@@ -786,6 +787,7 @@ class HlebBootstrap
         $dir = $this->vendorDirectory . '/phphleb/framework/';
         foreach (
             [BaseSingleton::class => 'Main/Insert/BaseSingleton.php',
+                RollbackInterface::class => 'Base/RollbackInterface.php',
                 SystemSettings::class => 'Constructor/Data/SystemSettings.php',
                 BaseAsyncSingleton::class => 'Main/Insert/BaseAsyncSingleton.php',
                 AsyncExitException::class => 'Constructor/Exceptions/Exit/AsyncExitException.php',

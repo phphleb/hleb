@@ -17,11 +17,15 @@ use Hleb\Constructor\Attributes\AvailableAsParent;
 /**
  * Framework loader for executing individual commands from a queue.
  * Installed similarly to the console.php file.
- * Can be executed by a worker in various modes, since commands may have restrictive attributes.
+ * Can be executed by a worker in various modes specified in the constructor,
+ * since commands may have restrictive attributes.
+ * Should not be used in asynchronous mode.
  *
  * Загрузчик фреймворка для выполнения отдельных команд из очереди.
  * Инсталлируется аналогично файлу console.php
- * Может выполнятся воркером в различных режимах, так как у команд могут быть ограничительные атрибуты.
+ * Может выполнятся воркером в различных указанных в конструкторе режимах,
+ * так как у команд могут быть ограничительные атрибуты.
+ * Не должен использоваться в асинхронном режиме.
  *
  * ```php
  *
