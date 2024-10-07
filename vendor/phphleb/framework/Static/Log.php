@@ -5,6 +5,7 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
@@ -18,7 +19,7 @@ use Hleb\Main\Logger\Log as Logger;
  * Логирование данных различного уровня во фреймворке.
  */
 #[Accessible]
-final class Log extends BaseAsyncSingleton
+final class Log extends BaseAsyncSingleton implements RollbackInterface
 {
     private static LogInterface|null $replace = null;
 

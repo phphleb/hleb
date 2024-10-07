@@ -4,6 +4,7 @@
 
 namespace Hleb\Constructor\Data;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\InvalidArgumentException;
 use Hleb\Main\Insert\BaseAsyncSingleton;
 use Hleb\Main\Logger\LogLevel;
@@ -17,7 +18,7 @@ use Hleb\Main\Logger\LogLevel;
  *
  * @internal
  */
-final class MainLogLevel extends BaseAsyncSingleton
+final class MainLogLevel extends BaseAsyncSingleton implements RollbackInterface
 {
     private const LEVEL_ERROR = 'Invalid level value. Possible:';
 

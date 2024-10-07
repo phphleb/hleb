@@ -6,6 +6,7 @@ namespace App\Bootstrap;
 
 use App\Bootstrap\Services\RequestIdService;
 use App\Bootstrap\Services\RequestIdInterface;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Dependency;
 use Hleb\Constructor\Containers\BaseContainerFactory;
 use Hleb\Reference\DbInterface;
@@ -37,12 +38,12 @@ final class ContainerFactory extends BaseContainerFactory
 
     /**
      * A system method that resets class data on an asynchronous request.
-     * This method is called upon completion of each asynchronous request.
+     * This method is called by the framework once upon completion of each asynchronous request.
      * If some data should not change during an asynchronous request, then you can exclude them.
      * For example:
      *
      * Системный метод, при помощи которого сбрасываются данные класса при асинхронном запросе.
-     * Этот метод вызывается при завершении каждого асинхронного запроса.
+     * Этот метод вызывается фреймворком при завершении каждого асинхронного запроса один раз.
      * Если какие-то данные не должны меняться при асинхронном запросе, то можно их исключить.
      * Например:
      *
@@ -53,6 +54,8 @@ final class ContainerFactory extends BaseContainerFactory
      *    unset(self::$singletons[$key]);
      * }
      * ```
+     * @see RollbackInterface - the recommended way to reload class state during an asynchronous request.
+     *                        - рекомендуемый способ перезагрузки состояния класса при асинхронном запросе.
      *
      * @inheritDoc
      */

@@ -5,6 +5,7 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
@@ -14,7 +15,7 @@ use Hleb\Main\Insert\BaseAsyncSingleton;
 use Hleb\Reference\RequestInterface;
 
 #[Accessible]
-final class Request extends BaseAsyncSingleton
+final class Request extends BaseAsyncSingleton implements RollbackInterface
 {
     private static RequestInterface|null $replace = null;
 
@@ -574,7 +575,7 @@ final class Request extends BaseAsyncSingleton
      * @internal
      */
     #[\Override]
-    public static function rollback(): void
+    final public static function rollback(): void
     {
         if (self::$replace) {
             self::$replace::rollback();

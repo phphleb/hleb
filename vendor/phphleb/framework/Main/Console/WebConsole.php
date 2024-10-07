@@ -5,6 +5,7 @@
 namespace Hleb\Main\Console;
 
 use Hleb\Main\Console\Extreme\{ExtremeDataTransfer, ExtremeIdentifier, ExtremeRegister, ExtremeTerminal};
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Static\Request;
 use Hleb\Static\Settings;
@@ -27,7 +28,7 @@ use Hleb\Static\Settings;
  * где нет доступа к консольным командам.
  */
 #[Accessible]
-class WebConsole
+class WebConsole implements RollbackInterface
 {
     private const GET_COMMANDS = ['php console --help', 'php console --list'];
 

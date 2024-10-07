@@ -4,6 +4,7 @@
 
 namespace Hleb\Constructor\Protected;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Data\Key;
 use Hleb\Static\Request;
 use Hleb\Main\Insert\BaseAsyncSingleton;
@@ -12,7 +13,7 @@ use Hleb\Static\Session;
 /**
  * @internal
  */
-final class Csrf extends BaseAsyncSingleton
+final class Csrf extends BaseAsyncSingleton implements RollbackInterface
 {
     final public const KEY_NAME = '_token';
 

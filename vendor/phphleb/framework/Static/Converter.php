@@ -3,6 +3,7 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
 use Hleb\Main\Insert\BaseAsyncSingleton;
@@ -17,7 +18,7 @@ use Psr\SimpleCache\CacheInterface;
  *
  * Преобразование внутренних сущностей фреймворка в PSR-объекты.
  */
-class Converter extends BaseAsyncSingleton
+class Converter extends BaseAsyncSingleton implements RollbackInterface
 {
     private static ConverterInterface|null $replace = null;
 

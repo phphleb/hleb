@@ -5,6 +5,7 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
@@ -21,7 +22,7 @@ use Hleb\Reference\DtoInterface;
  * @see DtoInterface
  */
 #[Accessible]
-final class Dto extends BaseAsyncSingleton
+final class Dto extends BaseAsyncSingleton implements RollbackInterface
 {
     private static DtoInterface|null $replace = null;
 

@@ -5,6 +5,7 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
@@ -12,7 +13,7 @@ use Hleb\Main\Insert\BaseAsyncSingleton;
 use Hleb\Reference\TemplateInterface;
 
 #[Accessible]
-final class Template extends BaseAsyncSingleton
+final class Template extends BaseAsyncSingleton implements RollbackInterface
 {
     private static TemplateInterface|null $replace = null;
 

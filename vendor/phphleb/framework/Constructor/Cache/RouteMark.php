@@ -4,6 +4,7 @@
 
 namespace Hleb\Constructor\Cache;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Data\SystemSettings;
 use Hleb\CoreProcessException;
 use Hleb\Main\Insert\BaseAsyncSingleton;
@@ -19,7 +20,7 @@ use Hleb\Main\Insert\BaseAsyncSingleton;
  *
  * @internal
  */
-final class RouteMark extends BaseAsyncSingleton
+final class RouteMark extends BaseAsyncSingleton implements RollbackInterface
 {
     final public const INFO_CLASS_NAME = 'HL2Info';
 

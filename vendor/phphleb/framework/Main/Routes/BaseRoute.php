@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Hleb\Main\Routes;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Main\Insert\BaseAsyncSingleton;
 
 /**
  * @internal
  */
-final class BaseRoute extends BaseAsyncSingleton
+final class BaseRoute extends BaseAsyncSingleton  implements RollbackInterface
 {
 
     private static array $data = [];

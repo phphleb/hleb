@@ -4,6 +4,7 @@
 
 namespace Hleb\Constructor\Data;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Main\Insert\BaseAsyncSingleton;
 
 /**
@@ -13,7 +14,7 @@ use Hleb\Main\Insert\BaseAsyncSingleton;
  *
  * @internal
  */
-final class DebugAnalytics extends BaseAsyncSingleton
+final class DebugAnalytics extends BaseAsyncSingleton implements RollbackInterface
 {
     final public const CLASSES_AUTOLOAD = 'classes.autoload';
 

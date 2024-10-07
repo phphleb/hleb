@@ -5,6 +5,7 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
@@ -29,7 +30,7 @@ use Hleb\Reference\ArrInterface;
  * при изменении реализации в контейнере.
  */
 #[Accessible]
-final class Arr extends BaseAsyncSingleton
+final class Arr extends BaseAsyncSingleton implements RollbackInterface
 {
     private static ArrInterface|null $replace = null;
 

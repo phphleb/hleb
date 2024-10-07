@@ -5,6 +5,7 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
@@ -12,7 +13,7 @@ use Hleb\Main\Insert\BaseAsyncSingleton;
 use Hleb\Reference\PathInterface;
 
 #[Accessible]
-final class Path extends BaseAsyncSingleton
+final class Path extends BaseAsyncSingleton implements RollbackInterface
 {
     private static PathInterface|null $replace = null;
 

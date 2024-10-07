@@ -5,6 +5,7 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
@@ -18,7 +19,7 @@ use Hleb\Reference\CacheInterface;
  * Кеширование данных различного типа во фреймворке.
  */
 #[Accessible]
-final class Cache extends BaseAsyncSingleton
+final class Cache extends BaseAsyncSingleton implements RollbackInterface
 {
     final public const DEFAULT_TIME = 60;
 

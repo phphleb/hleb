@@ -5,12 +5,13 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
 use Hleb\Main\Insert\BaseAsyncSingleton;
 use Hleb\Reference\DiInterface;
 
-class DI extends BaseAsyncSingleton
+class DI extends BaseAsyncSingleton implements RollbackInterface
 {
     private static DiInterface|null $replace = null;
 

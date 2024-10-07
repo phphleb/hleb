@@ -9,11 +9,19 @@ namespace Hleb\Base;
  * in asynchronous mode, the rollback() method is called at the end of each request,
  * which helps clean up the class state.
  * You must manually add actions to reset/rollback class state to the method.
+ * It is worth considering that if a class has a parent class with this interface
+ * and the rollback() method is overridden, then it will be called twice.
+ * Therefore, if you need to perform an action to complete an asynchronous request,
+ * use it in the rollback() of the App\Bootstrap\ContainerFactory class.
  *
  * При нахождении этого интерфейса у используемого класса
  * в асинхронном режиме вызывается метод rollback() в конце каждого запроса,
  * что способствует очистке состояния класса.
  * Необходимо вручную добавить действия по очистке/откату состояния класса в метод.
+ * Стоит учесть, что если класс имеет родительский класс с этим интерфейсом,
+ * то метод rollback() будет вызван дважды.
+ * Поэтому, если необходимо выполнить действие по завершению асинхронного запроса,
+ * используйте его в rollback() класса App\Bootstrap\ContainerFactory.
  */
 interface RollbackInterface
 {

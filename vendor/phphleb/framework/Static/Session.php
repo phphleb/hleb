@@ -5,6 +5,7 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
@@ -17,7 +18,7 @@ use Hleb\Reference\SessionInterface;
  * Простая обёртка для сессий.
  */
 #[Accessible]
-class Session extends BaseAsyncSingleton
+class Session extends BaseAsyncSingleton implements RollbackInterface
 {
     private static SessionInterface|null $replace = null;
 

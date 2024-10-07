@@ -6,6 +6,7 @@ namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
 use App\Bootstrap\ContainerFactory;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\Constructor\Containers\CoreContainer;
@@ -20,7 +21,7 @@ use Hleb\Constructor\Containers\TestContainerInterface;
  * Реализует методы работы с пользовательскими контейнерами.
  */
 #[Accessible]
-final class Container extends BaseAsyncSingleton
+final class Container extends BaseAsyncSingleton implements RollbackInterface
 {
     private static TestContainerInterface|null $replace = null;
 

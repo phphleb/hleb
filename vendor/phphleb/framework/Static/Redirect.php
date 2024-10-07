@@ -5,6 +5,7 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
@@ -12,7 +13,7 @@ use Hleb\Main\Insert\BaseAsyncSingleton;
 use Hleb\Reference\RedirectInterface;
 
 #[Accessible]
-final class Redirect extends BaseAsyncSingleton
+final class Redirect extends BaseAsyncSingleton implements RollbackInterface
 {
     private static RedirectInterface|null $replace = null;
 

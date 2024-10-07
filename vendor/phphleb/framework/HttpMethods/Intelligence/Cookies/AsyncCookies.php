@@ -4,6 +4,7 @@
 
 namespace Hleb\HttpMethods\Intelligence\Cookies;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\HttpMethods\Intelligence\AsyncConsolidator;
 use Hleb\Static\Response;
 use Hleb\HttpMethods\Specifier\DataType;
@@ -13,7 +14,7 @@ use Hleb\Static\Settings;
 /**
  * @internal
  */
-final class AsyncCookies extends BaseAsyncSingleton implements CookieInterface
+final class AsyncCookies extends BaseAsyncSingleton implements CookieInterface, RollbackInterface
 {
     /**
      * Current dynamic data Cookies.

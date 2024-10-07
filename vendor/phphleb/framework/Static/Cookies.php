@@ -5,6 +5,7 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
@@ -25,7 +26,7 @@ use Hleb\Reference\CookieInterface;
  * Для улучшения производительности обработка Cookies разделена на асинхронный и обычный типы.
  */
 #[Accessible]
-final class Cookies extends BaseAsyncSingleton
+final class Cookies extends BaseAsyncSingleton implements RollbackInterface
 {
     final public const OPTION_KEYS = ['expires', 'path', 'domain', 'secure', 'httponly', 'samesite'];
 

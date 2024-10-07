@@ -4,13 +4,14 @@
 
 namespace Hleb\Static;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\Constructor\Cache\OnceResult;
 use Hleb\CoreProcessException;
 use Hleb\Main\Insert\BaseAsyncSingleton;
 use Hleb\Reference\OnceInterface;
 
-final class Once extends BaseAsyncSingleton
+final class Once extends BaseAsyncSingleton implements RollbackInterface
 {
     private static OnceInterface|null $replace = null;
 

@@ -5,6 +5,7 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Base\Task;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
@@ -13,7 +14,7 @@ use Hleb\Main\Insert\BaseAsyncSingleton;
 use Hleb\Reference\CommandInterface;
 
 #[Accessible]
-final class Command extends BaseAsyncSingleton
+final class Command extends BaseAsyncSingleton implements RollbackInterface
 {
     private static CommandInterface|null $replace = null;
 

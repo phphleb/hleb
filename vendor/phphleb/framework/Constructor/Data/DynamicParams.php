@@ -4,6 +4,7 @@
 
 namespace Hleb\Constructor\Data;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\HttpMethods\External\SystemRequest;
 use Hleb\Main\Insert\BaseAsyncSingleton;
 
@@ -14,7 +15,7 @@ use Hleb\Main\Insert\BaseAsyncSingleton;
  *
  * @internal
  */
-final class DynamicParams extends BaseAsyncSingleton
+final class DynamicParams extends BaseAsyncSingleton implements RollbackInterface
 {
     /** @see self::rollback() */
     private static bool $dynamicDebug = true;
