@@ -35,7 +35,7 @@ interface RollbackInterface
      * ```php
      * class Example implements \Hleb\Base\RollbackInterface
      * {
-     *    private static User $currentUser = null;
+     *    private static ?User $currentUser = null;
      *
      *    public function set(User $user): void {
      *      self::$currentUser = $user;
