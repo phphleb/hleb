@@ -38,12 +38,12 @@ interface RollbackInterface
      *    private static User $currentUser = null;
      *
      *    public function set(User $user): void {
-     *      self::currentUser = $user;
+     *      self::$currentUser = $user;
      *    }
      *
      *    #[\Override]
      *    public static function rollback(): void {
-     *       self::currentUser = null;
+     *       self::$currentUser = null;
      *    }
      * }
      *
