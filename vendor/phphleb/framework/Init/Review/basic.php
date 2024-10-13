@@ -64,4 +64,16 @@ namespace {
             return defined($name) ? constant($name) : $default;
         }
     }
+
+    if (!function_exists('redefine')) {
+        /**
+         * Sets a global constant if it is not defined.
+         *
+         * Устанавливает глобальную константу, если она не определена.
+         */
+        function redefine(string $name, mixed $value = null): void
+        {
+            defined($name) or define($name, $value);
+        }
+    }
 }

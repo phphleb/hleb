@@ -186,8 +186,13 @@ class HlebAsyncBootstrap extends HlebBootstrap
 
         self::prepareAsyncRequestData();
 
-        // Periodically clean up used memory and call GC.
-        // Периодическая очистка используемой памяти и вызов GC.
+        /*
+         * Periodically clean up used memory and call GC. Will be applied to every $rate request.
+         * For example, if you pass 3, then after every third request.
+         *
+         * Периодическая очистка используемой памяти и вызов GC. Будет применено к каждому $rate запросу.
+         * Например, если передать 3, то после каждого третьего запроса.
+         */
         $rate = get_env('ASYNC_RE_CLEANING', get_constant('ASYNC_RE_CLEANING', 20));
         if ($this->processNumber % $rate == 0) {
             \gc_collect_cycles();
