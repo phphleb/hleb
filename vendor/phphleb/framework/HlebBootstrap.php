@@ -916,7 +916,7 @@ class HlebBootstrap
         // These constants should only be used for debugging the project.
         // Эти константы должны быть использованы только для отладки проекта.
         if (!\defined('HLEB_CLI_MODE')) {
-            \redefine('HLEB_CLI_MODE', $this->mode === self::CONSOLE_MODE);
+            \define('HLEB_CLI_MODE', $this->mode === self::CONSOLE_MODE);
         }
         if (!\defined('HLEB_LOAD_MODE')) {
             \define('HLEB_LOAD_MODE', $this->mode);
