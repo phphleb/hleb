@@ -14,38 +14,14 @@ use Exception;
 use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
-use Hleb\Constructor\Cache\RouteMark;
-use Hleb\Constructor\Protected\Csrf;
-use Hleb\Constructor\Data\{DebugAnalytics, DynamicParams, MainLogLevel};
 use Hleb\HttpMethods\{External\RequestUri, External\SystemRequest};
 use Hleb\HttpMethods\External\Response as SystemResponse;
 use Hleb\HttpMethods\Intelligence\Cookies\AsyncCookies;
 use Hleb\Init\ErrorLog;
 use Hleb\Init\Headers\ParsePsrHeaders;
 use Hleb\Init\Headers\ParseSwooleHeaders;
-use Hleb\Main\Console\WebConsole;
 use Hleb\Main\Logger\LoggerInterface;
-use Hleb\Static\Arr;
-use Hleb\Static\Cache;
-use Hleb\Static\Command;
-use Hleb\Static\Container;
-use Hleb\Static\Converter;
-use Hleb\Static\Cookies;
-use Hleb\Static\DI;
-use Hleb\Static\Debug;
-use Hleb\Static\Dto;
-use Hleb\Static\Log;
-use Hleb\Static\Once;
-use Hleb\Static\Path;
-use Hleb\Static\Redirect;
-use Hleb\Static\Request;
 use Hleb\Static\Response;
-use Hleb\Main\Routes\BaseRoute;
-use Hleb\Static\Router;
-use Hleb\Static\Session;
-use Hleb\Static\Settings;
-use Hleb\Static\System;
-use Hleb\Static\Template;
 use Throwable;
 
 #[Accessible] #[AvailableAsParent]
@@ -398,6 +374,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
         $_SERVER['QUERY_STRING'] = $server['query_string'] ?? '';
         $_SERVER['REQUEST_URI'] = $server['request_uri'] ?? '';
 
+        $_SERVER['HTTPS'] = $_SERVER['SERVER_PORT'] == 443 ? 'on' : 'off';
         // An additional field by which you can get the type of HTTP connection scheme.
         // Дополнительное поле по которому можно получить тип HTTP-схемы подключения.
         if (isset($server['https'])) {
