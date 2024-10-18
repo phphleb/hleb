@@ -13,6 +13,8 @@ use Hleb\Main\Console\Commands\Deployer\LibDeployerFinder;
 use Hleb\Main\Console\Commands\Deployer\LibraryDeployer;
 use Hleb\Main\Console\Commands\Features\AutoloaderSupport\AutoloaderSupport;
 use Hleb\Main\Console\Commands\Features\CodeCleanup\ClearingComments;
+use Hleb\Main\Console\Commands\Features\CommandDetails\AllCommands;
+use Hleb\Main\Console\Commands\Features\CommandDetails\CommandArgument;
 use Hleb\Main\Console\Commands\Features\ExecutionSpeed\ExecutionSpeed;
 use Hleb\Main\Console\Commands\Features\FeatureInterface;
 use Hleb\Main\Console\Commands\Features\FlatKegling\FlatKeglingGame;
@@ -38,6 +40,27 @@ use Hleb\Static\Settings;
 final class ConsoleHandler
 {
     final public const DEFAULT_MESSAGE = 'Command not found. List of available commands --help or --list';
+
+    private const DEFAULT_COMMANDS = [
+        '--help', '-h',
+        '--version', '-v',
+        '--info', '-i',
+        '--logs', '-lg',
+        '--log-level', '-ll',
+        '--routes', '-r',
+        '--list', '-l',
+        '--find-route', '-fr',
+        '--route-info', '-ri',
+        '--update-routes-cache', '--routes-upd', '-u',
+        '--clear-routes-cache', '-cr',
+        '--clear-cache', '-cc',
+        '--lock-project',
+        '--unlock-project',
+        '--add',
+        '--create',
+        '--ping',
+        '--plain-version', '-pv',
+    ];
 
     /**
      * List of arguments received with the request.
@@ -153,7 +176,7 @@ final class ConsoleHandler
             return '[HELP] This command displays the formatted output of the current version of the framework.' . PHP_EOL;
         }
         $frameworkVersion = \defined('HLEB_CORE_VERSION') ? HLEB_CORE_VERSION : '2.x.x';
-        return PHP_EOL . "  " . $this->color->yellow("HLEB2 Framework ") . " " . $this->color->green("v" . $frameworkVersion) .
+        return PHP_EOL . "  " . $this->color::yellow("HLEB2 Framework ") . " " . $this->color::green("v" . $frameworkVersion) .
             "  (c)2019 - " . \date("Y") . " Foma Tuturov" . PHP_EOL . PHP_EOL;
     }
 
@@ -512,6 +535,16 @@ final class ConsoleHandler
         // Очистка комментариев для php-файлов в директории (по умолчанию фреймворка).
         if ($command === 'clearing-comment-feature') {
             return $this->runFeature(new ClearingComments());
+        }
+        // Lists all supported commands for autocompletion.
+        // Выводит список всех поддерживаемых команд для автодополнения.
+        if ($command === 'command-list-feature') {
+            return $this->runFeature(new AllCommands(self::DEFAULT_COMMANDS));
+        }
+        // Prints a list of possible arguments for autocompletion.
+        // Выводит список возможных аргументов для автодополнения.
+        if ($command === 'command-arguments-feature') {
+            return $this->runFeature(new CommandArgument(self::DEFAULT_COMMANDS));
         }
         return false;
     }
