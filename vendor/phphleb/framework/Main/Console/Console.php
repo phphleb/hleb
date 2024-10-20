@@ -299,7 +299,10 @@ abstract class Console
      */
     protected function color(): Colorizer
     {
-       return $this->colorizer ?? ($this->colorizer = new Colorizer());
+        if (!$this->colorizer) {
+            $this->colorizer = \in_array('--no-ansi', $this->basicArguments) ? new ReplacingColorizer() : new Colorizer();
+        }
+        return $this->colorizer;
     }
 
     private function convertArguments(array $arguments): array
