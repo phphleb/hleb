@@ -428,6 +428,7 @@ if (!function_exists('dump')) {
     function dump(mixed $value, mixed ...$values): void
     {
         if (($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
+
             echo PHP_EOL, \hl_formatting_debug_info($value, ...$values), PHP_EOL;
         } else {
             \var_dump($value, ...$values);

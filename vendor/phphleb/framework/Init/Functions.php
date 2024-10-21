@@ -210,43 +210,75 @@ final class Functions
 
         if (!function_exists('hl_formatting_debug_info')) {
             /**
-             * Converts debugging information to HTML
+             * Converts debugging information to HTML.
+             * A feature of this HTML is that it displays normally
+             * when inline styles are disabled.
              *
              * Преобразует отладочную информацию в HTML.
+             * Особенностью этого HTML является нормальное отображение
+             * при отключенных встроенных стилях.
              *
              * @internal
              */
             function hl_formatting_debug_info(mixed $value, mixed ...$values): string
             {
-                $result = PHP_EOL . "<!-- DEBUG_INFO -->" . PHP_EOL . '<div style=\'border-bottom: 2px solid #E65F4B;\'>' . PHP_EOL;
+                $backtrace = \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
+                $level = $backtrace[2] ?? [];
+                $function = $level['function'] ?? null;
+                if ($function !== 'dd') {
+                    $level = $backtrace[1] ?? [];
+                    $function = 'dump';
+                }
+                $file = $level['file'] ?? null;
+                $line = $level['line'] ?? null;
+                $path = "";
+                if ($file) {
+                    $file = Path::relative($file);
+                    if ($line) {
+                        $pathStyle = 'color: #d3d3d3!important;' .
+                            'background-color: #28396c!important;' .
+                            'padding: 10px!important;' .
+                            'font-size: 13px!important;' .
+                            'font-family: Verdana, Geneva, sans-serif!important;';
+                        $path = "<tr bgcolor='#28396c'><td style='{$pathStyle}'>" .
+                            "<font color='#d3d3d3'>[<b>{$function}</b>] $file:$line</font></td></tr>" . PHP_EOL;
+                    }
+                }
+                $tableStyle = 'background-color: #f9f9f910px!important; border-bottom: 3px solid #E65F4B';
+                $result = PHP_EOL . "<!-- DEBUG_INFO -->" . PHP_EOL . "<font color='#353478'>" .
+                    "<table width='100%' border='0' cellspacing='0' cellpadding='0' bgcolor='whitesmoke' style='$tableStyle'>" .
+                    "<tbody>" . PHP_EOL;
+                $result .= $path;
                 $processValue = function (mixed $val): string {
                     \ob_start();
                     \var_dump($val);
                     $text = (string)\ob_get_clean();
                     $converted = \htmlspecialchars($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
                     $text = \str_replace(' ', '&nbsp;', $converted);
-                    $blockStyle = 'background-color: whitesmoke!important;' .
-                        'font-family: Verdana, Geneva, sans-serif;' .
+                    $blockStyle = 'background-color: #f9f9f910px!important;' .
+                        'font-family: Verdana, Geneva, sans-serif10px!important;' .
                         'color: #353478!important;' .
-                        'padding: 10px!important;' .
+                        'padding: 0 10px!important;' .
                         'margin: 0;' .
                         'font-size: 14px!important;';
-                    $prepareContent = PHP_EOL . "<div style='{$blockStyle}'>";
+                    $prepareContent = PHP_EOL;
                     $lines = \explode("\n", $text);
                     foreach ($lines as $key => $line) {
                         if ($key === 0) {
-                            $prepareContent .= "<div><b>{$line}</b></div>" . PHP_EOL;
+                            $prepareContent .= "<tr bgcolor='#f9f9f9'><td>&nbsp;</td></tr>";
+                            $prepareContent .= "<tr bgcolor='#f9f9f9'><td style='{$blockStyle}'><b>{$line}</b></td></tr>" . PHP_EOL;
                             continue;
                         }
-                        $prepareContent .= "<div>{$line}</div>" . PHP_EOL;
+                        $prepareContent .= "<tr bgcolor='#f9f9f9'><td style='{$blockStyle}'>{$line}</td></tr>" . PHP_EOL;
                     }
-                    return $prepareContent . '</div>' . PHP_EOL;
+                    return $prepareContent . PHP_EOL;
                 };
                 $result .= $processValue($value);
                 foreach ($values as $val) {
                     $result .= $processValue($val);
                 }
-                return $result . '</div><!-- END DEBUG_INFO -->' . PHP_EOL;
+                $result .= "<tr bgcolor='#f9f9f9'><td>&nbsp;</td></tr>";
+                return $result . "</tbody></table></font><!-- END DEBUG_INFO -->" . PHP_EOL;
             }
         }
 
