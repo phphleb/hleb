@@ -208,6 +208,48 @@ final class Functions
             }
         }
 
+        if (!function_exists('hl_formatting_debug_info')) {
+            /**
+             * Converts debugging information to HTML
+             *
+             * Преобразует отладочную информацию в HTML.
+             *
+             * @internal
+             */
+            function hl_formatting_debug_info(mixed $value, mixed ...$values): string
+            {
+                $result = PHP_EOL . "<!-- DEBUG_INFO -->" . PHP_EOL . '<div style=\'border-bottom: 2px solid #E65F4B;\'>' . PHP_EOL;
+                $processValue = function (mixed $val): string {
+                    \ob_start();
+                    \var_dump($val);
+                    $text = (string)\ob_get_clean();
+                    $converted = \htmlspecialchars($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                    $text = \str_replace(' ', '&nbsp;', $converted);
+                    $blockStyle = 'background-color: whitesmoke!important;' .
+                        'font-family: Verdana, Geneva, sans-serif;' .
+                        'color: #353478!important;' .
+                        'padding: 10px!important;' .
+                        'margin: 0;' .
+                        'font-size: 14px!important;';
+                    $prepareContent = PHP_EOL . "<div style='{$blockStyle}'>";
+                    $lines = \explode("\n", $text);
+                    foreach ($lines as $key => $line) {
+                        if ($key === 0) {
+                            $prepareContent .= "<div><b>{$line}</b></div>" . PHP_EOL;
+                            continue;
+                        }
+                        $prepareContent .= "<div>{$line}</div>" . PHP_EOL;
+                    }
+                    return $prepareContent . '</div>' . PHP_EOL;
+                };
+                $result .= $processValue($value);
+                foreach ($values as $val) {
+                    $result .= $processValue($val);
+                }
+                return $result . '</div><!-- END DEBUG_INFO -->' . PHP_EOL;
+            }
+        }
+
         require __DIR__ . '/Review/functions.php';
 
         return true;

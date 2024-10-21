@@ -407,15 +407,45 @@ if (!function_exists('var_dump2')) {
      *
      * Улучшенный вывод var_dump().
      */
-    function var_dump2(mixed $data): void
+    function var_dump2(mixed $value, mixed ...$values): void
     {
         if (($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
             echo '<pre>' . PHP_EOL;
-            var_dump($data);
+            \var_dump($value, ...$values);
             echo PHP_EOL . '</pre>';
             return;
         }
-        var_dump($data);
+        \var_dump($value, ...$values);
+    }
+}
+
+if (!function_exists('dump')) {
+    /**
+     * Improved formatted output of var_dump().
+     *
+     * Улучшенный форматированный вывод var_dump().
+     */
+    function dump(mixed $value, mixed ...$values): void
+    {
+        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
+            echo PHP_EOL, \hl_formatting_debug_info($value, ...$values), PHP_EOL;
+        } else {
+            \var_dump($value, ...$values);
+        }
+    }
+}
+
+if (!function_exists('dd')) {
+    /**
+     * Improved formatted output of var_dump() with script termination.
+     *
+     * Улучшенный форматированный вывод var_dump() c завершением работы скрипта.
+     */
+    function dd(mixed $value, mixed ...$values): void
+    {
+        \dump($value, ...$values);
+        /** @see async_exit() - для асинхронных запросов. */
+        \async_exit();
     }
 }
 
