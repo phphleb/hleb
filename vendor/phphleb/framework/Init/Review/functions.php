@@ -570,7 +570,7 @@ if (!function_exists('request_path')) {
      * без параметров.
      * Параметры можно получить как:
      *
-     * app_request_uri()->getQuery();
+     * request_uri()->getQuery();
      */
     function request_path(): string
     {
@@ -586,7 +586,7 @@ if (!function_exists('request_address')) {
      * Возвращает текущий URL запроса без параметров.
      * Параметры можно получить как:
      *
-     * app_request_uri()->getQuery();
+     * request_uri()->getQuery();
      */
     function request_address(): string
     {
