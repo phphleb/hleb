@@ -494,6 +494,16 @@ if (!function_exists('config')) {
     }
 }
 
+if (!function_exists('hl_config')) {
+    /**
+     * @see config() - alias
+     */
+    function hl_config(string $name, string $key): mixed
+    {
+        return config($name, $key);
+    }
+}
+
 if (!function_exists('get_config_or_fail')) {
     /**
      * A wrapper for receiving settings parameters. If not present or equal to null, throws an error.
