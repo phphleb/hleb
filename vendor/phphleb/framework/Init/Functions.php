@@ -30,40 +30,6 @@ final class Functions
             }
         }
 
-        if (!function_exists('hl_relative_path')) {
-            /**
-             * Converts the full path to relative to the project's root directory.
-             * The result can be used in notifications given to the user.
-             * For example:
-             *
-             * Преобразует полный путь в относительный по отношению к корневой директории проекта.
-             * Результат можно использовать в отдаваемых пользователю оповещениях.
-             * Например:
-             *
-             * '/home/user/projects/hleb/public/index.php' => '@/public/index.php'
-             *
-             * @see PathInfoDoc::special()
-             */
-            function hl_relative_path(string $path): string
-            {
-                return Path::relative($path);
-            }
-        }
-
-        if (!function_exists('hl_create_directory')) {
-            /**
-             * Recursively creates a directory according to the file path.
-             *
-             * Создаёт рекурсивно директорию для файлового пути.
-             *
-             * @see PathInfoDoc::special()
-             */
-            function hl_create_directory(string $path, int $permissions = 0775): bool
-            {
-                return Path::createDirectory($path, $permissions);
-            }
-        }
-
         if (!function_exists('hl_clear_tags')) {
             /**
              * Recursive initial data cleaning.
@@ -279,6 +245,82 @@ final class Functions
                 }
                 $result .= "<tr bgcolor='#f9f9f9'><td>&nbsp;</td></tr>";
                 return $result . "</tbody></table></font><!-- END DEBUG_INFO -->" . PHP_EOL;
+            }
+        }
+
+        if (!function_exists('array_find')) {
+            /**
+             * Returns the first array element that matches a condition.
+             * Similar to array_find() in PHP 8.4
+             *
+             * Возвращает первый элемент массива, соответствующий условию.
+             * Аналогично array_find() в PHP 8.4
+             */
+            function array_find(array $array, callable $callback): mixed
+            {
+                foreach ($array as $value) {
+                    if ($callback($value)) {
+                        return $value;
+                    }
+                }
+                return null;
+            }
+        }
+
+        if (!function_exists('array_find_key')) {
+            /**
+             * Returns the key of the first element of an array that matches a condition.
+             * Similar to array_find_key() in PHP 8.4
+             *
+             * Возвращает ключ первого элемента массива, соответствующего условию.
+             * Аналогично array_find_key() в PHP 8.4
+             */
+            function array_find_key(array $array, callable $callback): int|string|null
+            {
+                foreach ($array as $key => $value) {
+                    if ($callback($value, $key)) {
+                        return $key;
+                    }
+                }
+                return null;
+            }
+        }
+
+        if (!function_exists('array_all')) {
+            /**
+             * Checks whether each element of the array matches a condition.
+             * Similar to array_all() in PHP 8.4
+             *
+             * Проверяет, соответствует ли каждый элемент массива условию.
+             * Аналогично array_all() в PHP 8.4
+             */
+            function array_all(array $array, callable $callback): bool
+            {
+                foreach ($array as $value) {
+                    if (!$callback($value)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+
+        if (!function_exists('array_any')) {
+            /**
+             * Checks whether at least one array element matches a condition.
+             * Similar to array_any() in PHP 8.4
+             *
+             * Проверяет, соответствует ли условию хотя бы один элемент массива.
+             * Аналогично array_any() в PHP 8.4
+             */
+            function array_any(array $array, callable $callback): bool
+            {
+                foreach ($array as $value) {
+                    if ($callback($value)) {
+                        return true;
+                    }
+                }
+                return false;
             }
         }
 

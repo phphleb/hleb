@@ -183,7 +183,7 @@ final class Request extends BaseAsyncSingleton implements RollbackInterface
      * Request::param('test')->asInt(); - возвращение значения, преобразованного в integer, при отсутствии null.
      * Request::param('test')->asInt($default); - возвращение значения, преобразованного в integer,
      * при отсутствии будет возвращено $default.
-     * Если последняя часть маршрута является необязательным переменным значением, то это значение равно null.
+     * Если последняя часть маршрута является необязательным переменным значением, то это значение будет равно null.
      *
      * @param string $name - parameter to get data by name.
      *                     - параметр для получения данных по названию.

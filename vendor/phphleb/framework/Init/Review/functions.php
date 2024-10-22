@@ -22,24 +22,10 @@ if (!function_exists('hl_debug')) {
      * Returns the debug mode status from the framework settings.
      *
      * Возвращает статус режима отладки из настроек фреймворка.
-     *
-     * @return bool
      */
     function hl_debug(): bool
     {
         return Settings::isDebug();
-    }
-}
-
-if (!function_exists('hl_config')) {
-    /**
-     * Getting any value from the framework configuration by value name.
-     *
-     * Получение любого значения из конфигурации фреймворка по названию значения.
-     */
-    function hl_config(string $name): float|bool|array|int|string|null
-    {
-        return Settings::getParam('common', $name);
     }
 }
 
@@ -110,9 +96,9 @@ if (!function_exists('hl_path')) {
 
 if (!function_exists('is_async')) {
     /**
-     * Returns the current mode of using the framework in asynchronous mode.
+     * Returns true if the framework is used in asynchronous mode.
      *
-     * Возвращает соответствие текущему режиму использования фреймворка в асинхронном режиме.
+     * Возвращает true, если фреймворк используется в асинхронном режиме.
      */
     function is_async(): bool
     {
@@ -194,10 +180,10 @@ if (!function_exists('csrf_token')) {
 
 if (!function_exists('csrf_field')) {
     /**
-     * The Csrf::field() method returns HTML content to be inserted
+     * The csrf_field function returns HTML content to be inserted
      * into the form to protect against CSRF attacks.
      *
-     * Метод Csrf::field() возвращает HTML-контент для вставки
+     * Функция csrf_field возвращает HTML-контент для вставки
      * в форму для защиты от CSRF-атак.
      */
     function csrf_field(): string
@@ -281,7 +267,7 @@ if (!function_exists('insertCacheTemplate')) {
 
 if (!function_exists('url')) {
     /**
-     * Returns the standardized address from the route name in the URL.
+     * Returns the standardized relative address (URI) from the route name in the URL.
      * For example, for a route: Route::get('/test/{var1}/{var2?}', ...)->name('example');
      * you need to pass the following data to the function url('example', ['var1' => 3000, 'var2' => 'pro'], true);
      * to get this string value '/test/3000/pro'. This will set the trailing slash
@@ -289,7 +275,7 @@ if (!function_exists('url')) {
      * Returns error if the parameters did not match the route (there is no such name, the route does not support
      * the specified method, the replacement parts of the route did not fit) or an error in obtaining routes.
      *
-     * Возвращает стандартизированный адрес из названия маршрута в URL.
+     * Возвращает стандартизированный относительный адрес (URI) из названия маршрута в URL.
      * Например, для маршрута Route::get('/test/{var1}/{var2?}', ...)->name('example');
      * нужно передать следующие данные в функцию url('example', ['var1' => 3000, 'var2' => 'pro'], true);
      * чтобы получить такое строковое значение '/test/3000/pro'. При этом конечный слеш будет установлен
@@ -495,11 +481,13 @@ if (!function_exists('setting')) {
 
 if (!function_exists('config')) {
     /**
-     * A wrapper for receiving settings parameters.
+     * Getting any value from the framework configuration
+     * by configuration type and value name.
      *
-     * Обёртка для получения параметров настроек.
+     * Получение любого значения из конфигурации фреймворка
+     * по типу конфигурации и названию значения.
      *
-     * @see settings()
+     * @see hl_config() - alias
      */
     function config(string $name, string $key): mixed
     {
@@ -662,15 +650,56 @@ if (!function_exists('hl_is_dir')) {
     }
 }
 
+
+if (!function_exists('hl_relative_path')) {
+    /**
+     * Converts the full path to relative to the project's root directory.
+     * The result can be used in notifications given to the user.
+     * For example:
+     *
+     * Преобразует полный путь в относительный по отношению к корневой директории проекта.
+     * Результат можно использовать в отдаваемых пользователю оповещениях.
+     * Например:
+     *
+     * '/home/user/projects/hleb/public/index.php' => '@/public/index.php'
+     *
+     * @see PathInfoDoc::special()
+     */
+    function hl_relative_path(string $path): string
+    {
+        return Path::relative($path);
+    }
+}
+
+if (!function_exists('hl_create_directory')) {
+    /**
+     * Recursively creates a directory according to the file path.
+     *
+     * Создаёт рекурсивно директорию для файлового пути.
+     *
+     * @see PathInfoDoc::special()
+     */
+    function hl_create_directory(string $path, int $permissions = 0775): bool
+    {
+        return Path::createDirectory($path, $permissions);
+    }
+}
+
 if (!function_exists('is_empty')) {
     /**
      * Checking for empty value, more selective than empty().
+     * There will be an error when passing an undeclared variable,
+     * so in an analogy with the original function, you can suppress
+     * this error by adding an '@' before the function.
      *
      * Проверка на пустое значение, более избирательная, чем empty().
+     * При передаче не объявленной переменной будет ошибка, поэтому для аналогии
+     * с оригинальной функцией можно подавить эту ошибку добавлением '@'
+     * перед функцией.
      */
     function is_empty(mixed $value): bool
     {
-        return $value === null || $value === [] || $value === '';
+        return $value === null || $value === [] || $value === '' || $value === false;
     }
 }
 
@@ -698,81 +727,3 @@ if (!function_exists('once')) {
         return Once::get($func);
     }
 }
-
-
-if (!function_exists('array_find')) {
-    /**
-     * Returns the first array element that matches a condition.
-     * Similar to array_find() in PHP 8.4
-     *
-     * Возвращает первый элемент массива, соответствующий условию.
-     * Аналогично array_find() в PHP 8.4
-     */
-    function array_find(array $array, callable $callback): mixed
-    {
-        foreach ($array as $value) {
-            if ($callback($value)) {
-                return $value;
-            }
-        }
-        return null;
-    }
-}
-
-if (!function_exists('array_find_key')) {
-    /**
-     * Returns the key of the first element of an array that matches a condition.
-     * Similar to array_find_key() in PHP 8.4
-     *
-     * Возвращает ключ первого элемента массива, соответствующего условию.
-     * Аналогично array_find_key() в PHP 8.4
-     */
-    function array_find_key(array $array, callable $callback): int|string|null
-    {
-        foreach ($array as $key => $value) {
-            if ($callback($value, $key)) {
-                return $key;
-            }
-        }
-        return null;
-    }
-}
-
-if (!function_exists('array_all')) {
-    /**
-     * Checks whether each element of the array matches a condition.
-     * Similar to array_all() in PHP 8.4
-     *
-     * Проверяет, соответствует ли каждый элемент массива условию.
-     * Аналогично array_all() в PHP 8.4
-     */
-    function array_all(array $array, callable $callback): bool
-    {
-        foreach ($array as $value) {
-            if (!$callback($value)) {
-                return false;
-            }
-        }
-        return true;
-    }
-}
-
-if (!function_exists('array_any')) {
-    /**
-     * Checks whether at least one array element matches a condition.
-     * Similar to array_any() in PHP 8.4
-     *
-     * Проверяет, соответствует ли условию хотя бы один элемент массива.
-     * Аналогично array_any() в PHP 8.4
-     */
-    function array_any(array $array, callable $callback): bool
-    {
-        foreach ($array as $value) {
-            if ($callback($value)) {
-                return true;
-            }
-        }
-        return false;
-    }
-}
-
