@@ -35,10 +35,38 @@ if (!function_exists('hl_db_config')) {
      *
      * Получение настроек баз данных из конфигурации фреймворка по названию значения.
      */
-    function hl_db_config(string $key): float|bool|int|string|null
+    function hl_db_config(string $key): mixed
     {
         return Settings::getParam('database', $key);
     }
+}
+
+if (!function_exists('hl_db_connection')) {
+    /**
+     * Obtaining database connection data from the framework configuration by connection name.
+     *
+     * Получение данных соединения к базе данных из конфигурации фреймворка по названию подключения.
+     */
+    function hl_db_connection(string $name): array
+    {
+        $connection = hl_db_config('db.settings.list')[$name] ?? null;
+        if (!$connection || !is_array($connection)) {
+            throw new InvalidArgumentException('Connection not found: ' . $name);
+        }
+        return $connection;
+    }
+}
+
+if (!function_exists('hl_db_active_connection')) {
+    /**
+     * Retrieving active database connection data from the framework configuration.
+     *
+     * Получение данных активного соединения к базе данных из конфигурации фреймворка.
+     */
+    function hl_db_active_connection(): array
+    {
+        return hl_db_connection(hl_db_config('base.db.type'));
+     }
 }
 
 if (!function_exists('hl_realpath')) {
@@ -547,9 +575,9 @@ if (!function_exists('request_uri')) {
 
 if (!function_exists('request_host')) {
     /**
-     * Returns the current host (and port if non-default).
+     * Returns the current host (and port if passed in the URL).
      *
-     * Возвращает текущий хост (и порт, если он не стандартный).
+     * Возвращает текущий хост (и порт, если он передан в URL).
      */
     function request_host(): string
     {
