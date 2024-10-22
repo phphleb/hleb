@@ -49,7 +49,6 @@ if (!function_exists('hl_realpath')) {
      * Возвращает полный путь до папки согласно настройкам проекта.
      * Может принимать специальные пути с '@' в начале.
      *
-     * @see hl_realpath()
      * @see PathInfoDoc::special()
      */
     /*
