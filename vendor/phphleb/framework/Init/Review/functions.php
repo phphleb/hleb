@@ -66,7 +66,7 @@ if (!function_exists('hl_db_active_connection')) {
     function hl_db_active_connection(): array
     {
         return hl_db_connection(hl_db_config('base.db.type'));
-     }
+    }
 }
 
 if (!function_exists('hl_realpath')) {
