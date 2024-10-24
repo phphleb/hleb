@@ -518,7 +518,7 @@ if (!function_exists('config')) {
      * Получение любого значения из конфигурации фреймворка
      * по типу конфигурации и названию значения.
      *
-     * @see hl_config() - alias
+     * @alias hl_config()
      */
     function config(string $name, string $key): mixed
     {
@@ -534,7 +534,7 @@ if (!function_exists('hl_config')) {
      * Получение любого значения из конфигурации фреймворка
      * по типу конфигурации и названию значения.
      *
-     * @see config() - alias
+     * @see config() - alias with short name.
      */
     function hl_config(string $name, string $key): mixed
     {
