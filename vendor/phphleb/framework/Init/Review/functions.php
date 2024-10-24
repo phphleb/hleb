@@ -822,8 +822,25 @@ if (!function_exists('get_config_or_fail')) {
      *
      * @throws InvalidArgumentException
      * @see config()
+     * @alias hl_get_config_or_fail()
      */
     function get_config_or_fail(string $name, string $key): mixed
+    {
+        return config($name, $key) ?? throw new InvalidArgumentException("Failed to get `{$key}` parameter from `{$name}` configuration");
+    }
+}
+
+if (!function_exists('hl_get_config_or_fail')) {
+    /**
+     * A wrapper for receiving settings parameters. If not present or equal to null, throws an error.
+     *
+     * Обёртка для получения параметров настроек. При отсутствии или равном null выбрасывает ошибку.
+     *
+     * @throws InvalidArgumentException
+     * @see config()
+     * @see get_config_or_fail() - alias with short name.
+     */
+    function hl_get_config_or_fail(string $name, string $key): mixed
     {
         return config($name, $key) ?? throw new InvalidArgumentException("Failed to get `{$key}` parameter from `{$name}` configuration");
     }
@@ -835,6 +852,7 @@ if (!function_exists('hl_redirect')) {
      *
      * Замена внутреннего редиректа для обычных и асинхронных запросов.
      */
+    #[NoReturn]
     function hl_redirect(string $location, int $status = 302): void
     {
         Redirect::to($location, $status);
