@@ -311,8 +311,24 @@ if (!function_exists('template')) {
      * Возвращает содержимое инициализированного шаблона.
      *
      * @see insertTemplate()
+     * @alias hl_template()
      */
     function template(string $viewPath, array $extractParams = [], array $config = []): string
+    {
+        return Template::get($viewPath, $extractParams, $config);
+    }
+}
+
+if (!function_exists('hl_template')) {
+    /**
+     * Returns the content of the initialized template.
+     *
+     * Возвращает содержимое инициализированного шаблона.
+     *
+     * @see insertTemplate()
+     * @see template() - alias with short name.
+     */
+    function hl_template(string $viewPath, array $extractParams = [], array $config = []): string
     {
         return Template::get($viewPath, $extractParams, $config);
     }
