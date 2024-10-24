@@ -177,6 +177,7 @@ if (!function_exists('async_exit')) {
      * ```
      *
      * @throws AsyncExitException
+     * @alias hl_async_exit()
      */
     function async_exit($message = '', ?int $httpStatus = null, array $headers = []): never
     {
@@ -233,7 +234,7 @@ if (!function_exists('view')) {
 
 if (!function_exists('hl_view')) {
     /**
-     * @deprecated
+     * @internal
      * @see view() - current version of the function.
      *             - актуальная версия функции.
      */
@@ -248,8 +249,24 @@ if (!function_exists('csrf_token')) {
      * The csrf_token() function returns the protected token for protection against CSRF attacks.
      *
      * Функция csrf_token() возвращает защищённый токен для защиты от CSRF-атак.
+     *
+     * @alias hl_csrf_token()
      */
     function csrf_token(): string
+    {
+        return Csrf::token();
+    }
+}
+
+if (!function_exists('hl_csrf_token')) {
+    /**
+     * The csrf_token() function returns the protected token for protection against CSRF attacks.
+     *
+     * Функция csrf_token() возвращает защищённый токен для защиты от CSRF-атак.
+     *
+     * @see csrf_token() - alias with short name.
+     */
+    function hl_csrf_token(): string
     {
         return Csrf::token();
     }
@@ -262,8 +279,26 @@ if (!function_exists('csrf_field')) {
      *
      * Функция csrf_field возвращает HTML-контент для вставки
      * в форму для защиты от CSRF-атак.
+     *
+     * @alias hl_csrf_field()
      */
     function csrf_field(): string
+    {
+        return Csrf::field();
+    }
+}
+
+if (!function_exists('hl_csrf_field')) {
+    /**
+     * The csrf_field function returns HTML content to be inserted
+     * into the form to protect against CSRF attacks.
+     *
+     * Функция csrf_field возвращает HTML-контент для вставки
+     * в форму для защиты от CSRF-атак.
+     *
+     * @see hl_csrf_token() - alias with short name.
+     */
+    function hl_csrf_field(): string
     {
         return Csrf::field();
     }
@@ -580,7 +615,7 @@ if (!function_exists('hl_config')) {
      * Получение любого значения из конфигурации фреймворка
      * по типу конфигурации и названию значения.
      *
-     *
+     * @see config() - alias with short name.
      */
     function hl_config(string $name, string $key): mixed
     {
