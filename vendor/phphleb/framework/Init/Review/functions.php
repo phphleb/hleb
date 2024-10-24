@@ -411,9 +411,9 @@ if (!function_exists('hl_insert_cache_template')) {
      * @see insertCacheTemplate() - current version of the function.
      *                            - актуальная версия функции.
      */
-    function hl_insert_cache_template(string $viewPath, array $extractParams = [], array $config = []): void
+    function hl_insert_cache_template(string $viewPath, array $extractParams = [], int $sec = Cache::DEFAULT_TIME, array $config = []): void
     {
-        Template::insert($viewPath, $extractParams, $config);
+        Template::insertCache($viewPath, $extractParams, $sec, $config);
     }
 }
 
@@ -457,6 +457,18 @@ if (!function_exists('url')) {
     }
 }
 
+if (!function_exists('hl_url')) {
+    /**
+     * @internal
+     * @see url() - current version of the function.
+     *            - актуальная версия функции.
+     */
+    function hl_url(string $routeName, array $replacements = [], bool $endPart = true, string $method = 'get'): string
+    {
+        return Router::url($routeName, $replacements, $endPart, $method);
+    }
+}
+
 if (!function_exists('address')) {
     /**
      * Returns the full URL given the route name and current domain. For example `https://site.com/test/3000/pro`.
@@ -475,6 +487,18 @@ if (!function_exists('address')) {
      *            - подробнее об аргументах метода.
      */
     function address(string $routeName, array $replacements = [], bool $endPart = true, string $method = 'get'): string
+    {
+        return Router::address($routeName, $replacements, $endPart, $method);
+    }
+}
+
+if (!function_exists('hl_address')) {
+    /**
+     * @internal
+     * @see address() - current version of the function.
+     *                - актуальная версия функции.
+     */
+    function hl_address(string $routeName, array $replacements = [], bool $endPart = true, string $method = 'get'): string
     {
         return Router::address($routeName, $replacements, $endPart, $method);
     }
