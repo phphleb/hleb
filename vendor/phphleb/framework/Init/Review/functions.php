@@ -686,8 +686,24 @@ if (!function_exists('route_name')) {
      * Returns the name of the current route, or null if none has been assigned.
      *
      * Возвращает название текущего маршрута или null если оно не назначено.
+     *
+     * @alias hl_route_name()
      */
     function route_name(): null|string
+    {
+        return Router::name();
+    }
+}
+
+if (!function_exists('hl_route_name')) {
+    /**
+     * Returns the name of the current route, or null if none has been assigned.
+     *
+     * Возвращает название текущего маршрута или null если оно не назначено.
+     *
+     * @see route_name() - alias with short name.
+     */
+    function hl_route_name(): null|string
     {
         return Router::name();
     }
@@ -703,8 +719,28 @@ if (!function_exists('param')) {
      *
      * @see Request::param() - more about return parameters.
      *                       - подробнее о возвращаемых параметрах.
+     * @alias hl_param()
      */
     function param(string $name): DataType
+    {
+        return Request::param($name);
+    }
+}
+
+if (!function_exists('hl_param')) {
+    /**
+     * Returns an object with dynamic query data by parameter name
+     * with a choice of value format.
+     *
+     * Возвращает объект с данными динамического запроса по имени параметра
+     * с возможностью выбора формата значения.
+     *
+     * @see Request::param() - more about return parameters.
+     *                       - подробнее о возвращаемых параметрах.
+     *
+     * @see param() - alias with short name.
+     */
+    function hl_param(string $name): DataType
     {
         return Request::param($name);
     }
@@ -714,11 +750,33 @@ if (!function_exists('setting')) {
     /**
      * Since custom values are recommended to be added to /config/main.php,
      * a separate function is provided for frequent use of this configuration.
+     * Returns the value of the parameter by key from the 'main' settings group.
      *
      * Ввиду того, что пользовательские значения рекомендовано добавлять в /config/main.php,
      * то для частого использования этой конфигурации предусмотрена отдельная функция.
+     * Возвращает значение параметра по ключу из группы настроек 'main'.
+     *
+     * @alias hl_setting()
      */
     function setting(string $key): mixed
+    {
+        return Settings::getParam('main', $key);
+    }
+}
+
+if (!function_exists('hl_setting')) {
+    /**
+     * Since custom values are recommended to be added to /config/main.php,
+     * a separate function is provided for frequent use of this configuration.
+     * Returns the value of the parameter by key from the 'main' settings group.
+     *
+     * Ввиду того, что пользовательские значения рекомендовано добавлять в /config/main.php,
+     * то для частого использования этой конфигурации предусмотрена отдельная функция.
+     * Возвращает значение параметра по ключу из группы настроек 'main'.
+     *
+     * @see setting() - alias with short name.
+     */
+    function hl_setting(string $key): mixed
     {
         return Settings::getParam('main', $key);
     }
