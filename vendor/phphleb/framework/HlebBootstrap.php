@@ -921,7 +921,7 @@ class HlebBootstrap
         if (!\defined('HLEB_LOAD_MODE')) {
             \define('HLEB_LOAD_MODE', $this->mode);
         }
-        if (\function_exists('Hleb\hl_user_log')) {
+        if (\function_exists('Hleb\_h2_user_log')) {
             return;
         }
         $logger = $this->logger;
@@ -932,7 +932,7 @@ class HlebBootstrap
          *
          * @internal
          */
-        function hl_user_log(int $errno, string $errstr, ?string $errfile = null, ?int $errline = null): bool
+        function _h2_user_log(int $errno, string $errstr, ?string $errfile = null, ?int $errline = null): bool
         {
             global $logger;
 
@@ -947,13 +947,13 @@ class HlebBootstrap
             return ErrorLog::execute($errno, $errstr, $errfile, $errline);
         }
 
-        \set_error_handler('Hleb\hl_user_log');
+        \set_error_handler('Hleb\_h2_user_log');
 
         /** @internal */
         function _h2_bootstrap_shutdown(): void
         {
             if ($e = \error_get_last() and $e['type'] & (E_ERROR | E_PARSE | E_COMPILE_ERROR | E_CORE_ERROR | E_USER_ERROR)) {
-                hl_user_log(E_ERROR, $e['message'] ?? '', $e['file'] ?? null, $e['line'] ?? null);
+                _h2_user_log(E_ERROR, $e['message'] ?? '', $e['file'] ?? null, $e['line'] ?? null);
             }
         }
         /** @internal */

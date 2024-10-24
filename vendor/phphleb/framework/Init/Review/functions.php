@@ -878,8 +878,24 @@ if (!function_exists('request_host')) {
      * Returns the current host (and port if passed in the URL).
      *
      * Возвращает текущий хост (и порт, если он передан в URL).
+     *
+     * @alias hl_request_host()
      */
     function request_host(): string
+    {
+        return Request::getUri()->getHost();
+    }
+}
+
+if (!function_exists('hl_request_host')) {
+    /**
+     * Returns the current host (and port if passed in the URL).
+     *
+     * Возвращает текущий хост (и порт, если он передан в URL).
+     *
+     * @see request_host() - alias with short name.
+     */
+    function hl_request_host(): string
     {
         return Request::getUri()->getHost();
     }
@@ -896,8 +912,30 @@ if (!function_exists('request_path')) {
      * Параметры можно получить как:
      *
      * request_uri()->getQuery();
+     *
+     * @alias hl_request_path()
      */
     function request_path(): string
+    {
+        return Request::getUri()->getPath();
+    }
+}
+
+if (!function_exists('hl_request_path')) {
+    /**
+     * Returns the current request path from a URL
+     * with no parameters.
+     * Parameters can be obtained as:
+     *
+     * Возвращает текущий путь запроса из URL
+     * без параметров.
+     * Параметры можно получить как:
+     *
+     * hl_request_uri()->getQuery();
+     *
+     * @see request_path() - alias with short name.
+     */
+    function hl_request_path(): string
     {
         return Request::getUri()->getPath();
     }
@@ -912,8 +950,28 @@ if (!function_exists('request_address')) {
      * Параметры можно получить как:
      *
      * request_uri()->getQuery();
+     *
+     * @alias hl_request_address()
      */
     function request_address(): string
+    {
+        return Request::getAddress();
+    }
+}
+
+if (!function_exists('hl_request_address')) {
+    /**
+     * Returns the current request URL without parameters.
+     * Parameters can be obtained as:
+     *
+     * Возвращает текущий URL запроса без параметров.
+     * Параметры можно получить как:
+     *
+     * hl_request_uri()->getQuery();
+     *
+     * @see request_address() - alias with short name.
+     */
+    function hl_request_address(): string
     {
         return Request::getAddress();
     }
@@ -924,8 +982,24 @@ if (!function_exists('logger')) {
      * Logging according to the established levels. logger()->error('Message', []);
      *
      * Логирование по установленным уровням. logger()->error('Message', []);
+     *
+     * @alias hl_logger()
      */
     function logger(): LogInterface
+    {
+        return new LoggerWrapper();
+    }
+}
+
+if (!function_exists('hl_logger')) {
+    /**
+     * Logging according to the established levels. hl_logger()->error('Message', []);
+     *
+     * Логирование по установленным уровням. hl_logger()->error('Message', []);
+     *
+     * @see logger() - alias with short name.
+     */
+    function hl_logger(): LogInterface
     {
         return new LoggerWrapper();
     }
@@ -987,7 +1061,6 @@ if (!function_exists('hl_is_dir')) {
     }
 }
 
-
 if (!function_exists('hl_relative_path')) {
     /**
      * Converts the full path to relative to the project's root directory.
@@ -1040,6 +1113,18 @@ if (!function_exists('is_empty')) {
     }
 }
 
+if (!function_exists('hl_is_empty')) {
+    /**
+     * @internal
+     * @see is_empty() - current version of the function.
+     *             - актуальная версия функции.
+     */
+    function hl_is_empty(mixed $value): bool
+    {
+        return is_empty($value);
+    }
+}
+
 if (!function_exists('once')) {
     /**
      * The once() function allows you to execute a piece of code only once for one request,
@@ -1062,5 +1147,17 @@ if (!function_exists('once')) {
     function once(callable $func): mixed
     {
         return Once::get($func);
+    }
+}
+
+if (!function_exists('hl_once')) {
+    /**
+     * @internal
+     * @see once() - current version of the function.
+     *             - актуальная версия функции.
+     */
+    function hl_once(callable $func): mixed
+    {
+        return once($func);
     }
 }
