@@ -20,6 +20,7 @@ use Hleb\Static\Router;
 use Hleb\Static\Script;
 use Hleb\Static\Settings;
 use Hleb\Static\Template;
+use JetBrains\PhpStorm\NoReturn;
 
 if (!function_exists('hl_debug')) {
     /**
@@ -179,6 +180,7 @@ if (!function_exists('async_exit')) {
      * @throws AsyncExitException
      * @alias hl_async_exit()
      */
+    #[NoReturn]
     function async_exit($message = '', ?int $httpStatus = null, array $headers = []): never
     {
         Script::asyncExit($message, $httpStatus, $headers);
@@ -197,6 +199,7 @@ if (!function_exists('hl_async_exit')) {
      * @see async_exit() - learn more about the capabilities of the function in the main version.     *
      *                   - подробно о возможностях функции в основном варианте.
      */
+    #[NoReturn]
     function hl_async_exit($message = '', ?int $httpStatus = null, array $headers = []): never
     {
         Script::asyncExit($message, $httpStatus, $headers);
@@ -556,8 +559,24 @@ if (!function_exists('print_r2')) {
      * Data output to the debug panel.
      *
      * Вывод данных в панель отладки.
+     *
+     * @alias hl_print_r2()
      */
     function print_r2(mixed $data, ?string $name = null): void
+    {
+        Debug::send($data, $name);
+    }
+}
+
+if (!function_exists('hl_print_r2')) {
+    /**
+     * Data output to the debug panel.
+     *
+     * Вывод данных в панель отладки.
+     *
+     * @see print_r2() - alias with short name.
+     */
+    function hl_print_r2(mixed $data, ?string $name = null): void
     {
         Debug::send($data, $name);
     }
@@ -568,6 +587,8 @@ if (!function_exists('var_dump2')) {
      * Improved var_dump() output.
      *
      * Улучшенный вывод var_dump().
+     *
+     * @alias hl_var_dump2()
      */
     function var_dump2(mixed $value, mixed ...$values): void
     {
@@ -581,11 +602,27 @@ if (!function_exists('var_dump2')) {
     }
 }
 
+if (!function_exists('hl_var_dump2')) {
+    /**
+     * Improved var_dump() output.
+     *
+     * Улучшенный вывод var_dump().
+     *
+     * @see var_dump2() - alias with short name.
+     */
+    function hl_var_dump2(mixed $value, mixed ...$values): void
+    {
+        var_dump2($value, ...$values);
+    }
+}
+
 if (!function_exists('dump')) {
     /**
      * Improved formatted output of var_dump().
      *
      * Улучшенный форматированный вывод var_dump().
+     *
+     * @alias hl_dump()
      */
     function dump(mixed $value, mixed ...$values): void
     {
@@ -598,17 +635,49 @@ if (!function_exists('dump')) {
     }
 }
 
+if (!function_exists('hl_dump')) {
+    /**
+     * Improved formatted output of var_dump().
+     *
+     * Улучшенный форматированный вывод var_dump().
+     *
+     * @see dump() - alias with short name.
+     */
+    function hl_dump(mixed $value, mixed ...$values): void
+    {
+        dump($value, ...$values);
+    }
+}
+
 if (!function_exists('dd')) {
     /**
      * Improved formatted output of var_dump() with script termination.
      *
      * Улучшенный форматированный вывод var_dump() c завершением работы скрипта.
+     *
+     * @alias hl_dd()
      */
-    function dd(mixed $value, mixed ...$values): void
+    #[NoReturn]
+    function dd(mixed $value, mixed ...$values): never
     {
         \dump($value, ...$values);
         /** @see async_exit() - для асинхронных запросов. */
         \async_exit();
+    }
+}
+
+if (!function_exists('hl_dd')) {
+    /**
+     * Improved formatted output of var_dump() with script termination.
+     *
+     * Улучшенный форматированный вывод var_dump() c завершением работы скрипта.
+     *
+     * @see dd() - alias with short name.
+     */
+    #[NoReturn]
+    function hl_dd(mixed $value, mixed ...$values): never
+    {
+        \dd($value, ...$values);
     }
 }
 
