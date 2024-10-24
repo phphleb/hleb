@@ -184,6 +184,24 @@ if (!function_exists('async_exit')) {
     }
 }
 
+if (!function_exists('hl_async_exit')) {
+    /**
+     * Simulation with exit from the process (script) for asynchronous mode
+     * and normal exit for standard mode.
+     *
+     * Имитация с выходом из процесса (скрипта) для асинхронного режима
+     * и обычный выход для стандартного режима.
+     *
+     * @throws AsyncExitException
+     * @see async_exit() - learn more about the capabilities of the function in the main version.     *
+     *                   - подробно о возможностях функции в основном варианте.
+     */
+    function hl_async_exit($message = '', ?int $httpStatus = null, array $headers = []): never
+    {
+        Script::asyncExit($message, $httpStatus, $headers);
+    }
+}
+
 if (!function_exists('view')) {
     /**
      * The view() function allows you to display the desired template or plain text from the controller or route.
