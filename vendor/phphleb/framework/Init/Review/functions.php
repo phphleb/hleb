@@ -3,16 +3,20 @@
 declare(strict_types=1);
 
 use Hleb\Constructor\Data\View;
+use Hleb\Static\View as StaticView;
 use Hleb\HttpMethods\External\RequestUri;
 use Hleb\HttpMethods\Specifier\DataType;
 use Hleb\Main\Console\Specifiers\ArgType;
+use Hleb\Main\Logger\LoggerWrapper;
 use Hleb\Reference\LogInterface;
 use Hleb\Static\Cache;
+use Hleb\Static\Csrf;
 use Hleb\Static\Debug;
 use Hleb\Static\Once;
 use Hleb\Static\Path;
 use Hleb\Static\Redirect;
 use Hleb\Static\Request;
+use Hleb\Static\Router;
 use Hleb\Static\Script;
 use Hleb\Static\Settings;
 use Hleb\Static\Template;
@@ -50,7 +54,7 @@ if (!function_exists('hl_db_connection')) {
     function hl_db_connection(string $name): array
     {
         $connection = hl_db_config('db.settings.list')[$name] ?? null;
-        if (!$connection || !is_array($connection)) {
+        if (!$connection || !\is_array($connection)) {
             throw new InvalidArgumentException('Connection not found: ' . $name);
         }
         return $connection;
@@ -189,7 +193,7 @@ if (!function_exists('view')) {
      */
     function view(string $template, array $params = [], ?int $status = null): View
     {
-        return \Hleb\Static\View::view($template, $params, $status);
+        return StaticView::view($template, $params, $status);
     }
 }
 
@@ -201,7 +205,7 @@ if (!function_exists('csrf_token')) {
      */
     function csrf_token(): string
     {
-        return \Hleb\Static\Csrf::token();
+        return Csrf::token();
     }
 }
 
@@ -215,7 +219,7 @@ if (!function_exists('csrf_field')) {
      */
     function csrf_field(): string
     {
-        return \Hleb\Static\Csrf::field();
+        return Csrf::field();
     }
 }
 
@@ -328,7 +332,7 @@ if (!function_exists('url')) {
      */
     function url(string $routeName, array $replacements = [], bool $endPart = true, string $method = 'get'): string
     {
-        return \Hleb\Static\Router::url($routeName, $replacements, $endPart, $method);
+        return Router::url($routeName, $replacements, $endPart, $method);
     }
 }
 
@@ -351,7 +355,7 @@ if (!function_exists('address')) {
      */
     function address(string $routeName, array $replacements = [], bool $endPart = true, string $method = 'get'): string
     {
-        return \Hleb\Static\Router::address($routeName, $replacements, $endPart, $method);
+        return Router::address($routeName, $replacements, $endPart, $method);
     }
 }
 
@@ -442,7 +446,7 @@ if (!function_exists('dump')) {
     {
         if (($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
 
-            echo PHP_EOL, \hl_formatting_debug_info($value, ...$values), PHP_EOL;
+            echo PHP_EOL, \_h2_formatting_debug_info($value, ...$values), PHP_EOL;
         } else {
             \var_dump($value, ...$values);
         }
@@ -471,7 +475,7 @@ if (!function_exists('route_name')) {
      */
     function route_name(): null|string
     {
-        return \Hleb\Static\Router::name();
+        return Router::name();
     }
 }
 
@@ -524,11 +528,17 @@ if (!function_exists('config')) {
 
 if (!function_exists('hl_config')) {
     /**
+     * Getting any value from the framework configuration
+     * by configuration type and value name.
+     *
+     * Получение любого значения из конфигурации фреймворка
+     * по типу конфигурации и названию значения.
+     *
      * @see config() - alias
      */
     function hl_config(string $name, string $key): mixed
     {
-        return config($name, $key);
+        return Settings::getParam($name, $key);
     }
 }
 
@@ -627,7 +637,7 @@ if (!function_exists('logger')) {
      */
     function logger(): LogInterface
     {
-        return new Hleb\Main\Logger\LoggerWrapper();
+        return new LoggerWrapper();
     }
 }
 

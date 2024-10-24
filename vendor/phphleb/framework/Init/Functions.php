@@ -21,12 +21,12 @@ final class Functions
     /** @internal */
     public function create(): bool
     {
-        if (function_exists('hl_debug')) {
+        if (\function_exists('hl_debug')) {
             return false;
         }
         if ($files = SystemSettings::getValue('system', 'custom.function.files')) {
             foreach($files as $file) {
-                require Path::get('global') . DIRECTORY_SEPARATOR . ltrim($file, '\\/');
+                require Path::get('global') . DIRECTORY_SEPARATOR . \ltrim($file, '\\/');
             }
         }
 
@@ -43,15 +43,15 @@ final class Functions
                 if (empty($value)) {
                     return $value;
                 }
-                $type = gettype($value);
+                $type = \gettype($value);
                 if ($type === 'string') {
-                    return str_replace($neededTags, $replacingTags, $value);
+                    return \str_replace($neededTags, $replacingTags, $value);
                 }
                 if ($type === 'array') {
-                    $preKeys = implode(\array_keys($value));
+                    $preKeys = \implode(\array_keys($value));
                     $clearKeys = false;
                     foreach ($neededTags as $tag) {
-                        if (str_contains($preKeys, $tag)) {
+                        if (\str_contains($preKeys, $tag)) {
                             $clearKeys = true;
                             break;
                         }
@@ -59,12 +59,12 @@ final class Functions
                     if ($clearKeys) {
                         $new = [];
                         foreach ($value as $key => $item) {
-                            $new[hl_clear_tags($key)] = hl_clear_tags($item);
+                            $new[\hl_clear_tags($key)] = \hl_clear_tags($item);
                         }
                         return $new;
                     } else {
                         foreach ($value as $key => $item) {
-                            $value[$key] = hl_clear_tags($item);
+                            $value[$key] = \hl_clear_tags($item);
                         }
                     }
                 }
@@ -94,7 +94,7 @@ final class Functions
                     $decodeFlags += JSON_INVALID_UTF8_IGNORE;
                 }
                 try {
-                    json_decode($json, true, $depth, $decodeFlags);
+                    \json_decode($json, true, $depth, $decodeFlags);
                 } catch (\JsonException) {
                     return false;
                 }
@@ -113,7 +113,7 @@ final class Functions
                 $headers = [];
                 foreach ($_SERVER as $name => $item) {
                     if ($name != 'HTTP_MOD_REWRITE' && (\str_starts_with($name, 'HTTP_') || $name == 'CONTENT_TYPE' || $name == 'CONTENT_LENGTH')) {
-                        $name = str_replace(' ', '-', ucwords(\strtolower(str_replace('_', ' ', str_replace('HTTP_', '', $name)))));
+                        $name = \str_replace(' ', '-', \ucwords(\strtolower(\str_replace('_', ' ', \str_replace('HTTP_', '', $name)))));
                         if ($name == 'Content-Type') $name = 'Content-type';
                         $headers[$name] = $item;
                     }
@@ -160,21 +160,21 @@ final class Functions
                     return [];
                 }
                 foreach ((array)$headers as $name => $header) {
-                    if (is_string($name)) {
+                    if (\is_string($name)) {
                         $result = [];
-                        foreach (explode(',', $header) as $item) {
-                            $result[] = trim($item);
+                        foreach (\explode(',', $header) as $item) {
+                            $result[] = \trim($item);
                         }
                         $headers[$name] = $result;
                     } else {
                         throw new \InvalidArgumentException('Wrong headers format.');
                     }
                 }
-                return array_change_key_case($headers, CASE_LOWER);
+                return \array_change_key_case($headers, CASE_LOWER);
             }
         }
 
-        if (!function_exists('hl_formatting_debug_info')) {
+        if (!function_exists('_h2_formatting_debug_info')) {
             /**
              * Converts debugging information to HTML.
              * A feature of this HTML is that it displays normally
@@ -186,7 +186,7 @@ final class Functions
              *
              * @internal
              */
-            function hl_formatting_debug_info(mixed $value, mixed ...$values): string
+            function _h2_formatting_debug_info(mixed $value, mixed ...$values): string
             {
                 $backtrace = \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
                 $level = $backtrace[2] ?? [];

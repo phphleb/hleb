@@ -950,14 +950,14 @@ class HlebBootstrap
         \set_error_handler('Hleb\hl_user_log');
 
         /** @internal */
-        function hl_shutdown(): void
+        function _h2_bootstrap_shutdown(): void
         {
             if ($e = \error_get_last() and $e['type'] & (E_ERROR | E_PARSE | E_COMPILE_ERROR | E_CORE_ERROR | E_USER_ERROR)) {
                 hl_user_log(E_ERROR, $e['message'] ?? '', $e['file'] ?? null, $e['line'] ?? null);
             }
         }
         /** @internal */
-        function hl_log_finished(): void
+        function _h2_bootstrap_log_finished(): void
         {
             if (\class_exists(FileLogger::class, false)) {
                 FileLogger::finished();
@@ -965,9 +965,9 @@ class HlebBootstrap
         }
 
         if ($this->mode !== self::ASYNC_MODE) {
-            \register_shutdown_function('Hleb\hl_shutdown');
+            \register_shutdown_function('Hleb\_h2_bootstrap_shutdown');
         }
-        \register_shutdown_function('Hleb\hl_log_finished');
+        \register_shutdown_function('Hleb\_h2_bootstrap_log_finished');
     }
 
     /**
