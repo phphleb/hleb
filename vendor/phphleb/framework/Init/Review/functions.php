@@ -130,8 +130,24 @@ if (!function_exists('is_async')) {
      * Returns true if the framework is used in asynchronous mode.
      *
      * Возвращает true, если фреймворк используется в асинхронном режиме.
+     *
+     * @alias hl_is_async()
      */
     function is_async(): bool
+    {
+        return Settings::isAsync();
+    }
+}
+
+if (!function_exists('hl_is_async')) {
+    /**
+     * Returns true if the framework is used in asynchronous mode.
+     *
+     * Возвращает true, если фреймворк используется в асинхронном режиме.
+     *
+     * @see is_async() - alias with short name.
+     */
+    function hl_is_async(): bool
     {
         return Settings::isAsync();
     }
@@ -534,7 +550,7 @@ if (!function_exists('hl_config')) {
      * Получение любого значения из конфигурации фреймворка
      * по типу конфигурации и названию значения.
      *
-     * @see config() - alias with short name.
+     *
      */
     function hl_config(string $name, string $key): mixed
     {
