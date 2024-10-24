@@ -38,6 +38,7 @@ Basic features of the framework:
 + [Mutexes](https://github.com/phphleb/conductor)
 + [Admin panel](https://github.com/phphleb/adminpan)
 
+An additional [plugin](https://plugins.jetbrains.com/plugin/25645-hleb2) for the framework with integration into PhpStorm IDE.
 
 The framework code has been thoroughly [tested](https://github.com/phphleb/tests).
 
