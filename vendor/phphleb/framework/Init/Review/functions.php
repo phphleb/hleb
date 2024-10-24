@@ -368,6 +368,18 @@ if (!function_exists('insertTemplate')) {
     }
 }
 
+if (!function_exists('hl_insert_template')) {
+    /**
+     * @internal
+     * @see insertTemplate() - current version of the function.
+     *                       - актуальная версия функции.
+     */
+    function hl_insert_template(string $viewPath, array $extractParams = [], array $config = []): void
+    {
+        Template::insert($viewPath, $extractParams, $config);
+    }
+}
+
 if (!function_exists('insertCacheTemplate')) {
     /**
      * Allows you to save the template to the cache, for example
@@ -390,6 +402,18 @@ if (!function_exists('insertCacheTemplate')) {
     function insertCacheTemplate(string $viewPath, array $extractParams = [], int $sec = Cache::DEFAULT_TIME, array $config = []): void
     {
         Template::insertCache($viewPath, $extractParams, $sec, $config);
+    }
+}
+
+if (!function_exists('hl_insert_cache_template')) {
+    /**
+     * @internal
+     * @see insertCacheTemplate() - current version of the function.
+     *                            - актуальная версия функции.
+     */
+    function hl_insert_cache_template(string $viewPath, array $extractParams = [], array $config = []): void
+    {
+        Template::insert($viewPath, $extractParams, $config);
     }
 }
 
