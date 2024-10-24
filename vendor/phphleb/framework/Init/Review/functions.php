@@ -231,6 +231,18 @@ if (!function_exists('view')) {
     }
 }
 
+if (!function_exists('hl_view')) {
+    /**
+     * @deprecated
+     * @see view() - current version of the function.
+     *             - актуальная версия функции.
+     */
+    function hl_view(string $template, array $params = [], ?int $status = null): View
+    {
+        return StaticView::view($template, $params, $status);
+    }
+}
+
 if (!function_exists('csrf_token')) {
     /**
      * The csrf_token() function returns the protected token for protection against CSRF attacks.
