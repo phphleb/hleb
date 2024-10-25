@@ -21,6 +21,15 @@ final class Template extends BaseAsyncSingleton implements RollbackInterface
      * Returns the content of the initialized template.
      *
      * Возвращает содержимое инициализированного шаблона.
+     *
+     * @param string $viewPath - special path to the template file.
+     *                         - специальный путь к файлу шаблона.
+     *
+     * @param array $extractParams - a named array of values converted into variables inside the template.
+     *                             - именованный массив значений преобразуемых в переменные внутри шаблона.
+     *
+     * @param array $config - config for replacing data in the transferred container when testing the template.
+     *                      - конфиг для замены данных в передаваемом контейнере при тестировании шаблона.
      */
     public static function get(string $viewPath, array $extractParams = [], array $config = []): string
     {
@@ -46,6 +55,14 @@ final class Template extends BaseAsyncSingleton implements RollbackInterface
      * Пример для модуля: для активного модуля путь будет указывать в папку
      * /modules/{module_name}/views/test.php
      *
+     * @param string $viewPath - special path to the template file.
+     *                         - специальный путь к файлу шаблона.
+     *
+     * @param array $extractParams - a named array of values converted into variables inside the template.
+     *                             - именованный массив значений преобразуемых в переменные внутри шаблона.
+     *
+     * @param array $config - config for replacing data in the transferred container when testing the template.
+     *                      - конфиг для замены данных в передаваемом контейнере при тестировании шаблона.
      */
     public static function insert(string $viewPath, array $extractParams = [], array $config = []): void
     {
@@ -71,8 +88,18 @@ final class Template extends BaseAsyncSingleton implements RollbackInterface
      * то это будет новый созданный кеш,
      * так как параметры входят в ключ кеша вместе с $viewPath.
      *
-     * @see self::insert() - more details about method arguments.
-     *                     - подробнее об аргументах метода.
+     * @param string $viewPath - special path to the template file.
+     *                         - специальный путь к файлу шаблона.
+     *
+     * @param array $extractParams - a named array of values converted into variables inside the template.
+     *                             - именованный массив значений преобразуемых в переменные внутри шаблона.
+     *
+     * @param int $sec - number of seconds for caching.
+     *                 - количество секунд для кеширования.
+     *
+     * @param array $config - config for replacing data in the transferred container when testing the template.
+     *                      - конфиг для замены данных в передаваемом контейнере при тестировании шаблона.
+     *
      */
     public static function insertCache(string $viewPath, array $extractParams = [], int $sec = Cache::DEFAULT_TIME, array $config = []): void
     {

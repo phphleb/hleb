@@ -317,11 +317,31 @@ if (!function_exists('template')) {
      *
      * Возвращает содержимое инициализированного шаблона.
      *
+     * @param string $viewPath - special path to the template file.
+     *                         - специальный путь к файлу шаблона.
+     *
+     * @param array $extractParams - a named array of values converted into variables inside the template.
+     *                             - именованный массив значений преобразуемых в переменные внутри шаблона.
+     *
+     * @param array $config - config for replacing data in the transferred container when testing the template.
+     *                      - конфиг для замены данных в передаваемом контейнере при тестировании шаблона.
+     *
      * @see insertTemplate()
      * @alias hl_template()
      */
     function template(string $viewPath, array $extractParams = [], array $config = []): string
     {
+        /**
+         * Additional variables that will be active in the template.
+         *
+         * Дополнительные переменные, которые будут активны в шаблоне.
+         *
+         * @var $container - container for templates.
+         *                 - контейнер для шаблонов.
+         *
+         * @var $extractParams - initial data set.
+         *                     - первоначальный массив данных.
+         */
         return Template::get($viewPath, $extractParams, $config);
     }
 }
@@ -356,6 +376,15 @@ if (!function_exists('insertTemplate')) {
      * Пример: insertTemplate('test.twig'); аналогично выводит шаблон /resources/views/test.twig
      * Пример для модуля: для активного модуля путь будет указывать в папку
      * /modules/{module_name}/views/test.php
+     *
+     * @param string $viewPath - special path to the template file.
+     *                         - специальный путь к файлу шаблона.
+     *
+     * @param array $extractParams - a named array of values converted into variables inside the template.
+     *                             - именованный массив значений преобразуемых в переменные внутри шаблона.
+     *
+     * @param array $config - config for replacing data in the transferred container when testing the template.
+     *                      - конфиг для замены данных в передаваемом контейнере при тестировании шаблона.
      *
      * @alias hl_insert_template()
      */
@@ -409,13 +438,33 @@ if (!function_exists('insertCacheTemplate')) {
      * то это будет новый созданный кеш,
      * так как параметры входят в ключ кеша вместе с $viewPath.
      *
-     * @see insertTemplate() - more about function arguments.
-     *                       - подробнее об аргументах функции.
+     * @param string $viewPath - special path to the template file.
+     *                         - специальный путь к файлу шаблона.
+     *
+     * @param array $extractParams - a named array of values converted into variables inside the template.
+     *                             - именованный массив значений преобразуемых в переменные внутри шаблона.
+     *
+     * @param int $sec - number of seconds for caching.
+     *                 - количество секунд для кеширования.
+     *
+     * @param array $config - config for replacing data in the transferred container when testing the template.
+     *                      - конфиг для замены данных в передаваемом контейнере при тестировании шаблона.
      *
      * @alias hl_insert_cache_template()
      */
     function insertCacheTemplate(string $viewPath, array $extractParams = [], int $sec = Cache::DEFAULT_TIME, array $config = []): void
     {
+        /**
+         * Additional variables that will be active in the template.
+         *
+         * Дополнительные переменные, которые будут активны в шаблоне.
+         *
+         * @var $container - container for templates.
+         *                 - контейнер для шаблонов.
+         *
+         * @var $extractParams - initial data set.
+         *                     - первоначальный массив данных.
+         */
         Template::insertCache($viewPath, $extractParams, $sec, $config);
     }
 }
@@ -1146,6 +1195,15 @@ if (!function_exists('is_empty')) {
      * При передаче не объявленной переменной будет ошибка, поэтому для аналогии
      * с оригинальной функцией можно подавить эту ошибку добавлением '@'
      * перед функцией.
+     *
+     * ```php
+     * unset($var);
+     *
+     * if (@is_empty($var) || @is_empty($var[1])) {
+     *     // Code if the variable is empty.
+     * }
+     *
+     * ```
      */
     function is_empty(mixed $value): bool
     {
