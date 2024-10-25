@@ -174,7 +174,7 @@ final class Functions
             }
         }
 
-        if (!function_exists('_h2_formatting_debug_info')) {
+        if (!function_exists('core_formatting_debug_info')) {
             /**
              * Converts debugging information to HTML.
              * A feature of this HTML is that it displays normally
@@ -184,9 +184,9 @@ final class Functions
              * Особенностью этого HTML является нормальное отображение
              * при отключенных встроенных стилях.
              *
-             * @internal
+             * @internal - do not use outside the framework core.
              */
-            function _h2_formatting_debug_info(mixed $value, mixed ...$values): string
+            function core_formatting_debug_info(mixed $value, mixed ...$values): string
             {
                 $backtrace = \debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
                 $level = $backtrace[2] ?? [];

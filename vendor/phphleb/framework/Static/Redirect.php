@@ -21,6 +21,12 @@ final class Redirect extends BaseAsyncSingleton implements RollbackInterface
      * Redirect to internal page or full URL.
      *
      * Редирект на внутреннюю страницу или полный URL.
+     *
+     * @param string $location - redirect target, full or relative URL.
+     *                         - цель редиректа, полный или относительный URL.
+     *
+     * @param int $status - response code of the current HTTP request for the redirect.
+     *                    - код ответа текущего HTTP-запроса для редиректа.
      */
     public static function to(string $location, int $status = 302): void
     {

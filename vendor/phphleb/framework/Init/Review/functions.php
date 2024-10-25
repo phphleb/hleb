@@ -177,7 +177,8 @@ if (!function_exists('async_exit')) {
      *   }
      * ```
      *
-     * @throws AsyncExitException
+     * @throws AsyncExitException - in asynchronous mode.
+     *                             - в асинхронном режиме.
      * @alias hl_async_exit()
      */
     #[NoReturn]
@@ -195,7 +196,9 @@ if (!function_exists('hl_async_exit')) {
      * Имитация с выходом из процесса (скрипта) для асинхронного режима
      * и обычный выход для стандартного режима.
      *
-     * @throws AsyncExitException
+     * @throws AsyncExitException - in asynchronous mode.
+     *                             - в асинхронном режиме.
+     *
      * @see async_exit() - learn more about the capabilities of the function in the main version.     *
      *                   - подробно о возможностях функции в основном варианте.
      */
@@ -238,6 +241,7 @@ if (!function_exists('view')) {
 if (!function_exists('hl_view')) {
     /**
      * @internal
+     *
      * @see view() - current version of the function.
      *             - актуальная версия функции.
      */
@@ -353,6 +357,7 @@ if (!function_exists('insertTemplate')) {
      * Пример для модуля: для активного модуля путь будет указывать в папку
      * /modules/{module_name}/views/test.php
      *
+     * @alias hl_insert_template()
      */
     function insertTemplate(string $viewPath, array $extractParams = [], array $config = []): void
     {
@@ -373,7 +378,12 @@ if (!function_exists('insertTemplate')) {
 
 if (!function_exists('hl_insert_template')) {
     /**
-     * @internal
+     * Inserting a template and assigning variables from its parameters.
+     * Example: hl_insert_template('test', ['param' => 'value']);
+     *
+     * Вставка шаблона и назначение переменных из его параметров.
+     * Пример: hl_insert_template('test', ['param' => 'value']);
+     *
      * @see insertTemplate() - current version of the function.
      *                       - актуальная версия функции.
      */
@@ -401,6 +411,8 @@ if (!function_exists('insertCacheTemplate')) {
      *
      * @see insertTemplate() - more about function arguments.
      *                       - подробнее об аргументах функции.
+     *
+     * @alias hl_insert_cache_template()
      */
     function insertCacheTemplate(string $viewPath, array $extractParams = [], int $sec = Cache::DEFAULT_TIME, array $config = []): void
     {
@@ -410,7 +422,14 @@ if (!function_exists('insertCacheTemplate')) {
 
 if (!function_exists('hl_insert_cache_template')) {
     /**
-     * @internal
+     * Allows you to save the template to the cache, for example
+     * hl_insert_cache_template('template', ['param' => 'value'], sec:60)
+     * will save the template to the cache for 1 minute.
+     *
+     * Позволяет сохранить шаблон в кеш, например
+     * hl_insert_cache_template('template', ['param' => 'value'], sec:60)
+     * сохранит в кеш шаблон на 1 минуту.
+     *
      * @see insertCacheTemplate() - current version of the function.
      *                            - актуальная версия функции.
      */
@@ -453,6 +472,8 @@ if (!function_exists('url')) {
      *                         Такой метод должен поддерживаться маршрутом.
      *
      * @return string
+     *
+     * @alias hl_url()
      */
     function url(string $routeName, array $replacements = [], bool $endPart = true, string $method = 'get'): string
     {
@@ -462,7 +483,10 @@ if (!function_exists('url')) {
 
 if (!function_exists('hl_url')) {
     /**
-     * @internal
+     * Returns the standardized relative address (URI) from the route name in the URL.
+     *
+     * Возвращает стандартизированный относительный адрес (URI) из названия маршрута в URL.
+     *
      * @see url() - current version of the function.
      *            - актуальная версия функции.
      */
@@ -488,6 +512,8 @@ if (!function_exists('address')) {
      *
      * @see url() - more about method arguments.
      *            - подробнее об аргументах метода.
+     *
+     * @alias hl_address()
      */
     function address(string $routeName, array $replacements = [], bool $endPart = true, string $method = 'get'): string
     {
@@ -497,7 +523,10 @@ if (!function_exists('address')) {
 
 if (!function_exists('hl_address')) {
     /**
-     * @internal
+     * Returns the full URL given the route name and current domain. For example `https://site.com/test/3000/pro`.
+     *
+     * Возвращает полный URL-адрес по имени маршрута и текущего домена. Например `https://site.com/test/3000/pro`.
+     *
      * @see address() - current version of the function.
      *                - актуальная версия функции.
      */
@@ -628,7 +657,7 @@ if (!function_exists('dump')) {
     {
         if (($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
 
-            echo PHP_EOL, \_h2_formatting_debug_info($value, ...$values), PHP_EOL;
+            echo PHP_EOL, \core_formatting_debug_info($value, ...$values), PHP_EOL;
         } else {
             \var_dump($value, ...$values);
         }
@@ -655,6 +684,8 @@ if (!function_exists('dd')) {
      *
      * Улучшенный форматированный вывод var_dump() c завершением работы скрипта.
      *
+     * @throws AsyncExitException - in asynchronous mode.
+     *                            - в асинхронном режиме.
      * @alias hl_dd()
      */
     #[NoReturn]
@@ -671,6 +702,9 @@ if (!function_exists('hl_dd')) {
      * Improved formatted output of var_dump() with script termination.
      *
      * Улучшенный форматированный вывод var_dump() c завершением работы скрипта.
+     *
+     * @throws AsyncExitException - in asynchronous mode.
+     *                            - в асинхронном режиме.
      *
      * @see dd() - alias with short name.
      */
@@ -842,7 +876,7 @@ if (!function_exists('hl_get_config_or_fail')) {
      */
     function hl_get_config_or_fail(string $name, string $key): mixed
     {
-        return config($name, $key) ?? throw new InvalidArgumentException("Failed to get `{$key}` parameter from `{$name}` configuration");
+        return get_config_or_fail($name, $key);
     }
 }
 
@@ -851,6 +885,12 @@ if (!function_exists('hl_redirect')) {
      * Replacing the internal redirect for normal and asynchronous requests.
      *
      * Замена внутреннего редиректа для обычных и асинхронных запросов.
+     *
+     * @param string $location - redirect target, full or relative URL.
+     *                         - цель редиректа, полный или относительный URL.
+     *
+     * @param int $status - response code of the current HTTP request for the redirect.
+     *                    - код ответа текущего HTTP-запроса для редиректа.
      */
     #[NoReturn]
     function hl_redirect(string $location, int $status = 302): void
@@ -1071,7 +1111,7 @@ if (!function_exists('hl_relative_path')) {
      * Результат можно использовать в отдаваемых пользователю оповещениях.
      * Например:
      *
-     * '/home/user/projects/hleb/public/index.php' => '@/public/index.php'
+     * '/home/user/projects/hleb/public/index.php' -> '@/public/index.php'
      *
      * @see PathInfoDoc::special()
      */
@@ -1152,12 +1192,17 @@ if (!function_exists('once')) {
 
 if (!function_exists('hl_once')) {
     /**
-     * @internal
+     * The hl_once() function allows you to execute a piece of code only once for one request,
+     * and when accessed again, it returns the same result.
+     *
+     * Функция hl_once() позволяет выполнять часть кода только единожды для одного запроса,
+     * а при повторном обращении возвращает прежний результат.
+     *
      * @see once() - current version of the function.
      *             - актуальная версия функции.
      */
     function hl_once(callable $func): mixed
     {
-        return once($func);
+        return Once::get($func);
     }
 }

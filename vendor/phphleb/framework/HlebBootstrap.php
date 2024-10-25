@@ -105,7 +105,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.31');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.32');
 
         $this->logger = $logger;
 
@@ -921,7 +921,7 @@ class HlebBootstrap
         if (!\defined('HLEB_LOAD_MODE')) {
             \define('HLEB_LOAD_MODE', $this->mode);
         }
-        if (\function_exists('Hleb\_h2_user_log')) {
+        if (\function_exists('Hleb\core_user_log')) {
             return;
         }
         $logger = $this->logger;
@@ -930,9 +930,9 @@ class HlebBootstrap
          *
          * Вывод ошибок в способ логирования, даже если часть классов не загружена.
          *
-         * @internal
+         * @internal - do not use outside the framework core.
          */
-        function _h2_user_log(int $errno, string $errstr, ?string $errfile = null, ?int $errline = null): bool
+        function core_user_log(int $errno, string $errstr, ?string $errfile = null, ?int $errline = null): bool
         {
             global $logger;
 
@@ -947,17 +947,17 @@ class HlebBootstrap
             return ErrorLog::execute($errno, $errstr, $errfile, $errline);
         }
 
-        \set_error_handler('Hleb\_h2_user_log');
+        \set_error_handler('Hleb\core_user_log');
 
-        /** @internal */
-        function _h2_bootstrap_shutdown(): void
+        /** @internal - do not use outside the framework core. */
+        function core_bootstrap_shutdown(): void
         {
             if ($e = \error_get_last() and $e['type'] & (E_ERROR | E_PARSE | E_COMPILE_ERROR | E_CORE_ERROR | E_USER_ERROR)) {
-                _h2_user_log(E_ERROR, $e['message'] ?? '', $e['file'] ?? null, $e['line'] ?? null);
+                core_user_log(E_ERROR, $e['message'] ?? '', $e['file'] ?? null, $e['line'] ?? null);
             }
         }
-        /** @internal */
-        function _h2_bootstrap_log_finished(): void
+        /** @internal - do not use outside the framework core. */
+        function core_bootstrap_log_finished(): void
         {
             if (\class_exists(FileLogger::class, false)) {
                 FileLogger::finished();
@@ -965,9 +965,9 @@ class HlebBootstrap
         }
 
         if ($this->mode !== self::ASYNC_MODE) {
-            \register_shutdown_function('Hleb\_h2_bootstrap_shutdown');
+            \register_shutdown_function('Hleb\core_bootstrap_shutdown');
         }
-        \register_shutdown_function('Hleb\_h2_bootstrap_log_finished');
+        \register_shutdown_function('Hleb\core_bootstrap_log_finished');
     }
 
     /**
