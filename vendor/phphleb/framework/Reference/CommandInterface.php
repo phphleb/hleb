@@ -12,13 +12,4 @@ interface CommandInterface
      * Выполнение инициированного объекта команды с аргументами.
      */
     public function execute(Task $task, array $arguments): mixed;
-
-    /**
-     * Used if you need to rollback data
-     * for an asynchronous request.
-     *
-     * Используется, если необходимо откатить
-     * данные для асинхронного запроса.
-     */
-    public static function rollback(): void;
 }

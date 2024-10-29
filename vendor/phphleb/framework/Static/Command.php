@@ -5,16 +5,15 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Base\Task;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\CommandInterface;
 
 #[Accessible]
-final class Command extends BaseAsyncSingleton implements RollbackInterface
+final class Command extends BaseSingleton
 {
     private static CommandInterface|null $replace = null;
 
@@ -30,21 +29,6 @@ final class Command extends BaseAsyncSingleton implements RollbackInterface
         }
 
         return BaseContainer::instance()->get(CommandInterface::class)->execute($task, $arguments);
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(CommandInterface::class)::rollback();
-        }
     }
 
     /**

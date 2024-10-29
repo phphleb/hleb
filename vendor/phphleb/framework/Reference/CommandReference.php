@@ -4,7 +4,6 @@
 
 namespace Hleb\Reference;
 
-use Hleb\Base\RollbackInterface;
 use Hleb\Base\Task;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
@@ -15,7 +14,7 @@ use Hleb\Constructor\Attributes\AvailableAsParent;
  * Кеширование данных различного типа во фреймворке.
  */
 #[Accessible] #[AvailableAsParent]
-class CommandReference implements CommandInterface, Interface\Command, RollbackInterface
+class CommandReference implements CommandInterface, Interface\Command
 {
     /**
      * @inheritDoc
@@ -26,12 +25,5 @@ class CommandReference implements CommandInterface, Interface\Command, RollbackI
         $task->call($arguments);
 
         return $task->getExecResult();
-    }
-
-    /** @inheritDoc */
-    #[\Override]
-    public static function rollback(): void
-    {
-        // Not involved.
     }
 }
