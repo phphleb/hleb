@@ -5,15 +5,14 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\RedirectInterface;
 
 #[Accessible]
-final class Redirect extends BaseAsyncSingleton implements RollbackInterface
+final class Redirect extends BaseSingleton
 {
     private static RedirectInterface|null $replace = null;
 
@@ -34,21 +33,6 @@ final class Redirect extends BaseAsyncSingleton implements RollbackInterface
             self::$replace->to($location, $status);
         } else {
             BaseContainer::instance()->get(RedirectInterface::class)->to($location, $status);
-        }
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(RedirectInterface::class)::rollback();
         }
     }
 
