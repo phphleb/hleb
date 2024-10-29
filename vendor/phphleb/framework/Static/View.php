@@ -4,7 +4,6 @@
 
 namespace Hleb\Static;
 
-use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
 use Hleb\Reference\ViewInterface;
