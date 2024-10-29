@@ -5,17 +5,16 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
 use Hleb\HttpMethods\External\RequestUri;
 use Hleb\HttpMethods\Specifier\DataType;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\RequestInterface;
 
 #[Accessible]
-final class Request extends BaseAsyncSingleton implements RollbackInterface
+final class Request extends BaseSingleton
 {
     private static RequestInterface|null $replace = null;
 
@@ -567,21 +566,6 @@ final class Request extends BaseAsyncSingleton implements RollbackInterface
         }
 
         return BaseContainer::instance()->get(RequestInterface::class)->getStreamBody();
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    final public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(RequestInterface::class)::rollback();
-        }
     }
 
     /**

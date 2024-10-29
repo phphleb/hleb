@@ -353,13 +353,4 @@ interface RequestInterface
      * @see \Psr\Http\Message\StreamInterface;
      */
     public function getStreamBody(): ?object;
-
-    /**
-     * Used if you need to rollback data
-     * for an asynchronous request.
-     *
-     * Используется, если необходимо откатить
-     * данные для асинхронного запроса.
-     */
-    public static function rollback(): void;
 }
