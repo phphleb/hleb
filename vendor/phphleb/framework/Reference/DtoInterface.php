@@ -38,13 +38,4 @@ interface DtoInterface
      * Возвращает все присвоенные данные в массиве.
      */
     public function list(): array;
-
-    /**
-     * Used if you need to rollback data
-     * for an asynchronous request.
-     *
-     * Используется, если необходимо откатить
-     * данные для асинхронного запроса.
-     */
-    public static function rollback(): void;
 }

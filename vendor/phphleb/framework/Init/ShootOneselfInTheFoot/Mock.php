@@ -27,7 +27,6 @@ final class Mock extends BaseMockAddOn
                      CsrfForTest::class,
                      DbForTest::class,
                      DebugForTest::class,
-                     DtoForTest::class,
                      LogForTest::class,
                      PatchForTest::class,
                      RedirectForTest::class,
