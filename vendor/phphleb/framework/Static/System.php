@@ -5,12 +5,11 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
 use Hleb\Database\PdoManager;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\SystemInterface;
 
 /**
@@ -19,7 +18,7 @@ use Hleb\Reference\SystemInterface;
  * Различные системные вызовы для использования собственными библиотеками фреймворка.
  */
 #[Accessible]
-class System extends BaseAsyncSingleton implements RollbackInterface
+class System extends BaseSingleton
 {
     private static SystemInterface|null $replace = null;
 
@@ -545,22 +544,6 @@ class System extends BaseAsyncSingleton implements RollbackInterface
             return self::$replace->getTaskPermissions($taskClass);
         }
         return BaseContainer::instance()->get(SystemInterface::class)->getTaskPermissions($taskClass);
-    }
-
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(SystemInterface::class)::rollback();
-        }
     }
 
     /**

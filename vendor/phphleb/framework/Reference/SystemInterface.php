@@ -315,13 +315,4 @@ interface SystemInterface
      * @return array
      */
     public static function getTaskPermissions(string $taskClass): array;
-
-    /**
-     * Used if you need to rollback data
-     * for an asynchronous request.
-     *
-     * Используется, если необходимо откатить
-     * данные для асинхронного запроса.
-     */
-    public static function rollback(): void;
 }
