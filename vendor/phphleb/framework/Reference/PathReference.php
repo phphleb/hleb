@@ -4,6 +4,7 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\FileResourceModificationException;
@@ -12,7 +13,7 @@ use Hleb\Static\Settings;
 use RuntimeException;
 
 #[Accessible] #[AvailableAsParent]
-class PathReference extends ContainerUniqueItem implements PathInterface, Interface\Path
+class PathReference extends ContainerUniqueItem implements PathInterface, Interface\Path, RollbackInterface
 {
     /** @inheritDoc */
     #[\Override]

@@ -7,6 +7,7 @@ namespace Hleb\Reference;
 use CallbackFilterIterator;
 use FilesystemIterator;
 use GlobIterator;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Constructor\Cache\ClassWithDataCreator;
@@ -28,7 +29,7 @@ use SplFileInfo;
  * Кеширование данных различного типа во фреймворке.
  */
 #[Accessible] #[AvailableAsParent]
-class CacheReference extends ContainerUniqueItem implements CacheInterface, Interface\Cache
+class CacheReference extends ContainerUniqueItem implements CacheInterface, Interface\Cache, RollbackInterface
 {
     public const BLOCKED_PROCESS_TAG = 'IN_PROGRESS';
 

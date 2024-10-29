@@ -4,6 +4,7 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Constructor\Data\SystemSettings;
@@ -11,7 +12,7 @@ use Hleb\Main\Insert\ContainerUniqueItem;
 use Hleb\Static\Cookies;
 
 #[Accessible] #[AvailableAsParent]
-class SessionReference extends ContainerUniqueItem implements SessionInterface, Interface\Session
+class SessionReference extends ContainerUniqueItem implements SessionInterface, Interface\Session, RollbackInterface
 {
 
     /** @inheritDoc */

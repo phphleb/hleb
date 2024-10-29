@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hleb\Reference;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Phphleb\PsrAdapter\Psr11\Container;
@@ -13,7 +14,7 @@ use Phphleb\PsrAdapter\Psr16\Cache;
 use Phphleb\PsrAdapter\Psr3\Logger;
 
 #[Accessible] #[AvailableAsParent]
-class ConverterReference implements ConverterInterface, Interface\Converter
+class ConverterReference implements ConverterInterface, Interface\Converter, RollbackInterface
 {
 
     /** @inheritDoc */

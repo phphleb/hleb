@@ -4,6 +4,7 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Constructor\Data\SystemSettings;
@@ -24,7 +25,7 @@ use Hleb\Main\Insert\ContainerUniqueItem;
  * работы с Cookies.
  */
 #[Accessible] #[AvailableAsParent]
-class CookieReference extends ContainerUniqueItem implements CookieInterface, Interface\Cookie
+class CookieReference extends ContainerUniqueItem implements CookieInterface, Interface\Cookie, RollbackInterface
 {
     /**
      * Contains the name of the required class depending on the type of use of the framework.

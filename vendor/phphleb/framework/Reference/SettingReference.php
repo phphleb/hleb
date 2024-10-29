@@ -4,6 +4,7 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Constructor\Data\DynamicParams;
@@ -24,7 +25,7 @@ use Hleb\Static\Session;
  * @see DynamicParams
  */
 #[Accessible] #[AvailableAsParent]
-class SettingReference extends ContainerUniqueItem implements SettingInterface, Interface\Setting
+class SettingReference extends ContainerUniqueItem implements SettingInterface, Interface\Setting, RollbackInterface
 {
     /** @inheritDoc */
     #[\Override]

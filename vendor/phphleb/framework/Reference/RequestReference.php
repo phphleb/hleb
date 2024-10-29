@@ -7,6 +7,7 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Constructor\Data\DynamicParams;
@@ -15,7 +16,7 @@ use Hleb\HttpMethods\Specifier\DataType;
 use Hleb\Main\Insert\ContainerUniqueItem;
 
 #[Accessible] #[AvailableAsParent]
-class RequestReference extends ContainerUniqueItem implements RequestInterface, Interface\Request
+class RequestReference extends ContainerUniqueItem implements RequestInterface, Interface\Request, RollbackInterface
 {
     private static array $cachedParams = [];
 

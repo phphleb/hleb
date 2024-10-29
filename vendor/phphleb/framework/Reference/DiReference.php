@@ -4,6 +4,7 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Constructor\DI\DependencyInjection;
@@ -12,7 +13,7 @@ use Hleb\Helpers\ReflectionMethod;
 use Hleb\Main\Insert\ContainerUniqueItem;
 
 #[Accessible] #[AvailableAsParent]
-class DiReference extends ContainerUniqueItem implements DiInterface, Interface\DI
+class DiReference extends ContainerUniqueItem implements DiInterface, Interface\DI, RollbackInterface
 {
     private const MAX_CACHED_EVENTS = 1000;
 

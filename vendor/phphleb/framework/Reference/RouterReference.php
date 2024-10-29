@@ -4,6 +4,7 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Constructor\Data\DynamicParams;
@@ -15,7 +16,7 @@ use Hleb\InvalidArgumentException;
 use Hleb\Main\Insert\ContainerUniqueItem;
 
 #[Accessible] #[AvailableAsParent]
-class RouterReference extends ContainerUniqueItem implements RouterInterface, Interface\Router
+class RouterReference extends ContainerUniqueItem implements RouterInterface, Interface\Router, RollbackInterface
 {
     /** @inheritDoc */
     #[\Override]

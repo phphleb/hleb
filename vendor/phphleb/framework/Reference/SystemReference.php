@@ -2,6 +2,7 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Base\Task;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
@@ -32,7 +33,7 @@ use Hleb\Static\Settings;
  * Различные системные вызовы для использования собственными библиотеками фреймворка.
  */
 #[Accessible] #[AvailableAsParent]
-class SystemReference extends ContainerUniqueItem implements SystemInterface, Interface\System
+class SystemReference extends ContainerUniqueItem implements SystemInterface, Interface\System, RollbackInterface
 {
     /** @inheritDoc */
     #[\Override]

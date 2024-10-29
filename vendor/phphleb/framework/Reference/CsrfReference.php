@@ -4,12 +4,13 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Main\Insert\ContainerUniqueItem;
 
 #[Accessible] #[AvailableAsParent]
-class CsrfReference extends ContainerUniqueItem implements CsrfInterface, Interface\Csrf
+class CsrfReference extends ContainerUniqueItem implements CsrfInterface, Interface\Csrf, RollbackInterface
 {
     /**
      * @inheritDoc

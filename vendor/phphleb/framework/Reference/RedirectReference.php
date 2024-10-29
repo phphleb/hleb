@@ -4,6 +4,7 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Main\Insert\ContainerUniqueItem;
@@ -11,7 +12,7 @@ use Hleb\Static\Response;
 use Hleb\Static\Script;
 
 #[Accessible] #[AvailableAsParent]
-class RedirectReference extends ContainerUniqueItem implements RedirectInterface, Interface\Redirect
+class RedirectReference extends ContainerUniqueItem implements RedirectInterface, Interface\Redirect, RollbackInterface
 {
     /**
      * @inheritDoc

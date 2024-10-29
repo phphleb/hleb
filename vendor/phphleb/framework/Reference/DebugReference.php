@@ -4,6 +4,7 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Constructor\Data\DebugAnalytics;
@@ -12,7 +13,7 @@ use Hleb\Main\Insert\ContainerUniqueItem;
 use Hleb\Static\Path;
 
 #[Accessible] #[AvailableAsParent]
-class DebugReference extends ContainerUniqueItem implements DebugInterface, Interface\Debug
+class DebugReference extends ContainerUniqueItem implements DebugInterface, Interface\Debug, RollbackInterface
 {
     /** @inheritDoc */
     #[\Override]

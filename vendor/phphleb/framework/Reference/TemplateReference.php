@@ -5,6 +5,7 @@
 namespace Hleb\Reference;
 
 use App\Bootstrap\BaseContainer;
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Constructor\Data\DebugAnalytics;
@@ -19,7 +20,7 @@ use Hleb\Static\Settings;
 use App\Bootstrap\ContainerInterface;
 
 #[Accessible] #[AvailableAsParent]
-class TemplateReference extends ContainerUniqueItem implements TemplateInterface, Interface\Template
+class TemplateReference extends ContainerUniqueItem implements TemplateInterface, Interface\Template, RollbackInterface
 {
     /** @inheritDoc */
     #[\Override]

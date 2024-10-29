@@ -7,13 +7,14 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\HttpMethods\External\Response as SystemResponse;
 use Hleb\Main\Insert\ContainerUniqueItem;
 
 #[Accessible] #[AvailableAsParent]
-class ResponseReference extends ContainerUniqueItem implements ResponseInterface, Interface\Response
+class ResponseReference extends ContainerUniqueItem implements ResponseInterface, Interface\Response, RollbackInterface
 {
     /**
      * Need to maintain compatibility with @see self::rollback()

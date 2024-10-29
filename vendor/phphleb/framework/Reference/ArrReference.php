@@ -4,13 +4,14 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Helpers\ArrayHelper;
 use Hleb\Main\Insert\ContainerUniqueItem;
 
 #[Accessible] #[AvailableAsParent]
-class ArrReference extends ContainerUniqueItem implements ArrInterface, Interface\Arr
+class ArrReference extends ContainerUniqueItem implements ArrInterface, Interface\Arr, RollbackInterface
 {
     /** @inheritDoc */
     #[\Override]

@@ -2,13 +2,14 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Main\Insert\ContainerUniqueItem;
 use Hleb\Main\Logger\Log as Logger;
 
 #[Accessible] #[AvailableAsParent]
-class LogReference extends ContainerUniqueItem implements LogInterface, Interface\Log
+class LogReference extends ContainerUniqueItem implements LogInterface, Interface\Log, RollbackInterface
 {
     /** @inheritDoc */
     #[\Override]

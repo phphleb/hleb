@@ -4,12 +4,13 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Main\Insert\ContainerUniqueItem;
 
 #[Accessible] #[AvailableAsParent]
-class DtoReference extends ContainerUniqueItem implements DtoInterface, Interface\Dto
+class DtoReference extends ContainerUniqueItem implements DtoInterface, Interface\Dto, RollbackInterface
 {
     private static array $data = [];
 
