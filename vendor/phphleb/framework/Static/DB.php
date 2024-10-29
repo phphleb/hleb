@@ -9,7 +9,7 @@ use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
 use Hleb\Database\PdoManager;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\DbInterface;
 use PDO;
 
@@ -19,7 +19,7 @@ use PDO;
  * Оболочка для работы с PDO.
  */
 #[Accessible]
-final class DB extends BaseAsyncSingleton
+final class DB extends BaseSingleton
 {
     private static DbInterface|null $replace = null;
 
@@ -225,21 +225,6 @@ final class DB extends BaseAsyncSingleton
         }
 
         return BaseContainer::instance()->get(DbInterface::class)->quote($value, $type, $config);
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(DbInterface::class)::rollback();
-        }
     }
 
     /**
