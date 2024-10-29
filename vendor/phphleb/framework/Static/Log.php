@@ -5,11 +5,10 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\LogInterface;
 use Hleb\Main\Logger\Log as Logger;
 
@@ -19,7 +18,7 @@ use Hleb\Main\Logger\Log as Logger;
  * Логирование данных различного уровня во фреймворке.
  */
 #[Accessible]
-final class Log extends BaseAsyncSingleton implements RollbackInterface
+final class Log extends BaseSingleton
 {
     private static LogInterface|null $replace = null;
 
@@ -128,21 +127,6 @@ final class Log extends BaseAsyncSingleton implements RollbackInterface
             self::$replace->log($level, $message, $context);
         } else {
             BaseContainer::instance()->get(LogInterface::class)->log($level, $message, self::b7e($context));
-        }
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(LogInterface::class)::rollback();
         }
     }
 

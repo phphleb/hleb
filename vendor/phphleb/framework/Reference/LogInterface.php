@@ -83,14 +83,4 @@ interface LogInterface
      * Логи с произвольным уровнем.
      */
     public function log($level, string $message, array $context = []);
-
-    /**
-     * Used if you need to rollback data
-     * for an asynchronous request.
-     *
-     * Используется, если необходимо откатить
-     * данные для асинхронного запроса.
-     */
-    public static function rollback(): void;
-
 }
