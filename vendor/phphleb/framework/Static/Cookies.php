@@ -5,13 +5,12 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
 use Hleb\Init\ShootOneselfInTheFoot\CookiesForTest;
-use Hleb\Main\Insert\BaseAsyncSingleton;
 use Hleb\HttpMethods\Specifier\DataType;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\CookieInterface;
 
 /**
@@ -26,7 +25,7 @@ use Hleb\Reference\CookieInterface;
  * Для улучшения производительности обработка Cookies разделена на асинхронный и обычный типы.
  */
 #[Accessible]
-final class Cookies extends BaseAsyncSingleton implements RollbackInterface
+final class Cookies extends BaseSingleton
 {
     final public const OPTION_KEYS = ['expires', 'path', 'domain', 'secure', 'httponly', 'samesite'];
 
@@ -168,21 +167,6 @@ final class Cookies extends BaseAsyncSingleton implements RollbackInterface
             self::$replace->clear();
         } else {
             BaseContainer::instance()->get(CookieInterface::class)->clear();
-        }
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(CookieInterface::class)::rollback();
         }
     }
 
