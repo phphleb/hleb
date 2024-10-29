@@ -5,12 +5,11 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
 use Hleb\Init\ShootOneselfInTheFoot\ArrForTest;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\ArrInterface;
 
 /**
@@ -30,7 +29,7 @@ use Hleb\Reference\ArrInterface;
  * при изменении реализации в контейнере.
  */
 #[Accessible]
-final class Arr extends BaseAsyncSingleton implements RollbackInterface
+final class Arr extends BaseSingleton
 {
     private static ArrInterface|null $replace = null;
 
@@ -315,21 +314,6 @@ final class Arr extends BaseAsyncSingleton implements RollbackInterface
         }
 
         return BaseContainer::instance()->get(ArrInterface::class)->expand($array);
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(ArrInterface::class)::rollback();
-        }
     }
 
     /**
