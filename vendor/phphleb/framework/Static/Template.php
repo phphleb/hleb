@@ -5,15 +5,14 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\TemplateInterface;
 
 #[Accessible]
-final class Template extends BaseAsyncSingleton implements RollbackInterface
+final class Template extends BaseSingleton
 {
     private static TemplateInterface|null $replace = null;
 
@@ -107,21 +106,6 @@ final class Template extends BaseAsyncSingleton implements RollbackInterface
             self::$replace->insertCache($viewPath, $extractParams, $sec, $config);
         } else {
             BaseContainer::instance()->get(TemplateInterface::class)->insertCache($viewPath, $extractParams, $sec, $config);
-        }
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(TemplateInterface::class)::rollback();
         }
     }
 

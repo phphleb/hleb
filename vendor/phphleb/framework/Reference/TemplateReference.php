@@ -5,7 +5,6 @@
 namespace Hleb\Reference;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Constructor\Data\DebugAnalytics;
@@ -14,13 +13,12 @@ use Hleb\Constructor\Data\SystemSettings;
 use Hleb\Constructor\Templates\Template;
 use Hleb\CoreProcessException;
 use Hleb\Main\Insert\ContainerUniqueItem;
-use Hleb\Reference\Interface\Setting;
 use Hleb\Static\Cache;
 use Hleb\Static\Settings;
 use App\Bootstrap\ContainerInterface;
 
 #[Accessible] #[AvailableAsParent]
-class TemplateReference extends ContainerUniqueItem implements TemplateInterface, Interface\Template, RollbackInterface
+class TemplateReference extends ContainerUniqueItem implements TemplateInterface, Interface\Template
 {
     /** @inheritDoc */
     #[\Override]
@@ -118,12 +116,5 @@ class TemplateReference extends ContainerUniqueItem implements TemplateInterface
         }
 
         echo $data;
-    }
-
-    /** @inheritDoc */
-    #[\Override]
-    public static function rollback(): void
-    {
-        // This action is not necessary.
     }
 }

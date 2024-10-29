@@ -50,13 +50,4 @@ interface TemplateInterface
      *                     - подробнее об аргументах метода.
      */
     public function insertCache(string $viewPath, array $extractParams = [], int $sec = Cache::DEFAULT_TIME, array $config = []): void;
-
-    /**
-     * Used if you need to rollback data
-     * for an asynchronous request.
-     *
-     * Используется, если необходимо откатить
-     * данные для асинхронного запроса.
-     */
-    public static function rollback(): void;
 }
