@@ -187,13 +187,4 @@ interface SettingInterface
      * то данные объекта могут быть не настолько полными, как у текущего.
      */
     public function getInitialRequest(): object;
-
-    /**
-     * Used if you need to rollback data
-     * for an asynchronous request.
-     *
-     * Используется, если необходимо откатить
-     * данные для асинхронного запроса.
-     */
-    public static function rollback(): void;
 }

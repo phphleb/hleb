@@ -5,15 +5,14 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\SettingInterface;
 
 #[Accessible]
-final class Settings extends BaseAsyncSingleton implements RollbackInterface
+final class Settings extends BaseSingleton
 {
     private static SettingInterface|null $replace = null;
 
@@ -319,21 +318,6 @@ final class Settings extends BaseAsyncSingleton implements RollbackInterface
         }
 
         return BaseContainer::instance()->get(SettingInterface::class)->getInitialRequest();
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(SettingInterface::class)::rollback();
-        }
     }
 
     /**
