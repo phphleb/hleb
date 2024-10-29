@@ -77,13 +77,4 @@ interface RouterInterface
      * Возвращает данные, указанные в маршруте контроллера (middleware).
      */
     public function data(): array;
-
-    /**
-     * Used if you need to rollback data
-     * for an asynchronous request.
-     *
-     * Используется, если необходимо откатить
-     * данные для асинхронного запроса.
-     */
-    public static function rollback(): void;
 }

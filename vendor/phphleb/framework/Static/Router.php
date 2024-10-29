@@ -5,15 +5,14 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\RouterInterface;
 
 #[Accessible]
-final class Router extends BaseAsyncSingleton implements RollbackInterface
+final class Router extends BaseSingleton
 {
     private static RouterInterface|null $replace = null;
 
@@ -110,21 +109,6 @@ final class Router extends BaseAsyncSingleton implements RollbackInterface
         }
 
         return BaseContainer::instance()->get(RouterInterface::class)->data();
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(RouterInterface::class)::rollback();
-        }
     }
 
     /**
