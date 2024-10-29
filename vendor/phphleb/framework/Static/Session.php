@@ -5,11 +5,10 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\SessionInterface;
 
 /**
@@ -18,7 +17,7 @@ use Hleb\Reference\SessionInterface;
  * Простая обёртка для сессий.
  */
 #[Accessible]
-class Session extends BaseAsyncSingleton implements RollbackInterface
+class Session extends BaseSingleton
 {
     private static SessionInterface|null $replace = null;
 
@@ -103,21 +102,6 @@ class Session extends BaseAsyncSingleton implements RollbackInterface
             self::$replace->clear();
         } else {
             BaseContainer::instance()->get(SessionInterface::class)->clear();
-        }
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(SessionInterface::class)::rollback();
         }
     }
 
