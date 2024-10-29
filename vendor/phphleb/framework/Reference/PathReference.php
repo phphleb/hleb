@@ -4,7 +4,6 @@
 
 namespace Hleb\Reference;
 
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\FileResourceModificationException;
@@ -13,7 +12,7 @@ use Hleb\Static\Settings;
 use RuntimeException;
 
 #[Accessible] #[AvailableAsParent]
-class PathReference extends ContainerUniqueItem implements PathInterface, Interface\Path, RollbackInterface
+class PathReference extends ContainerUniqueItem implements PathInterface, Interface\Path
 {
     /** @inheritDoc */
     #[\Override]
@@ -118,12 +117,5 @@ class PathReference extends ContainerUniqueItem implements PathInterface, Interf
     public function get(string $keyOrPath): false|string
     {
         return Settings::getPath($keyOrPath);
-    }
-
-    /** @inheritDoc */
-    #[\Override]
-    public static function rollback(): void
-    {
-        // This action is not necessary.
     }
 }

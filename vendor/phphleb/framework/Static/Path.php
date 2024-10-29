@@ -5,15 +5,14 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\PathInterface;
 
 #[Accessible]
-final class Path extends BaseAsyncSingleton implements RollbackInterface
+final class Path extends BaseSingleton
 {
     private static PathInterface|null $replace = null;
 
@@ -177,21 +176,6 @@ final class Path extends BaseAsyncSingleton implements RollbackInterface
         }
 
         return BaseContainer::instance()->get(PathInterface::class)->get($keyOrPath);
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(PathInterface::class)::rollback();
-        }
     }
 
     /**
