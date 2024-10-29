@@ -35,13 +35,4 @@ interface CsrfInterface
      * Возвращает найденный токен в данных запроса или null.
      */
     public function discover(): string|null;
-
-    /**
-     * Used if you need to rollback data
-     * for an asynchronous request.
-     *
-     * Используется, если необходимо откатить
-     * данные для асинхронного запроса.
-     */
-    public static function rollback(): void;
 }
