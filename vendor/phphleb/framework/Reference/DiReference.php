@@ -4,7 +4,6 @@
 
 namespace Hleb\Reference;
 
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\Constructor\DI\DependencyInjection;
@@ -13,7 +12,7 @@ use Hleb\Helpers\ReflectionMethod;
 use Hleb\Main\Insert\ContainerUniqueItem;
 
 #[Accessible] #[AvailableAsParent]
-class DiReference extends ContainerUniqueItem implements DiInterface, Interface\DI, RollbackInterface
+class DiReference extends ContainerUniqueItem implements DiInterface, Interface\DI
 {
     private const MAX_CACHED_EVENTS = 1000;
 
@@ -56,14 +55,5 @@ class DiReference extends ContainerUniqueItem implements DiInterface, Interface\
         }
 
         return self::$cachedEvents[$tag] = new ReflectionMethod($class, $method);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        // Not necessary
     }
 }
