@@ -5,12 +5,11 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
 use Hleb\Init\ShootOneselfInTheFoot\CacheForTest;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\CacheInterface;
 
 /**
@@ -19,7 +18,7 @@ use Hleb\Reference\CacheInterface;
  * Кеширование данных различного типа во фреймворке.
  */
 #[Accessible]
-final class Cache extends BaseAsyncSingleton implements RollbackInterface
+final class Cache extends BaseSingleton
 {
     final public const DEFAULT_TIME = 60;
 
@@ -413,21 +412,6 @@ final class Cache extends BaseAsyncSingleton implements RollbackInterface
             self::$replace->clearExpired();
         } else {
             BaseContainer::instance()->get(CacheInterface::class)->clearExpired();
-        }
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(CacheInterface::class)::rollback();
         }
     }
 
