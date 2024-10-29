@@ -68,10 +68,4 @@ class NullLogger  implements LoggerInterface, \Hleb\Reference\Interface\Log
     public function log(mixed $level, \Stringable|string $message, array $context = []): void
     {
     }
-
-    /** @inheritDoc */
-    #[\Override]
-    public static function rollback(): void
-    {
-    }
 }

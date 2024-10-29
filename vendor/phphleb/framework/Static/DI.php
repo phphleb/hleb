@@ -7,10 +7,10 @@ namespace Hleb\Static;
 use App\Bootstrap\BaseContainer;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\DiInterface;
 
-class DI extends BaseAsyncSingleton
+class DI extends BaseSingleton
 {
     private static DiInterface|null $replace = null;
 

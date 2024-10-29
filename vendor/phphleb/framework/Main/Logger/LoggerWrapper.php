@@ -79,13 +79,6 @@ class LoggerWrapper  implements LoggerInterface, \Hleb\Reference\Interface\Log
         \Hleb\Static\Log::log($level, $message, self::b7e($context));
     }
 
-    /** @inheritDoc */
-    #[\Override]
-    public static function rollback(): void
-    {
-        \Hleb\Static\Log::rollback();
-    }
-
     /**
      * The nesting level of the called log in the code to determine the file and call line.
      *
