@@ -30,13 +30,4 @@ interface ConverterInterface
      * Возвращает обертку над объектом для кеширования во фреймворке на основе PSR-16 интерфейса.
      */
     public function toPsr16SimpleCache(): \Psr\SimpleCache\CacheInterface;
-
-    /**
-     * Used if you need to rollback data
-     * for an asynchronous request.
-     *
-     * Используется, если необходимо откатить
-     * данные для асинхронного запроса.
-     */
-    public static function rollback(): void;
 }

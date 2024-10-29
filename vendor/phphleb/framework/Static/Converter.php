@@ -3,10 +3,9 @@
 namespace Hleb\Static;
 
 use App\Bootstrap\BaseContainer;
-use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\ForTestOnly;
 use Hleb\CoreProcessException;
-use Hleb\Main\Insert\BaseAsyncSingleton;
+use Hleb\Main\Insert\BaseSingleton;
 use Hleb\Reference\ConverterInterface;
 use Phphleb\PsrAdapter\Psr11\IntermediateContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -18,7 +17,7 @@ use Psr\SimpleCache\CacheInterface;
  *
  * Преобразование внутренних сущностей фреймворка в PSR-объекты.
  */
-class Converter extends BaseAsyncSingleton implements RollbackInterface
+class Converter extends BaseSingleton
 {
     private static ConverterInterface|null $replace = null;
 
@@ -64,21 +63,6 @@ class Converter extends BaseAsyncSingleton implements RollbackInterface
         }
 
         return BaseContainer::instance()->get(ConverterInterface::class)->toPsr16SimpleCache();
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @internal
-     */
-    #[\Override]
-    public static function rollback(): void
-    {
-        if (self::$replace) {
-            self::$replace::rollback();
-        } else {
-            BaseContainer::instance()->get(ConverterInterface::class)::rollback();
-        }
     }
 
     /**
