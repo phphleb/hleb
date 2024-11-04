@@ -749,7 +749,7 @@ class HlebBootstrap
 
         $this->config = $this->getConfig();
         if ($this->config['common']['debug'] ?? null) {
-            \umask(0000);
+            \defined('HL_STRICT_UMASK') or @\umask(0000);
         }
         \error_reporting($this->config['common']['error.reporting'] ?? null);
 
