@@ -192,6 +192,8 @@ final class ProjectLoader
         }
         $session = DynamicParams::getAlternateSession();
         if (\is_array($session)) {
+            $this->updateSession($session);
+            DynamicParams::setAlternateSession($session);
             $_SESSION = $session;
             return;
         }
@@ -219,6 +221,33 @@ final class ProjectLoader
             }
             if (\session_status() !== PHP_SESSION_ACTIVE) {
                 throw new CoreProcessException('SESSION not initialized!');
+            }
+        }
+        empty($_SESSION) or $this->updateSession($_SESSION);
+    }
+
+    /**
+     * Performs mandatory manipulations on sessions.
+     *
+     * Производит обязательные манипуляции над сессиями.
+     */
+    private function updateSession(array &$session): void
+    {
+        $id = '_hl_flash_';
+        if (isset($session[$id])) {
+            foreach ($session[$id] as $key => &$data) {
+                $data['reps_left'] --;
+                if ($data['reps_left'] < 0) {
+                    unset($session[$id][$key]);
+                    continue;
+                }
+                if (isset($data['new'])) {
+                    $data['old'] = $data['new'];
+                    $data['new'] = null;
+                }
+                if (\is_null($data['old'])) {
+                    unset($session[$id][$key]);
+                }
             }
         }
     }
