@@ -124,7 +124,7 @@ class Session extends BaseSingleton
      * If the session does not exist or the value is null, it will return false.
      *
      * Проверяет сессию с конкретным названием.
-     * Если сессия на существует или значение равно null, то вернет false.
+     * Если сессия не существует или значение равно null, то вернет false.
      */
     public static function exists(string|int $name): bool
     {

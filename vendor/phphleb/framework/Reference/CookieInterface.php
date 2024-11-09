@@ -86,4 +86,20 @@ interface CookieInterface
      * Удаление всех ранее установленных Cookies.
      */
     public function clear(): void;
+
+    /**
+     * Checks the existence of a cookie with a specific name.
+     *
+     * Проверяет наличие cookie с конкретным названием.
+     */
+    public function has(string $name): bool;
+
+    /**
+     * Checks a cookie with a specific name.
+     * If the cookie does not exist or the value is an empty string, it will return false.
+     *
+     * Проверяет cookie с конкретным названием.
+     * Если cookie не существует или значение пустая строка, то вернет false.
+     */
+    public function exists(string $name): bool;
 }

@@ -120,4 +120,20 @@ class CookieReference extends ContainerUniqueItem implements CookieInterface, In
     {
         self::$performer::rollback();
     }
+
+    /** @inheritDoc */
+    #[\Override]
+    public function has(string $name): bool
+    {
+        return self::$performer::get($name)->value() !== null;
+    }
+
+    /** @inheritDoc */
+    #[\Override]
+    public function exists(string $name): bool
+    {
+        $value = self::$performer::get($name)->value();
+
+        return $value !== '' && $value !== null;
+    }
 }
