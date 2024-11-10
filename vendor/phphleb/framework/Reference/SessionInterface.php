@@ -56,10 +56,10 @@ interface SessionInterface
 
     /**
      * Checks a session with a specific name.
-     * If the session does not exist or the value is null, it will return false.
+     * If the session does not exist or the value is null or the empty string, it will return false.
      *
      * Проверяет сессию с конкретным названием.
-     * Если сессия не существует или значение равно null, то вернет false.
+     * Если сессия не существует или значение равно null или пустой строке, то вернет false.
      */
     public function exists(string|int $name): bool;
 

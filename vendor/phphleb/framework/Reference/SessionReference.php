@@ -113,7 +113,7 @@ class SessionReference extends ContainerUniqueItem implements SessionInterface, 
     #[\Override]
     public function exists(int|string $name): bool
     {
-        return isset($_SESSION[$name]);
+        return isset($_SESSION[$name]) && $_SESSION[$name] !== '';
     }
 
     /** @inheritDoc */
