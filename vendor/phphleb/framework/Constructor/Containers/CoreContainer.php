@@ -211,8 +211,13 @@ abstract class CoreContainer extends ExternalSingleton implements CoreContainerI
         if (isset($list[$id])) {
             $id = $list[$id];
         }
-        if (!\in_array($id, $list)) {
-            return false;
+        if (\in_array($id, $list)) {
+            return true;
+        }
+
+        $customKeys = BaseContainerFactory::getCustomKeys();
+        if (!\is_null($customKeys)) {
+            return \in_array($id, $customKeys);
         }
         try {
             return static::get($id) !== null;

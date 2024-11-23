@@ -51,7 +51,7 @@ final class ContainerFactory extends BaseContainerFactory
      *
      * foreach(self::$singletons as $key => $value) {
      *    if ($key === RequestIdInterface::class) continue;
-     *    unset(self::$singletons[$key]);
+     *    unset(self::$singletons[$key], self::$customServiceKeys[$key]);
      * }
      * ```
      * @see RollbackInterface - the recommended way to reload class state during an asynchronous request.
@@ -63,6 +63,7 @@ final class ContainerFactory extends BaseContainerFactory
     public static function rollback(): void
     {
         self::$singletons = [];
+        self::$customServiceKeys = null;
 
         // The connection to the database is reset with each asynchronous request.
         // Сбрасывается подключение к БД при каждом асинхронном запросе.
