@@ -14,7 +14,7 @@ class task_class_template extends Task
     /**
      * task_description_template
      */
-    protected function run(string $arg = null)
+    protected function run(?string $arg = null)
     {
         // Your code here.
     }

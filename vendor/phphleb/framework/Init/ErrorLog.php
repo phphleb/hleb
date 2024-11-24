@@ -129,7 +129,7 @@ final class ErrorLog
                     break;
                 case E_USER_NOTICE:
                 case E_NOTICE:
-                case E_STRICT:
+                // case E_STRICT: // deprecated in PHP 8.4
                 case E_DEPRECATED:
                 case E_USER_DEPRECATED:
                     $log->notice($errstr, $params);
@@ -277,7 +277,13 @@ final class ErrorLog
     {
         $dir = \defined('HLEB_GLOBAL_DIR') ? HLEB_GLOBAL_DIR : \dirname(__DIR__, 4);
         $c = (static function () use ($dir): array {
-            return include $dir . '/config/common.php';
+            try {
+                if (\file_exists($directory = $dir . '/config/common.php')) {
+                    return include $directory;
+                }
+            } catch (\Throwable) {
+            }
+            return [];
         })();
         !\is_bool($c['debug'] ?? null) and $c['debug'] = false;
         isset($c['log.enabled']) or $c['log.enabled'] = true;
