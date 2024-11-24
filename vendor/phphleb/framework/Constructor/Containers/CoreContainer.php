@@ -5,7 +5,8 @@
 namespace Hleb\Constructor\Containers;
 
 use Hleb\Main\Insert\ExternalSingleton;
-use Hleb\Reference\{ArrInterface,
+use Hleb\Reference\{
+    ArrInterface,
     ArrReference,
     CacheInterface,
     CacheReference,
@@ -44,7 +45,8 @@ use Hleb\Reference\{ArrInterface,
     SystemInterface,
     SystemReference,
     TemplateInterface,
-    TemplateReference};
+    TemplateReference
+};
 use Throwable;
 
 /**
@@ -55,6 +57,14 @@ use Throwable;
 abstract class CoreContainer extends ExternalSingleton implements CoreContainerInterface
 {
     private static array $containers = [];
+
+
+    /**
+     * Registered keys for custom services.
+     *
+     * Зарегистрированные ключи кастомных сервисов.
+     */
+    protected static ?array $customServiceKeys = null;
 
     /**
      * @inheritDoc
@@ -208,22 +218,52 @@ abstract class CoreContainer extends ExternalSingleton implements CoreContainerI
     {
         $list = BaseContainerFactory::SERVICE_MAP;
 
-        if (isset($list[$id])) {
-            $id = $list[$id];
-        }
+        $id = $list[$id] ?? $id;
+
         if (\in_array($id, $list)) {
             return true;
         }
 
-        $customKeys = BaseContainerFactory::getCustomKeys();
-        if (!\is_null($customKeys)) {
-            return \in_array($id, $customKeys);
+        $singletonKeys = BaseContainerFactory::getCustomKeys();
+        if (!\is_null($singletonKeys) && \in_array($id, $singletonKeys)) {
+            return true;
+        }
+        if (!\is_null(self::$customServiceKeys) && \in_array($id, self::$customServiceKeys)) {
+            return true;
         }
         try {
             return static::get($id) !== null;
         } catch (Throwable) {
         }
         return true;
+    }
+
+
+    /**
+     * To simplify the search for services through Container::has(),
+     * all custom services must be registered.
+     * For singleton services, there is a similar method in ContainerFactory.
+     * If none are registered, by default the framework tries to determine
+     *  the existence of the service along with its creation. To avoid this,
+     * add ALL custom services using this method.
+     * For example:
+     *
+     * Для упрощения поиска сервисов через Container::has(),
+     * все кастомные сервисы должны быть зарегистрированы.
+     * Для сервисов типа singleton существует аналогичный метод в ContainerFactory.
+     * Если не зарегистрирован ни один, по умолчанию фреймворк пытается определить
+     * наличие сервиса вместе с его созданием. Чтобы этого избежать,
+     * добавьте ВСЕ кастомные сервисы при помощи этого метода.
+     * Например:
+     *
+     * ```php
+     *   self::register(CustomService::class);
+     * ```
+     *
+     */
+    final protected static function register(string $id): void
+    {
+            self::$customServiceKeys[$id] ?? self::$customServiceKeys[] = $id;
     }
 
     private function getOriginSingleton(string $id): mixed
@@ -277,5 +317,6 @@ abstract class CoreContainer extends ExternalSingleton implements CoreContainerI
     public static function rollback(): void
     {
         self::$containers = [];
+        self::$customServiceKeys = null;
     }
 }
