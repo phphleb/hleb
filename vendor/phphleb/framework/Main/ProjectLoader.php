@@ -102,7 +102,7 @@ final class ProjectLoader
                 $value = \str_replace('{{method}}', DynamicParams::getRequest()->getMethod(), $value);
                 $value = \str_replace('{{route}}', $address, $value);
                 foreach ($params as $key => $param) {
-                    $value = \str_replace("{%$key%}", $param, $value);
+                    $value = \str_replace("{%$key%}", (string)$param, $value);
                 }
             }
             if (DynamicParams::isDebug()) {
