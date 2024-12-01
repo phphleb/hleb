@@ -5,7 +5,6 @@ namespace App\Bootstrap;
 use App\Bootstrap\Services\RequestIdInterface;
 use Hleb\Constructor\Attributes\Dependency;
 use Hleb\Constructor\Containers\CoreContainerInterface;
-use Hleb\Reference\CacheInterface;
 
 #[Dependency]
 interface ContainerInterface extends CoreContainerInterface

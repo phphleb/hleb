@@ -20,7 +20,7 @@ final class RouteList
      */
     public function run(): string
     {
-        $error = 'Route cache not found. Use `php console -routes-upd` to generate the cache.' . PHP_EOL;
+        $error = 'Route cache not found. Use `php console --routes-upd` to generate the cache.' . PHP_EOL;
         $routes = (new RouteHelper())->getRawCachedData();
         if (!$routes) {
             return $error;
