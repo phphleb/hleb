@@ -1264,3 +1264,28 @@ if (!function_exists('hl_once')) {
         return Once::get($func);
     }
 }
+
+
+if (!function_exists('preview')) {
+    /**
+     * Allows you to display the current request data in the route text field.
+     * Also, automatically adds the appropriate Content-Type header.
+     * For example:
+     *
+     * Позволяет вывести в текстовом поле маршрута текущие данные запроса.
+     * Также автоматически добавляет соответствующий заголовок Content-Type.
+     * Например:
+     *
+     * ```php
+     *
+     * Route::any(
+     *     '/address/{name}',
+     *     preview('Current route {{route}}, request parameter {%name%}, request method {{method}}')
+     * );
+     * ```
+     */
+    function preview(string $value): string
+    {
+        return Functions::PREVIEW_TAG . $value;
+    }
+}

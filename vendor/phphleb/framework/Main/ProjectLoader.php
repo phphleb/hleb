@@ -87,6 +87,39 @@ final class ProjectLoader
     }
 
     /**
+     * Outputting the value from the route with the assignment of headers.
+     *
+     * Вывод значения из маршрута c назначением заголовков.
+     *
+     * @internal
+     */
+    public static function renderSimpleValue(string $value, $address): void
+    {
+        if (\str_starts_with($value, \Functions::PREVIEW_TAG)) {
+            $value = \substr($value, \strlen(\Functions::PREVIEW_TAG));
+            if (\str_contains($value, '{')) {
+                $params = DynamicParams::getDynamicUriParams();
+                $value = \str_replace('{{method}}', DynamicParams::getRequest()->getMethod(), $value);
+                $value = \str_replace('{{route}}', $address, $value);
+                foreach ($params as $key => $param) {
+                    $value = \str_replace("{%$key%}", $param, $value);
+                }
+            }
+            if (DynamicParams::isDebug()) {
+                Response::addHeaders(['Content-Type' => 'text/html']);
+                $value = \htmlspecialchars($value);
+            } else if (\str_starts_with($value, '{') && \str_ends_with($value, '}')) {
+                Response::addHeaders(['Content-Type' => 'application/json']);
+            } else {
+                Response::addHeaders(['Content-Type' => 'text/plain']);
+            }
+        }
+
+        Response::addToBody($value);
+    }
+
+
+    /**
      * Apply settings when a module is detected.
      *
      * Применение настроек в случае обнаружения модуля.
@@ -197,6 +230,9 @@ final class ProjectLoader
             $_SESSION = $session;
             return;
         }
+
+        // If $disabledInRoute is null, this means that the value is not set.
+        // Если $disabledInRoute равен null, то это значит, что значение не задано.
 
         if ($disabledInRoute === false || SystemSettings::getValue('main', 'session.enabled')) {
             if (SystemSettings::isStandardMode()) {
@@ -320,6 +356,15 @@ final class ProjectLoader
             (new BaseErrorPage(401, 'Protected from CSRF'))->insertInResponse();
             return true;
         }
+        // If this is simple text, then we will process it here.
+        // Если это простой текст, то обработаем его здесь.
+        if (empty($block['middlewares']) && empty($block['middleware-after']) && \is_string($block['data']['view'] ?? null)) {
+            self::renderSimpleValue($block['data']['view'], $block['full-address']);
+            DynamicParams::setEndTime(\microtime(true));
+            $this->addDebugPanelToResponse();
+            return true;
+        }
+
         $workspace = new Workspace();
         DynamicParams::setCoreEndTime(\microtime(true));
         $result = $workspace->extract($block);

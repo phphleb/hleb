@@ -18,6 +18,8 @@ final class Functions
     /** @internal */
     final public const REPLACING_TAGS = ['&lt;', '&gt;'];
 
+    final public const PREVIEW_TAG = '~{/preview/}';
+
     /** @internal */
     public function create(): bool
     {
@@ -323,7 +325,6 @@ final class Functions
                 return false;
             }
         }
-
         require __DIR__ . '/Review/functions.php';
 
         return true;

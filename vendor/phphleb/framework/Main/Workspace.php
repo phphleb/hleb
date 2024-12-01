@@ -25,6 +25,7 @@ use Hleb\ParseException;
 use Hleb\Reference\ResponseInterface;
 use Hleb\RouteColoredException;
 use Hleb\Helpers\ReflectionMethod;
+use Hleb\Static\Request;
 use Hleb\Static\Response;
 use Phphleb\Adminpan\Src\ViewPage;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
@@ -67,7 +68,7 @@ final class Workspace
         $after = $block['middleware-after'] ?? [];
 
         if (\is_string($view)) {
-            $this->renderValue($view);
+            ProjectLoader::renderSimpleValue($view, $block['full-address']);
             return !($after && $this->middlewareUsage($after) === false);
         }
         if ($view !== null) {
@@ -227,10 +228,11 @@ final class Workspace
      */
     private function renderValue(mixed $value): true
     {
-        Response::addToBody((string)$value);
+        Response::addToBody($value);
 
         return true;
     }
+
 
     /**
      * Template output.
