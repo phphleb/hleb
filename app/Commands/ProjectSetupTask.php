@@ -57,7 +57,7 @@ class ProjectSetupTask extends Task
     {
         $this->indicate();
         try {
-            Key::get();
+            Key::generateIfNotExists();
             echo 'The secret key has been generated.' . PHP_EOL;
         } catch (CoreProcessException $e) {
             echo $e->getMessage() . PHP_EOL;

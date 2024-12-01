@@ -47,4 +47,14 @@ final class Key extends BaseSingleton
 
         return $_SESSION[self::$name] = self::$key;
     }
+
+    /**
+     * Generates a key if it has not been created previously.
+     *
+     * Генерирует ключ если он не был создан ранее.
+     */
+    public static function generateIfNotExists(): bool
+    {
+        return !empty(self::get());
+    }
 }

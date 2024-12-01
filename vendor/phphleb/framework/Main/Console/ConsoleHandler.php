@@ -632,7 +632,7 @@ final class ConsoleHandler
         if (\end($this->arguments) === '--help') {
             return '[HELP] Generating a project key if it is missing.' . PHP_EOL;
         }
-        if (!Key::get()) {
+        if (!Key::generateIfNotExists()) {
             throw new CoreErrorException('Error while creating the key.');
         }
         return 'The secret key has been generated.' . PHP_EOL;
