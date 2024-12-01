@@ -244,8 +244,12 @@ class HlebAsyncBootstrap extends HlebBootstrap
      */
     public static function prepareAsyncRequestData(): void
     {
-        foreach(\get_declared_classes() as $class) {
-            \is_a($class, RollbackInterface::class, true) and $class::rollback();
+        // If your application does not use state storage, you can disable state cleanup.
+        // Если в приложении не используется хранение состояния, то можно отключить его очистку.
+        if (!\defined('HL_ASYNC_STATE_CLEAR') || HL_ASYNC_STATE_CLEAR) {
+            foreach (\get_declared_classes() as $class) {
+                \is_a($class, RollbackInterface::class, true) and $class::rollback();
+            }
         }
         foreach ([ContainerFactory::class, Registrar::class, ErrorLog::class] as $class) {
             \class_exists($class, false) and $class::rollback();
