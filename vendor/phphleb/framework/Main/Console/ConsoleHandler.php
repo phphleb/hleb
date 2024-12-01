@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Hleb\Main\Console;
 
 use Hleb\Constructor\Actions\ClearCacheAction;
+use Hleb\Constructor\Data\Key;
+use Hleb\CoreErrorException;
 use Hleb\CoreException;
 use Hleb\Main\Console\Commands\CliLogLevel;
 use Hleb\Main\Console\Commands\ConfigInfo;
@@ -148,6 +150,7 @@ final class ConsoleHandler
             '--add' => $this->addTemplate(),
             '--create' => $this->createSection(),
             '--ping' => $this->getPong(),
+            '--generate-key' => $this->getGenerateKey(),
             '--plain-version', '-pv' => $this->getPlainVersion(),
             default => $this->searchAndRunTask(),
         };
@@ -617,6 +620,22 @@ final class ConsoleHandler
             return '[HELP] Service health check. Returns PONG on success.' . PHP_EOL;
         }
         return "PONG";
+    }
+
+    /**
+     * Generates a project secret key if it has not been created previously.
+     *
+     * Генерирует секретный ключ проекта если он не был создан ранее.
+     */
+    private function getGenerateKey(): string
+    {
+        if (\end($this->arguments) === '--help') {
+            return '[HELP] Generating a project key if it is missing.' . PHP_EOL;
+        }
+        if (!Key::get()) {
+            throw new CoreErrorException('Error while creating the key.');
+        }
+        return 'The secret key has been generated.' . PHP_EOL;
     }
 
     /**
