@@ -17,6 +17,7 @@ use Hleb\Reference\SettingInterface;
 use Hleb\DynamicStateException;
 use Hleb\Helpers\ReflectionMethod;
 use Hleb\Main\Console\Specifiers\LightDataType;
+use Hleb\Static\Settings;
 
 abstract class Console
 {
@@ -162,10 +163,12 @@ abstract class Console
             throw new DynamicStateException('Forbidden by an attribute for a class ' . static::class);
         }
 
-        $eventMethod = new ReflectionMethod(TaskEvent::class, '__construct');
-        $event = new TaskEvent(...($eventMethod->countArgs() > 1 ? DependencyInjection::prepare($eventMethod) : []));
-        if (\method_exists($event, 'before')) {
-            $this->unnamedArguments = $event->before(static::class, $this->fromCli ? 'run' : 'call', $this->unnamedArguments);
+        if (Settings::system('events.used') !== false) {
+            $eventMethod = new ReflectionMethod(TaskEvent::class, '__construct');
+            $event = new TaskEvent(...($eventMethod->countArgs() > 1 ? DependencyInjection::prepare($eventMethod) : []));
+            if (\method_exists($event, 'before')) {
+                $this->unnamedArguments = $event->before(static::class, $this->fromCli ? 'run' : 'call', $this->unnamedArguments);
+            }
         }
 
         $result = $this->fromCli ? $this->runCli() : $this->runOthers();
