@@ -415,7 +415,10 @@ class HlebBootstrap
          * ```
          *
          */
-        if (class_exists(KernelEvent::class, false) && !(new KernelEvent())->before()) {
+        if (($this->config['system']['events.used'] ?? true) !== false &&
+            \class_exists(KernelEvent::class, false) &&
+            !(new KernelEvent())->before()
+        ) {
             return;
         }
 

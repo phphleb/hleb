@@ -26,7 +26,6 @@ use Hleb\Reference\ResponseInterface;
 use Hleb\RouteColoredException;
 use Hleb\Helpers\ReflectionMethod;
 use Hleb\Static\Redirect;
-use Hleb\Static\Request;
 use Hleb\Static\Response;
 use Phphleb\Adminpan\Src\ViewPage;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
@@ -546,6 +545,9 @@ final class Workspace
      */
     private function getEventIfExists(string $eventClass): ?Event
     {
+        if (SystemSettings::getValue('system', 'events.used') === false) {
+            return null;
+        }
         $eventMethod = new ReflectionMethod($eventClass, '__construct');
         if ($eventMethod->countArgs() > 1) {
             $event = new $eventClass(...DependencyInjection::prepare($eventMethod));
