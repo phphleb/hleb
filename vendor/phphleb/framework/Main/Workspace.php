@@ -25,6 +25,7 @@ use Hleb\ParseException;
 use Hleb\Reference\ResponseInterface;
 use Hleb\RouteColoredException;
 use Hleb\Helpers\ReflectionMethod;
+use Hleb\Static\Redirect;
 use Hleb\Static\Request;
 use Hleb\Static\Response;
 use Phphleb\Adminpan\Src\ViewPage;
@@ -91,7 +92,23 @@ final class Workspace
             $after and $this->middlewareUsage($after);
             return $result;
         }
+        if (isset($block['redirect'])) {
+            $this->redirectHandler($block, $params);
+        }
         return false;
+    }
+
+    /**
+     * @throws AsyncExitException
+     */
+    private function redirectHandler(array $block, array $params): void
+    {
+        $location = $block['redirect']['location'];
+        foreach($params as $key => $param) {
+            $location = \str_replace("{%{$key}%}", (string)$param, $location);
+        }
+
+        Redirect::to($location, $block['redirect']['status']);
     }
 
     /**

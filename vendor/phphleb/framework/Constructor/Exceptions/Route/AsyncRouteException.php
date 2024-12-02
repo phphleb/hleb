@@ -88,6 +88,8 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
 
     final public const HL38_ERROR = 'HL38_ERROR';
 
+    final public const HL39_ERROR = 'HL39_ERROR';
+
     private const ALL = [
         self::HL00_ERROR => [
             'en' => 'Sample error output number %value%',
@@ -107,7 +109,7 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
         ],
         self::HL04_ERROR => [
             'en' => 'Route compilation error. In the %method%() method, content is already passed as the second parameter, so the controller is invalid.',
-            'ru' => 'Ошибка составления маршрутов. В методе %method%() контент уже передан как второй параметр, поэтому контроллер недействителен.'
+            'ru' => 'Ошибка составления маршрутов. В методе %method%() контент уже передан как второй параметр, поэтому %controller%() недействителен.'
         ],
         self::HL05_ERROR => [
             'en' => 'Route compilation error. The keys of the where() method can only be strings and match the substituted value in the route.',
@@ -248,6 +250,10 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
         self::HL38_ERROR => [
             'en' => 'Route compilation error. Duplicate {%key%:%value%} key for dynamic address %address%.',
             'ru' => 'Ошибка составления маршрутов. Дублирование ключа {%key%:%value%} для динамического адреса %address%.'
+        ],
+        self::HL39_ERROR => [
+            'en' => 'Error in creating routes. The redirect() method status code can be in the range 300-308.',
+            'ru' => 'Ошибка составления маршрутов. Код статуса метода redirect() может быть в диапазоне 300-308.'
         ],
     ];
 

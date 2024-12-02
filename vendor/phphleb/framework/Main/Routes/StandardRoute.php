@@ -57,6 +57,8 @@ abstract class StandardRoute
 
     final public const PLAIN_TYPE = 'plain';
 
+    final public const REDIRECT_TYPE = 'redirect';
+
     private ?NameConverter $nameConverter = null;
 
     /**

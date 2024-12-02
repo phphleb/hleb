@@ -12,6 +12,7 @@ use Hleb\Main\Routes\Methods\Traits\InsertControllerTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertMiddlewareTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertNameTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertPageTrait;
+use Hleb\Main\Routes\Methods\Traits\InsertRedirectTrait;
 use Hleb\Main\Routes\StandardRoute;
 
 /**
@@ -25,6 +26,7 @@ final class Fallback extends StandardRoute
     use InsertBeforeTrait;
     use InsertControllerTrait;
     use InsertPageTrait;
+    use InsertRedirectTrait;
 
     private array $types;
 

@@ -22,6 +22,6 @@ class RedirectReference extends ContainerUniqueItem implements RedirectInterface
     #[\Override]
     public function to(string $location, int $status = 302): void
     {
-        Script::asyncExit('', $status, array_merge(Response::getHeaders(), ['Location' => $location]));
+        Script::asyncExit('', $status, \array_merge(Response::getHeaders(), ['Location' => $location]));
     }
 }

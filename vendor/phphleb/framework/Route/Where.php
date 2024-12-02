@@ -14,6 +14,7 @@ use Hleb\Main\Routes\Methods\Traits\InsertNameTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertPlainTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertPageTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertProtectTrait;
+use Hleb\Main\Routes\Methods\Traits\InsertRedirectTrait;
 use Hleb\Main\Routes\StandardRoute;
 
 /**
@@ -31,6 +32,7 @@ final class Where extends StandardRoute
     use InsertDomainTrait;
     use InsertPageTrait;
     use InsertPlainTrait;
+    use InsertRedirectTrait;
 
     public function __construct(array $rules)
     {

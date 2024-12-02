@@ -12,6 +12,7 @@ use Hleb\Main\Routes\Methods\Traits\InsertMiddlewareTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertModuleTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertNameTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertPageTrait;
+use Hleb\Main\Routes\Methods\Traits\InsertRedirectTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertWhereTrait;
 use Hleb\Main\Routes\StandardRoute;
 
@@ -29,6 +30,7 @@ final class Plain extends StandardRoute
     use InsertModuleTrait;
     use InsertDomainTrait;
     use InsertPageTrait;
+    use InsertRedirectTrait;
 
     public function __construct(bool $on = true)
     {

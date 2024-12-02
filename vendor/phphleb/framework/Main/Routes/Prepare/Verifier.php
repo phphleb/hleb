@@ -62,16 +62,21 @@ final readonly class Verifier
 
                 $realTagKeys = [];
                 $controllerCount = 0;
-                $countNames = 0;
-                $hasPage = 0;
-                $hasProtect = 0;
-                $hasPlain = 0;
+                $nameCount = 0;
+                $pageCount = 0;
+                $protectCount = 0;
+                $plainCount = 0;
                 foreach ($route['actions'] ?? [] as $action) {
                     $method = $action['method'];
-                    if (\in_array($method, [StandardRoute::CONTROLLER_TYPE, StandardRoute::MODULE_TYPE, StandardRoute::PAGE_TYPE])) {
+                    if (\in_array($method, [
+                        StandardRoute::CONTROLLER_TYPE,
+                        StandardRoute::MODULE_TYPE,
+                        StandardRoute::PAGE_TYPE,
+                        StandardRoute::REDIRECT_TYPE,
+                    ])) {
                         if ($route['data']['view'] !== null) {
                             // Если есть второй параметр в методе и контроллер.
-                            $this->error(AsyncRouteException::HL04_ERROR, ['method' => $route['name']]);
+                            $this->error(AsyncRouteException::HL04_ERROR, ['method' => $route['name'], 'controller' => $method]);
                         }
                         $controllerCount++;
                     }
@@ -79,16 +84,22 @@ final readonly class Verifier
                         $this->error(AsyncRouteException::HL13_ERROR, ['types' => $all]);
                     }
                     if ($method === StandardRoute::PAGE_TYPE) {
-                        $hasPage++;
+                        $pageCount++;
                     }
                     if ($method === StandardRoute::PROTECT_TYPE) {
-                        $hasProtect++;
+                        $protectCount++;
                     }
                     if ($method === StandardRoute::PLAIN_TYPE && $action['data']['on']) {
-                        $hasPlain++;
+                        $plainCount++;
                     }
                     if ($method === StandardRoute::MODULE_TYPE) {
                         $this->checkModule($action);
+                    }
+                    if ($method === StandardRoute::REDIRECT_TYPE) {
+                        $status = $action['status'];
+                        if ($status < 300 || $status > 308) {
+                            $this->error(AsyncRouteException::HL39_ERROR);
+                        }
                     }
                     if ($method === StandardRoute::WHERE_TYPE) {
                         $rules = $route['data']['rules'] ?? [];
@@ -117,19 +128,19 @@ final readonly class Verifier
                             $nonDuplicateNames[$httpMethod][] = $action['name'];
                         }
 
-                        if ($countNames > 0) {
+                        if ($nameCount > 0) {
                             $this->error(AsyncRouteException::HL28_ERROR, ['name' =>  $errorName]);
                         }
                         if (!\preg_match('/^[a-z0-9\.\-]+$/i', $action['name'])) {
                             $this->error(AsyncRouteException::HL20_ERROR, ['method' => $route['name'], 'name' =>  $errorName]);
                         }
-                        $countNames++;
+                        $nameCount++;
                     }
                 }
-                if ($hasPage && !$countNames) {
+                if ($pageCount && !$nameCount) {
                     $this->error(AsyncRouteException::HL29_ERROR);
                 }
-                if ($hasProtect && $hasPlain) {
+                if ($protectCount && $plainCount) {
                     $this->error(AsyncRouteException::HL34_ERROR);
                 }
                 if (\count($realTagKeys) > \count($tags)) {

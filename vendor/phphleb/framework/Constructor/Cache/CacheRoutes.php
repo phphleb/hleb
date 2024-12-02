@@ -179,6 +179,9 @@ final class CacheRoutes
             if ($value['method'] === StandardRoute::PAGE_TYPE) {
                 $data['page'] = $value;
             }
+            if ($value['method'] === StandardRoute::REDIRECT_TYPE) {
+                $data['redirect'] = $value;
+            }
             if ($value['method'] === StandardRoute::MODULE_TYPE) {
                 $data['module'] = $value;
             }

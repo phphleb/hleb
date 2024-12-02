@@ -14,6 +14,7 @@ use Hleb\Main\Routes\Methods\Traits\InsertMiddlewareTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertModuleTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertNameTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertProtectTrait;
+use Hleb\Main\Routes\Methods\Traits\InsertRedirectTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertWhereTrait;
 use Hleb\Main\Routes\StandardRoute;
 
@@ -33,6 +34,7 @@ final class Domain extends StandardRoute
     use InsertNameTrait;
     use InsertDomainTrait;
     use InsertPlainTrait;
+    use InsertRedirectTrait;
 
     public function __construct(string|array $part, int $level = 2)
     {

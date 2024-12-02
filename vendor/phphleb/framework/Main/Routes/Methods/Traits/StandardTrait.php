@@ -15,5 +15,6 @@ trait StandardTrait
     use InsertDomainTrait;
     use InsertPageTrait;
     use InsertPlainTrait;
+    use InsertRedirectTrait;
 
 }
