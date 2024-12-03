@@ -499,7 +499,7 @@ class HlebBootstrap
                 'log.db.excess' => [['integer'], 0],
                 'timezone' => [['string']],
                 'routes.auto-update' => [['boolean']],
-                'container.mock.allowed' => [['boolean'], false],
+                'container.mock.allowed' => [['boolean'], /*(!)*/],
                 'app.cache.on' => [['boolean']],
                 'twig.options' => [['array'], []],
                 'twig.cache.inverted' => [['array'], []],
@@ -529,9 +529,9 @@ class HlebBootstrap
                 'allowed.route.paths' => [['array'], []],
                 'allowed.structure.parts' => [['array'], []],
                 'page.external.access' => [['boolean'], true],
-                'module.dir.name' => [['string'], 'modules'],
-                'custom.setting.files' => [['array'], []],
-                'custom.function.files' => [['array'], []],
+                'module.dir.name' => [['string'], /*(!)*/],
+                'custom.setting.files' => [['array'], /*(!)*/],
+                'custom.function.files' => [['array'], /*(!)*/],
             ],
         ];
         // The following errors that occur at this level can be displayed without taking into account the settings and debug mode.
