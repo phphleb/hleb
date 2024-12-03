@@ -459,7 +459,6 @@ class RouteFileManager
         if (empty($path)) {
             return false;
         }
-
         return new SearchBlock($request, (array)$this->getFromCache($path, $class));
     }
 
