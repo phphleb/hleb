@@ -160,7 +160,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
 
         $_GET = $_POST = $_SERVER = $_SESSION = $_COOKIE = $_REQUEST = $_FILES = [];
 
-        self::prepareAsyncRequestData();
+        self::prepareAsyncRequestData($this->config);
 
         /*
          * Periodically clean up used memory and call GC. Will be applied to every $rate request.
@@ -169,8 +169,8 @@ class HlebAsyncBootstrap extends HlebBootstrap
          * Периодическая очистка используемой памяти и вызов GC. Будет применено к каждому $rate запросу.
          * Например, если передать 3, то после каждого третьего запроса.
          */
-        $rate = get_env('HLEB_ASYNC_RE_CLEANING', get_constant('HLEB_ASYNC_RE_CLEANING', 20));
-        if ($this->processNumber % $rate == 0) {
+        $rate = (int)get_env('HLEB_ASYNC_RE_CLEANING', get_constant('HLEB_ASYNC_RE_CLEANING', -1));
+        if ($rate >= 0 && ($rate === 0 || $this->processNumber % $rate == 0)) {
             \gc_collect_cycles();
             \gc_mem_caches();
         }
@@ -242,11 +242,11 @@ class HlebAsyncBootstrap extends HlebBootstrap
      *
      * @internal
      */
-    public static function prepareAsyncRequestData(): void
+    public static function prepareAsyncRequestData(array $config): void
     {
         // If your application does not use state storage, you can disable state cleanup.
         // Если в приложении не используется хранение состояния, то можно отключить его очистку.
-        if (!\defined('HLEB_ASYNC_STATE_CLEAR') || HLEB_ASYNC_STATE_CLEAR) {
+        if ($config['system']['async.clear.state'] ?? true) {
             foreach (\get_declared_classes() as $class) {
                 \is_a($class, RollbackInterface::class, true) and $class::rollback();
             }

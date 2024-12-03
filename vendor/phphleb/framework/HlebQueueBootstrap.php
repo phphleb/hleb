@@ -144,7 +144,7 @@ class HlebQueueBootstrap extends HlebBootstrap
             echo $e->getMessage();
         }
 
-        HlebAsyncBootstrap::prepareAsyncRequestData();
+        HlebAsyncBootstrap::prepareAsyncRequestData($this->config);
 
         return (int)($status != 0);
     }
