@@ -487,52 +487,51 @@ class HlebBootstrap
     {
         $map = [
             'common' => [
-                'debug' => [['boolean']],
-                'log.enabled' => [['boolean']],
-                'max.log.level' => [['string']],
-                'max.cli.log.level' => [['string']],
-                'log.level.in-cli' => [['boolean']],
-                'error.reporting' => [['integer']],
-                'log.sort' => [['boolean']],
-                'log.stream' => [['boolean', 'string']],
-                'log.format' => [['string'], 'row'],
-                'log.db.excess' => [['integer'], 0],
-                'timezone' => [['string']],
-                'routes.auto-update' => [['boolean']],
-                'container.mock.allowed' => [['boolean'], /*(!)*/],
-                'app.cache.on' => [['boolean']],
-                'twig.options' => [['array'], []],
-                'twig.cache.inverted' => [['array'], []],
-                'show.request.id' => [['boolean'], false],
-                'max.log.size' => [['integer'], 0],
-                'max.cache.size' => [['integer'], 0],
+                'debug' => ['boolean'],
+                'log.enabled' => ['boolean'],
+                'max.log.level' => ['string'],
+                'max.cli.log.level' => ['string'],
+                'log.level.in-cli' => ['boolean'],
+                'error.reporting' => ['integer'],
+                'log.sort' => ['boolean'],
+                'log.stream' => ['boolean', 'string'],
+                'log.format' => ['string'],
+                'log.db.excess' => ['integer'],
+                'timezone' => ['string'],
+                'routes.auto-update' => ['boolean'],
+                'container.mock.allowed' => ['boolean'],
+                'app.cache.on' => ['boolean'],
+                // 'twig.options' => ['array'],
+                // 'twig.cache.inverted' => ['array'],
+                // 'show.request.id' => ['boolean'],
+                // 'max.log.size' => ['integer'],
+                //  'max.cache.size' => ['integer'],
             ],
             'database' => [
-                'base.db.type' => [['string'], 'undefined'],
-                'db.settings.list' => [['array']],
+                //'base.db.type' => ['string'],
+                'db.settings.list' => ['array'],
             ],
             'main' => [
-                'session.enabled' => [['boolean']],
-                'db.log.enabled' => [['boolean']],
-                'default.lang' => [['string'], 'en'],
-                'allowed.languages' => [['array'], ['en', 'ru']],
-                'session.options' => [['array'], []],
+                'session.enabled' => ['boolean'],
+                'db.log.enabled' => ['boolean'],
+                // 'default.lang' => ['string'],
+                // 'allowed.languages' => ['array'],
+                // 'session.options' => ['array'],
             ],
             'system' => [
-                'classes.autoload' => [['boolean'], true],
-                'origin.request' => [['boolean'], false],
-                'ending.slash.url' => [['boolean', 'integer']],
-                'ending.url.methods' => [['array']],
-                'url.validation' => [['boolean', 'string']],
-                'session.name' => [['string']],
-                'max.session.lifetime' => [['integer']],
-                'allowed.route.paths' => [['array'], []],
-                'allowed.structure.parts' => [['array'], []],
-                'page.external.access' => [['boolean'], true],
-                'module.dir.name' => [['string'], /*(!)*/],
-                'custom.setting.files' => [['array'], /*(!)*/],
-                'custom.function.files' => [['array'], /*(!)*/],
-                // 'project.paths' => [['array'], []], // already used
+                'classes.autoload' => ['boolean'],
+                'origin.request' => ['boolean'],
+                'ending.slash.url' => ['boolean', 'integer'],
+                'ending.url.methods' => ['array'],
+                'url.validation' => ['boolean', 'string'],
+                'session.name' => ['string'],
+                'max.session.lifetime' => ['integer'],
+                // 'allowed.route.paths' => ['array'],
+                // 'allowed.structure.parts' => ['array'],
+                //'page.external.access' => ['boolean'],
+                'module.dir.name' => ['string'],
+                'custom.setting.files' => ['array'],
+                'custom.function.files' => ['array'],
             ],
         ];
         // The following errors that occur at this level can be displayed without taking into account the settings and debug mode.
@@ -542,15 +541,10 @@ class HlebBootstrap
                 throw new \DomainException("Configuration not found for `$key`");
             }
             foreach ($rule as $k => $val) {
-                $types = \array_shift($val);
-                if (!\array_key_exists($k, $config[$key])) {
-                    if ($val) {
-                        $config[$key][$k] = \current($val);
-                    } else {
-                        throw new \DomainException("Configuration parameter `$k` not found for `$key`");
-                    }
+                if (!isset($config[$key][$k])) {
+                    throw new \DomainException("Configuration parameter `$k` not found for `$key`");
                 }
-                if (!\in_array(\gettype($config[$key][$k]), $types, true)) {
+                if (!\in_array(\gettype($config[$key][$k]), $val, true)) {
                     throw new \DomainException("Wrong type of configuration parameter `$k`.");
                 }
             }
