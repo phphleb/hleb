@@ -92,6 +92,8 @@ final class ClassWithDataCreator
             '* This class is generated automatically. It will be changed during the update.' . PHP_EOL .
             '* ' . PHP_EOL .
             '* Этот класс сгенерирован автоматически. Он будет изменён при обновлении.' . PHP_EOL .
+            '* ' . PHP_EOL .
+            '* @internal' . PHP_EOL .
             '*/';
     }
 }
