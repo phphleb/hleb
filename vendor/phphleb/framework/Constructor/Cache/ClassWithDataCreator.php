@@ -36,10 +36,7 @@ final class ClassWithDataCreator
         $type = $privateData ? 'private' : 'public';
         return '<?php' . PHP_EOL . PHP_EOL .
             'declare(strict_types=1);' . PHP_EOL . PHP_EOL .
-            $this->getDangerInfo() . PHP_EOL . PHP_EOL .
-            '/**' . PHP_EOL .
-            '* @internal' . PHP_EOL .
-            '*/' . PHP_EOL .
+            $this->getDangerInfo() . PHP_EOL .
             "final class $className" . PHP_EOL .
             '{' . PHP_EOL .
             '    /**' . PHP_EOL .
