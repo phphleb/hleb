@@ -426,7 +426,7 @@ class HlebBootstrap
         // Проверка входящих данных URL на валидность.
         $this->verifiedUrlOrRedirect($request);
 
-        (new ProjectLoader())->init();
+        ProjectLoader::init();
     }
 
     /**
@@ -752,7 +752,7 @@ class HlebBootstrap
 
         $this->config = $this->getConfig();
         if ($this->config['common']['debug'] ?? null) {
-            \defined('HL_STRICT_UMASK') or @\umask(0000);
+            \defined('HLEB_STRICT_UMASK') or @\umask(0000);
         }
         \error_reporting($this->config['common']['error.reporting'] ?? null);
 

@@ -368,7 +368,7 @@ return [
     │
     │ If events will not be used, they can be disabled in this setting
     │ and the /app/Bootstrap/Events/ folder can be deleted.
-    │ Default: 'modules'
+    │ Default: true
     │
     │
     │-----------------------------------------------------------------------------

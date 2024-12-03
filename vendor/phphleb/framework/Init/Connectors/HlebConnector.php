@@ -178,6 +178,8 @@ final class HlebConnector
         'Hleb\Main\Routes\Prepare\Verifier' => '/Main/Routes/Prepare/Verifier.php',
         'Hleb\Main\Routes\Search\FindRoute' => '/Main/Routes/Search/FindRoute.php',
         'Hleb\Main\Routes\Search\RouteFileManager' => '/Main/Routes/Search/RouteFileManager.php',
+        'Hleb\Main\Routes\Search\RouteAsyncFileManager' => '/Main/Routes/Search/RouteAsyncFileManager.php',
+        'Hleb\Main\Routes\Search\RouteAnyFileManager' => '/Main/Routes/Search/RouteAnyFileManager.php',
         'Hleb\Main\Routes\Search\SearchBlock' => '/Main/Routes/Search/SearchBlock.php',
         'Hleb\Main\Routes\Update\CheckRouteForUpdates' => '/Main/Routes/Update/CheckRouteForUpdates.php',
         'Hleb\Main\Routes\Update\RouteData' => '/Main/Routes/Update/RouteData.php',

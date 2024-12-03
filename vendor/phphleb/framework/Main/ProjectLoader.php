@@ -11,6 +11,7 @@ use Hleb\CoreProcessException;
 use Hleb\Helpers\RouteHelper;
 use Hleb\HttpException;
 use Hleb\HttpMethods\Intelligence\Cookies\AsyncCookies;
+use Hleb\Main\Routes\Search\RouteAsyncFileManager;
 use \Hleb\Static\Csrf;
 use Hleb\HttpMethods\Intelligence\AsyncConsolidator;
 use Hleb\HttpMethods\Intelligence\Cookies\StandardCookies;
@@ -38,35 +39,35 @@ final class ProjectLoader
      *
      * @throws AsyncExitException|HttpException
      */
-    public function init(): void
+    public static function init(): void
     {
         /** @see hl_check() - ProjectLoader start */
-        if ($this->insertServiceResource()) {
+        if (self::insertServiceResource()) {
             return;
         }
         /** @see hl_check() - insertServiceResource worked */
 
-        $routes = new RouteFileManager();
+        $routes = SystemSettings::isAsync() ? new RouteAsyncFileManager() : new RouteFileManager();
         /** @see hl_check() - RouteFileManager created */
 
         $block = $routes->getBlock();
         /** @see hl_check() - search for a suitable block is completed */
 
-        if ($this->searchHeadMethod()) {
+        if (self::searchHeadMethod()) {
             return;
         }
         /** @see hl_check() - searchHeadMethod completed */
 
         if ($block) {
-            if ($this->searchDefaultHttpOptionsMethod($block)) {
+            if (self::searchDefaultHttpOptionsMethod($block)) {
                 return;
             }
             /** @see hl_check() - search for default method is completed */
 
-            $this->updateDataIfModule($block);
+            self::updateDataIfModule($block);
             /** @see hl_check() - updateDataIfModule completed */
 
-            if ($this->initBlock($block, $routes)){
+            if (self::initBlock($block, $routes)){
                 return;
             }
         }
@@ -77,13 +78,14 @@ final class ProjectLoader
         }
 
         $block = $routes->getFallbackBlock();
-        if ($block && $this->initBlock($block, $routes)) {
+        if ($block && self::initBlock($block, $routes)) {
             return;
         }
+        unset($block, $routes);
         // If the block is not found, then the error page is determined.
         // Если блок не найден, то определяется страница ошибки.
         (new BaseErrorPage(404, 'Not Found'))->insertInResponse();
-        $this->addDebugPanelToResponse();
+        self::addDebugPanelToResponse();
     }
 
     /**
@@ -98,12 +100,14 @@ final class ProjectLoader
         if (\str_starts_with($value, \Functions::PREVIEW_TAG)) {
             $value = \substr($value, \strlen(\Functions::PREVIEW_TAG));
             if (\str_contains($value, '{')) {
-                $params = DynamicParams::getDynamicUriParams();
-                $value = \str_replace('{{method}}', DynamicParams::getRequest()->getMethod(), $value);
-                $value = \str_replace('{{route}}', $address, $value);
-                foreach ($params as $key => $param) {
-                    $value = \str_replace("{%$key%}", (string)$param, $value);
+                $replacements = [
+                    '{{method}}' => DynamicParams::getRequest()->getMethod(),
+                    '{{route}}' => $address,
+                ];
+                foreach (DynamicParams::getDynamicUriParams() as $key => $param) {
+                    $replacements["{%$key%}"] = (string)$param;
                 }
+                $value = \strtr($value, $replacements);
             }
             if (DynamicParams::isDebug()) {
                 Response::addHeaders(['Content-Type' => 'text/html']);
@@ -124,7 +128,7 @@ final class ProjectLoader
      *
      * Применение настроек в случае обнаружения модуля.
      */
-    private function updateDataIfModule(array $block): void
+    private static function updateDataIfModule(array $block): void
     {
         if (isset($block['module'])) {
             $moduleName = $block['module']['name'];
@@ -152,7 +156,7 @@ final class ProjectLoader
      *
      * Добавление панели отладки.
      */
-    private function addDebugPanelToResponse(): void
+    private static function addDebugPanelToResponse(): void
     {
         if (DynamicParams::isDebug() &&
             DynamicParams::getRequest()->getMethod() === 'GET' &&
@@ -169,7 +173,7 @@ final class ProjectLoader
      * Если скрипт для регистрации не был задан на странице, то он будет выведен
      * при наличии middleware-контроллера для регистрации.
      */
-    private function addRegisterBlockIfExists(): void
+    private static function addRegisterBlockIfExists(): void
     {
         if (\class_exists(Registrar::class, false) && Registrar::isUsed()) {
             ScriptLoader::set();
@@ -182,12 +186,12 @@ final class ProjectLoader
      * Сервисный вызов ресурсов подходящей библиотеки фреймворка.
      *
      */
-    private function insertServiceResource(): bool
+    private static function insertServiceResource(): bool
     {
         $address = DynamicParams::getRequest()->getUri()->getPath();
         if (\str_starts_with($address, '/hl') && !\str_contains($address, '.')) {
-            $this->initCookies(true);
-            $this->initSession(true);
+            self::initCookies(true);
+            self::initSession(true);
             return (new LibraryServiceResources())->place();
         }
         return false;
@@ -198,7 +202,7 @@ final class ProjectLoader
      *
      * Устанавливает Cookies при их отсутствии.
      */
-    private function initCookies(bool|null $disabledInRoute): void
+    private static function initCookies(bool|null $disabledInRoute): void
     {
         if ($disabledInRoute === true) {
             return;
@@ -218,14 +222,14 @@ final class ProjectLoader
      * Устанавливает сессию при её отсутствии.
      *
      */
-    private function initSession(bool|null $disabledInRoute): void
+    private static function initSession(bool|null $disabledInRoute): void
     {
         if ($disabledInRoute === true) {
             return;
         }
         $session = DynamicParams::getAlternateSession();
         if (\is_array($session)) {
-            $this->updateSession($session);
+            self::updateSession($session);
             DynamicParams::setAlternateSession($session);
             $_SESSION = $session;
             return;
@@ -259,7 +263,7 @@ final class ProjectLoader
                 throw new CoreProcessException('SESSION not initialized!');
             }
         }
-        empty($_SESSION) or $this->updateSession($_SESSION);
+        empty($_SESSION) or self::updateSession($_SESSION);
     }
 
     /**
@@ -267,7 +271,7 @@ final class ProjectLoader
      *
      * Производит обязательные манипуляции над сессиями.
      */
-    private function updateSession(array &$session): void
+    private static function updateSession(array &$session): void
     {
         $id = '_hl_flash_';
         if (isset($session[$id])) {
@@ -293,7 +297,7 @@ final class ProjectLoader
      *
      * Возвращает результат поиска и обработки метода HEAD.
      */
-    private function searchHeadMethod(): bool
+    private static function searchHeadMethod(): bool
     {
         if (DynamicParams::getRequest()->getMethod() === 'HEAD') {
             $allow = (new RouteHelper())->getRouteHttpMethods(
@@ -316,7 +320,7 @@ final class ProjectLoader
      * Стандартный ответ на HTTP метод OPTIONS,
      * если он не указан отдельно.
      */
-    private function searchDefaultHttpOptionsMethod(array $block): bool
+    private static function searchDefaultHttpOptionsMethod(array $block): bool
     {
         if ($block['name'] !== 'options' &&
             DynamicParams::getRequest()->getMethod() === 'OPTIONS'
@@ -343,10 +347,10 @@ final class ProjectLoader
      *
      * @throws AsyncExitException|HttpException
      */
-    private function initBlock(array $block, RouteFileManager $routes): bool
+    private static function initBlock(array $block, RouteFileManager $routes): bool
     {
-        $this->initCookies($routes->getIsPlain());
-        $this->initSession($routes->getIsPlain());
+        self::initCookies($routes->getIsPlain());
+        self::initSession($routes->getIsPlain());
 
         DynamicParams::setDynamicUriParams($routes->getData());
         DynamicParams::setRouteName($routes->getRouteName());
@@ -361,7 +365,7 @@ final class ProjectLoader
         if (empty($block['middlewares']) && empty($block['middleware-after']) && \is_string($block['data']['view'] ?? null)) {
             self::renderSimpleValue($block['data']['view'], $block['full-address']);
             DynamicParams::setEndTime(\microtime(true));
-            $this->addDebugPanelToResponse();
+            self::addDebugPanelToResponse();
             return true;
         }
 
@@ -369,9 +373,9 @@ final class ProjectLoader
         DynamicParams::setCoreEndTime(\microtime(true));
         $result = $workspace->extract($block);
         if ($result) {
-            $this->addRegisterBlockIfExists();
+            self::addRegisterBlockIfExists();
             DynamicParams::setEndTime(\microtime(true));
-            $this->addDebugPanelToResponse();
+            self::addDebugPanelToResponse();
             return true;
         }
         DynamicParams::setEndTime(\microtime(true));

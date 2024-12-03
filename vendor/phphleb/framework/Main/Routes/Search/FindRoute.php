@@ -65,7 +65,7 @@ final class FindRoute
        $request = new SystemRequest([], null, null, null, $method, [], '1.1', $uri);
        DynamicParams::setDynamicRequest($request);
        try {
-           $search = new RouteFileManager();
+           $search = new RouteAnyFileManager();
            $block = $search->getBlock();
        } catch (AsyncRouteException $e) {
            $this->rollbackRequest($oldRequest);

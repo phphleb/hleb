@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+/*declare(strict_types=1);*/
 
 namespace Hleb\Main\Routes\Search;
 
@@ -21,23 +21,27 @@ use Hleb\Main\Routes\Update\RouteData;
  *
  * @internal
  */
-final class RouteFileManager
+class RouteFileManager
 {
-    private bool $isBlocked = false;
+    protected bool $isBlocked = false;
 
-    private array $data = [];
+    protected array $data = [];
 
-    private int $fallbackNumber = 0;
+    protected int $fallbackNumber = 0;
 
-    private array $protected = [];
+    protected array $protected = [];
 
-    private ?string $method = null;
+    protected ?string $method = null;
 
-    private ?string $routeName = null;
+    protected ?string $routeName = null;
 
-    private ?string $routeClassName = null;
+    protected ?string $routeClassName = null;
 
-    private ?bool $isPlain = null;
+    protected ?bool $isPlain = null;
+
+    protected static ?array $infoCache = null;
+
+    protected static bool|array $stubData = false;
 
     /**
      * Get a matching block of route data with the current request, or false if not found.
@@ -49,17 +53,14 @@ final class RouteFileManager
     public function getBlock(): false|array
     {
         /** @see hl_check() - getBlock start */
-        $this->data = [];
-        $this->protected = [];
-        $this->fallbackNumber = 0;
-        $this->method = null;
-        $info = $this->getInfoFromCache();
+        $this->init();
+        self::$infoCache = $this->getInfoFromCache();
         /** @see hl_check() - getInfoFromCache received */
 
-        if ($this->checkFromUpdate($info)) {
+        if ($this->checkFromUpdate(self::$infoCache)) {
             // During the check, the state may have changed.
             // Во время проверки состояние могло измениться.
-            if ($this->validateInfoFromUpdate($info, $this->getInfoFromCache())) {
+            if ($this->validateInfoFromUpdate(self::$infoCache, $this->getInfoFromCache())) {
                 // Direct saving routes to the cache.
                 // Непосредственное сохранение маршрутов в кеш.
                 $routes = (new RouteData())->dataExtraction();
@@ -72,51 +73,23 @@ final class RouteFileManager
             }
             // Check cache persistence.
             // Проверка сохранения кеша.
-            $info = $this->getInfoFromCache();
-            if (!$info) {
+            self::$infoCache = $this->getInfoFromCache();
+            if (!self::$infoCache) {
                 $this->throwSaveError();
             }
         }
         /** @see hl_check() - checkFromUpdate completed */
 
-        $stub = $this->siteStubSearch($info);
+        self::$stubData = $this->siteStubSearch(self::$infoCache);
 
-        if ($stub) {
+        if (self::$stubData) {
             $this->isBlocked = true;
-            return \is_array($stub) ? $stub : false;
+            return \is_array(self::$stubData) ? self::$stubData : false;
         }
-        $info = $this->getInfoFromCache();
+        self::$infoCache = $this->getInfoFromCache();
         /** @see hl_check() - getInfoFromCache completed */
 
-        $request = DynamicParams::getRequest();
-        // If this is the main page.
-        // Если это главная страница.
-        $index = $this->searchIndexPage((int)($info['index_page'] ?? 0), $request);
-        if ($index) {
-            $this->routeName = $info['index_page_name'] ?? null;
-            return $index;
-        }
-        // Search for a list of routes.
-        // Поиск списка маршрутов.
-        $this->method = \ucfirst(\strtolower($request->getMethod()));
-        /** @see hl_check() - request method defined */
-
-        // Search for a specific route.
-        // Поиск конкретного маршрута.
-        $block = $this->getDataByRequest($request);
-        /** @see hl_check() - getDataByRequest completed */
-
-        if ($block === false) {
-            return false;
-        }
-
-        $blockNumber = $this->createBlockDataNumber($block);
-        if (!$blockNumber) {
-            return false;
-        }
-        /** @see hl_check() - createBlockDataNumber completed */
-
-        return $this->getBlockById($blockNumber, $block->getIsCompleteAddress());
+        return $this->searchBlock();
     }
 
     /**
@@ -195,6 +168,55 @@ final class RouteFileManager
     }
 
     /**
+     * @throws RouteColoredException
+     */
+    protected function searchBlock(): false|array
+    {
+        $request = DynamicParams::getRequest();
+        // If this is the main page.
+        // Если это главная страница.
+        $index = $this->searchIndexPage((int)(self::$infoCache['index_page'] ?? 0), $request);
+        if ($index) {
+            $this->routeName = self::$infoCache['index_page_name'] ?? null;
+            return $index;
+        }
+        // Search for a list of routes.
+        // Поиск списка маршрутов.
+        $this->method = \ucfirst(\strtolower($request->getMethod()));
+        /** @see hl_check() - request method defined */
+
+        // Search for a specific route.
+        // Поиск конкретного маршрута.
+        $block = $this->getDataByRequest($request);
+        /** @see hl_check() - getDataByRequest completed */
+
+        if ($block === false) {
+            return false;
+        }
+
+        $blockNumber = $this->createBlockDataNumber($block);
+        if (!$blockNumber) {
+            return false;
+        }
+        /** @see hl_check() - createBlockDataNumber completed */
+
+        return $this->getBlockById($blockNumber, $block->getIsCompleteAddress());
+    }
+
+    /**
+     * Initialization to avoid code duplication.
+     *
+     * Инициализация для того, чтобы избежать дублирования кода.
+     */
+    protected function init(): void
+    {
+        $this->data = [];
+        $this->protected = [];
+        $this->fallbackNumber = 0;
+        $this->method = null;
+    }
+
+    /**
      * Search for block data by ID.
      *
      * Поиск данных блока по идентификатору.
@@ -207,7 +229,7 @@ final class RouteFileManager
         // Search for a block with route data.
         // Поиск блока с данными маршрута.
         $class = RouteMark::getRouteClassName(RouteMark::DATA_PREFIX . $method . $blockNumber);
-        $path = SystemSettings::getRealPath("@storage/cache/routes/Map/$method/$class.php");
+        $path = $this->searchPath("@storage/cache/routes/Map/$method/$class.php");
         if (empty($path)) {
             return false;
         }
@@ -234,11 +256,22 @@ final class RouteFileManager
      */
     private function getFromCache(string $path, string $class): array|false
     {
-        if (!\file_exists($path)) {
-            return false;
-        }
-        if (!\class_exists($class, false)) {
-            require $path;
+        if (SystemSettings::isAsync()) {
+            // First the class's existence is checked, whether it has been modified on disk or not.
+            // Сначала проверяется существование класса, неважно, был ли он изменен на диске.
+            if (!\class_exists($class, false)) {
+                if (!\file_exists($path)) {
+                    return false;
+                }
+                require $path;
+            }
+        } else {
+            if (!\file_exists($path)) {
+                return false;
+            }
+            if (!\class_exists($class, false)) {
+                require $path;
+            }
         }
         $this->routeClassName = $class;
 
@@ -257,13 +290,23 @@ final class RouteFileManager
     {
         if ($page && $request->getMethod() === 'GET' && $request->getUri()->getPath() === '/') {
             $class = RouteMark::getRouteClassName(RouteMark::DATA_PREFIX . 'Get' . $page);
-            $path = SystemSettings::getRealPath("@storage/cache/routes/Map/Get/$class.php");
+            $path = $this->searchPath("@storage/cache/routes/Map/Get/$class.php");
             if ($path) {
                 return $this->getFromCache($path, $class);
             }
         }
 
         return false;
+    }
+
+    /**
+     * Returns the path depending on the usage method.
+     *
+     * Возвращает путь в зависимости от метода использования.
+     */
+    private function searchPath(string $path): false|string
+    {
+        return SystemSettings::isAsync() ? SystemSettings::getPath($path) : SystemSettings::getRealPath($path);
     }
 
     /**
@@ -412,7 +455,7 @@ final class RouteFileManager
     private function getDataByRequest(SystemRequest $request): SearchBlock|false
     {
         $class = RouteMark::getRouteClassName(RouteMark::PREVIEW_PREFIX . $this->method);
-        $path = SystemSettings::getRealPath("@storage/cache/routes/Preview/$class.php");
+        $path = $this->searchPath("@storage/cache/routes/Preview/$class.php");
         if (empty($path)) {
             return false;
         }
@@ -449,7 +492,7 @@ final class RouteFileManager
      *
      * @throws RouteColoredException
      */
-    public function checkKeysAndUpdateData(array $data, string $address, bool $isComplete): array
+    private function checkKeysAndUpdateData(array $data, string $address, bool $isComplete): array
     {
         $defaultList = [];
         foreach ($data as $subarray) {
