@@ -4,6 +4,7 @@
 
 namespace Hleb\Init;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Data\DynamicParams;
 use Hleb\Constructor\Data\SystemSettings;
 use Hleb\Constructor\Data\MainLogLevel;
@@ -193,8 +194,17 @@ final class ErrorLog
     {
         try {
             $dir = \dirname(__DIR__);
-            if (!\class_exists(HlebConnector::class, false)) {
-                require_once $dir . '/Init/Connectors/HlebConnector.php';
+            if (!\interface_exists(RollbackInterface::class, false)) {
+                require_once $dir . '/Base/RollbackInterface.php';
+            }
+            foreach ([
+                HlebConnector::class => '/Init/Connectors/HlebConnector.php',
+                BaseAsyncSingleton::class => '/Main/Insert/BaseAsyncSingleton.php',
+                DynamicParams::class => '/Constructor/Data/DynamicParams.php',
+                ] as $name => $path) {
+                if (!\class_exists($name, false)) {
+                    require_once $dir . $path;
+                }
             }
             foreach (HlebConnector::$exceptionMap as $excClass => $excName) {
                 if (!\class_exists($dir . DIRECTORY_SEPARATOR . $excClass, false)) {
@@ -213,7 +223,6 @@ final class ErrorLog
             $beforeSettingsClasses = [
                 BaseSingleton::class => $dir . '/Main/Insert/BaseSingleton.php',
                 OpenInstanceSingleton::class => $dir . '/Main/Insert/OpenInstanceSingleton.php',
-                BaseAsyncSingleton::class => $dir . '/Main/Insert/BaseAsyncSingleton.php',
                 LogLevel::class => $dir . '/Main/Logger/LogLevel.php',
                 SystemSettings::class => $dir . '/Constructor/Data/SystemSettings.php',
                 DynamicParams::class => $dir . '/Constructor/Data/DynamicParams.php',

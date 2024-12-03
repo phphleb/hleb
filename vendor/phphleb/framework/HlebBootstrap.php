@@ -532,6 +532,7 @@ class HlebBootstrap
                 'module.dir.name' => [['string'], /*(!)*/],
                 'custom.setting.files' => [['array'], /*(!)*/],
                 'custom.function.files' => [['array'], /*(!)*/],
+                // 'project.paths' => [['array'], []], // already used
             ],
         ];
         // The following errors that occur at this level can be displayed without taking into account the settings and debug mode.
