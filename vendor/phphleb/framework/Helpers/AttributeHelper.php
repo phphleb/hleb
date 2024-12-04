@@ -29,7 +29,7 @@ final class AttributeHelper
      */
     public function getFromClass(): array
     {
-        if (array_key_exists($this->className, self::$cacheRefClass)) {
+        if (\array_key_exists($this->className, self::$cacheRefClass)) {
             return self::$cacheRefClass[$this->className];
         }
         $result = [];

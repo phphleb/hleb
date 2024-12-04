@@ -105,9 +105,14 @@ final class ProjectLoader
                     '{{route}}' => $address,
                 ];
                 foreach (DynamicParams::getDynamicUriParams() as $key => $param) {
+                    if ("{%$key%}" === $value) {
+                        $value = $param;
+                        $replacements = [];
+                        break;
+                    }
                     $replacements["{%$key%}"] = (string)$param;
                 }
-                $value = \strtr($value, $replacements);
+                $replacements and $value = \strtr($value, $replacements);
             }
             if (DynamicParams::isDebug()) {
                 Response::addHeaders(['Content-Type' => 'text/html']);

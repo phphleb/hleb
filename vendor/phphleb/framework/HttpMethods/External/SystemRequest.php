@@ -64,7 +64,7 @@ final class SystemRequest
             }
             (\is_array($this->parsedBody) || \is_object($this->parsedBody)) or $this->parsedBody = null;
         }
-        if (is_object($this->parsedBody)) {
+        if (\is_object($this->parsedBody)) {
             return $cleared ? \hl_clear_tags((array)$this->parsedBody) : (array)$this->parsedBody;
         }
 
