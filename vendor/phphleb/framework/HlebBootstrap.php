@@ -105,7 +105,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.48');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.49');
 
         $this->logger = $logger;
 
@@ -503,20 +503,20 @@ class HlebBootstrap
                 'app.cache.on' => ['boolean'],
                 // 'twig.options' => ['array'],
                 // 'twig.cache.inverted' => ['array'],
-                // 'show.request.id' => ['boolean'],
-                // 'max.log.size' => ['integer'],
-                //  'max.cache.size' => ['integer'],
+                'show.request.id' => ['boolean'],
+                'max.log.size' => ['integer'],
+                'max.cache.size' => ['integer'],
             ],
             'database' => [
-                //'base.db.type' => ['string'],
+                'base.db.type' => ['string'],
                 'db.settings.list' => ['array'],
             ],
             'main' => [
                 'session.enabled' => ['boolean'],
                 'db.log.enabled' => ['boolean'],
-                // 'default.lang' => ['string'],
-                // 'allowed.languages' => ['array'],
-                // 'session.options' => ['array'],
+                'default.lang' => ['string'],
+                'allowed.languages' => ['array'],
+                'session.options' => ['array'],
             ],
             'system' => [
                 'classes.autoload' => ['boolean'],
@@ -526,9 +526,9 @@ class HlebBootstrap
                 'url.validation' => ['boolean', 'string'],
                 'session.name' => ['string'],
                 'max.session.lifetime' => ['integer'],
-                // 'allowed.route.paths' => ['array'],
-                // 'allowed.structure.parts' => ['array'],
-                //'page.external.access' => ['boolean'],
+                'allowed.route.paths' => ['array'],
+                'allowed.structure.parts' => ['array'],
+                'page.external.access' => ['boolean'],
                 'module.dir.name' => ['string'],
                 'custom.setting.files' => ['array'],
                 'custom.function.files' => ['array'],
