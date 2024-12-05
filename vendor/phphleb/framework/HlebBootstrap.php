@@ -501,11 +501,12 @@ class HlebBootstrap
                 'routes.auto-update' => ['boolean'],
                 'container.mock.allowed' => ['boolean'],
                 'app.cache.on' => ['boolean'],
-                // 'twig.options' => ['array'], // optional
-                // 'twig.cache.inverted' => ['array'], // optional
                 'show.request.id' => ['boolean'],
                 'max.log.size' => ['integer'],
                 'max.cache.size' => ['integer'],
+
+                // 'twig.options' => ['array'], // optional
+                // 'twig.cache.inverted' => ['array'], // optional
             ],
             'database' => [
                 'base.db.type' => ['string'],
@@ -532,6 +533,11 @@ class HlebBootstrap
                 'module.dir.name' => ['string'],
                 'custom.setting.files' => ['array'],
                 'custom.function.files' => ['array'],
+
+                // 'start.unixtime' => ['integer'], // system
+                // 'module.namespace' => ['string'], system
+                // 'events.used' => ['boolean'], // hidden
+                // 'async.clear.state' => ['boolean'], // hidden
             ],
         ];
         // The following errors that occur at this level can be displayed without taking into account the settings and debug mode.
