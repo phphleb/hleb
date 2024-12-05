@@ -101,6 +101,7 @@ final class ProjectLoader
             $value = \substr($value, \strlen(\Functions::PREVIEW_TAG));
             if (\str_contains($value, '{')) {
                 $replacements = [
+                    '{{ip}}' => DynamicParams::getRequest()->getUri()->getIp(),
                     '{{method}}' => DynamicParams::getRequest()->getMethod(),
                     '{{route}}' => $address,
                 ];
