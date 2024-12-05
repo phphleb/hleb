@@ -16,10 +16,10 @@ if (file_exists(__DIR__ . '/database-local.php')) { return (require __DIR__ . '/
  * В параметр `options` можно передать настройки PDO.
  */
 return [
-    'base.db.type' => get_env('DB_TYPE','mysql.name'),
+    'base.db.type' => env('DB_TYPE','mysql.name'),
 
-    'mutex.db.type' => get_env('DB_MUTEX','mysql.name'),
-    'redis.db.type' => get_env('DB_REDIS','redis.name'),
+    'mutex.db.type' => env('DB_MUTEX','mysql.name'),
+    'redis.db.type' => env('DB_REDIS','redis.name'),
 
     'db.settings.list' => [
 

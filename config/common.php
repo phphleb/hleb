@@ -31,7 +31,7 @@ return [
     │ Изначально: true
     │
     */
-    'debug' => get_env('APP_DEBUG', true),
+    'debug' => env_bool('APP_DEBUG', true),
 
     /*
     │-----------------------------------------------------------------------------
@@ -56,7 +56,7 @@ return [
     │ Изначально: true
     │
     */
-    'log.enabled' => get_env('APP_LOG_ENABLED', true),
+    'log.enabled' => env_bool('APP_LOG_ENABLED', true),
 
     /*
     │-----------------------------------------------------------------------------
@@ -79,7 +79,7 @@ return [
     │ Изначально: info
     │
     */
-    'max.log.level' => get_env('APP_LOG_LEVEL','info'),
+    'max.log.level' => env('APP_LOG_LEVEL','info'),
 
     /*
     │-----------------------------------------------------------------------------
@@ -104,7 +104,7 @@ return [
     │ Изначально: info
     │
     */
-    'max.cli.log.level' => get_env('CLI_LOG_LEVEL','info'),
+    'max.cli.log.level' => env('CLI_LOG_LEVEL','info'),
 
     /*
     │-----------------------------------------------------------------------------
@@ -214,7 +214,7 @@ return [
     │ Изначально: row.
     │
     */
-    'log.format' => get_env('APP_LOG_FORMAT','row'),
+    'log.format' => env('APP_LOG_FORMAT','row'),
 
     /*
     │-----------------------------------------------------------------------------
@@ -270,7 +270,7 @@ return [
     │ Изначально: 'Europe/Moscow'
     │
     */
-    'timezone' => get_env('APP_TIMEZONE','Europe/Moscow'),
+    'timezone' => env('APP_TIMEZONE','Europe/Moscow'),
 
     /*
     │-----------------------------------------------------------------------------
@@ -361,6 +361,7 @@ return [
     │
     │ In the local version, when using the DEBUG mode, it is recommended
     │ to completely disable caching.
+    │ This is an optional parameter, remove it if TWIG will not be used.
     │
     │ P.S. To use the twig library, you must first install it.
     │
@@ -375,6 +376,7 @@ return [
     │
     │ В локальной версии при использовании режима DEBUG, рекомендуется полностью
     │ отключить кеширование.
+    │ Это необязательный параметр, удалите его, если TWIG не будет использован.
     │
     │ P.S. Для использования библиотеки Twig её необходимо сначала установить.
     │
@@ -396,7 +398,7 @@ return [
     │
     │ If twig.options[cache] = true, then excludes the listed directories
     │ (from the project root) from the cache, otherwise it includes them.
-    │
+    │ This is an optional parameter, remove it if TWIG will not be used.
     │ In the local version, when using the DEBUG mode, it is recommended
     │ to completely disable caching.
     │ Default: [] (auto-detection)
@@ -408,7 +410,7 @@ return [
     │
     │ Если twig.options[cache] = true, то исключает перечисленные директории
     │ (из корня проекта) из кеша, иначе - включает.
-    │
+    │ Это необязательный параметр, удалите его, если TWIG не будет использован.
     │ В локальной версии при использовании режима DEBUG, рекомендуется полностью
     │ отключить кеширование.
     │ Изначально: [] (автоопределение)
