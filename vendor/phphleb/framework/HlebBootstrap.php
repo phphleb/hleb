@@ -534,9 +534,10 @@ class HlebBootstrap
                 'custom.setting.files' => ['array'],
                 'custom.function.files' => ['array'],
 
+                // 'events.used' => ['boolean'], // optional
                 // 'start.unixtime' => ['integer'], // system
                 // 'module.namespace' => ['string'], system
-                // 'events.used' => ['boolean'], // hidden
+                // 'route.files.checking' => ['boolean'], // hidden
                 // 'async.clear.state' => ['boolean'], // hidden
             ],
         ];

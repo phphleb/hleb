@@ -4,8 +4,10 @@
 
 namespace Hleb\Constructor\Cache;
 
+use FilesystemIterator;
 use Hleb\Constructor\Data\SystemSettings;
 use Hleb\Main\Routes\Prepare\Defender;
+use Hleb\Main\Routes\Update\CheckRouteForUpdates;
 use Hleb\RouteColoredException;
 use Hleb\Main\Routes\Prepare\FileChecker;
 use Hleb\Main\Routes\Prepare\Handler;
@@ -14,7 +16,6 @@ use Hleb\Main\Routes\Prepare\Verifier;
 use Hleb\Main\Routes\StandardRoute;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use SplFileInfo;
 
 /**
  * @internal
@@ -22,6 +23,8 @@ use SplFileInfo;
 final class CacheRoutes
 {
     private const DIR = '@storage/cache/routes';
+
+    private const FILES = '@global/routes';
 
     private string $dir;
 
@@ -131,8 +134,31 @@ final class CacheRoutes
         );
     }
 
+    /**
+     * Updating a file with general information about routes.
+     *
+     * Обновление файла с общей информацией о маршрутах.
+     */
     public function updateInfo(array $data, ?string $className = null): void
     {
+        if (SystemSettings::getSystemValue('route.files.checking')) {
+            $fileInfo = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator(SystemSettings::getPath(self::FILES),
+                    FilesystemIterator::SKIP_DOTS
+                ),
+            );
+            $map = [];
+            /** @see CheckRouteForUpdates::hasChanges() */
+            foreach ($fileInfo as $info) {
+                if (!$info->isFile() || $info->getExtension() !== 'php') {
+                    continue;
+                }
+                $map[] = $info->getRealPath();
+            }
+            $data['files_hash'] = \sha1(\json_encode($map));
+        }
+
+
         $className = $className ?? RouteMark::getRouteClassName(RouteMark::INFO_CLASS_NAME);
         $this->creator->saveContent(
             $className,
@@ -163,6 +189,32 @@ final class CacheRoutes
                 );
             }
         }
+    }
+
+    /**
+     * Returns a list of all files in a directory and subdirectories relative to the root of the directory.
+     *
+     * Возвращает список всех файлов в директории и поддиректориях относительно корня директории.
+     */
+    function getFileList(string $directory): array {
+        $files = [];
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        $baseDirLength = \strlen(\realpath($directory)) + 1;
+
+        foreach ($iterator as $fileInfo) {
+            if ($fileInfo->isFile()) {
+                $filePath = \realpath($fileInfo->getPathname());
+                $relativePath = \substr($filePath, $baseDirLength);
+                $relativePath = \str_replace(DIRECTORY_SEPARATOR, '/', $relativePath);
+                $files[] = $relativePath;
+            }
+        }
+
+        return $files;
     }
 
     /**

@@ -363,7 +363,9 @@ class RouteFileManager
             // Кеш не обнаружен.
             return true;
         }
-        if (!(new CheckRouteForUpdates($time, SystemSettings::getRealPath('routes')))->hasChanges()) {
+        if (!(new CheckRouteForUpdates($time, SystemSettings::getRealPath('routes')))
+            ->hasChanges($info['files_hash'] ?? null)
+        ) {
             // If there is no forced update and routes do not need to be updated.
             // Если маршруты не нужно обновлять.
             return false;
