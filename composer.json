@@ -50,6 +50,5 @@
         "post-create-project-cmd": [
             "@php console project-setup-task --clear"
         ]
-    },
-    "minimum-stability": "dev"
+    }
 }
