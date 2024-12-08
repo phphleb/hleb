@@ -7,8 +7,11 @@ declare(strict_types=1);
 
 namespace Hleb;
 
+use App\Bootstrap\ContainerFactory;
 use ErrorException;
+use Hleb\Base\RollbackInterface;
 use Hleb\Base\Task;
+use Hleb\Init\ErrorLog;
 use Hleb\Main\Logger\LoggerInterface;
 use Exception;
 use Hleb\Constructor\Attributes\Accessible;
@@ -36,6 +39,8 @@ use Hleb\Constructor\Attributes\AvailableAsParent;
 #[Accessible] #[AvailableAsParent]
 class HlebQueueBootstrap extends HlebBootstrap
 {
+    private static int $processNumber = 0;
+
     protected const SUPPORTED_MODES = [self::ASYNC_MODE, self::CONSOLE_MODE, self::STANDARD_MODE];
 
     protected mixed $result = null;
@@ -122,6 +127,8 @@ class HlebQueueBootstrap extends HlebBootstrap
     #[\Override]
     public function load(?string $commandClass = null, array $arguments = []): int
     {
+        self::$processNumber++;
+
         \date_default_timezone_set($this->config['common']['timezone']);
 
         if (!$commandClass) {
@@ -144,8 +151,47 @@ class HlebQueueBootstrap extends HlebBootstrap
             echo $e->getMessage();
         }
 
-        HlebAsyncBootstrap::prepareAsyncRequestData($this->config);
+        if ($this->mode === self::ASYNC_MODE) {
+            self::prepareAsyncRequestData($this->config, self::$processNumber);
+        }
 
         return (int)($status != 0);
+    }
+
+    /**
+     * Preparing data to use an asynchronous request.
+     *
+     * Подготовка данных к использованию асинхронного запроса.
+     *
+     * @see HlebAsyncBootstrap::prepareAsyncRequestData()
+     *
+     * @internal
+     */
+    protected static function prepareAsyncRequestData(array $config, int $processNumber): void
+    {
+        // If your application does not use state storage, you can disable state cleanup.
+        // Если в приложении не используется хранение состояния, то можно отключить его очистку.
+        if ($config['system']['async.clear.state'] ?? true) {
+            foreach (\get_declared_classes() as $class) {
+                \is_a($class, RollbackInterface::class, true) and $class::rollback();
+            }
+        }
+        foreach ([ContainerFactory::class, Registrar::class, ErrorLog::class] as $class) {
+            \class_exists($class, false) and $class::rollback();
+        }
+
+        /*
+         * Periodically clean up used memory and call GC. Will be applied to every $rate request.
+         * For example, if you pass HLEB_ASYNC_RE_CLEANING=3, then after every third request.
+         *
+         * Периодическая очистка используемой памяти и вызов GC. Будет применено к каждому $rate запросу.
+         * Например, если передать HLEB_ASYNC_RE_CLEANING=3, то после каждого третьего запроса.
+         */
+        $rate = (int)get_env('HLEB_ASYNC_RE_CLEANING', get_constant('HLEB_ASYNC_RE_CLEANING', 1000));
+        if ($rate >= 0 && ($rate === 0 || $processNumber % $rate == 0)) {
+            \gc_collect_cycles();
+            \gc_mem_caches();
+        }
+        \memory_reset_peak_usage();
     }
 }

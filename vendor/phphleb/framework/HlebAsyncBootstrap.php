@@ -27,7 +27,7 @@ use Throwable;
 #[Accessible] #[AvailableAsParent]
 class HlebAsyncBootstrap extends HlebBootstrap
 {
-    private int $processNumber = 0;
+    private static int $processNumber = 0;
 
     /**
      * Constructor with initialization.
@@ -98,7 +98,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
         $this->session = $session;
         $this->cookies = $cookie;
 
-        $this->processNumber++;
+        self::$processNumber++;
 
         \ob_start();
         try {
@@ -160,21 +160,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
 
         $_GET = $_POST = $_SERVER = $_SESSION = $_COOKIE = $_REQUEST = $_FILES = [];
 
-        self::prepareAsyncRequestData($this->config);
-
-        /*
-         * Periodically clean up used memory and call GC. Will be applied to every $rate request.
-         * For example, if you pass 3, then after every third request.
-         *
-         * Периодическая очистка используемой памяти и вызов GC. Будет применено к каждому $rate запросу.
-         * Например, если передать 3, то после каждого третьего запроса.
-         */
-        $rate = (int)get_env('HLEB_ASYNC_RE_CLEANING', get_constant('HLEB_ASYNC_RE_CLEANING', 1000));
-        if ($rate >= 0 && ($rate === 0 || $this->processNumber % $rate == 0)) {
-            \gc_collect_cycles();
-            \gc_mem_caches();
-        }
-        \memory_reset_peak_usage();
+        self::prepareAsyncRequestData($this->config, self::$processNumber);
     }
 
     /**
@@ -240,9 +226,11 @@ class HlebAsyncBootstrap extends HlebBootstrap
      *
      * Подготовка данных к использованию асинхронного запроса.
      *
+     * @see HlebQueueBootstrap::prepareAsyncRequestData()
+     *
      * @internal
      */
-    public static function prepareAsyncRequestData(array $config): void
+    protected static function prepareAsyncRequestData(array $config, int $processNumber): void
     {
         // If your application does not use state storage, you can disable state cleanup.
         // Если в приложении не используется хранение состояния, то можно отключить его очистку.
@@ -254,6 +242,20 @@ class HlebAsyncBootstrap extends HlebBootstrap
         foreach ([ContainerFactory::class, Registrar::class, ErrorLog::class] as $class) {
             \class_exists($class, false) and $class::rollback();
         }
+
+        /*
+         * Periodically clean up used memory and call GC. Will be applied to every $rate request.
+         * For example, if you pass HLEB_ASYNC_RE_CLEANING=3, then after every third request.
+         *
+         * Периодическая очистка используемой памяти и вызов GC. Будет применено к каждому $rate запросу.
+         * Например, если передать HLEB_ASYNC_RE_CLEANING=3, то после каждого третьего запроса.
+         */
+        $rate = (int)get_env('HLEB_ASYNC_RE_CLEANING', get_constant('HLEB_ASYNC_RE_CLEANING', 1000));
+        if ($rate >= 0 && ($rate === 0 || $processNumber % $rate == 0)) {
+            \gc_collect_cycles();
+            \gc_mem_caches();
+        }
+        \memory_reset_peak_usage();
     }
 
     /**
