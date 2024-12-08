@@ -384,7 +384,7 @@ final class ProjectLoader
         if (self::$cachePlainRoutes) {
             $current = DynamicParams::addressAsArray();
             foreach (self::$cachePlainRoutes as $cache) {
-                if ($current['id'] === $cache) {
+                if ($current === $cache['id']) {
                     Response::setBody($cache['value']);
                     Response::addHeaders(['Content-Type' => $cache['type']]);
                     return true;
