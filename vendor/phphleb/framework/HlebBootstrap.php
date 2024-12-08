@@ -51,6 +51,8 @@ class HlebBootstrap
 
     final public const ASYNC_MODE = 3;
 
+    final protected const DEFAULT_RE_CLEANING = 10_000;
+
     protected ?int $mode = null;
 
     protected array $config = [];
