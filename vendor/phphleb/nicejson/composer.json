@@ -17,6 +17,5 @@
     "require": {
         "php": ">=8.2.0",
         "ext-json": "*"
-    },
-    "minimum-stability": "dev"
+    }
 }
