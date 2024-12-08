@@ -32,6 +32,8 @@ use App\Middlewares\Hlogin\Registrar;
  */
 final class ProjectLoader
 {
+    private static array $cachePlainRoutes = [];
+
     /**
      * Performs all stages of the project in turn. In this case, the input / output data is initialized.
      *
@@ -42,7 +44,7 @@ final class ProjectLoader
     public static function init(): void
     {
         /** @see hl_check() - ProjectLoader start */
-        if (self::insertServiceResource()) {
+        if (self::cachePlainRoutes() || self::insertServiceResource()) {
             return;
         }
         /** @see hl_check() - insertServiceResource worked */
@@ -90,13 +92,17 @@ final class ProjectLoader
 
     /**
      * Outputting the value from the route with the assignment of headers.
+     * Returns the matched data for caching.
      *
      * Вывод значения из маршрута c назначением заголовков.
+     * Возвращает совпавшие данные для кеширования.
      *
      * @internal
      */
-    public static function renderSimpleValue(string $value, $address): void
+    public static function renderSimpleValue(string $value, string $address): array
     {
+        $isSimple = false;
+        $contentType = 'text/html';
         if (\str_starts_with($value, \Functions::PREVIEW_TAG)) {
             $value = \substr($value, \strlen(\Functions::PREVIEW_TAG));
             if (\str_contains($value, '{')) {
@@ -105,27 +111,45 @@ final class ProjectLoader
                     '{{method}}' => DynamicParams::getRequest()->getMethod(),
                     '{{route}}' => $address,
                 ];
-                foreach (DynamicParams::getDynamicUriParams() as $key => $param) {
-                    if ("{%$key%}" === $value) {
-                        $value = $param;
-                        $replacements = [];
-                        break;
+                if (\str_contains($value, '%')) {
+                    foreach (DynamicParams::getDynamicUriParams() as $key => $param) {
+                        if ("{%$key%}" === $value) {
+                            $value = $param;
+                            $isSimple = true;
+                            $replacements = [];
+                            break;
+                        }
+                        $replacements["{%$key%}"] = (string)$param;
                     }
-                    $replacements["{%$key%}"] = (string)$param;
+                } else if(!\str_contains($value, '{{ip}}')){
+                    $isSimple = true;
                 }
                 $replacements and $value = \strtr($value, $replacements);
             }
             if (DynamicParams::isDebug()) {
-                Response::addHeaders(['Content-Type' => 'text/html']);
                 $value = \htmlspecialchars($value);
             } else if (\str_starts_with($value, '{') && \str_ends_with($value, '}')) {
-                Response::addHeaders(['Content-Type' => 'application/json']);
+                $contentType = 'application/json';
             } else {
-                Response::addHeaders(['Content-Type' => 'text/plain']);
+                $contentType = 'text/plain';
             }
+            Response::addHeaders(['Content-Type' => $contentType]);
+        } else {
+            $isSimple = true;
         }
 
         Response::addToBody($value);
+
+        if (!DynamicParams::isDebug() && SystemSettings::isAsync()) {
+            if ($isSimple) {
+                return [
+                    'id' => DynamicParams::addressAsArray(),
+                    'value' => $value,
+                    'type' => $contentType,
+                ];
+            }
+        }
+        return [];
     }
 
 
@@ -347,6 +371,48 @@ final class ProjectLoader
     }
 
     /**
+     * Most queries that return pre-specified text in a route and run asynchronously
+     * can be added to the in-memory cache.
+     * If they are added, then this method composes a response and returns true.
+     *
+     * Большинство запросов, возвращающих предварительно указанный текст в маршруте
+     * и работающих в асинхронном режиме, могут быть добавлены в in-memory кэш.
+     * Если они добавлены, то данный метод составляет ответ и возвращает true.
+     */
+    private static function cachePlainRoutes(): bool
+    {
+        if (self::$cachePlainRoutes) {
+            $current = DynamicParams::addressAsArray();
+            foreach (self::$cachePlainRoutes as $cache) {
+                if ($current['id'] === $cache) {
+                    Response::setBody($cache['value']);
+                    Response::addHeaders(['Content-Type' => $cache['type']]);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Added to the cache if there is no such value already.
+     *
+     * Добавляется в кеш, если там еще нет такого значения.
+     */
+    private static function addToPlainCache(array $data): void
+    {
+        if (!$data) {
+            return;
+        }
+        foreach (self::$cachePlainRoutes as $cache) {
+            if ($data['id'] === $cache['id']) {
+                return;
+            }
+        }
+        self::$cachePlainRoutes[] = $data;
+    }
+
+    /**
      * Returns the result of block initialization.
      *
      * Возвращает результат инициализации блока.
@@ -369,7 +435,7 @@ final class ProjectLoader
         // If this is simple text, then we will process it here.
         // Если это простой текст, то обработаем его здесь.
         if (empty($block['middlewares']) && empty($block['middleware-after']) && \is_string($block['data']['view'] ?? null)) {
-            self::renderSimpleValue($block['data']['view'], $block['full-address']);
+            self::addToPlainCache(self::renderSimpleValue($block['data']['view'], $block['full-address']));
             DynamicParams::setEndTime(\microtime(true));
             self::addDebugPanelToResponse();
             return true;
