@@ -143,7 +143,7 @@ final class ProjectLoader
         if (!DynamicParams::isDebug() && SystemSettings::isAsync()) {
             if ($isSimple) {
                 return [
-                    'id' => DynamicParams::addressAsArray(),
+                    'id' => DynamicParams::addressAsString(true),
                     'value' => $value,
                     'type' => $contentType,
                 ];
@@ -382,34 +382,32 @@ final class ProjectLoader
     private static function cachePlainRoutes(): bool
     {
         if (self::$cachePlainRoutes) {
-            $current = DynamicParams::addressAsArray();
-            foreach (self::$cachePlainRoutes as $cache) {
-                if ($current === $cache['id']) {
-                    Response::setBody($cache['value']);
-                    Response::addHeaders(['Content-Type' => $cache['type']]);
-                    return true;
-                }
+            $cache = self::$cachePlainRoutes[DynamicParams::addressAsString(true)] ?? [];
+            if ($cache) {
+                Response::setBody($cache['value']);
+                Response::addHeaders(['Content-Type' => $cache['type']]);
+                return true;
             }
         }
         return false;
     }
 
     /**
-     * Added to the cache if there is no such value already.
+     * Added to the cache.
      *
-     * Добавляется в кеш, если там еще нет такого значения.
+     * Добавляется в кеш.
      */
     private static function addToPlainCache(array $data): void
     {
         if (!$data) {
             return;
         }
-        foreach (self::$cachePlainRoutes as $cache) {
-            if ($data['id'] === $cache['id']) {
-                return;
-            }
+        if (\count(self::$cachePlainRoutes) > 1000) {
+            \array_unshift(self::$cachePlainRoutes);
         }
-        self::$cachePlainRoutes[] = $data;
+        $id = $data['id'];
+        unset($data['id']);
+        self::$cachePlainRoutes[$id] = $data;
     }
 
     /**
