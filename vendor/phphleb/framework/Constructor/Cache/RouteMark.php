@@ -124,7 +124,7 @@ final class RouteMark extends BaseAsyncSingleton implements RollbackInterface
     #[\Override]
     public static function rollback(): void
     {
-        self::$hash = null;
+        // Nothing happens. //
     }
 
     private static function deleteOldHash(): void
