@@ -287,6 +287,8 @@ class HlebAsyncBootstrap extends HlebBootstrap
             ) {
                 [$body, $headers] = $this->parseSwooleRequest($request);
                 $headers = $this->parseHeaders($headers, ParseSwooleHeaders::class);
+            } else if (\str_starts_with($request::class, "Workerman\\")) {
+                [$body, $headers] = $this->parseWorkermanRequest($request);
             } else {
                 // Data will be received from $_SERVER.
                 // Данные будут получены из $_SERVER.
@@ -389,6 +391,44 @@ class HlebAsyncBootstrap extends HlebBootstrap
         $body = method_exists($req, 'rawContent') ? $req->rawContent() : $req->getContent();
 
         return [(string)$body, $headers];
+    }
+
+    /**
+     * An attempt to parse an object according to the PHP Workerman specification.
+     *
+     * Попытка разбора объекта по спецификации PHP Workerman.
+     *
+     * @param \Workerman\Protocols\Http\Request $req
+     */
+    protected function parseWorkermanRequest(object $req): array
+    {
+        $hostData = \explode($req->host(true), ':');
+        $host = \array_shift($hostData);
+        $port = $hostData? (int)$hostData[0] : null;
+        // Override $_SERVER['HTTP_HOST'] on initialization if it's different.
+        // Переопределите $_SERVER['HTTP_HOST'] при инициализации, если он отличается.
+        $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_HOST'] ?? $req->host(true);
+        $_SERVER['REMOTE_ADDR'] = $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'];
+        $get = $req->get() ?: [];
+        $_GET = $get;
+        $_POST = $req->post() ?: [];
+        $_SERVER['QUERY_STRING'] = $get ? '?' . \http_build_query($get) : '';
+        $_SERVER['REQUEST_METHOD'] = \strtoupper((string)$req->method());
+        $_SERVER['DOCUMENT_URI'] = $req->uri() ?: '';
+        // Override $_SERVER['SERVER_PORT'] on initialization if it's different.
+        // Переопределите $_SERVER['SERVER_PORT'] при инициализации, если он отличается.
+        $_SERVER['SERVER_PORT'] = $_SERVER['SERVER_PORT'] ?? $port;
+        $_SERVER['REQUEST_URI'] = $_SERVER['DOCUMENT_URI'] . $_SERVER['QUERY_STRING'];
+        $_SERVER['HTTPS'] = $_SERVER['HTTPS'] ?? ($_SERVER['SERVER_PORT'] == 443 ? 'on' : 'off');
+        $_SERVER["SERVER_PROTOCOL"] = 'HTTP/' . $req->protocolVersion();
+
+        $body = $req->rawBody();
+        $headers = $req->header() ?: [];
+        $_SESSION = $req->session() ? $req->session()->all() : [];
+        $_COOKIE = $req->cookie() ?: [];
+        $_FILES = $req->file() ?: [];
+
+        return [$body, $headers];
     }
 
     /**
