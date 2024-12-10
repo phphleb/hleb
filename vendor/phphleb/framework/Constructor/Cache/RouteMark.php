@@ -28,7 +28,7 @@ final class RouteMark extends BaseAsyncSingleton implements RollbackInterface
 
     final public const DATA_PREFIX = 'HL2';
 
-    private const FILE_NAME = 'config-hash.txt';
+    private const CACHE_CLASS_NAME = 'HL2ConfigHash';
 
     private static ?string $hash = null;
 
@@ -61,8 +61,23 @@ final class RouteMark extends BaseAsyncSingleton implements RollbackInterface
         $dataHash = self::createHash($data);
         $dir = SystemSettings::getRealPath('storage') . '/cache/routes/';
         \hl_create_directory($dir);
-        $path = $dir . self::FILE_NAME;
-        \file_put_contents($path, $dataHash, LOCK_EX);
+        $class = self::CACHE_CLASS_NAME;
+        $content = "<?php
+/**
+* This class is generated automatically. It will be changed during the update.
+* 
+* Этот класс сгенерирован автоматически. Он будет изменён при обновлении.
+* 
+* @internal
+*/
+final class {$class}
+{  
+   /** @internal */
+   public const HASH = '{$dataHash}';
+}
+";
+        $path = $dir . $class. '.php';
+        \file_put_contents($path, $content, LOCK_EX);
         @\chmod($path, 0664);
         if (empty(\file_get_contents($path))) {
             throw new CoreProcessException('Failed to save route cache key.');
@@ -86,18 +101,23 @@ final class RouteMark extends BaseAsyncSingleton implements RollbackInterface
         if (!$dir) {
             return false;
         }
-        $file = $dir . self::FILE_NAME;
-        if (!\file_exists($file)) {
-            if (!\file_exists($dir . 'Map')) {
-                return false;
-            }
-            \usleep(10000);
+        $class = self::CACHE_CLASS_NAME;
+        $file = $dir . $class . '.php';
+        if (!\class_exists($class, false)) {
             if (!\file_exists($file)) {
-                return false;
+                if (!\file_exists($dir . 'Map')) {
+                    return false;
+                }
+                \usleep(10000);
+                if (!\file_exists($file)) {
+                    return false;
+                }
             }
+            require $file;
         }
 
-        return self::$hash = \file_get_contents($file) ?: null;
+        /** @var object $class */
+        return $class::HASH;
     }
 
     /**
