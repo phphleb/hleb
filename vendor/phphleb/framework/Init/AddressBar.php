@@ -12,14 +12,30 @@ use Hleb\HttpMethods\External\RequestUri;
  */
 final class AddressBar
 {
-    readonly private string $originUrl;
+    private array $config;
+    private ?SystemRequest $request;
+    private ?string $originUrl;
+    private false|string $resultUrl;
+    private ?RequestUri $uri;
 
-    private false|string $resultUrl = false;
-
-    private RequestUri $uri;
-
-    public function __construct(readonly private array $config, readonly private SystemRequest $request)
+    public function __construct()
     {
+        $this->config = [];
+        $this->request = null;
+        $this->uri = null;
+        $this->originUrl = null;
+        $this->resultUrl = false;
+    }
+
+    /**
+     * This method is needed to reuse a class object.
+     *
+     * Данный метод нужен для повторного использования объекта класса.
+     */
+    public function init(array $config, SystemRequest $request): void
+    {
+        $this->config = $config;
+        $this->request = $request;
         $this->uri = $request->getUri();
         $this->originUrl = $this->uri->getScheme() . '://' . $this->uri->getHost() . $this->uri->getPath() . $this->uri->getQuery();
     }
@@ -39,7 +55,7 @@ final class AddressBar
 
         // Test for trailing slash only for set HTTP methods.
         // Проверка на конечный слеш только для установленных HTTP-методов.
-        (\in_array(\strtolower($method), $methods, true) || \in_array($method, $methods, true)) or $endingUrl = false;
+        (\in_array($method, \array_map('strtoupper', $methods), true)) or $endingUrl = false;
 
         // Clean up duplicate slashes.
         // Очистка дублированных слешей.

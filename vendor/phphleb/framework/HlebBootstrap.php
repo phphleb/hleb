@@ -77,6 +77,8 @@ class HlebBootstrap
 
     protected static bool $loadResources = false;
 
+    protected ?AddressBar $addressBar = null;
+
     /**
      * Constructor with initialization.
      *
@@ -107,7 +109,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.53');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.54');
 
         $this->logger = $logger;
 
@@ -395,33 +397,6 @@ class HlebBootstrap
         }
         if ($this->mode === self::ASYNC_MODE && $request->getMethod() === 'GET') {
             Response::addHeaders(['Content-Type' => 'text/html; charset=UTF-8']);
-        }
-
-        /**
-         * The KernelEvent class is used only to interfere with the pre-request logic.
-         *
-         * Класс KernelEvent используется только для вмешательства в предварительную логику запроса.
-         *
-         * ```php
-         * <?php
-         *
-         * namespace App\Bootstrap\Events;
-         *
-         * final class KernelEvent
-         * {
-         *     public function before(): bool
-         *     {
-         *         return true; // Continue execution
-         *     }
-         * }
-         * ```
-         *
-         */
-        if (($this->config['system']['events.used'] ?? true) !== false &&
-            \class_exists(KernelEvent::class, false) &&
-            !(new KernelEvent())->before()
-        ) {
-            return;
         }
 
         // Check the incoming URL data for validity.
@@ -819,10 +794,6 @@ class HlebBootstrap
         if ($this->config['common']['debug']) {
             \class_exists(DebugAnalytics::class, false) or require $dir . 'Constructor/Data/DebugAnalytics.php';
         }
-        $kernelEvent = $this->globalDirectory . '/app/Bootstrap/Events/KernelEvent.php';
-        if (!\class_exists(KernelEvent::class, false) && \file_exists($kernelEvent)) {
-            require $kernelEvent;
-        }
     }
 
     /**
@@ -884,7 +855,11 @@ class HlebBootstrap
      */
     private function verifiedUrlOrRedirect(SystemRequest $request): void
     {
-        $urlValidator = new AddressBar(SystemSettings::getData(), $request);
+       if ($request->getUri()->getPath() === '/') {
+           return;
+       }
+        $urlValidator = $this->mode === self::ASYNC_MODE ? ($this->addressBar ??= new AddressBar()) : new AddressBar();
+        $urlValidator->init(SystemSettings::getData(), $request);
         if ($urlValidator->check()->isUrlCompare()) {
             return;
         }
