@@ -54,11 +54,11 @@ final class AddressBar
         $methods = $this->config['system']['ending.url.methods'];
 
         // Test for trailing slash only for set HTTP methods.
-        // Проверка на конечный слеш только для установленных HTTP-методов.
-        (\in_array($method, \array_map('strtoupper', $methods), true)) or $endingUrl = false;
+        // Проверка на конечный слэш только для установленных HTTP-методов.
+        (\in_array(\strtolower($method), $methods, true) || \in_array($method, $methods, true)) or $endingUrl = false;
 
         // Clean up duplicate slashes.
-        // Очистка дублированных слешей.
+        // Очистка дублированных слэшей.
         $urlPath = \str_contains($urlPath, '//') ? \preg_replace('!/+!', '/', $urlPath) : $urlPath;
 
         // If a specific value is set, the slash at the end is removed.
