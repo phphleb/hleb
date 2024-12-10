@@ -13,7 +13,6 @@ if (typeof hlDPan.terminal === 'undefined') hlDPan.terminal = {
             this.getButton('help') +
             this.getButton('version') +
             this.getButton('routes') +
-            this.getButton('routes-upd') +
             this.getButton('log-level');
     },
     getButton: function(name){
@@ -32,9 +31,6 @@ if (typeof hlDPan.terminal === 'undefined') hlDPan.terminal = {
         }
         document.getElementById('hl-DEBUGPAN-terminal-btn-routes').onclick = function() {
             th.runCommand('routes');
-        }
-        document.getElementById('hl-DEBUGPAN-terminal-btn-routes-upd').onclick = function() {
-            th.runCommand('routes-upd');
         }
         document.getElementById('hl-DEBUGPAN-terminal-btn-log-level').onclick = function() {
             th.runCommand('log-level');
