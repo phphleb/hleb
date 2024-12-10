@@ -62,15 +62,15 @@ final class AddressBar
         $urlPath = \str_contains($urlPath, '//') ? \preg_replace('!/+!', '/', $urlPath) : $urlPath;
 
         // If a specific value is set, the slash at the end is removed.
-        // Если установлено конкретное значение - убирается слеш в конце.
+        // Если установлено конкретное значение - убирается слэш в конце.
         $endingUrl === false or $urlPath = \rtrim($urlPath, '/');
 
         // If a slash is required, it is placed at the end of the value.
-        // При обязательном слеше он проставляется в конец значения.
+        // При обязательном слэше он проставляется в конец значения.
         ($endingUrl === 1 || $endingUrl === '1') and $urlPath .= '/';
 
         // Must have a slash when path is missing, but with associated parameters.
-        // Должно быть наличие слеша при отсутствии path, но со связанными параметрами.
+        // Должно быть наличие слэша при отсутствии path, но со связанными параметрами.
         ($this->uri->getQuery() !== '' && $urlPath === '') and $urlPath = \rtrim($urlPath, '/') . '/';
 
         // Amend the homepage URL to match Request.
