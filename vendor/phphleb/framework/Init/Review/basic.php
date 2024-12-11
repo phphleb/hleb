@@ -12,15 +12,13 @@ namespace {
          * or $default if it is not set.
          * The type is determined automatically.
          * If you need to cast to a specific type,
-         * use env(), env_string(), env_bool(),
-         * env_array() or env_int().
+         * use env(), env_bool(), env_array() or env_int().
          *
          * Возвращает переменную окружения по имени или $default,
          * если она не установлена.
          * Определение типа производится автоматически.
          * Если необходимо приведение к конкретному типу,
-         * используйте env(), env_string(), env_bool(),
-         * env_array() или env_int().
+         * используйте env(), env_bool(), env_array() или env_int().
          *
          *  | value               | default     | result               |
          *  |---------------------|-------------|----------------------|
