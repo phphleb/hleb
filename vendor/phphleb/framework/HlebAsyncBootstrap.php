@@ -15,6 +15,7 @@ use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\HttpMethods\{External\RequestUri, External\SystemRequest};
+use Hleb\Constructor\Data\DebugAnalytics;
 use Hleb\HttpMethods\External\Response as SystemResponse;
 use Hleb\HttpMethods\Intelligence\Cookies\AsyncCookies;
 use Hleb\Init\ErrorLog;
@@ -239,7 +240,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
                 \is_a($class, RollbackInterface::class, true) and $class::rollback();
             }
         }
-        foreach ([ContainerFactory::class, Registrar::class, ErrorLog::class] as $class) {
+        foreach ([ContainerFactory::class, Registrar::class, DebugAnalytics::class, ErrorLog::class] as $class) {
             \class_exists($class, false) and $class::rollback();
         }
 

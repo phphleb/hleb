@@ -11,6 +11,7 @@ use App\Bootstrap\ContainerFactory;
 use ErrorException;
 use Hleb\Base\RollbackInterface;
 use Hleb\Base\Task;
+use Hleb\Constructor\Data\DebugAnalytics;
 use Hleb\Init\ErrorLog;
 use Hleb\Main\Logger\LoggerInterface;
 use Exception;
@@ -176,7 +177,7 @@ class HlebQueueBootstrap extends HlebBootstrap
                 \is_a($class, RollbackInterface::class, true) and $class::rollback();
             }
         }
-        foreach ([ContainerFactory::class, Registrar::class, ErrorLog::class] as $class) {
+        foreach ([ContainerFactory::class, Registrar::class, DebugAnalytics::class, ErrorLog::class] as $class) {
             \class_exists($class, false) and $class::rollback();
         }
 

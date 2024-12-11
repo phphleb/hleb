@@ -21,7 +21,6 @@ use Hleb\Static\Response;
 use Hleb\Main\Logger\{FileLogger, Log, LoggerInterface, LogLevel};
 use Hleb\Main\ProjectLoader;
 use Phphleb\Idnaconv\IdnaConvert;
-use App\Bootstrap\Events\KernelEvent;
 use Hleb\HttpMethods\External\SystemRequest;
 use Hleb\HttpMethods\External\Response as SystemResponse;
 use Throwable;

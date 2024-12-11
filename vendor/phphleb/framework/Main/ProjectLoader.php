@@ -4,10 +4,13 @@
 
 namespace Hleb\Main;
 
+use App\Bootstrap\Events\KernelEvent;
 use AsyncExitException;
 use Hleb\Constructor\Data\DynamicParams;
 use Hleb\Constructor\Data\SystemSettings;
+use Hleb\Constructor\DI\DependencyInjection;
 use Hleb\CoreProcessException;
+use Hleb\Helpers\ReflectionMethod;
 use Hleb\Helpers\RouteHelper;
 use Hleb\HttpException;
 use Hleb\HttpMethods\Intelligence\Cookies\AsyncCookies;
@@ -33,6 +36,8 @@ use App\Middlewares\Hlogin\Registrar;
 final class ProjectLoader
 {
     private static array $cachePlainRoutes = [];
+
+    private static ?bool $kernelEventExists = null;
 
     /**
      * Performs all stages of the project in turn. In this case, the input / output data is initialized.
@@ -382,6 +387,9 @@ final class ProjectLoader
     private static function cachePlainRoutes(): bool
     {
         if (self::$cachePlainRoutes) {
+            if (self::searchKernelEvent()) {
+                return false;
+            }
             $cache = self::$cachePlainRoutes[DynamicParams::addressAsString(true)] ?? [];
             if ($cache) {
                 Response::setBody($cache['value']);
@@ -430,6 +438,9 @@ final class ProjectLoader
             (new BaseErrorPage(401, 'Protected from CSRF'))->insertInResponse();
             return true;
         }
+        if (self::searchKernelEvent() && self::runKernelEventAndExit()) {
+            return true;
+        }
         // If this is simple text, then we will process it here.
         // Если это простой текст, то обработаем его здесь.
         if (empty($block['middlewares']) && empty($block['middleware-after']) && \is_string($block['data']['view'] ?? null)) {
@@ -450,6 +461,74 @@ final class ProjectLoader
         }
         DynamicParams::setEndTime(\microtime(true));
 
+        return false;
+    }
+
+    /**
+     * Returns the result of checking the existence of the KernelEvent class.
+     *
+     * Возвращает результат проверки существования класса KernelEvent.
+     *
+     * @see self::runKernelEventAndExit()
+     */
+    private static function searchKernelEvent(): bool
+    {
+        if ((SystemSettings::getSystemValue('events.used') ?? true) !== false) {
+            if (\is_null(self::$kernelEventExists)) {
+                $file = SystemSettings::getPath('@global/app/Bootstrap/Events/KernelEvent.php');
+                self::$kernelEventExists = \file_exists($file);
+                if (self::$kernelEventExists) {
+                    require $file;
+                }
+            }
+        }
+        return (bool)self::$kernelEventExists;
+    }
+
+    /**
+     * Implements a check for the existence of the KernelEvent class and returns its execution status.
+     * The KernelEvent class is used only to interfere with the pre-request logic.
+     * Initially, such a file is not in the Events folder; to use it, you need to create it.
+     * The class constructor, if added, supports framework dependency injection.
+     * In the debug panel output, the event execution time is included in the framework initialization.
+     * Example file /app/Bootstrap/Events/KernelEvent.php:
+     *
+     * Реализует проверку существования класса KernelEvent и возврат статуса его выполнения.
+     * Класс KernelEvent используется только для вмешательства в предварительную логику запроса.
+     * Первоначально такого файла нет в папке с Событиями, для использования нужно его создать.
+     * Конструктор класса, если добавлен, поддерживает внедрение зависимостей фреймворка.
+     * В выводе панели отладки время выполнения события входит в инициализацию фреймворка.
+     * Пример файла /app/Bootstrap/Events/KernelEvent.php:
+     *
+     * ```php
+     * <?php
+     *
+     * namespace App\Bootstrap\Events;
+     *
+     * final class KernelEvent
+     * {
+     *     public function before(): bool
+     *     {
+     *         // Completion of execution, if false, then exit the script immediately.
+     *         return true;
+     *     }
+     * }
+     * ```
+     *
+     */
+    protected static function runKernelEventAndExit(): bool
+    {
+        if (self::$kernelEventExists) {
+            if (\method_exists(KernelEvent::class, '__construct')) {
+                $refConstruct = new ReflectionMethod(KernelEvent::class, '__construct');
+                $event = new KernelEvent(
+                    ...($refConstruct->countArgs() ? DependencyInjection::prepare($refConstruct) : [])
+                );
+            } else {
+                $event = new KernelEvent();
+            }
+            return !$event->before();
+        }
         return false;
     }
 }
