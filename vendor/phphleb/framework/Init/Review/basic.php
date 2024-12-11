@@ -51,6 +51,16 @@ namespace {
         }
     }
 
+    if (!function_exists('hl_get_env')) {
+        /**
+         * @see get_env()
+         */
+        function hl_get_env(string $name, #[SensitiveParameter] mixed $default): string|int|float|bool|null
+        {
+            return get_env($name, $default);
+        }
+    }
+
     if (!function_exists('env')) {
         /**
          * Returns the original value of the environment variable, or $default if it is not found.
@@ -71,6 +81,16 @@ namespace {
             $env = $_ENV[$name] ?? getenv($name);
 
             return  $env === false || $env === '' ? $default : (string)$env;
+        }
+    }
+
+    if (!function_exists('hl_env')) {
+        /**
+         * @see env()
+         */
+        function hl_env(string $name, #[SensitiveParameter] string $default): string
+        {
+            return env($name, $default);
         }
     }
 
@@ -113,6 +133,16 @@ namespace {
         }
     }
 
+    if (!function_exists('hl_env_bool')) {
+        /**
+         * @see env_bool()
+         */
+        function hl_env_bool(string $name, #[SensitiveParameter] bool $default): bool
+        {
+            return env_bool($name, $default);
+        }
+    }
+
     if (!function_exists('env_int')) {
         /**
          * Converts to integer and returns the environment variable
@@ -145,6 +175,16 @@ namespace {
         }
     }
 
+    if (!function_exists('hl_env_int')) {
+        /**
+         * @see env_int()
+         */
+        function hl_env_int(string $name, #[SensitiveParameter] int $default): int
+        {
+            return env_int($name, $default);
+        }
+    }
+
     if (!function_exists('env_array')) {
         /**
          * Converts to an array from a JSON string and returns the environment
@@ -167,9 +207,19 @@ namespace {
                 return $default;
             }
             if (str_starts_with($env, '{') && str_ends_with($env,'}')) {
-                  return json_decode($env, true, JSON_THROW_ON_ERROR);
+                return json_decode($env, true, JSON_THROW_ON_ERROR);
             }
             throw new RuntimeException("The value of the environment variable `{$name}` is expected to be an JSON string!");
+        }
+    }
+
+    if (!function_exists('hl_env_array')) {
+        /**
+         * @see env_array()
+         */
+        function hl_env_array(string $name, #[SensitiveParameter] array $default): array
+        {
+            return env_array($name, $default);
         }
     }
 
