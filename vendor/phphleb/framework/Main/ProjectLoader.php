@@ -505,7 +505,9 @@ final class ProjectLoader
      *
      * namespace App\Bootstrap\Events;
      *
-     * final class KernelEvent
+     * use Hleb\Base\Event;
+     *
+     * final class KernelEvent extends Event
      * {
      *     public function before(): bool
      *     {
