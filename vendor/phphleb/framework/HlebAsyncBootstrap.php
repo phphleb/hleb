@@ -306,7 +306,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
         $rawBody    = isset($body) && \is_string($body) ? $body : null;
         $parsedBody = isset($body) && \is_array($body)  ? $body : null;
 
-        $_SERVER['REMOTE_ADDR'] = \strip_tags((string)$_SERVER['REMOTE_ADDR']);
+        $_SERVER['REMOTE_ADDR'] = \strip_tags((string)($_SERVER['REMOTE_ADDR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null)) ?: null;
 
         return new SystemRequest(
             (array)$_COOKIE,
@@ -357,8 +357,12 @@ class HlebAsyncBootstrap extends HlebBootstrap
             isset($_SERVER['REQUEST_URI']) or $_SERVER['REQUEST_URI'] = $uri->getPath() . '?' .
                 \ltrim($uri->getQuery(), '?/');
             if (empty($_SERVER['REMOTE_ADDR'])) {
-                $params = $uri->getServerParams();
-                $_SERVER['REMOTE_ADDR'] = (string)($params['REMOTE_ADDR'] ?? $params['HTTP_CLIENT_IP'] ?? $params['HTTP_X_FORWARDED_FOR'] ?? null);
+                if (\method_exists($req, 'getServerParams')) {
+                    $params = $uri->getServerParams();
+                    $_SERVER['REMOTE_ADDR'] = (string)($params['REMOTE_ADDR'] ?? $params['HTTP_CLIENT_IP'] ?? $params['HTTP_X_FORWARDED_FOR'] ?? null);
+                } else if (\filter_var($_SERVER['HTTP_HOST'], FILTER_VALIDATE_IP)) {
+                    $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_HOST'];
+                }
             }
         }
         return [$body, $headers];

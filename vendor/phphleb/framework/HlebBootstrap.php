@@ -624,7 +624,7 @@ class HlebBootstrap
         }
         $_SERVER['REQUEST_METHOD'] = \strtoupper($_SERVER['REQUEST_METHOD']);
 
-        $_SERVER['REMOTE_ADDR'] = \strip_tags((string)($_SERVER['REMOTE_ADDR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null));
+        $_SERVER['REMOTE_ADDR'] = \strip_tags((string)($_SERVER['REMOTE_ADDR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null)) ?: null;
 
         isset($_SERVER["SERVER_PROTOCOL"]) or $_SERVER["SERVER_PROTOCOL"] = 'HTTP/1.1';
     }
