@@ -306,6 +306,8 @@ class HlebAsyncBootstrap extends HlebBootstrap
         $rawBody    = isset($body) && \is_string($body) ? $body : null;
         $parsedBody = isset($body) && \is_array($body)  ? $body : null;
 
+        $_SERVER['REMOTE_ADDR'] = \strip_tags((string)$_SERVER['REMOTE_ADDR']);
+
         return new SystemRequest(
             (array)$_COOKIE,
             $rawBody,
@@ -351,12 +353,14 @@ class HlebAsyncBootstrap extends HlebBootstrap
             isset($_SERVER['DOCUMENT_URI']) or $_SERVER['DOCUMENT_URI'] = $uri->getPath();
             isset($_SERVER['SERVER_NAME']) or $_SERVER['SERVER_NAME'] = $uri->getHost();
             isset($_SERVER['QUERY_STRING']) or $_SERVER['QUERY_STRING'] = $uri->getQuery();
-            isset($_SERVER['REMOTE_ADDR']) or $_SERVER['REMOTE_ADDR'] = $uri->getScheme();
             isset($_SERVER['SERVER_PORT']) or $_SERVER['SERVER_PORT'] = $uri->getPort();
             isset($_SERVER['REQUEST_URI']) or $_SERVER['REQUEST_URI'] = $uri->getPath() . '?' .
                 \ltrim($uri->getQuery(), '?/');
+            if (empty($_SERVER['REMOTE_ADDR'])) {
+                $params = $uri->getServerParams();
+                $_SERVER['REMOTE_ADDR'] = (string)($params['REMOTE_ADDR'] ?? $params['HTTP_CLIENT_IP'] ?? $params['HTTP_X_FORWARDED_FOR'] ?? null);
+            }
         }
-
         return [$body, $headers];
     }
 
@@ -376,12 +380,14 @@ class HlebAsyncBootstrap extends HlebBootstrap
         $_GET = $req->get ?? [];
         $_FILES = $req->files ?? [];
         $_SERVER['HTTP_HOST'] = $server['remote_addr'] ?? $headers['host'];
-        $_SERVER['REMOTE_ADDR'] = $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'];
+        $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'];
+        $_SERVER['REMOTE_ADDR'] = $server['remote_addr'] ?? '';
         $_SERVER['REQUEST_METHOD'] = \strtoupper((string)$server['request_method']);
         $_SERVER['DOCUMENT_URI'] = $server['path_info'] ?? '';
         $_SERVER['SERVER_PORT'] = $server['server_port'] ?? null;
         $_SERVER['QUERY_STRING'] = $server['query_string'] ?? '';
         $_SERVER['REQUEST_URI'] = $server['request_uri'] ?? '';
+        $_SERVER["SERVER_PROTOCOL"] = $server['server_protocol'] ?? 'HTTP/1.1';
 
         $_SERVER['HTTPS'] = $_SERVER['SERVER_PORT'] == 443 ? 'on' : 'off';
         // An additional field by which you can get the type of HTTP connection scheme.
@@ -403,22 +409,18 @@ class HlebAsyncBootstrap extends HlebBootstrap
      */
     protected function parseWorkermanRequest(object $req): array
     {
-        $hostData = \explode($req->host(true), ':');
-        $host = \array_shift($hostData);
-        $port = $hostData? (int)$hostData[0] : null;
         // Override $_SERVER['HTTP_HOST'] on initialization if it's different.
         // Переопределите $_SERVER['HTTP_HOST'] при инициализации, если он отличается.
         $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_HOST'] ?? $req->host(true);
-        $_SERVER['REMOTE_ADDR'] = $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'];
+        $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'];
+        $_SERVER['REMOTE_ADDR'] = $req->connection?->getRemoteIp();
         $get = $req->get() ?: [];
         $_GET = $get;
         $_POST = $req->post() ?: [];
         $_SERVER['QUERY_STRING'] = $get ? '?' . \http_build_query($get) : '';
         $_SERVER['REQUEST_METHOD'] = \strtoupper((string)$req->method());
         $_SERVER['DOCUMENT_URI'] = $req->uri() ?: '';
-        // Override $_SERVER['SERVER_PORT'] on initialization if it's different.
-        // Переопределите $_SERVER['SERVER_PORT'] при инициализации, если он отличается.
-        $_SERVER['SERVER_PORT'] = $_SERVER['SERVER_PORT'] ?? $port;
+        $_SERVER['SERVER_PORT'] = $_SERVER['SERVER_PORT'] ?? $req->connection?->getLocalPort();
         $_SERVER['REQUEST_URI'] = $_SERVER['DOCUMENT_URI'] . $_SERVER['QUERY_STRING'];
         $_SERVER['HTTPS'] = $_SERVER['HTTPS'] ?? ($_SERVER['SERVER_PORT'] == 443 ? 'on' : 'off');
         $_SERVER["SERVER_PROTOCOL"] = 'HTTP/' . $req->protocolVersion();
