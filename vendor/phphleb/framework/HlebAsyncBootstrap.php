@@ -306,7 +306,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
         $rawBody    = isset($body) && \is_string($body) ? $body : null;
         $parsedBody = isset($body) && \is_array($body)  ? $body : null;
 
-        $_SERVER['REMOTE_ADDR'] = \strip_tags((string)($_SERVER['REMOTE_ADDR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null)) ?: null;
+        $_SERVER['REMOTE_ADDR'] = \strip_tags((string)($_SERVER['REMOTE_ADDR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null));
 
         return new SystemRequest(
             (array)$_COOKIE,
