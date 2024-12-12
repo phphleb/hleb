@@ -50,7 +50,7 @@ class HlebBootstrap
 
     final public const ASYNC_MODE = 3;
 
-    final protected const DEFAULT_RE_CLEANING = 10_000;
+    final protected const DEFAULT_RE_CLEANING = 100_000;
 
     protected ?int $mode = null;
 
@@ -108,7 +108,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.54');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.56');
 
         $this->logger = $logger;
 

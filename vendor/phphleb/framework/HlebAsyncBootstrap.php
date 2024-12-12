@@ -443,7 +443,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
     {
         $headers = (new $class())->update($headers);
 
-        return array_change_key_case($headers, CASE_LOWER);
+        return \array_change_key_case($headers, CASE_LOWER);
     }
 
     /**
