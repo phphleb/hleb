@@ -158,13 +158,16 @@ class HlebQueueBootstrap extends HlebBootstrap
         } catch (\AsyncExitException $e) {
             echo $e->getMessage();
 
-        } catch (Throwable) {
-            /*
-             * If the error is caught at the initialization stage, then it must be logged independently.
-             *
-             * Если ошибка будет перехвачена на этапе инициализации, то её нужно самостоятельно залогировать.
-             */
+        } catch (Throwable $t) {
+            $this->logsPostProcessing();
+            $this->errorLog($t);
+            if ($this->mode !== self::ASYNC_MODE) {
+                throw $t;
+            }
+            $status = false;
+
         } finally {
+            $this->logsPostProcessing();
             if ($this->mode === self::ASYNC_MODE) {
                 self::prepareAsyncRequestData($this->config, self::$processNumber);
             }
