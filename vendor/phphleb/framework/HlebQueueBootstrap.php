@@ -12,10 +12,13 @@ use ErrorException;
 use Hleb\Base\RollbackInterface;
 use Hleb\Base\Task;
 use Hleb\Constructor\Data\DebugAnalytics;
+use Hleb\Constructor\Data\SystemSettings;
 use Hleb\Init\ErrorLog;
+use Hleb\Main\Logger\Log;
 use Hleb\Main\Logger\LoggerInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
+use Hleb\Main\Logger\LogLevel;
 use Throwable;
 
 /**
@@ -149,6 +152,8 @@ class HlebQueueBootstrap extends HlebBootstrap
         $status = true;
 
         try {
+            $this->loadSettings();
+
             $command = new $commandClass();
 
             $status = $command->call($arguments, strictVerbosity: $this->verbosity);
@@ -229,5 +234,21 @@ class HlebQueueBootstrap extends HlebBootstrap
             \error_log((string)$e);
             \error_log((string)$t);
         }
+    }
+
+    /**
+     * Simplified project assembly.
+     *
+     * Упрощённая сборка проекта.
+     */
+    protected function loadSettings(): void
+    {
+        $startTime = \defined('HLEB_START') ? HLEB_START : \microtime(true);
+        $this->config['system']['start.unixtime'] = $startTime;
+        SystemSettings::setStartTime($startTime);
+        $this->logger and Log::setLogger($this->logger);
+        LogLevel::setDefaultMaxLogLevel(SystemSettings::getCommonValue('max.log.level'));
+        \date_default_timezone_set($this->config['common']['timezone']);
+        \ini_set('display_errors', $this->config['common']['debug'] ? '1' : '0');
     }
 }
