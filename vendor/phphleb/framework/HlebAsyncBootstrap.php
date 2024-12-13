@@ -214,7 +214,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
         // The error may be in the error handler itself.
         // Ошибка может быть в самом обработчике ошибок.
         try {
-            class_exists(ErrorLog::class, false) or require __DIR__ . '/Init/ErrorLog.php';
+            \class_exists(ErrorLog::class, false) or require __DIR__ . '/Init/ErrorLog.php';
             ErrorLog::log($e);
         } catch (\Throwable $t) {
             \error_log((string)$e);

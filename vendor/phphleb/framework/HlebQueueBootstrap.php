@@ -14,9 +14,9 @@ use Hleb\Base\Task;
 use Hleb\Constructor\Data\DebugAnalytics;
 use Hleb\Init\ErrorLog;
 use Hleb\Main\Logger\LoggerInterface;
-use Exception;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
+use Throwable;
 
 /**
  * Framework loader for executing individual commands from a queue.
@@ -66,7 +66,7 @@ class HlebQueueBootstrap extends HlebBootstrap
      * @param int $mode - in what mode the commands are executed.
      *                  - в каком режиме выполняются команды.
      *
-     * @throws Exception
+     * @throws Throwable
      */
     public function __construct(
         ?string          $publicPath = null,
@@ -83,7 +83,14 @@ class HlebQueueBootstrap extends HlebBootstrap
 
         \defined('HLEB_START') or \define('HLEB_START', \microtime(true));
 
-        parent::__construct($publicPath, $config, $logger);
+        // Initialization errors should be sent to the log.
+        // Ошибки инициализации должны быть отправлены в лог.
+        try {
+            parent::__construct($publicPath, $config, $logger);
+        } catch (Throwable $t) {
+            $this->errorLog($t);
+            throw $t;
+        }
     }
 
     /**
@@ -123,7 +130,7 @@ class HlebQueueBootstrap extends HlebBootstrap
      * @param array $arguments - an array with arguments for the command.
      *                         - массив с аргументами для команды.
      *
-     * @throws ErrorException
+     * @throws Throwable
      */
     #[\Override]
     public function load(?string $commandClass = null, array $arguments = []): int
@@ -150,13 +157,20 @@ class HlebQueueBootstrap extends HlebBootstrap
 
         } catch (\AsyncExitException $e) {
             echo $e->getMessage();
+
+        } catch (Throwable) {
+            /*
+             * If the error is caught at the initialization stage, then it must be logged independently.
+             *
+             * Если ошибка будет перехвачена на этапе инициализации, то её нужно самостоятельно залогировать.
+             */
+        } finally {
+            if ($this->mode === self::ASYNC_MODE) {
+                self::prepareAsyncRequestData($this->config, self::$processNumber);
+            }
         }
 
-        if ($this->mode === self::ASYNC_MODE) {
-            self::prepareAsyncRequestData($this->config, self::$processNumber);
-        }
-
-        return (int)($status != 0);
+        return (int)($status != false);
     }
 
     /**
@@ -194,5 +208,23 @@ class HlebQueueBootstrap extends HlebBootstrap
             \gc_mem_caches();
         }
         \memory_reset_peak_usage();
+    }
+
+    /**
+     * Saving the error in prepared form if it occurred at the top level.
+     *
+     * Сохранение ошибки в подготовленном виде, если она возникла на самом верхнем уровне.
+     */
+    public function errorLog(Throwable $e): void
+    {
+        // The error may be in the error handler itself.
+        // Ошибка может быть в самом обработчике ошибок.
+        try {
+            \class_exists(ErrorLog::class, false) or require __DIR__ . '/Init/ErrorLog.php';
+            ErrorLog::log($e);
+        } catch (Throwable $t) {
+            \error_log((string)$e);
+            \error_log((string)$t);
+        }
     }
 }
