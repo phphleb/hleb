@@ -211,38 +211,38 @@ final class ErrorLog
                     require_once $dir . DIRECTORY_SEPARATOR . $excName;
                 }
             }
-
-            $load = static function(array $classes) {
-                foreach ($classes as $class => $path) {
+            $map = array_merge(HlebConnector::$map, HlebConnector::$formattedMap);
+            $load = static function(array $classes) use ($map, $dir) {
+                foreach ($classes as $class) {
                     if (!\class_exists($class, false)) {
-                        require_once $path;
+                        require_once $dir . $map[$class];
                     }
                 }
             };
 
             $beforeSettingsClasses = [
-                BaseSingleton::class => $dir . '/Main/Insert/BaseSingleton.php',
-                OpenInstanceSingleton::class => $dir . '/Main/Insert/OpenInstanceSingleton.php',
-                LogLevel::class => $dir . '/Main/Logger/LogLevel.php',
-                SystemSettings::class => $dir . '/Constructor/Data/SystemSettings.php',
-                DynamicParams::class => $dir . '/Constructor/Data/DynamicParams.php',
+                BaseSingleton::class,
+                OpenInstanceSingleton::class,
+                LogLevel::class,
+                SystemSettings::class,
+                DynamicParams::class,
             ];
             $load($beforeSettingsClasses);
 
             self::loadSettings();
 
             $afterSettingsClasses = [
-                LoggerInterface::class => $dir . '/Main/Logger/LoggerInterface.php',
-                LogInterface::class => $dir . '/Reference/LogInterface.php',
-                \Hleb\Reference\Interface\Log::class => $dir . '/Reference/Interface/Log.php',
-                MainLogLevel::class => $dir . '/Constructor/Data/MainLogLevel.php',
-                Script::class => $dir . '/Static/Script.php',
-                Log::class => $dir . '/Main/Logger/Log.php',
-                BaseLogger::class => $dir . '/Main/Logger/BaseLogger.php',
-                NullLogger::class => $dir . '/Main/Logger/NullLogger.php',
-                FileLogger::class => $dir . '/Main/Logger/FileLogger.php',
-                StreamLogger::class => $dir . '/Main/Logger/StreamLogger.php',
-                \Functions::class => $dir . '/Init/Functions.php',
+                LoggerInterface::class,
+                LogInterface::class,
+                \Hleb\Reference\Interface\Log::class,
+                MainLogLevel::class,
+                Script::class,
+                Log::class,
+                BaseLogger::class,
+                NullLogger::class,
+                FileLogger::class,
+                StreamLogger::class,
+                \Functions::class,
             ];
             $load($afterSettingsClasses);
 
@@ -271,7 +271,8 @@ final class ErrorLog
         $config = self::getMinConfig();
         $common = $config['common'];
         isset($common['timezone']) && \date_default_timezone_set($common['timezone']);
-        \ini_set('display_errors', $common['debug'] ?? 0 ? '1' : '0');
+        $debug = ($common['debug'] ?? '0') ? '1' : '0';
+        \ini_set('display_errors', $debug);
         LogLevel::setDefaultMaxLogLevel($common[HLEB_CLI_MODE ? 'max.cli.log.level' : 'max.log.level']);
         SystemSettings::setData($config);
         DynamicParams::setArgv($GLOBALS['argv'] ?? []);

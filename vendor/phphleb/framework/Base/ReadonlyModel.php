@@ -12,13 +12,13 @@ use Hleb\Constructor\Models\ModelTrait;
 
 /**
  * The base class of the model, all Models must be inherited from it.
- * To inherit readonly classes, use ReadonlyModel.
+ * To inherit non-readonly classes, use Model.
  *
  * Базовый класс модели, все Модели должны быть унаследованы от него.
- * Для наследования readonly классов используйте ReadonlyModel.
+ * Для наследования не-readonly классов используйте Model.
  */
 #[AvailableAsParent]
-abstract class Model
+abstract readonly class ReadonlyModel
 {
     use ModelTrait;
 }
