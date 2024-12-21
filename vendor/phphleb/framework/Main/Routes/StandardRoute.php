@@ -59,6 +59,8 @@ abstract class StandardRoute
 
     final public const REDIRECT_TYPE = 'redirect';
 
+    final public const NO_DEBUG_TYPE = 'noDebug';
+
     private ?NameConverter $nameConverter = null;
 
     /**

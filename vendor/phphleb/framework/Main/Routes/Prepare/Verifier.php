@@ -66,6 +66,7 @@ final readonly class Verifier
                 $pageCount = 0;
                 $protectCount = 0;
                 $plainCount = 0;
+                $noDebugCount = 0;
                 foreach ($route['actions'] ?? [] as $action) {
                     $method = $action['method'];
                     if (\in_array($method, [
@@ -88,6 +89,9 @@ final readonly class Verifier
                     }
                     if ($method === StandardRoute::PROTECT_TYPE) {
                         $protectCount++;
+                    }
+                    if ($method === StandardRoute::NO_DEBUG_TYPE) {
+                        $noDebugCount++;
                     }
                     if ($method === StandardRoute::PLAIN_TYPE && $action['data']['on']) {
                         $plainCount++;
@@ -157,6 +161,9 @@ final readonly class Verifier
                 }
                 if ($route['method'] === StandardRoute::DOMAIN_TYPE) {
                     $this->checkDomain($route);
+                }
+                if ($noDebugCount > 1) {
+                    $this->error(AsyncRouteException::HL40_ERROR);
                 }
             }
         }

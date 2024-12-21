@@ -110,6 +110,9 @@ final class Optimizer
                 if ($action['method'] === StandardRoute::PROTECT_TYPE) {
                     $this->routesInfo['has_protect'] = 1;
                 }
+                if ($action['method'] === StandardRoute::NO_DEBUG_TYPE) {
+                    $this->routesInfo['no_debug'] = 1;
+                }
                 if ($action['method'] === StandardRoute::PLAIN_TYPE) {
                     $this->routesInfo['has_plain'] = 1;
                 }
@@ -166,6 +169,7 @@ final class Optimizer
      * h - domain data.
      * p - the route is protected.
      * b - simple content.
+     * u - debug panel is disabled.
      *
      * Извлечение данных для идентификации запроса метода.
      * a - полный адрес маршрута, собранный вместе с префиксами.
@@ -182,6 +186,7 @@ final class Optimizer
      * h - данные домена.
      * p - маршрут защищён.
      * b - простое содержимое.
+     * u - отключена отладочная панель.
      */
     private function createRouteRequest(string $address, array $route, int $key): array
     {
@@ -207,6 +212,9 @@ final class Optimizer
                     if (!empty($action['data']['rules'])) {
                         $result['p'] = $action['data']['rules'];
                     }
+                }
+                if ($action['method'] === StandardRoute::NO_DEBUG_TYPE) {
+                    $result['u'] = 1;
                 }
                 if ($action['method'] === StandardRoute::PLAIN_TYPE) {
                     // Counts only on the last assigned.

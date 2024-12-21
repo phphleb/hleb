@@ -39,6 +39,8 @@ class RouteFileManager
 
     protected ?bool $isPlain = null;
 
+    protected ?bool $isNoDebug = null;
+
     protected static ?array $infoCache = null;
 
     protected static bool|array $stubData = false;
@@ -123,6 +125,16 @@ class RouteFileManager
     }
 
     /**
+     * Returns the flag for forcing the debug panel to be disabled.
+     *
+     * Возвращает признак принудительного отключения отладочной панели.
+     */
+    public function getIsNoDebug(): null|bool
+    {
+        return $this->isNoDebug;
+    }
+
+    /**
      * Returns dynamic route data when matching parts in `/{param}/` as 'param' => `value`.
      *
      * Возвращает данные динамического маршрута при совпадении частей в `/{param}/` как 'param' => `value`.
@@ -178,6 +190,8 @@ class RouteFileManager
         $index = $this->searchIndexPage((int)(self::$infoCache['index_page'] ?? 0), $request);
         if ($index) {
             $this->routeName = self::$infoCache['index_page_name'] ?? null;
+            $this->isNoDebug = self::$infoCache['no_debug'] ?? null;
+
             return $index;
         }
         // Search for a list of routes.
@@ -481,6 +495,7 @@ class RouteFileManager
         }
         $this->protected = $block->protected();
         $this->isPlain = $block->getIsPlain();
+        $this->isNoDebug = $block->getIsNoDebug();
         $this->data = $block->getData();
 
         return $blockNumber;

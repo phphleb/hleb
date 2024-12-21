@@ -22,6 +22,8 @@ final class SearchBlock
 
     private ?bool $isPlain = null;
 
+    private ?bool $isNoDebug = null;
+
     private bool $isCompleteAddress = true;
 
     public function __construct(
@@ -79,6 +81,16 @@ final class SearchBlock
     public function getIsPlain(): null|bool
     {
         return $this->isPlain;
+    }
+
+    /**
+     * Returns the flag for forcing the debug panel to be disabled.
+     *
+     * Возвращает признак принудительного отключения отладочной панели.
+     */
+    public function getIsNoDebug(): null|bool
+    {
+        return $this->isNoDebug;
     }
 
     /**
@@ -277,6 +289,9 @@ final class SearchBlock
         }
         if (isset($route['b'])) {
             $this->isPlain = (bool)$route['b'];
+        }
+        if (isset($route['u'])) {
+            $this->isNoDebug = (bool)$route['u'];
         }
     }
 

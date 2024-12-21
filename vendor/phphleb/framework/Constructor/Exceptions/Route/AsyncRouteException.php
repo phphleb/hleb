@@ -90,6 +90,8 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
 
     final public const HL39_ERROR = 'HL39_ERROR';
 
+    final public const HL40_ERROR = 'HL40_ERROR';
+
     private const ALL = [
         self::HL00_ERROR => [
             'en' => 'Sample error output number %value%',
@@ -254,6 +256,10 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
         self::HL39_ERROR => [
             'en' => 'Error in creating routes. The redirect() method status code can be in the range 300-308.',
             'ru' => 'Ошибка составления маршрутов. Код статуса метода redirect() может быть в диапазоне 300-308.'
+        ],
+        self::HL40_ERROR => [
+            'en' => 'Error in creating routes. Only one noDebug() method can be added to a route.',
+            'ru' => 'Ошибка составления маршрутов. К маршруту может быть добавлен только один метод noDebug().'
         ],
     ];
 

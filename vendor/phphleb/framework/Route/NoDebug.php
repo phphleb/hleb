@@ -12,6 +12,7 @@ use Hleb\Main\Routes\Methods\Traits\InsertMiddlewareTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertModuleTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertNameTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertPageTrait;
+use Hleb\Main\Routes\Methods\Traits\InsertProtectTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertRedirectTrait;
 use Hleb\Main\Routes\Methods\Traits\InsertWhereTrait;
 use Hleb\Main\Routes\StandardRoute;
@@ -19,7 +20,7 @@ use Hleb\Main\Routes\StandardRoute;
 /**
  * @internal
  */
-final class Protect extends StandardRoute
+final class NoDebug extends StandardRoute
 {
     use InsertWhereTrait;
     use InsertControllerTrait;
@@ -27,19 +28,17 @@ final class Protect extends StandardRoute
     use InsertAfterTrait;
     use InsertBeforeTrait;
     use InsertNameTrait;
+    use InsertProtectTrait;
     use InsertModuleTrait;
     use InsertDomainTrait;
     use InsertPageTrait;
     use InsertRedirectTrait;
 
-    public function __construct(string|array $rules)
+    public function __construct()
     {
-        \is_string($rules) and $rules = [$rules];
-
         $this->register([
-            'method' => self::PROTECT_TYPE,
+            'method' => self::NO_DEBUG_TYPE,
             'from-group' => false,
-            'data' => ['rules' => $rules],
         ]);
     }
 }

@@ -65,6 +65,10 @@ final class ProjectLoader
         }
         /** @see hl_check() - searchHeadMethod completed */
 
+        if ($routes->getIsNoDebug()) {
+            DynamicParams::setDynamicDebug(false);
+        }
+
         if ($block) {
             if (self::searchDefaultHttpOptionsMethod($block)) {
                 return;

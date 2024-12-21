@@ -16,5 +16,6 @@ trait StandardTrait
     use InsertPageTrait;
     use InsertPlainTrait;
     use InsertRedirectTrait;
+    use InsertNoDebugTrait;
 
 }
