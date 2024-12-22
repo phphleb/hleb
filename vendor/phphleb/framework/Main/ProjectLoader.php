@@ -13,6 +13,7 @@ use Hleb\CoreProcessException;
 use Hleb\Helpers\ReflectionMethod;
 use Hleb\Helpers\RouteHelper;
 use Hleb\HttpException;
+use Hleb\HttpMethods\External\SystemRequest;
 use Hleb\HttpMethods\Intelligence\Cookies\AsyncCookies;
 use Hleb\Main\Routes\Search\RouteAsyncFileManager;
 use \Hleb\Static\Csrf;
@@ -65,9 +66,7 @@ final class ProjectLoader
         }
         /** @see hl_check() - searchHeadMethod completed */
 
-        if ($routes->getIsNoDebug()) {
-            DynamicParams::setDynamicDebug(false);
-        }
+        self::checkIsNoDebug($routes, DynamicParams::getRequest());
 
         if ($block) {
             if (self::searchDefaultHttpOptionsMethod($block)) {
@@ -536,5 +535,19 @@ final class ProjectLoader
             return !$event->before();
         }
         return false;
+    }
+
+    /**
+     * Makes adjustments to debug mode activity for certain conditions.
+     *
+     * Вносит поправки в активность режима отладки для определенных условий.
+     */
+    protected static function checkIsNoDebug(RouteFileManager $routes, SystemRequest $request): void
+    {
+        if ($routes->getIsNoDebug() &&
+            ($request->getGetParam('_debug') ?? $request->getPostParam('_debug')) !== 'on'
+        ) {
+            DynamicParams::setDynamicDebug(false);
+        }
     }
 }
