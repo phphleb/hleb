@@ -9,6 +9,7 @@ use App\Bootstrap\ContainerInterface;
 use Hleb\Helpers\ArrayHelper;
 use Hleb\Helpers\ReflectionMethod;
 use Hleb\ReflectionProcessException;
+use Hleb\Constructor\Attributes\DI;
 
 /**
  * @internal
@@ -32,12 +33,34 @@ final class DependencyInjection
         }
         $defaults = $reflector->getArgDefaultValueList();
         $list = $reflector->getArgTypeList();
+        $diAttributes = $reflector->searchAttributes(DI::class);
 
         foreach ($list as $name => $types) {
+            // Search the passed arguments for replacement.
+            // Поиск в переданных аргументах для замены.
             if (\array_key_exists($name, $arguments)) {
                 $result[$name] = $arguments[$name];
                 continue;
             }
+
+            // Search through a predefined attribute.
+            // Поиск через предопределяющий атрибут.
+            /** @var DI $attribute */
+            $attribute = $diAttributes[$name] ?? null;
+            if ($attribute) {
+                $item = $attribute->classNameOrObject;
+                if (\is_string($item)) {
+                    if (\method_exists($item, '__construct')) {
+                        $ref = new ReflectionMethod($item, '__construct');
+                        $item = new $item(...($ref->countArgs() ? self::prepare($ref) : []));
+                    } else {
+                        $item = new $item();
+                    }
+                }
+                $result[$name] = $item;
+                continue;
+            }
+
             foreach ($types as $type) {
                 if (\in_array(\strtolower($type), self::EXCLUDED)) {
                     continue;

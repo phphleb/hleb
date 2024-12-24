@@ -50,7 +50,7 @@ final class ContainerFactory extends BaseContainerFactory
      *  ```php
      *
      * foreach(self::$singletons as $key => $value) {
-     *    if ($key === RequestIdInterface::class) continue;
+     *    if ($key === DbInterface::class) continue;
      *    unset(self::$singletons[$key], self::$customServiceKeys[$key]);
      * }
      * ```

@@ -309,4 +309,57 @@ final class ReflectionMethod
         }
         return $result;
     }
+
+    /**
+     * For method attributes, returns objects of these attributes by method name in an array.
+     * If there are identical attributes, then only the first object will be returned.
+     *
+     * Возвращает для атрибутов метода объекты этих атрибутов по названию метода в массиве.
+     * Если есть одинаковые атрибуты, то будет возвращён только первый объект.
+     *
+     * @template T
+     * @param class-string<T> $class - name of the attribute class to search for.
+     *                               - название класса атрибута для поиска.
+     *
+     * @return array<string, T> - an array of instances of the specified attribute.
+     *                          - массив экземпляров указанного атрибута.
+     */
+    public function searchAttributes(string $class): array
+    {
+        $result = [];
+
+        foreach ($this->params as $parameter) {
+            $attribute = \current($parameter->getAttributes($class));
+            if ($attribute) {
+                $result[$parameter->getName()] = $attribute->newInstance();
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * For method attributes, returns objects of these attributes by method name in an array.
+     * If there are identical attributes, then all options will be present.
+     *
+     * Возвращает для атрибутов метода объекты этих атрибутов по названию метода в массиве.
+     * Если есть одинаковые атрибуты, то будут присутствовать все варианты.
+     *
+     * @template T
+     * @param class-string<T> $class - name of the attribute class to search for.
+     *                               - название класса атрибута для поиска.
+     *
+     * @return array<string, array<T> - an array of instances of the specified attribute.
+     *                                - массив экземпляров указанного атрибута.
+     */
+    public function searchAttributesWithDuplicates(string $class): array
+    {
+        $result = [];
+
+        foreach ($this->params as $parameter) {
+            foreach ($parameter->getAttributes($class) as $attribute) {
+                $result[$parameter->getName()][] = $attribute->newInstance();
+            }
+        }
+        return $result;
+    }
 }
