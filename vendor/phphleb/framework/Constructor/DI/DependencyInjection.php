@@ -50,11 +50,14 @@ final class DependencyInjection
             if ($attribute) {
                 $item = $attribute->classNameOrObject;
                 if (\is_string($item)) {
-                    if (\method_exists($item, '__construct')) {
-                        $ref = new ReflectionMethod($item, '__construct');
-                        $item = new $item(...($ref->countArgs() ? self::prepare($ref) : []));
-                    } else {
-                        $item = new $item();
+                    $item = $container ? $container->get($item) : BaseContainer::instance()->get($item);
+                    if (!$item) {
+                        if (\method_exists($item, '__construct')) {
+                            $ref = new ReflectionMethod($item, '__construct');
+                            $item = new $item(...($ref->countArgs() ? self::prepare($ref) : []));
+                        } else {
+                            $item = new $item();
+                        }
                     }
                 }
                 $result[$name] = $item;
