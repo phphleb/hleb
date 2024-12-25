@@ -390,8 +390,8 @@ return [
     │ Selecting the mode for managing dependencies missing in the container:
     │ 0 - attempt to resolve all dependencies automatically.
     │ 1 - do not try to resolve dependencies automatically.
-    │ 2 - similar to item 0, except for classes with the #[NoAutowire].
-    │ 3 - similar to item 1, except for classes with the #[AllowAutowire].
+    │ 2 - similar to item 0, except for classes with the NoAutowire attribute.
+    │ 3 - similar to item 1, except for classes with the AllowAutowire attribute.
     │ Default: 0
     │
     │
@@ -402,8 +402,8 @@ return [
     │ Выбор режима указывает как управлять зависимостями которых нет в контейнере:
     │ 0 - попытка разрешить все зависимости автоматически.
     │ 1 - не пытаться разрешать зависимости автоматически.
-    │ 2 - аналогично п.0, кроме классов с атрибутом #[NoAutowire].
-    │ 3 - аналогично п.1, кроме классов с атрибутом #[AllowAutowire].
+    │ 2 - аналогично п.0, кроме классов с атрибутом NoAutowire.
+    │ 3 - аналогично п.1, кроме классов с атрибутом AllowAutowire.
     │ Изначально: 0
     │
     */
