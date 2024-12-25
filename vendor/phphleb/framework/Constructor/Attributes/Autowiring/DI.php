@@ -34,9 +34,9 @@ class DI
      * Примеры использования:
      *
      * ```php
-     * class Example extends Container
+     * class ExampleController extends Controller
      * {
-     *     public function __construct(
+     *     public function index(
      *         #[DI(LocalFileStorage::class)]
      *         FileSystemInterface $storage,
      *
