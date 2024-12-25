@@ -49,6 +49,8 @@ final class HlebConnector
         'Hleb\Constructor\Attributes\Hidden' => '/Constructor/Attributes/Hidden.php',
         'Hleb\Constructor\Attributes\NotFinal' => '/Constructor/Attributes/NotFinal.php',
         'Hleb\Constructor\Attributes\Autowiring\DI' => '/Constructor/Attributes/Autowiring/DI.php',
+        'Hleb\Constructor\Attributes\Autowiring\AllowAutowire' => '/Constructor/Attributes/Autowiring/AllowAutowire.php',
+        'Hleb\Constructor\Attributes\Autowiring\NoAutowire' => '/Constructor/Attributes/Autowiring/NoAutowire.php',
         'Hleb\Constructor\Cache\CacheRoutes' => '/Constructor/Cache/CacheRoutes.php',
         'Hleb\Constructor\Cache\RouteMark' => '/Constructor/Cache/RouteMark.php',
         'Hleb\Constructor\Cache\OnceResult' => '/Constructor/Cache/OnceResult.php',
@@ -362,7 +364,7 @@ final class HlebConnector
         'Hleb\Init\Headers\ParsePsrHeaders' => '/Init/Headers/ParsePsrHeaders.php',
         'Hleb\Init\Headers\ParseSwooleHeaders' => '/Init/Headers/ParseSwooleHeaders.php',
         'Hleb\Route\Group\GroupPlain' => '/Route/Group/GroupPlain.php',
-        ];
+    ];
 
     /**
      * For this set of classes, the path starts at the root directory (App\Bootstrap).
