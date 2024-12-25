@@ -6,10 +6,14 @@ namespace Hleb\Constructor\DI;
 
 use App\Bootstrap\BaseContainer;
 use App\Bootstrap\ContainerInterface;
+use Hleb\Constructor\Attributes\Autowiring\AllowAutowire;
+use Hleb\Constructor\Attributes\Autowiring\NoAutowire;
 use Hleb\Helpers\ArrayHelper;
+use Hleb\Helpers\AttributeHelper;
 use Hleb\Helpers\ReflectionMethod;
 use Hleb\ReflectionProcessException;
-use Hleb\Constructor\Attributes\DI;
+use Hleb\Constructor\Attributes\Autowiring\DI;
+use Hleb\UnexpectedValueException;
 
 /**
  * @internal
@@ -50,14 +54,11 @@ final class DependencyInjection
             if ($attribute) {
                 $item = $attribute->classNameOrObject;
                 if (\is_string($item)) {
-                    $item = $container ? $container->get($item) : BaseContainer::instance()->get($item);
-                    if (!$item) {
-                        if (\method_exists($item, '__construct')) {
-                            $ref = new ReflectionMethod($item, '__construct');
-                            $item = new $item(...($ref->countArgs() ? self::prepare($ref) : []));
-                        } else {
-                            $item = new $item();
-                        }
+                    /** @var string $item */
+                    $container = $container ?? BaseContainer::instance();
+                    $item = $container->get($item);
+                    if ($item === null){
+                        $item = self::create($attribute->classNameOrObject, $container);
                     }
                 }
                 $result[$name] = $item;
@@ -68,7 +69,8 @@ final class DependencyInjection
                 if (\in_array(\strtolower($type), self::EXCLUDED)) {
                     continue;
                 }
-                $result[$name] = $container ? $container->get($type) : BaseContainer::instance()->get($type);
+                $container = $container ?? BaseContainer::instance();
+                $result[$name] = $container->get($type);
                 if ($result[$name] !== null) {
                     continue 2;
                 }
@@ -76,12 +78,7 @@ final class DependencyInjection
                 // Поиск ресурса через загрузчик классов.
                 try {
                     if (\class_exists($type)) {
-                        if (\method_exists($type, '__construct')) {
-                            $ref = new ReflectionMethod($type, '__construct');
-                            $result[$name] = new $type(...($ref->countArgs() ? self::prepare($ref) : []));
-                        } else {
-                            $result[$name] = new $type();
-                        }
+                        $result[$name] = self::create($type, $container);
                     }
                 } catch (\Throwable) {
                 }
@@ -99,5 +96,55 @@ final class DependencyInjection
             }
         }
         return $result;
+    }
+
+    /**
+     * Checking the class for the possibility of automatic substitution.
+     *  0, null - attempt to resolve all dependencies automatically.
+     *  1 - do not try to resolve dependencies automatically.
+     *  2 - similar to item 0, except for classes with the #[NoAutowire].
+     *  3 - similar to step 1, except for classes with the #[AllowAutowire].
+     *
+     * Проверка класса на возможность автоматической подстановки.
+     *  0, null - попытка разрешить все зависимости автоматически.
+     *  1 - не пытаться разрешать зависимости автоматически.
+     *  2 - аналогично п.0, кроме классов с атрибутом #[NoAutowire].
+     *  3 - аналогично п.1, кроме классов с атрибутом #[AllowAutowire].
+     */
+    private static function checkAutowiring(string|object $class, ?int $mode): bool
+    {
+        \is_object($class) and $class = $class::class;
+
+        $isAllow = match ($mode) {
+            1, 3 => false,
+            0, 2, null => true,
+            default => throw new UnexpectedValueException('Unsupported mode number'),
+        };
+
+        if ($mode === 2 || $mode === 3) {
+            $attribute = $mode === 2 ? NoAutowire::class : AllowAutowire::class;
+            if ((new AttributeHelper($class))->hasClassAttribute($attribute)) {
+                $isAllow = !$isAllow;
+            }
+        }
+        return $isAllow;
+    }
+
+    /**
+     * Creating a class object with dependency injection.
+     *
+     * Создание объекта класса с внедрением зависимостей.
+     */
+    private static function create(string|object $class, ContainerInterface $container): ?object
+    {
+        if (self::checkAutowiring($class, $container->settings()->getParam('system', 'autowiring.mode'))) {
+            if (\method_exists($class, '__construct')) {
+                $ref = new ReflectionMethod($class, '__construct');
+                return new $class(...($ref->countArgs() ? self::prepare($ref) : []));
+            } else {
+                return new $class();
+            }
+        }
+        return null;
     }
 }

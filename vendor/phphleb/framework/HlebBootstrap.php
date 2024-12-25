@@ -511,6 +511,7 @@ class HlebBootstrap
                 'custom.function.files' => ['array'],
 
                 // 'events.used' => ['boolean'], // optional
+                // 'autowiring.mode' => ['integer'], // optional
                 // 'start.unixtime' => ['integer'], // system
                 // 'module.namespace' => ['string'], system
                 // 'route.files.checking' => ['boolean'], // hidden

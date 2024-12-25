@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Hleb\Constructor\Attributes;
+namespace Hleb\Constructor\Attributes\Autowiring;
 
 /**
  * Provides the ability to set the required value for auto-substitution
  * from a container using the Dependency Injection method.
+ * Can be used to automatically resolve dependencies.
  *
  * Предоставляет возможность задать необходимое значение для авто-подстановки
  * из контейнера методом Dependency Injection.
+ * Может быть применен для автоматического разрешения зависимостей.
  */
 #[\Attribute(\Attribute::TARGET_PARAMETER)]
 class DI

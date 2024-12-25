@@ -48,7 +48,7 @@ final class HlebConnector
         'Hleb\Constructor\Attributes\ForTestOnly' => '/Constructor/Attributes/ForTestOnly.php',
         'Hleb\Constructor\Attributes\Hidden' => '/Constructor/Attributes/Hidden.php',
         'Hleb\Constructor\Attributes\NotFinal' => '/Constructor/Attributes/NotFinal.php',
-        'Hleb\Constructor\Attributes\DI' => '/Constructor/Attributes/DI.php',
+        'Hleb\Constructor\Attributes\Autowiring\DI' => '/Constructor/Attributes/Autowiring/DI.php',
         'Hleb\Constructor\Cache\CacheRoutes' => '/Constructor/Cache/CacheRoutes.php',
         'Hleb\Constructor\Cache\RouteMark' => '/Constructor/Cache/RouteMark.php',
         'Hleb\Constructor\Cache\OnceResult' => '/Constructor/Cache/OnceResult.php',
