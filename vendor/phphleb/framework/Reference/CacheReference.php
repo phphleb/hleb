@@ -21,6 +21,7 @@ use Hleb\Main\Routes\Prepare\Defender;
 use Hleb\Static\Cache;
 use Hleb\Static\Settings;
 use RecursiveIteratorIterator;
+use RuntimeException;
 use SplFileInfo;
 
 /**
@@ -353,7 +354,11 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
         self::init();
         $cacheKey = self::getKey($key);
         $file = self::$cachePath . \ltrim(self::getFilePath($cacheKey), DIRECTORY_SEPARATOR);
-        @\unlink($file);
+        self::errorSuppression(function() use ($file) {
+            \unlink($file);
+        });
+        \clearstatcache(true, $file);
+
 
         $class = self::CLASS_PREFIX . $cacheKey;
 
@@ -361,7 +366,6 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
             $class::$expired = 1;
         }
         self::clearExpireData($cacheKey);
-        \clearstatcache();
 
         return \file_exists($file) === false;
     }
@@ -615,7 +619,11 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
      */
     private static function clearExpireData($cacheKey): void
     {
-        @\unlink(self::$cachePath . self::HEADLINE_PREFIX . self::getFilePath($cacheKey, 'txt'));
+        $path = self::$cachePath . self::HEADLINE_PREFIX . self::getFilePath($cacheKey, 'txt');
+        self::errorSuppression(function() use ($path) {
+            \unlink($path);
+        });
+        \clearstatcache(true, $path);
     }
 
 
@@ -641,6 +649,7 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
         \hl_create_directory($path);
         \file_put_contents($path, self::BLOCKED_PROCESS_TAG, LOCK_EX);
         @\chmod($path, 0664);
+        \clearstatcache(true, $path);
 
         $prefix = \substr($cacheKey, 0, self::FIRST_PREFIX_LEN);
         $secondPrefix = \substr($cacheKey, 0, self::SECOND_PREFIX_LEN);
@@ -834,14 +843,15 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
 
             // Due to concurrent deletion of files, they may be missing immediately after checking for existence.
             // Из-за конкурентного удаления файлов они могут отсутствовать сразу после проверки на существование.
-            try {
-                \file_exists($expiredPath) and @\unlink($expiredPath);
-            } catch (\Throwable) {
-            }
-            try {
-                \file_exists($path) and @\unlink($path);
-            } catch (\Throwable) {
-            }
+            self::errorSuppression(function() use ($expiredPath) {
+                \unlink($expiredPath);
+            });
+            \clearstatcache(true, $expiredPath);
+            self::errorSuppression(function() use ($path) {
+                \unlink($path);
+            });
+            \clearstatcache(true, $path);
+
             $class = self::CLASS_PREFIX . \str_replace('.txt', '', \explode(self::CLASS_PREFIX, $path)[1]);
             if (\class_exists($class, false)) {
                 /** @var object $class */
@@ -896,6 +906,24 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
         }
         if (!self::$defender) {
             self::$defender = new Defender();
+        }
+    }
+
+    /**
+     * Due to possible concurrent access, some errors need to be suppressed.
+     *
+     * Из-за возможного конкурентного доступа некоторые ошибки нужно подавлять.
+     */
+    private static function errorSuppression(callable $callback): void
+    {
+        try {
+            \set_error_handler(function ($_errno, $errstr) {
+                throw new RuntimeException($errstr);
+            });
+            $callback();
+        } catch (RuntimeException) {
+        } finally {
+            \restore_error_handler();
         }
     }
 }

@@ -10,6 +10,7 @@ use Hleb\Constructor\Cache\WebCron;
 use Hleb\Database\SystemDB;
 use Hleb\Static\Settings;
 use Hleb\Static\System;
+use RuntimeException;
 
 /**
  * Performs logging to files.
@@ -188,7 +189,15 @@ class FileLogger extends BaseLogger implements LoggerInterface
         }
         $dbPrefix = $level === LogLevel::STATE && \str_contains($row, SystemDB::DB_PREFIX) ? '.db' : '';
         if (!\file_exists($dir)) {
-            @\mkdir($dir, 0775, true);
+            try {
+                \set_error_handler(function ($_errno, $errstr) {
+                    throw new RuntimeException($errstr);
+                });
+                \mkdir($dir, 0775, true);
+            } catch (RuntimeException) {
+            } finally {
+                \restore_error_handler();
+            }
         }
         if ($this->isConsoleMode) {
             $file = $dir . $I . \date('Y_m_d') . $dbPrefix . '.system.log';

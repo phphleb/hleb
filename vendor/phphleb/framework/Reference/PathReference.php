@@ -52,7 +52,10 @@ class PathReference extends ContainerUniqueItem implements PathInterface, Interf
         }
 
         if (!\file_exists($dir)) {
-            @\mkdir($dir, $permissions, true);
+            self::errorSuppression(function() use ($dir, $permissions) {
+                \mkdir($dir, $permissions, true);
+            });
+            \clearstatcache(true, $dir);
         }
         if (!\is_writable($dir)) {
             throw new FileResourceModificationException("The directory `$path` is not available for writing files.");
@@ -70,6 +73,8 @@ class PathReference extends ContainerUniqueItem implements PathInterface, Interf
         if (\str_starts_with($path, '@')) {
             return (bool)Settings::getRealPath($path);
         }
+        \clearstatcache(true, $path);
+
         return \file_exists($path);
     }
 
@@ -90,6 +95,8 @@ class PathReference extends ContainerUniqueItem implements PathInterface, Interf
         if (\str_starts_with($path, '@')) {
             $path = Settings::getPath($path);
         }
+        \clearstatcache(true, $path);
+
         return \file_put_contents($path, $data, $flags, $context);
     }
 
@@ -115,5 +122,23 @@ class PathReference extends ContainerUniqueItem implements PathInterface, Interf
     public function get(string $keyOrPath): false|string
     {
         return Settings::getPath($keyOrPath);
+    }
+
+    /**
+     * Due to possible concurrent access, some errors need to be suppressed.
+     *
+     * Из-за возможного конкурентного доступа некоторые ошибки нужно подавлять.
+     */
+    private static function errorSuppression(callable $callback): void
+    {
+        try {
+            \set_error_handler(function ($_errno, $errstr) {
+                throw new RuntimeException($errstr);
+            });
+            $callback();
+        } catch (RuntimeException) {
+        } finally {
+            \restore_error_handler();
+        }
     }
 }
