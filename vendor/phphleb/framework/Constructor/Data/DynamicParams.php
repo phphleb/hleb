@@ -267,6 +267,12 @@ final class DynamicParams extends BaseAsyncSingleton implements RollbackInterfac
     }
 
     /** @internal */
+    public static function isConfigDebug(): bool
+    {
+        return (bool)(SystemSettings::getCommonValue('config.debug') ?? false);
+    }
+
+    /** @internal */
     public static function getHost(): ?string
     {
         return self::$dynamicHost;

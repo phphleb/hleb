@@ -108,7 +108,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.61');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.62');
 
         $this->logger = $logger;
 
@@ -483,6 +483,8 @@ class HlebBootstrap
 
                 // 'twig.options' => ['array'], // optional
                 // 'twig.cache.inverted' => ['array'], // optional
+                // 'allowed.hosts' => ['array'], // not necessary yet
+                // 'config.debug' => ['boolean'], // hidden
             ],
             'database' => [
                 'base.db.type' => ['string'],
@@ -544,6 +546,8 @@ class HlebBootstrap
         if (!\in_array($config['common']['log.format'], ['row', 'json'])) {
             throw new \DomainException("Wrong `log.format` format");
         }
+        // Initial value of debug mode.
+        $config['common']['config.debug'] = $config['common']['debug'];
 
         return $config;
     }
@@ -855,6 +859,25 @@ class HlebBootstrap
      */
     private function verifiedUrlOrRedirect(SystemRequest $request): void
     {
+        if (!$this->config['common']['config.debug'] && isset($this->config['common']['allowed.hosts'])) {
+            $allowed = $this->config['common']['allowed.hosts'];
+            $current = \explode(':', $request->getUri()->getHost())[0];
+            if (!$allowed || !\is_array($allowed)) {
+                $this->getLogger()->warning('common.allowed.hosts not set');
+            } else if (!in_array($current, $allowed)) {
+                $isValid = false;
+                foreach ($allowed as $pattern) {
+                    if (preg_match($pattern, $current)) {
+                        $isValid = true;
+                        break;
+                    }
+                }
+                if (!$isValid) {
+                    $this->getLogger()->error('The specified Host URL is not included or specified in the common.allowed.hosts list');
+                    async_exit('Invalid Host header', 400);
+                }
+            }
+        }
        if ($request->getUri()->getPath() === '/') {
            return;
        }
