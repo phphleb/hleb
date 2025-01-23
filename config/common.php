@@ -40,7 +40,7 @@ return [
     │
     │ To use full URLs in a project that point to the current application,
     │ you need to give them a list of restrictions in the form of allowed
-    │ enumerations or regular expressions, for example '^(.*\.)?example\.com$'.
+    │ enumerations or regular expressions, for example '/^(.*\.)?example\.com$/'.
     │ In DEBUG mode, no compliance check is performed.
     │ Initially: [] - you must specify a value!
     │
@@ -51,7 +51,7 @@ return [
     │
     │ Для использования полных URL в проекте, указывающих на текущее приложение,
     │ нужно задать им список ограничений в виде разрешенных перечислений или
-    │ регулярных выражений, например '^(.*\.)?example\.com$'.
+    │ регулярных выражений, например '/^(.*\.)?example\.com$/'.
     │ В режиме DEBUG проверка на соответствие не производится.
     │ Изначально: [] - необходимо указать значение!
     │

@@ -867,7 +867,7 @@ class HlebBootstrap
             } else if (!in_array($current, $allowed)) {
                 $isValid = false;
                 foreach ($allowed as $pattern) {
-                    if (preg_match($pattern, $current)) {
+                    if (\str_starts_with($pattern, '/') && \preg_match($pattern, $current)) {
                         $isValid = true;
                         break;
                     }
