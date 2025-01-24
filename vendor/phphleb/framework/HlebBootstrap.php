@@ -108,7 +108,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.62');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.63');
 
         $this->logger = $logger;
 
@@ -739,7 +739,7 @@ class HlebBootstrap
         $this->vendorDirectory = \rtrim($this->searchVendorDirectory(), '/\\');
 
         $this->config = $this->getConfig();
-        if ($this->config['common']['debug'] ?? null) {
+        if ($this->config['common']['config.debug'] ?? null) {
             \defined('HLEB_STRICT_UMASK') or @\umask(0000);
         }
         \error_reporting($this->config['common']['error.reporting'] ?? null);
@@ -873,7 +873,6 @@ class HlebBootstrap
                     }
                 }
                 if (!$isValid) {
-                    $this->getLogger()->error('The specified Host URL is not included or specified in the common.allowed.hosts list');
                     async_exit('Invalid Host header', 400);
                 }
             }
