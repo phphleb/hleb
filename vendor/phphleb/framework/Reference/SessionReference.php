@@ -159,6 +159,18 @@ class SessionReference extends ContainerUniqueItem implements SessionInterface, 
 
     /** @inheritDoc */
     #[\Override]
+    public function getAndClearFlash(string $name, string|float|int|array|bool|null $default = null): string|float|int|array|bool|null
+    {
+        $value = $this->getFlash($name);
+        if ($value !== null) {
+            $this->setFlash($name, null);
+            return $value;
+        }
+        return $default;
+    }
+
+    /** @inheritDoc */
+    #[\Override]
     public function hasFlash(string $name, string $type = 'old'): bool
     {
         if ($type === 'all') {

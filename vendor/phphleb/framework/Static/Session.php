@@ -190,6 +190,20 @@ class Session extends BaseSingleton
     }
 
     /**
+     * Obtaining a specific flash session and then deleting this data from the current session.
+     *
+     * Получение конкретной flash-сессии с последующим удалением этих данных из текущей сессии.
+     */
+    public function getAndClearFlash(string $name, string|float|int|array|bool|null $default = null): string|float|int|array|bool|null
+    {
+        if (self::$replace) {
+            return self::$replace->getAndClearFlash($name, $default);
+        }
+
+        return BaseContainer::instance()->get(SessionInterface::class)->getAndClearFlash($name, $default);
+    }
+
+    /**
      * Checking the existence of a flash session.
      * Types can be: `all` - all available, `new` - new, installed in the current request
      * and `old` - active, installed in the previous request.
