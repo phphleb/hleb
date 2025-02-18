@@ -602,7 +602,7 @@ class HlebBootstrap
             if (!$forced || $forced === 'POST') {
                 return null;
             }
-            if (\in_array($forced, ['PUT', 'PATCH', 'DELETE'])) {
+            if (!\in_array($forced, ['PUT', 'PATCH', 'DELETE'])) {
                 throw new RuntimeException('The `_method` value is incorrect.');
             }
             unset($post['_method']);
