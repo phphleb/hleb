@@ -23,6 +23,7 @@ use Hleb\Main\ProjectLoader;
 use Phphleb\Idnaconv\IdnaConvert;
 use Hleb\HttpMethods\External\SystemRequest;
 use Hleb\HttpMethods\External\Response as SystemResponse;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -108,7 +109,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.64');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.65');
 
         $this->logger = $logger;
 
@@ -561,11 +562,12 @@ class HlebBootstrap
      * @return SystemRequest
      * @throws Exception
      */
-    protected function buildRequest(?object $request = null): SystemRequest
+    protected function buildRequest(?object &$request = null): SystemRequest
     {
         $_SERVER['HTTP_HOST'] = $this->convertHost($_SERVER['HTTP_HOST']);
 
         $this->standardization();
+        $this->convertForcedMethod($_POST, $_SERVER);
         $protocol = \trim(\stristr($_SERVER["SERVER_PROTOCOL"], '/') ?: '', ' /') ?: '1.1';
 
         return new SystemRequest(
@@ -584,6 +586,30 @@ class HlebBootstrap
                 $_SERVER['REQUEST_SCHEME'],
                 $_SERVER['REMOTE_ADDR'],
             ));
+    }
+
+    /**
+     * If an adjusted method value is received from the form, then the previous method is replaced.
+     * Returns the modified method or null.
+     *
+     * Если из формы пришло скорректированное значение метода, то текущий метод заменяется.
+     * Возвращает измененный метод или null.
+     */
+    protected function convertForcedMethod(array &$post, array &$server, ?object &$request = null): ?string
+    {
+        if ($server['REQUEST_METHOD'] === 'POST' && isset($post['_method']) && \is_string($post['_method'])) {
+            $forced = \strtoupper($post['_method']);
+            if (!$forced || $forced === 'POST') {
+                return null;
+            }
+            if (\in_array($forced, ['PUT', 'PATCH', 'DELETE'])) {
+                throw new RuntimeException('The `_method` value is incorrect.');
+            }
+            unset($post['_method']);
+            $server['REQUEST_METHOD'] = $forced;
+            return $forced;
+        }
+        return null;
     }
 
     /**

@@ -276,7 +276,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
      * @see self::load()
      */
     #[\Override]
-    protected function buildRequest(?object $request = null): SystemRequest
+    protected function buildRequest(?object &$request = null): SystemRequest
     {
         $headers = [];
         if ($request !== null) {
@@ -300,6 +300,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
         $_SERVER['HTTP_HOST'] = $this->convertHost($_SERVER['HTTP_HOST']);
 
         $this->standardization();
+        $this->convertForcedMethod($_POST, $_SERVER, $request);
         $protocol = \trim(\stristr($_SERVER["SERVER_PROTOCOL"] ?? '','/') ?: '', ' /') ?: '1.1';
 
         $streamBody = isset($body) && \is_object($body) ? $body : null;
@@ -324,6 +325,31 @@ class HlebAsyncBootstrap extends HlebBootstrap
                 $_SERVER['REQUEST_SCHEME'],
                 $_SERVER['REMOTE_ADDR'],
             ));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function convertForcedMethod(array &$post, array &$server, ?object &$request = null): ?string
+    {
+        $forced = parent::convertForcedMethod($post, $server);
+        if ($forced && $request) {
+            try {
+                if (\method_exists($request, 'withMethod')) {
+                    // PSR7
+                    $request = $request->withMethod($forced);
+                } else if (\property_exists($request, 'server') && \is_array($request->server)) {
+                    // Swoole
+                    $request->server['request_method'] = \strtolower($forced);
+                } else if (\method_exists($request, 'method')) {
+                    // Workerman
+                    $request = new ($request::class)(\strtolower($forced), $request->uri(), $request->header(), $request->rawBody());
+                }
+            } catch (\Throwable $t) {
+                $this->getLogger()->warning($t);
+            }
+        }
+        return $forced;
     }
 
     /**
