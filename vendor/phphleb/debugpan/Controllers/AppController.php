@@ -47,4 +47,14 @@ class AppController
 
         return $this->getErrorResponse('The requested command does not exist');
     }
+
+    /**
+     * Return the standardized error.
+     *
+     * Возврат стандартизированной ошибки.
+     */
+    public function dataNotAvailable(): string
+    {
+        return $this->getSuccessfulResponse(['data' => '(!) Data is not available if debug mode is disabled or partially enabled.']);
+    }
  }

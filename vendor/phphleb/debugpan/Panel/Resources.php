@@ -7,6 +7,7 @@ namespace Phphleb\Debugpan\Panel;
 use Hleb\Helpers\ResourceViewHelper;
 use Hleb\HttpMethods\External\SystemRequest;
 use Hleb\Static\Settings;
+use Phphleb\Debugpan\Controllers\AppController;
 
 final class Resources
 {
@@ -53,6 +54,12 @@ final class Resources
             $class = "Phphleb\Debugpan\Controllers\\{$class}Controller";
             if (!\class_exists($class, false)) {
                 require $file;
+            }
+            // Debug mode can only be partially enabled, in which case a warning is sent.
+            // Режим отладки может быть включен только частично, в этом случае отсылается предупреждение.
+            if ($class === AppController::class && !Settings::isDebug()) {
+                echo (new AppController())->dataNotAvailable();
+                return true;
             }
             $initiator = new $class;
             if (!\method_exists($initiator, $method)) {
