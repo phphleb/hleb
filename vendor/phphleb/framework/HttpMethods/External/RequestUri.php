@@ -1,14 +1,14 @@
 <?php
 
-/*declare(strict_types=1);*/
+declare(strict_types=1);
 
 namespace Hleb\HttpMethods\External;
 
-/**
- * @internal
- */
+use Hleb\Constructor\Attributes\Autowiring\NoAutowire;
+
 // Prior to php 8.2, the `readonly` status may cause an error.
 // До версии php 8.2 статус `readonly` может вызывать ошибку.
+#[NoAutowire]
 final readonly class RequestUri
 {
     public function __construct(

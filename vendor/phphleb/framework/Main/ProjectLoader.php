@@ -77,7 +77,7 @@ final class ProjectLoader
             self::updateDataIfModule($block);
             /** @see hl_check() - updateDataIfModule completed */
 
-            if (self::initBlock($block, $routes)){
+            if (self::initBlock($block, $routes)) {
                 return;
             }
         }
@@ -129,7 +129,7 @@ final class ProjectLoader
                         }
                         $replacements["{%$key%}"] = (string)$param;
                     }
-                } else if(!\str_contains($value, '{{ip}}')){
+                } else if (!\str_contains($value, '{{ip}}')) {
                     $isSimple = true;
                 }
                 $replacements and $value = \strtr($value, $replacements);
@@ -163,29 +163,38 @@ final class ProjectLoader
 
     /**
      * Apply settings when a module is detected.
+     * For modules, the config can be either in the module or in a separate 'modules' config.
+     * The modules.php file must first be allowed in the 'custom.setting.files' setting.
      *
      * Применение настроек в случае обнаружения модуля.
+     * Для модулей конфигурация может быть как в модуле, так и в отдельном конфиге 'modules'.
+     * Предварительно файл modules.php должен быть разрешен в настройке 'custom.setting.files'.
      */
     private static function updateDataIfModule(array $block): void
     {
         if (isset($block['module'])) {
             $moduleName = $block['module']['name'];
-            $mainFile = SystemSettings::getRealPath("@modules/$moduleName/config/main.php");
-            if ($mainFile) {
-                $main = (static function () use ($mainFile): array {
-                    return require $mainFile;
-                })();
-                SystemSettings::updateMainSettings($main);
+            $configModule = SystemSettings::getValue('modules', $moduleName);
+            if ($configModule) {
+                isset($configModule['main']) and SystemSettings::updateMainSettings($configModule['main']);
+                isset($configModule['database']) and SystemSettings::updateDatabaseSettings($configModule['database']);
+            } else {
+                $mainFile = SystemSettings::getRealPath("@modules/$moduleName/config/main.php");
+                if ($mainFile) {
+                    $main = (static function () use ($mainFile): array {
+                        return require $mainFile;
+                    })();
+                    SystemSettings::updateMainSettings($main);
+                }
+                $dbFile = SystemSettings::getRealPath("@modules/$moduleName/config/database.php");
+                if ($dbFile) {
+                    $database = (static function () use ($dbFile): array {
+                        return require $dbFile;
+                    })();
+                    SystemSettings::updateDatabaseSettings($database);
+                }
             }
             SystemSettings::addModuleType((bool)SystemSettings::getRealPath("@modules/$moduleName/views"));
-
-            $dbFile = SystemSettings::getRealPath("@modules/$moduleName/config/database.php");
-            if ($dbFile) {
-                $database = (static function () use ($dbFile): array {
-                    return require $dbFile;
-                })();
-                SystemSettings::updateDatabaseSettings($database);
-            }
         }
     }
 
@@ -275,13 +284,12 @@ final class ProjectLoader
 
         // If $disabledInRoute is null, this means that the value is not set.
         // Если $disabledInRoute равен null, то это значит, что значение не задано.
-
         if ($disabledInRoute === false || SystemSettings::getValue('main', 'session.enabled')) {
             if (SystemSettings::isStandardMode()) {
                 if (\session_status() !== PHP_SESSION_ACTIVE) {
                     \session_name(SystemSettings::getSystemValue('session.name'));
                     $options = SystemSettings::getMainValue('session.options');
-                    if ($options){
+                    if ($options) {
                         \session_set_cookie_params($options);
                     } else {
                         $lifetime = SystemSettings::getSystemValue('max.session.lifetime');
@@ -295,7 +303,7 @@ final class ProjectLoader
                 }
                 StandardCookies::sync();
             } else {
-               AsyncConsolidator::initAsyncSessionAndCookies();
+                AsyncConsolidator::initAsyncSessionAndCookies();
             }
             if (\session_status() !== PHP_SESSION_ACTIVE) {
                 throw new CoreProcessException('SESSION not initialized!');
@@ -314,7 +322,7 @@ final class ProjectLoader
         $id = '_hl_flash_';
         if (isset($session[$id])) {
             foreach ($session[$id] as $key => &$data) {
-                $data['reps_left'] --;
+                $data['reps_left']--;
                 if ($data['reps_left'] < 0) {
                     unset($session[$id][$key]);
                     continue;

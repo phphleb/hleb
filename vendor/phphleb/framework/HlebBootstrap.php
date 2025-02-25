@@ -109,7 +109,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.66');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.67');
 
         $this->logger = $logger;
 
@@ -118,7 +118,7 @@ class HlebBootstrap
         $this->setErrorHandler();
 
         if ($config) {
-            $this->config = $this->checkConfig($config);
+            $this->config = $config;
         }
 
         $this->initialParameters();
@@ -190,56 +190,49 @@ class HlebBootstrap
      *
      * @throws Exception
      */
-    protected function getConfig(): array
+    protected function initConfig(): array
     {
-        if ($this->config) {
-            return $this->config;
-        }
+        $c = $this->config ?? [];
+
         $moduleDirectory = $this->getModuleDirectoryName();
-
-        require __DIR__ . '/Init/Review/basic.php';
-
         $dir = $this->globalDirectory;
-        $func = static function ($path): array {
-            return require $path;
-        };
-        $common = $func($dir . '/config/common.php');
-        $database = $func($dir . '/config/database.php');
-        $system = $func($dir . '/config/system.php');
-        $main = $func($dir . '/config/main.php');
 
-        $system['mode'] = $this->mode;
-        if ($moduleDirectory) {
-            $system['module.dir.name'] = $moduleDirectory;
-        } else {
-            $this->moduleDirectory = $this->globalDirectory . DIRECTORY_SEPARATOR . $system['module.dir.name'];
+        if (!$c) {
+            require __DIR__ . '/Init/Review/basic.php';
+            $func = static function ($path): array {
+                return require $path;
+            };
+            $c['common'] = $func($dir . '/config/common.php');
+            $c['database'] = $func($dir . '/config/database.php');
+            $c['system'] = $func($dir . '/config/system.php');
+            $c['main'] = $func($dir . '/config/main.php');
         }
-        $system['module.namespace'] = \ucfirst($system['module.dir.name']);
-        $paths = $system['project.paths'];
-        unset($system['project.paths']);
+        $c['system']['mode'] = $this->mode;
+        if ($moduleDirectory) {
+            $c['system']['module.dir.name'] = $moduleDirectory;
+        } else {
+            $this->moduleDirectory = $this->globalDirectory . DIRECTORY_SEPARATOR . $c['system']['module.dir.name'];
+        }
+        $c['system']['module.namespace'] = \ucfirst($c['system']['module.dir.name']);
+        $paths = $c['system']['project.paths'];
+        unset($c['system']['project.paths']);
         foreach ($paths as &$path) {
             $path = $dir . '/' . \ltrim($path, '/\\');
         }
-        $c = [
-            'common' => $common,
-            'main' => $main,
-            'database' => $database,
-            'default.database' => $database,
-            'path' => \array_merge($paths, [
-                'global' => $dir,
-                'public' => $this->publicDirectory,
-                'vendor' => $this->vendorDirectory,
-                'modules' => $this->moduleDirectory,
-                'app' => $dir . '/app',
-                'storage' => $dir . '/storage',
-                'routes' => $dir . '/routes',
-                'resources' => $dir . '/resources',
-                'views' => $dir . '/resources/views',
-                'library' => $this->vendorDirectory . '/phphleb',
-                'framework' => $this->vendorDirectory . '/phphleb/framework',
-            ]),
-            'system' => $system
-        ];
+        $c['path'] = \array_merge($paths, [
+            'global' => $dir,
+            'public' => $this->publicDirectory,
+            'vendor' => $this->vendorDirectory,
+            'modules' => $this->moduleDirectory,
+            'app' => $dir . '/app',
+            'storage' => $dir . '/storage',
+            'routes' => $dir . '/routes',
+            'resources' => $dir . '/resources',
+            'views' => $dir . '/resources/views',
+            'library' => $this->vendorDirectory . '/phphleb',
+            'framework' => $this->vendorDirectory . '/phphleb/framework',
+        ]);
+        $c['default.database'] = $c['database'];
         if ($custom = $c['system']['custom.setting.files']) {
             foreach ($custom as $name => $file) {
                 if ($name && !isset($c[$name]) && \is_string($name)) {
@@ -247,7 +240,6 @@ class HlebBootstrap
                 }
             }
         }
-
         return ($this->config = $this->checkConfig($c));
     }
 
@@ -759,12 +751,14 @@ class HlebBootstrap
                 \define('HLEB_PUBLIC_DIR', $this->publicDirectory);
             }
         }
-        require __DIR__ . '/Init/Review/basic.php';
+        if (!\function_exists('get_env')) {
+            require __DIR__ . '/Init/Review/basic.php';
+        }
 
         $this->globalDirectory = \rtrim($this->searchGlobalDirectory(), '/\\');
         $this->vendorDirectory = \rtrim($this->searchVendorDirectory(), '/\\');
 
-        $this->config = $this->getConfig();
+        $this->initConfig();
         if ($this->config['common']['config.debug'] ?? null) {
             \defined('HLEB_STRICT_UMASK') or @\umask(0000);
         }

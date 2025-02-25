@@ -97,6 +97,7 @@ final class HlebConnector
         'Hleb\Helpers\PhpCommentHelper' => '/Helpers/PhpCommentHelper.php',
         'Hleb\Helpers\ProtectedFileSaver' => '/Helpers/ProtectedFileSaver.php',
         'Hleb\HttpMethods\External\RequestUri' => '/HttpMethods/External/RequestUri.php',
+        'Hleb\HttpMethods\External\SpareRequest' => '/HttpMethods/External/SpareRequest.php',
         'Hleb\HttpMethods\External\SystemRequest' => '/HttpMethods/External/SystemRequest.php',
         'Hleb\HttpMethods\External\Response' => '/HttpMethods/External/Response.php',
         'Hleb\HttpMethods\Intelligence\AsyncConsolidator' => '/HttpMethods/Intelligence/AsyncConsolidator.php',
