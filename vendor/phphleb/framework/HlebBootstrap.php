@@ -117,9 +117,7 @@ class HlebBootstrap
         // Регистрация обработчика ошибок.
         $this->setErrorHandler();
 
-        if ($config) {
-            $this->config = $config;
-        }
+        $this->config = $config;
 
         $this->initialParameters();
     }
@@ -192,7 +190,7 @@ class HlebBootstrap
      */
     protected function initConfig(): array
     {
-        $c = $this->config ?? [];
+        $c = $this->config;
 
         $moduleDirectory = $this->getModuleDirectoryName();
         $dir = $this->globalDirectory;
