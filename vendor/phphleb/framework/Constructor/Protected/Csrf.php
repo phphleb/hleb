@@ -15,9 +15,9 @@ use Hleb\Static\Session;
  */
 final class Csrf extends BaseAsyncSingleton implements RollbackInterface
 {
-    final public const KEY_NAME = '_token';
+    public const KEY_NAME = '_token';
 
-    final public const X_TOKEN = 'X-CSRF-Token';
+    public const X_TOKEN = 'X-CSRF-Token';
 
     private const SESSION_KEY = 'HL-CSRF-TOKEN';
 
@@ -47,7 +47,9 @@ final class Csrf extends BaseAsyncSingleton implements RollbackInterface
      */
     public static function validate(?string $key): bool
     {
-        return self::key() === $key;
+        self::$key or self::key();
+
+        return self::$key === self::clearMask($key);
     }
 
     /**
@@ -70,7 +72,7 @@ final class Csrf extends BaseAsyncSingleton implements RollbackInterface
     public static function key(): string
     {
         if (self::$key) {
-            return self::$key;
+            return self::addMask(self::$key);
         }
         if (!empty($_SESSION[self::SESSION_KEY])) {
             self::$key = $_SESSION[self::SESSION_KEY];
@@ -80,7 +82,7 @@ final class Csrf extends BaseAsyncSingleton implements RollbackInterface
             $_SESSION[self::SESSION_KEY] = self::$key;
         }
 
-        return self::$key;
+        return self::addMask(self::$key);
     }
 
     /**
@@ -93,4 +95,27 @@ final class Csrf extends BaseAsyncSingleton implements RollbackInterface
     {
         self::$key = null;
     }
+
+    /**
+     * Implements protection against BREACH and CRIME attacks by adding arbitrary data.
+     *
+     * Реализует защиту от атак BREACH и CRIME, добавляя произвольные данные.
+     */
+    private static function addMask(string $token): string
+    {
+        $mask = \str_shuffle('abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz');
+
+        return $token . \substr($mask, 0, \rand(3, 10));
+    }
+
+    /**
+     * Clearing the token of additional arbitrary data.
+     *
+     * Очистка токена от добавочных произвольных данных.
+     */
+    private static function clearMask(string $maskedToken): string
+    {
+        return \substr($maskedToken, 0, 40);
+    }
+
 }

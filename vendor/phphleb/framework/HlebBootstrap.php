@@ -109,7 +109,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.67');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.68');
 
         $this->logger = $logger;
 
@@ -117,9 +117,7 @@ class HlebBootstrap
         // Регистрация обработчика ошибок.
         $this->setErrorHandler();
 
-        $this->config = $config;
-
-        $this->initialParameters();
+        $this->initialParameters($config);
     }
 
     /**
@@ -188,9 +186,9 @@ class HlebBootstrap
      *
      * @throws Exception
      */
-    protected function initConfig(): array
+    protected function initConfig(array $config): array
     {
-        $c = $this->config;
+        $c = $config;
 
         $moduleDirectory = $this->getModuleDirectoryName();
         $dir = $this->globalDirectory;
@@ -736,7 +734,7 @@ class HlebBootstrap
      *
      * @throws Exception
      */
-    private function initialParameters(): void
+    private function initialParameters(array $config): void
     {
         if ($this->publicDirectory !== null) {
             $this->publicDirectory = \rtrim($this->publicDirectory, '/\\');
@@ -756,7 +754,7 @@ class HlebBootstrap
         $this->globalDirectory = \rtrim($this->searchGlobalDirectory(), '/\\');
         $this->vendorDirectory = \rtrim($this->searchVendorDirectory(), '/\\');
 
-        $this->initConfig();
+        $this->initConfig($config);
         if ($this->config['common']['config.debug'] ?? null) {
             \defined('HLEB_STRICT_UMASK') or @\umask(0000);
         }
