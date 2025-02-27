@@ -440,6 +440,8 @@ final class HlebConnector
         'Hleb\Http401UnauthorizedException' => '/Constructor/Exceptions/Http/Http401UnauthorizedException.php',
         'Hleb\Http400BadRequestException' => '/Constructor/Exceptions/Http/Http400BadRequestException.php',
         'Hleb\Http500InternalServerErrorException' => '/Constructor/Exceptions/Http/Http500InternalServerErrorException.php',
+        'Hleb\Http429TooManyRequestsException' => '/Constructor/Exceptions/Http/Http429TooManyRequestsException.php',
+        'Hleb\Http503ServiceUnavailableException' => '/Constructor/Exceptions/Http/Http503ServiceUnavailableException.php',
         'Hleb\CoreErrorException' => '/Constructor/Exceptions/CoreErrorException.php',
         'Hleb\Http406NotAcceptableException' => '/Constructor/Exceptions/Http/Http406NotAcceptableException.php',
         'Hleb\Http409ConflictException' => '/Constructor/Exceptions/Http/Http409ConflictException.php',
