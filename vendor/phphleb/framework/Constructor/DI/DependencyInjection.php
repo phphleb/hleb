@@ -7,12 +7,14 @@ namespace Hleb\Constructor\DI;
 use App\Bootstrap\BaseContainer;
 use App\Bootstrap\ContainerInterface;
 use Hleb\Constructor\Attributes\Autowiring\AllowAutowire;
+use Hleb\Constructor\Attributes\Autowiring\Config;
 use Hleb\Constructor\Attributes\Autowiring\NoAutowire;
 use Hleb\Helpers\ArrayHelper;
 use Hleb\Helpers\AttributeHelper;
 use Hleb\Helpers\ReflectionMethod;
 use Hleb\ReflectionProcessException;
 use Hleb\Constructor\Attributes\Autowiring\DI;
+use Hleb\Static\Settings;
 use Hleb\UnexpectedValueException;
 
 /**
@@ -38,6 +40,7 @@ final class DependencyInjection
         $defaults = $reflector->getArgDefaultValueList();
         $list = $reflector->getArgTypeList();
         $diAttributes = $reflector->searchAttributes(DI::class);
+        $configAttributes = $reflector->searchAttributes(Config::class);
 
         foreach ($list as $name => $types) {
             // Search the passed arguments for replacement.
@@ -63,6 +66,13 @@ final class DependencyInjection
                 }
                 $result[$name] = $item;
                 continue;
+            } else if ($configAttributes) {
+                /** @var Config $attribute */
+                $attribute = $configAttributes[$name] ?? null;
+                if ($attribute) {
+                    $result[$name] = Settings::getParam($attribute->name, $attribute->key);
+                    continue;
+                }
             }
 
             foreach ($types as $type) {
@@ -111,7 +121,7 @@ final class DependencyInjection
      *  2 - аналогично п.0, кроме классов с атрибутом #[NoAutowire].
      *  3 - аналогично п.1, кроме классов с атрибутом #[AllowAutowire].
      */
-    private static function checkAutowiring(string|object $class, ?int $mode): bool
+    private static function checkAutowired(string|object $class, ?int $mode): bool
     {
         \is_object($class) and $class = $class::class;
 
@@ -137,7 +147,7 @@ final class DependencyInjection
      */
     private static function create(string|object $class, ContainerInterface $container): ?object
     {
-        if (self::checkAutowiring($class, $container->settings()->getParam('system', 'autowiring.mode'))) {
+        if (self::checkAutowired($class, $container->settings()->getParam('system', 'autowiring.mode'))) {
             if (\method_exists($class, '__construct')) {
                 $ref = new ReflectionMethod($class, '__construct');
                 return new $class(...($ref->countArgs() ? self::prepare($ref) : []));
