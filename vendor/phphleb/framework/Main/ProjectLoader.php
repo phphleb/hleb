@@ -410,6 +410,9 @@ final class ProjectLoader
     private static function cachePlainRoutes(): bool
     {
         if (self::$cachePlainRoutes) {
+            if (self::searchKernelEvent()) {
+                return false;
+            }
             $cache = self::$cachePlainRoutes[DynamicParams::addressAsString(true)] ?? [];
             if ($cache) {
                 Response::setBody($cache['value']);
@@ -499,7 +502,7 @@ final class ProjectLoader
     private static function searchKernelEvent(): bool
     {
         if ((SystemSettings::getSystemValue('events.used') ?? true) !== false) {
-            if (\is_null(self::$kernelEventExists)) {
+            if (\is_null(self::$kernelEventExists) && !\class_exists(KernelEvent::class, false)) {
                 $file = SystemSettings::getPath('@global/app/Bootstrap/Events/KernelEvent.php');
                 self::$kernelEventExists = \file_exists($file);
                 if (self::$kernelEventExists) {
