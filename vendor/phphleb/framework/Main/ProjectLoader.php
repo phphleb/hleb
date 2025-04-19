@@ -111,52 +111,63 @@ final class ProjectLoader
     public static function renderSimpleValue(string $value, string $address): array
     {
         $isSimple = false;
-        $contentType = 'text/html';
+        $contentType = 'text/plain';
         if (\str_starts_with($value, \Functions::PREVIEW_TAG)) {
             $value = \substr($value, \strlen(\Functions::PREVIEW_TAG));
-            if (\str_contains($value, '{')) {
-                $replacements = [
-                    '{{ip}}' => DynamicParams::getRequest()->getUri()->getIp(),
-                    '{{method}}' => DynamicParams::getRequest()->getMethod(),
-                    '{{route}}' => $address,
-                ];
-                if (\str_contains($value, '{%')) {
-                    foreach (DynamicParams::getDynamicUriParams() as $key => $param) {
-                        if ("{%$key%}" === $value) {
-                            $value = $param;
-                            $isSimple = true;
-                            $replacements = [];
-                            break;
-                        }
-                        $replacements["{%$key%}"] = (string)$param;
+            $replacements = [];
+            if ($hasKeyReplacement = \str_contains($value, '{%')) {
+                foreach (DynamicParams::getDynamicUriParams() as $key => $param) {
+                    if ("{%$key%}" === $value) {
+                        return self::createSimpleCacheData($param, $contentType);
                     }
-                } else if (!\str_contains($value, '{{ip}}')) {
-                    $isSimple = true;
+                    $replacements["{%$key%}"] = (string)$param;
                 }
-                $replacements and $value = \strtr($value, $replacements);
             }
-            if (DynamicParams::isDebug()) {
-                $value = \htmlspecialchars($value);
-            } else if (\str_starts_with($value, '{') && \str_ends_with($value, '}')) {
-                $contentType = 'application/json';
-            } else {
-                $contentType = 'text/plain';
+            $hasIp = false;
+            if (\str_contains($value, '{{')) {
+                $hasIp = \str_contains($value, '{{ip}}');
+                if ($hasIp) {
+                    $replacements['{{ip}}'] = DynamicParams::getRequest()->getUri()->getIp();
+                }
+                if (\str_contains($value, '{{method}}')) {
+                    $replacements['{{method}}'] = DynamicParams::getRequest()->getMethod();
+                }
+                if (\str_contains($value, '{{route}}')) {
+                    $replacements['{{route}}'] = $address;
+                }
             }
-            Response::addHeaders(['Content-Type' => $contentType]);
+            if (!$hasKeyReplacement && !$hasIp) {
+                $isSimple = true;
+            }
+            if ($replacements) {
+                $value = \strtr($value, $replacements);
+            }
         } else {
             $isSimple = true;
         }
+        if (\str_starts_with($value, '{') && \str_ends_with($value, '}')) {
+            $contentType = 'application/json';
+        }
 
+        return self::createSimpleCacheData($value, $contentType, $isSimple);
+    }
+
+    /**
+     * Transformation of final data into framework format.
+     *
+     * Преобразование конечных данных в формат фреймворка.
+     */
+    private static function createSimpleCacheData(string $value, string $contentType, bool $isSimple = true): array
+    {
         Response::addToBody($value);
+        Response::addHeaders(['Content-Type' => $contentType]);
 
-        if (!DynamicParams::isDebug() && SystemSettings::isAsync()) {
-            if ($isSimple) {
-                return [
-                    'id' => DynamicParams::addressAsString(true),
-                    'value' => $value,
-                    'type' => $contentType,
-                ];
-            }
+        if ($isSimple && SystemSettings::isAsync()) {
+            return [
+                'id' => DynamicParams::addressAsString(true),
+                'value' => $value,
+                'type' => $contentType,
+            ];
         }
         return [];
     }
@@ -399,9 +410,6 @@ final class ProjectLoader
     private static function cachePlainRoutes(): bool
     {
         if (self::$cachePlainRoutes) {
-            if (self::searchKernelEvent()) {
-                return false;
-            }
             $cache = self::$cachePlainRoutes[DynamicParams::addressAsString(true)] ?? [];
             if ($cache) {
                 Response::setBody($cache['value']);
@@ -464,8 +472,6 @@ final class ProjectLoader
         // Если это простой текст, то обработаем его здесь.
         if (empty($block['middlewares']) && empty($block['middleware-after']) && \is_string($block['data']['view'] ?? null)) {
             self::addToPlainCache(self::renderSimpleValue($block['data']['view'], $block['full-address']));
-            DynamicParams::setEndTime(\microtime(true));
-            self::addDebugPanelToResponse();
             return true;
         }
 
