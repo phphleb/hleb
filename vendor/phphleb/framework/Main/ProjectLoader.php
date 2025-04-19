@@ -19,6 +19,7 @@ use Hleb\Main\Routes\Search\RouteAsyncFileManager;
 use \Hleb\Static\Csrf;
 use Hleb\HttpMethods\Intelligence\AsyncConsolidator;
 use Hleb\HttpMethods\Intelligence\Cookies\StandardCookies;
+use Hleb\Static\Log;
 use Hleb\Static\Request;
 use Hleb\Static\Response;
 use Hleb\Main\Routes\Search\RouteFileManager;
@@ -119,7 +120,7 @@ final class ProjectLoader
                     '{{method}}' => DynamicParams::getRequest()->getMethod(),
                     '{{route}}' => $address,
                 ];
-                if (\str_contains($value, '%')) {
+                if (\str_contains($value, '{%')) {
                     foreach (DynamicParams::getDynamicUriParams() as $key => $param) {
                         if ("{%$key%}" === $value) {
                             $value = $param;
@@ -445,7 +446,14 @@ final class ProjectLoader
         DynamicParams::setRouteName($routes->getRouteName());
         DynamicParams::setRouteClassName($routes->getRouteClassName());
 
-        if (($protected = $routes->protected()) && \in_array('CSRF', $protected, true) && !Csrf::validate(Csrf::discover())) {
+        if (($protected = $routes->protected()) && \in_array('CSRF', $protected, true) && !Csrf::validate($token = Csrf::discover())) {
+            $message = 'Access to the protected route was prevented due to an invalid CSRF protection key';
+            if (empty($token)) {
+                $message = 'Access to the protected route is prevented unless the CSRF protection key is specified';
+            }
+            $level = SystemSettings::getCommonValue('system.log.level') ?: 'warning';
+            Log::log($level, $message, ['tag' => '#security_message']);
+
             (new BaseErrorPage(401, 'Protected from CSRF'))->insertInResponse();
             return true;
         }

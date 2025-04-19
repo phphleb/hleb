@@ -46,8 +46,8 @@ final class DbExcessLog
         $timeExcess = SystemSettings::getCommonValue('log.db.excess');
         if (!self::$notificationSent && self::$queryTime > $timeExcess) {
             Log::log(
-                LogLevel::STATE, SystemDB::DB_PREFIX . ' #db_total_time_exceeded > ' . $timeExcess . ' sec. for request-id: ' . self::$requestId,
-                [\Hleb\Main\Logger\Log::B7E_NAME => \Hleb\Main\Logger\Log::DB_B7E]
+                LogLevel::STATE, SystemDB::DB_PREFIX . ' > ' . $timeExcess . ' sec. for request-id: ' . self::$requestId . ']',
+                [\Hleb\Main\Logger\Log::B7E_NAME => \Hleb\Main\Logger\Log::DB_B7E, 'tag' => '#db_total_time_exceeded']
             );
             self::$notificationSent = true;
         }

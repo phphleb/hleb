@@ -47,6 +47,9 @@ final class Csrf extends BaseAsyncSingleton implements RollbackInterface
      */
     public static function validate(?string $key): bool
     {
+        if (empty($key)) {
+            return false;
+        }
         self::$key or self::key();
 
         return self::$key === self::clearMask($key);
