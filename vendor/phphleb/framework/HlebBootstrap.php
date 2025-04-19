@@ -474,6 +474,7 @@ class HlebBootstrap
                 // 'twig.cache.inverted' => ['array'], // optional
                 // 'allowed.hosts' => ['array'], // not necessary yet
                 // 'config.debug' => ['boolean'], // hidden
+                // 'system.log.level' => ['string'], // optional
             ],
             'database' => [
                 'base.db.type' => ['string'],
