@@ -4,7 +4,6 @@
 
 namespace Hleb\Main;
 
-use App\Bootstrap\Events\KernelEvent;
 use AsyncExitException;
 use Hleb\Constructor\Data\DynamicParams;
 use Hleb\Constructor\Data\SystemSettings;
