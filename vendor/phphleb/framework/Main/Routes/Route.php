@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Data\View;
 use Hleb\HlebBootstrap;
+use Hleb\Route\Alias;
 use Hleb\Route\Any;
 use Hleb\Route\Delete;
 use Hleb\Route\Fallback;
@@ -196,4 +197,32 @@ final class Route
         return new Fallback($view, $httpTypes);
     }
 
+    /**
+     * Creates a clone of the route named $name with a new name $newName and address.
+     * If the target route is dynamic, then the required parameters must be passed in the new address.
+     * You cannot assign additional conditions to this action, such as adding a controller,
+     * but when in a group, the method accepts actions from the group,
+     * adding them on top of the target ones.
+     * For example:
+     *
+     * Создает клон маршрута по имени $name c новым именем $newName и адресом.
+     * Если целевой маршрут динамический, то нужно передать необходимые параметры в новом адресе.
+     * К этому действию нельзя назначить дополнительные условия, например добавить контроллер,
+     * но находясь в группе метод принимает действия от группы, добавляя их поверх целевых.
+     * Например:
+     *
+     * ```php
+     * Route::get('/user/{id}/', view('user'))->name('profile');
+     * Route::alias('/profile/{id}/', 'main.profile', 'profile');
+     *
+     * Route::toGroup()->prefix('/demo/');
+     *   // ... //
+     *   Route::alias('/user/{id}/', 'demo.profile', 'profile');
+     * Route::endGroup();
+     * ```
+     */
+    public static function alias(string $route, string $newName, string $name): Alias
+    {
+        return new Alias($route, $newName, $name);
+    }
 }

@@ -92,6 +92,8 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
 
     final public const HL40_ERROR = 'HL40_ERROR';
 
+    final public const HL41_ERROR = 'HL41_ERROR';
+
     private const ALL = [
         self::HL00_ERROR => [
             'en' => 'Sample error output number %value%',
@@ -260,6 +262,10 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
         self::HL40_ERROR => [
             'en' => 'Error in creating routes. Only one noDebug() method can be added to a route.',
             'ru' => 'Ошибка составления маршрутов. К маршруту может быть добавлен только один метод noDebug().'
+        ],
+        self::HL41_ERROR => [
+            'en' => 'Error in creating routes. No route alias found for `%target%` >>> `%origin%`.',
+            'ru' => 'Ошибка составления маршрутов. Не найден алиас маршрута для `%target%` >>> `%origin%`.'
         ],
     ];
 
