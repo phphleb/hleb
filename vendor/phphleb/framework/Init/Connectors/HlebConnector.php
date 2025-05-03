@@ -312,6 +312,7 @@ final class HlebConnector
         'Hleb\Constructor\DI\DependencyInjection' => '/Constructor/DI/DependencyInjection.php',
         'Hleb\Constructor\Containers\TestContainerInterface' => '/Constructor/Containers/TestContainerInterface.php',
         'Hleb\Route\Any' => '/Route/Any.php',
+        'Hleb\Route\Alias' => '/Route/Alias.php',
         'Hleb\Route\After' => '/Route/After.php',
         'Hleb\Route\Controller' => '/Route/Controller.php',
         'Hleb\Route\Redirect' => '/Route/Redirect.php',
