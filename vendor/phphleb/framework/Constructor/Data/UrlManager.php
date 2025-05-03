@@ -146,7 +146,7 @@ final class UrlManager
             if ($condition && isset($condition[$key]) && !$this->checkWhereCondition($key, $condition, $param)) {
                 throw new InvalidArgumentException('Parts of the URL did not pass the where() condition in the route.');
             }
-            $address = \str_replace('{' . $key . '}', $param, $address);
+            $address = \str_replace('{' . $key . '}', (string)$param, $address);
         }
 
         return $address;
