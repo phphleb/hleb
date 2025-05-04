@@ -195,7 +195,7 @@ class HlebBootstrap
 
         if (!$c) {
             require __DIR__ . '/Init/Review/basic.php';
-            $func = static function ($path): array {
+            $func = static function (string $path): array {
                 return require $path;
             };
             $c['common'] = $func($dir . '/config/common.php');
@@ -961,20 +961,18 @@ class HlebBootstrap
          *
          * @internal - do not use outside the framework core.
          */
-        function core_user_log(int $errno, string $errstr, ?string $errfile = null, ?int $errline = null): bool
-        {
-            global $logger;
+        \set_error_handler(
+            static function (int $errno, string $errstr, ?string $errfile = null, ?int $errline = null) use ($logger): bool {
+                $level = \error_reporting();
+                if ($level >= 0 && ($level === 0 || !($level & $errno))) {
+                    return true;
+                }
+                \class_exists(ErrorLog::class, false) or require __DIR__ . '/Init/ErrorLog.php';
+                ErrorLog::setLogger($logger);
 
-            $level = \error_reporting();
-            if ($level >= 0 && ($level === 0 || !($level & $errno))) {
-                return true;
+                return ErrorLog::execute($errno, $errstr, $errfile, $errline);
             }
-            \class_exists(ErrorLog::class, false) or require __DIR__ . '/Init/ErrorLog.php';
-
-            ErrorLog::setLogger($logger);
-
-            return ErrorLog::execute($errno, $errstr, $errfile, $errline);
-        }
+        );
 
         \set_error_handler('Hleb\core_user_log');
 
