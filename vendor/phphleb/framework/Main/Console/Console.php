@@ -82,7 +82,9 @@ abstract class Console
 
     private const RULE_ERROR = 'Parameters passed incorrectly according to the rules from the `rules` method: ';
 
-    private static ?int $signalReceived = null;
+    private ?int $signalReceived = null;
+
+    private ?bool $isAsyncSignal = null;
 
     private int $code = 0;
 
@@ -148,6 +150,7 @@ abstract class Console
         $this->fromCli = $this->settings()->isCli();
 
         $this->registerSignalHandlers();
+        $this->enableAutomaticSignalInterrupt();
 
         $this->attributeHelper = new AttributeHelper(static::class);
     }
@@ -344,8 +347,9 @@ abstract class Console
      */
     protected function disableAutomaticSignalInterrupt(): void
     {
-        if (\is_int(self::$signalReceived)) {
+        if (\is_int($this->signalReceived) && $this->isAsyncSignal !== false) {
             \pcntl_async_signals(false);
+            $this->isAsyncSignal = false;
         }
     }
 
@@ -354,8 +358,9 @@ abstract class Console
      */
     protected function enableAutomaticSignalInterrupt(): void
     {
-        if (\is_int(self::$signalReceived)) {
+        if (\is_int($this->signalReceived) && $this->isAsyncSignal !== true) {
             \pcntl_async_signals(true);
+            $this->isAsyncSignal = true;
         }
     }
 
@@ -364,10 +369,10 @@ abstract class Console
      */
     protected function isShutdownSignalReceived(): int
     {
-        if (\is_int(self::$signalReceived)) {
+        if (\is_int($this->signalReceived)) {
             \pcntl_signal_dispatch();
         }
-        return (int)self::$signalReceived;
+        return (int)$this->signalReceived;
     }
 
     /**
@@ -377,16 +382,24 @@ abstract class Console
      */
     private function registerSignalHandlers(): void
     {
-        if (\is_int(self::$signalReceived)) {
+        if (\is_int($this->signalReceived)) {
             return;
         }
         if (\function_exists('pcntl_signal')) {
-            self::$signalReceived = 0;
+            $this->signalReceived = 0;
             \pcntl_signal(self::SIGTERM, function() {
-                self::$signalReceived = self::SIGTERM;
+                $this->signalReceived = self::SIGTERM;
+                    if ($this->isAsyncSignal) {
+                        echo " SIGTERM detected, exiting..." . PHP_EOL;
+                        exit(1);
+                }
             });
             \pcntl_signal(self::SIGINT, function() {
-                self::$signalReceived = self::SIGINT;
+                $this->signalReceived = self::SIGINT;
+                if ($this->isAsyncSignal) {
+                    echo " Ctrl+C detected, exiting..." . PHP_EOL;
+                    exit(1);
+                }
             });
         }
     }
