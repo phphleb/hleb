@@ -129,4 +129,63 @@ abstract class Task extends Console
     {
         return parent::color();
     }
+
+    /**
+     * Disables automatic processing of process interrupt signals.
+     * Active when the 'pcntl' extension is present.
+     * After this, you can use the method for manual signal processing.
+     *
+     * Выключает автоматическую обработку сигналов на прерывание процесса.
+     * Активно при наличии расширения 'pcntl'.
+     * После этого можно использовать метод для ручной обработки сигналов.
+     *
+     * @see self::isShutdownSignalReceived()
+     */
+    protected function disableAutomaticSignalInterrupt(): void
+    {
+        parent::disableAutomaticSignalInterrupt();
+    }
+
+    /**
+     * Enables automatic processing of process shutdown signals.
+     * Active when the 'pcntl' extension is present.
+     * Enabled by default, required to disable manual signal processing.
+     *
+     * Включает автоматическую обработку сигналов на прерывание процесса.
+     * Активно при наличии расширения 'pcntl'.
+     * По умолчанию включено, необходимо для отмены ручной обработки сигналов.
+     *
+     * @see self::disableAutomaticSignalInterrupt()
+     */
+    protected function enableAutomaticSignalInterrupt(): void
+    {
+        parent::enableAutomaticSignalInterrupt();
+    }
+
+    /**
+     * Checks if a process shutdown signal has been received.
+     * Active when the 'pcntl' extension is present.
+     * The default signal handler must be disabled for this to work.
+     * The signal type can be checked by comparing it with the returned value.
+     * If there are no shutdown signals, returns 0.
+     * Example with a specific signal:
+     *
+     * Проверяет, был ли получен сигнал на выключение процесса.
+     * Активно при наличии расширения 'pcntl'.
+     * Для работы необходимо отключить дефолтный обработчик сигналов.
+     * Тип сигнала можно проверить сравнив с возвращенным значением.
+     * При отсутствии сигналов на выключение возвращает 0.
+     * Пример с конкретным сигналом:
+     *
+     * ```php
+     *  $this->disableAutomaticSignalInterrupt();
+     *  if ($this->isShutdownSignalReceived() === self::SIGINT) {
+     *    // ... //
+     *  }
+     * ```
+     */
+    protected function isShutdownSignalReceived(): int
+    {
+        return parent::isShutdownSignalReceived();
+    }
 }
