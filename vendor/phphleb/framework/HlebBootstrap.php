@@ -961,18 +961,20 @@ class HlebBootstrap
          *
          * @internal - do not use outside the framework core.
          */
-        \set_error_handler(
-            static function (int $errno, string $errstr, ?string $errfile = null, ?int $errline = null) use ($logger): bool {
-                $level = \error_reporting();
-                if ($level >= 0 && ($level === 0 || !($level & $errno))) {
-                    return true;
-                }
-                \class_exists(ErrorLog::class, false) or require __DIR__ . '/Init/ErrorLog.php';
-                ErrorLog::setLogger($logger);
+        function core_user_log(int $errno, string $errstr, ?string $errfile = null, ?int $errline = null): bool
+        {
+            global $logger;
 
-                return ErrorLog::execute($errno, $errstr, $errfile, $errline);
+            $level = \error_reporting();
+            if ($level >= 0 && ($level === 0 || !($level & $errno))) {
+                return true;
             }
-        );
+            \class_exists(ErrorLog::class, false) or require __DIR__ . '/Init/ErrorLog.php';
+
+            ErrorLog::setLogger($logger);
+
+            return ErrorLog::execute($errno, $errstr, $errfile, $errline);
+        }
 
         \set_error_handler('Hleb\core_user_log');
 
