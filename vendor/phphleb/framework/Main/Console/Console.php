@@ -391,14 +391,14 @@ abstract class Console
                 $this->signalReceived = self::SIGTERM;
                     if ($this->isAsyncSignal) {
                         echo " SIGTERM detected, exiting..." . PHP_EOL;
-                        exit(1);
+                        exit(self::ERROR_CODE);
                 }
             });
             \pcntl_signal(self::SIGINT, function() {
                 $this->signalReceived = self::SIGINT;
                 if ($this->isAsyncSignal) {
                     echo " Ctrl+C detected, exiting..." . PHP_EOL;
-                    exit(1);
+                    exit(self::ERROR_CODE);
                 }
             });
         }
