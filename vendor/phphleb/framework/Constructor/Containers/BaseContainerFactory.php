@@ -105,41 +105,76 @@ abstract class BaseContainerFactory extends BaseAsyncSingleton
 
     /**
      * Add/replace container service in real time.
+     * (!) Without the following changes, the ability to change the container contents in real time is not available.
      * If you need to add a service after initialization, you can add it using this method.
      * As a result, it will be possible to use this feature via ContainerFactory::setSingleton().
      * You can use lazy loading of objects in two ways:
      * 1) Use lazy load object loading added in PHP 8.4,
      *  so that objects are initialized only upon request.
-     * 2) Use Callable type for $singleton as an initialization function.
-     * To do this you will need to change the ContainerFactory class:
+     * ```php
+     *    ContainerFactory::setSingleton(
+     *        CustomServiceInterface::class,
+     *        ContainerFactory::getLazyObject(CustomService::class)
+     *    );
+     *  ```
+     * 2) Use an anonymous function for $value that initializes the desired object.
+     *
+     * For all this, you will need to supplement the ContainerFactory class,
+     * and if you want the addition to be via $this->container in the application,
+     * then also the BaseContainer class:
      *
      * Добавление/замена сервиса контейнера в реальном времени.
+     * (!) Без указанных далее изменений возможность изменять содержимое контейнера в реальном времени недоступна.
      * При необходимости добавить сервис после инициализации можно добавить его при помощи этого метода.
      * В результате можно будет через ContainerFactory::setSingleton() использовать эту возможность.
      * Можно использовать "ленивую" загрузку объектов двумя способами:
      * 1) Используйте lazy load загрузку объектов, добавленную в PHP 8.4,
      *  чтобы объекты инициализировались только по запросу.
-     * 2) Используйте тип Callable для $singleton в виде инициализирующей функции.
-     * Для этого нужно будет изменить класс ContainerFactory:
+     *  ```php
+     *   ContainerFactory::setSingleton(
+     *         CustomServiceInterface::class,
+     *         ContainerFactory::getLazyObject(CustomService::class)
+     *     );
+     * ```
+     * 2) Используйте анонимную функцию для $value инициализирующую нужный объект.
+     *
+     * Для всего этого нужно будет дополнить класс ContainerFactory, а если нужно,
+     * чтобы добавление было и через $this->container в приложении, то и класс BaseContainer:
      *
      * ```php
+     * // App\Bootstrap\ContainerFactory
+     *
      * public static function getSingleton(string $id): mixed
      * {
      *   ...
      *
-     *   if (is_callable(self::$singletons[$id])) {
+     *   if (self::$singletons[$id] instanceof \Closure) {
      *       self::$singletons[$id] = self::$singletons[$id]();
      *   }
      *   return self::$singletons[$id];
      * }
+     *
      * #[\Override]
-     * public static function setSingleton(string $id, object|callable|null $value): void
+     * public static function setSingleton(string $id, ?object $value): void
      * {
-     *   parent::setSingleton($id, $value);
+     *    parent::setSingleton($id, $value);
      * }
      * ```
+     * ```php
+     *  // App\Bootstrap\BaseContainer
+     *
+     *  public function setSingleton(string $id, ?object $value): void
+     *  {
+     *     ContainerFactory::setSingleton($id, $value);
+     *  }
+     * ```
+     * ```php
+     *   // App\Bootstrap\ContainerInterface
+     *
+     *   public function setSingleton(string $id, ?object $value): void
+     *  ```
      */
-    protected static function setSingleton(string $id, object|callable|null $value): void
+    protected static function setSingleton(string $id, object|null $value): void
     {
         self::$singletons[$id] = $value;
         if (\is_null(self::$customServiceKeys)) {
@@ -150,6 +185,24 @@ abstract class BaseContainerFactory extends BaseAsyncSingleton
         } else {
             self::$customServiceKeys[] = $id;
         }
+    }
+
+    /**
+     * Getting a lazy object from a class name and constructor parameters for assignment in a container.
+     * It is necessary to take into account the nuances of lazy objects, including that if static methods
+     * such as rollback() are called on the object, the fields involved must have default values.
+     *
+     * Получение "ленивого" объекта из названия класса и параметров конструктора для присвоения в контейнере.
+     * Необходимо учитывать нюансы ленивых объектов, в том числе, если у объекта будут вызваны статические методы,
+     * например rollback(), задействованные поля должны иметь значения по умолчанию.
+     *
+     * ```php
+     *    CustomServiceInterface => self::getLazyObject(CustomService::class)
+     *  ```
+     */
+    final public static function getLazyObject(string $class, array $params = []): object
+    {
+        return CoreContainer::getLazyObject($class, $params);
     }
 
     /**

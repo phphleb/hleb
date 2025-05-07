@@ -25,9 +25,13 @@ interface RollbackInterface
 {
     /**
      * Used to clear class state at the end of a request for asynchronous mode.
+     * If an object of a derived class uses lazy loading in the container,
+     * then you must ensure that the fields involved have default values.
      * Example:
      *
      * Используется для очистки состояния класса в конце запроса для асинхронного режима.
+     * Если объект наследуемого класса использует "ленивую" загрузку в контейнере,
+     * то необходимо убедиться, что задействованные поля имеют значения по умолчанию.
      * Пример:
      *
      * ```php
@@ -35,7 +39,7 @@ interface RollbackInterface
      * {
      *    private static ?User $currentUser = null;
      *
-     *    public function set(User $user): void {
+     *    public function __construct(User $user) {
      *      self::$currentUser = $user;
      *    }
      *

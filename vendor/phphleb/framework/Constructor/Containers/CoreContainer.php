@@ -58,6 +58,8 @@ abstract class CoreContainer extends ExternalSingleton implements CoreContainerI
 {
     private static array $containers = [];
 
+    private static ?bool $supportLazyObjects = null;
+
 
     /**
      * Registered keys for custom services.
@@ -238,6 +240,42 @@ abstract class CoreContainer extends ExternalSingleton implements CoreContainerI
         return true;
     }
 
+    /**
+     * Getting a lazy object from a class name and constructor parameters for assignment in a container.
+     * It is necessary to take into account the nuances of lazy objects, including that if static methods
+     * such as rollback() are called on the object, the fields involved must have default values.
+     *
+     * Получение "ленивого" объекта из названия класса и параметров конструктора для присвоения в контейнере.
+     * Необходимо учитывать нюансы ленивых объектов, в том числе, если у объекта будут вызваны статические методы,
+     * например rollback(), задействованные поля должны иметь значения по умолчанию.
+     *
+     * ```php
+     *    CustomServiceInterface => self::getLazyObject(CustomService::class)
+     *  ```
+     */
+    final public static function getLazyObject(string $class, array $params = []): object
+    {
+        if (self::isLazyObjectsSupported()) {
+            $reflector = new \ReflectionClass($class);
+            return $reflector->newLazyGhost(static function (object $object) use ($params): object {
+                return $params ? new $object(...$params) : new $object();
+            });
+        }
+        return $params ? new $class(...$params) : new $class();
+    }
+
+    /**
+     * Checks support for lazy objects in PHP (since version 8.4).
+     *
+     * Проверяет поддержку ленивых объектов в PHP (с версии 8.4).
+     */
+    final public static function isLazyObjectsSupported(): bool
+    {
+        if (is_null(self::$supportLazyObjects)) {
+            self::$supportLazyObjects = \version_compare(\phpversion(), '8.4.0', '>=');
+        }
+        return self::$supportLazyObjects;
+    }
 
     /**
      * To simplify the search for services through Container::has(),
@@ -263,7 +301,7 @@ abstract class CoreContainer extends ExternalSingleton implements CoreContainerI
      */
     final protected static function register(string $id): void
     {
-            self::$customServiceKeys[$id] ?? self::$customServiceKeys[] = $id;
+       self::$customServiceKeys[$id] ?? self::$customServiceKeys[] = $id;
     }
 
     private function getOriginSingleton(string $id): mixed
@@ -285,31 +323,31 @@ abstract class CoreContainer extends ExternalSingleton implements CoreContainerI
             return self::$containers[$class];
         }
         $container = match ($class) {
-            ArrInterface::class => new ArrReference(),
-            CsrfInterface::class => new CsrfReference(),
-            ConverterInterface::class => new ConverterReference(),
-            RequestInterface::class => new RequestReference(),
-            ResponseInterface::class => new ResponseReference(),
-            DbInterface::class => new DbReference(),
+            ArrInterface::class => self::getLazyObject(ArrReference::class),
+            CsrfInterface::class => self::getLazyObject(CsrfReference::class),
+            ConverterInterface::class => self::getLazyObject(ConverterReference::class),
+            RequestInterface::class => self::getLazyObject(RequestReference::class),
+            ResponseInterface::class => self::getLazyObject(ResponseReference::class),
+            DbInterface::class => self::getLazyObject(DbReference::class),
             CookieInterface::class => new CookieReference(),
             SessionInterface::class => new SessionReference(),
-            SettingInterface::class => new SettingReference(),
-            RouterInterface::class => new RouterReference(),
-            LogInterface::class => new LogReference(),
-            PathInterface::class => new PathReference(),
-            DebugInterface::class => new DebugReference(),
-            DtoInterface::class => new DtoReference(),
-            CacheInterface::class => new CacheReference(),
-            RedirectInterface::class => new RedirectReference(),
-            SystemInterface::class => new SystemReference(),
-            TemplateInterface::class => new TemplateReference(),
-            CommandInterface::class => new CommandReference(),
-            DiInterface::class => new DiReference(),
+            SettingInterface::class => self::getLazyObject(SettingReference::class),
+            RouterInterface::class => self::getLazyObject(RouterReference::class),
+            LogInterface::class => self::getLazyObject(LogReference::class),
+            PathInterface::class => self::getLazyObject(PathReference::class),
+            DebugInterface::class => self::getLazyObject(DebugReference::class),
+            DtoInterface::class => self::getLazyObject(DtoReference::class),
+            CacheInterface::class => self::getLazyObject(CacheReference::class),
+            RedirectInterface::class => self::getLazyObject(RedirectReference::class),
+            SystemInterface::class => self::getLazyObject(SystemReference::class),
+            TemplateInterface::class => self::getLazyObject(TemplateReference::class),
+            CommandInterface::class => self::getLazyObject(CommandReference::class),
+            DiInterface::class => self::getLazyObject(DiReference::class),
             default => null
         };
 
         return self::$containers[$class] = $container;
-    }
+    }    
 
     /**
      * @internal
