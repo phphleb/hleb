@@ -14,6 +14,12 @@ trait GroupWhereTrait
      *
      * Проверка динамических частей маршрута в группе
      * при помощи регулярного выражения.
+     *
+     * ```php
+     *   Route::toGroup()->prefix('/order/{id}')->where(['id' => '[0-9]+']);
+     *        // ... //
+     *   Route::endGroup();
+     * ```
      */
     public function where(array $rules): GroupWhere
     {

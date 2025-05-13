@@ -20,6 +20,12 @@ trait GroupNoDebugTrait
      * Актуально только в DEBUG-режиме.
      * Подразумевается, что это не временное решение, а в этих условиях действительно
      * не нужно выводить панель отладки, например, GET-запрос к API, ожидающий в ответ JSON.
+     *
+     * ```php
+     *  Route::toGroup()->noDebug();
+     *    // ... //
+     *  Route::endGroup();
+     * ```
      */
     public function noDebug(): GroupNoDebug
     {

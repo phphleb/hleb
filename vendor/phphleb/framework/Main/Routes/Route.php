@@ -29,12 +29,12 @@ final class Route
      * To assign a URL route to the rendered content for the GET method.
      * Route::get('/address/', 'Content'); - displaying a text string.
      * Route::get('/', view('index')); - template display (file /resources/views/index.php).
-     * Route::get('/handling/default/')->controller('DefaultController'); - addressing to the controller. The second argument is missing.
+     * Route::get('/handling/default/')->controller(DefaultController::class); - addressing to the controller. The second argument is missing.
      *
      * Для назначения URL-маршрута отображаемому контенту для метода GET.
      * Route::get('/address/', 'Content'); - отображение текстовой строки.
      * Route::get('/', view('index')); - отображение шаблона (файл /resources/views/index.php).
-     * Route::get('/handling/default/')->controller('DefaultController'); - обращение к контроллеру. Второй аргумент отсутствует.
+     * Route::get('/handling/default/')->controller(DefaultController::class); - обращение к контроллеру. Второй аргумент отсутствует.
      *
      * @see view()
      */
@@ -47,13 +47,13 @@ final class Route
      * To assign a URL route to the rendered content for the POST method.
      * Route::post('/address/', 'Content'); - displaying a text string.
      * Route::post('/', view('index')); - template display (file /resources/views/index.php).
-     * Route::post('/handling/default/')->controller('DefaultController'); - addressing to the controller. The second argument is missing.
+     * Route::post('/handling/default/')->controller(DefaultController::class); - addressing to the controller. The second argument is missing.
      *
      * Для назначения URL-маршрута отображаемому контенту для метода POST.
      * Route::post('/address/', 'Content'); - отображение текстовой строки.
      *
      * Route::post('/', view('index')); - отображение шаблона (файл /resources/views/index.php).
-     * Route::post('/handling/default/')->controller('DefaultController'); - обращение к контроллеру. Второй аргумент отсутствует.
+     * Route::post('/handling/default/')->controller(DefaultController::class); - обращение к контроллеру. Второй аргумент отсутствует.
      *
      * @see view()
      */
@@ -66,12 +66,12 @@ final class Route
      * To assign a URL route to the rendered content for the PUT method.
      * Route::put('/address/', 'Content'); - displaying a text string.
      * Route::put('/', view('index')); - template display (file /resources/views/index.php).
-     * Route::put('/handling/default/')->controller('DefaultController'); - addressing to the controller. The second argument is missing.
+     * Route::put('/handling/default/')->controller(DefaultController::class); - addressing to the controller. The second argument is missing.
      *
      * Для назначения URL-маршрута отображаемому контенту для метода PUT.
      * Route::put('/address/', 'Content'); - отображение текстовой строки.
      * Route::put('/', view('index')); - отображение шаблона (файл /resources/views/index.php).
-     * Route::put('/handling/default/')->controller('DefaultController'); - обращение к контроллеру. Второй аргумент отсутствует.
+     * Route::put('/handling/default/')->controller(DefaultController::class); - обращение к контроллеру. Второй аргумент отсутствует.
      *
      * @see view()
      */
@@ -84,12 +84,12 @@ final class Route
      * To assign a URL route to the rendered content for the DELETE method.
      * Route::delete('/address/', 'Content'); - displaying a text string.
      * Route::delete('/', view('index')); - template display (file /resources/views/index.php).
-     * Route::delete('/handling/default/')->controller('DefaultController'); - addressing to the controller. The second argument is missing.
+     * Route::delete('/handling/default/')->controller(DefaultController::class); - addressing to the controller. The second argument is missing.
      *
      * Для назначения URL-маршрута отображаемому контенту для метода DELETE.
      * Route::delete('/address/', 'Content'); - отображение текстовой строки.
      * Route::delete('/', view('index')); - отображение шаблона (файл /resources/views/index.php).
-     * Route::delete('/handling/default/')->controller('DefaultController'); - обращение к контроллеру. Второй аргумент отсутствует.
+     * Route::delete('/handling/default/')->controller(DefaultController::class); - обращение к контроллеру. Второй аргумент отсутствует.
      *
      * @see view()
      */
@@ -102,12 +102,12 @@ final class Route
      * To assign a URL route to the rendered content for the PATCH method.
      * Route::patch('/address/', 'Content'); - displaying a text string.
      * Route::patch('/', view('index')); - template display (file /resources/views/index.php).
-     * Route::patch('/handling/default/')->controller('DefaultController'); - addressing to the controller. The second argument is missing.
+     * Route::patch('/handling/default/')->controller(DefaultController::class); - addressing to the controller. The second argument is missing.
      *
      * Для назначения URL-маршрута отображаемому контенту для метода PATCH.
      * Route::patch('/address/', 'Content'); - отображение текстовой строки.
      * Route::patch('/', view('index')); - отображение шаблона (файл /resources/views/index.php).
-     * Route::patch('/handling/default/')->controller('DefaultController'); - обращение к контроллеру. Второй аргумент отсутствует.
+     * Route::patch('/handling/default/')->controller(DefaultController::class); - обращение к контроллеру. Второй аргумент отсутствует.
      *
      * @see view()
      */
@@ -119,11 +119,11 @@ final class Route
     /**
      * The OPTIONS method is automatically supported by other methods in the framework and returns a standard list.
      * If you need to override it, then you need to call this method before any other with the same address.
-     * Route::options('/handling/default/')->controller('DefaultController'); - addressing to the controller.
+     * Route::options('/handling/default/')->controller(DefaultController::class); - addressing to the controller.
      *
      * Метод OPTIONS автоматически поддерживается другими методами во фреймворке и возвращает стандарный перечень.
      * Если необходимо его переопределить, то нужно вызвать этот метод перед любым другим с тем же адресом.
-     * Route::options('/handling/default/')->controller('DefaultController'); - обращение к контроллеру.
+     * Route::options('/handling/default/')->controller(DefaultController::class); - обращение к контроллеру.
      */
     public static function options(string $route): Options
     {
@@ -160,6 +160,18 @@ final class Route
      *
      * Добавляет следующие маршруты через Route в группу.
      * При этом методы, следующие за этим, будут добавляться в свойства группы.
+     *
+     * ```php
+     *   Route::toGroup()->prefix('/api/');
+     *
+     *      Route::get('/users/')
+     *           ->controller(ApiController::class, 'users'); // GET /api/users
+     *
+     *      Route::post('/user/')
+     *           ->controller(ApiController::class, 'createUser'); // POST /api/user
+     *
+     *    Route::endGroup();
+     * ```
      */
     public static function toGroup(): ToGroup
     {
@@ -170,6 +182,18 @@ final class Route
      * Finishes adding methods to the group.
      *
      * Завершает добавление методов в группу.
+     *
+     * ```php
+     *  Route::toGroup()->prefix('/api/');
+     *
+     *     Route::get('/users/')
+     *          ->controller(ApiController::class, 'users'); // GET /api/users
+     *
+     *     Route::post('/user/')
+     *          ->controller(ApiController::class, 'createUser'); // POST /api/user
+     *
+     *   Route::endGroup();
+     *  ```
      */
     public static function endGroup(): EndGroup
     {
@@ -186,6 +210,10 @@ final class Route
      * Может быть только один метод `fallback` в маршрутах для конкретного HTTP-метода.
      * Если нужно применить разный контент к разным не совпавшим HTTP-методам,
      * создайте дополнительный fallback().
+     *
+     * ```php
+     *  Route::fallback(view('404'));
+     *  ```
      *
      * @param null|int|float|string|View $view - standard options, string or view(...)
      *                                         - стандартные параметры, строка или view(...)

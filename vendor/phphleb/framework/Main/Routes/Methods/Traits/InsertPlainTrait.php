@@ -26,6 +26,10 @@ trait InsertPlainTrait
      * (!) Положительное значение отключает инициализацию сессий
      * и Cookies при обращении к маршруту.
      *
+     * ```php
+     *     Route::any('/site/info', view('info'))->plain();
+     *  ```
+     *
      * @param bool $on - simplification mode active.
      *
      *                 - активность режима упрощения.

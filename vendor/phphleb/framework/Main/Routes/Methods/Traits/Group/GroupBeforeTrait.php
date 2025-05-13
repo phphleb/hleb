@@ -25,6 +25,12 @@ trait GroupBeforeTrait
      * В $target можно указать App\Middleware\DefaultMiddlewareBefore::class,
      * тогда в аргументе $method должен быть указан метод контроллера.
      * Псевдоним метода middleware().
+     *
+     * ```php
+     *  Route::toGroup()->before(DefaultMiddleware::class);
+     *     // ... //
+     *  Route::endGroup();
+     * ```
      */
     public function before(string $target, ?string $method = null, array $data = []):  GroupMiddleware
     {

@@ -23,6 +23,12 @@ trait GroupMiddlewareTrait
      * Если не указан, будет использован 'index'.
      * В $target можно указать App\Middleware\DefaultMiddlewareBefore::class,
      * тогда в аргументе $method должен быть указан метод контроллера.
+     *
+     * ```php
+     *  Route::toGroup()->middleware(DefaultMiddleware::class);
+     *    // ... //
+     *  Route::endGroup();
+     * ```
      */
     public function middleware(string $target, ?string $method = null, array $data = []):  GroupMiddleware
     {

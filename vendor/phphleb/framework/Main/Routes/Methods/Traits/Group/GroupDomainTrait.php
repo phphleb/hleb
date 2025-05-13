@@ -43,6 +43,12 @@ trait GroupDomainTrait
      * domain('*', 3)->domain('test') - все поддомены третьего уровня для test.com
      * или test.net и тд.
      *
+     * ```php
+     *  Route::toGroup()->domain('test');
+     *    // ... //
+     *  Route::endGroup();
+     * ```
+     *
      * @param string|array $name - the name of the domain or subdomain for this level.
      *                           - название домена или поддомена для этого уровня.
      *

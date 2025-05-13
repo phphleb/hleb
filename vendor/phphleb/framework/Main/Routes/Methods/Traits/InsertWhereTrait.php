@@ -10,15 +10,16 @@ use Hleb\Route\Where;
 trait InsertWhereTrait
 {
     /**
-     * When where( ... ) is added after of the method get( ... ), it sets a check
-     * of dynamic parts of the route using regular expressions.
-     * Route::get('/ru/{version}/{page}/', 'Content')
-     *     ->where(['version' => '[a-z0-9]+', 'page' => '[a-z]+']);
+     * When added after get(), post(), etc. methods, sets up regular expression
+     * checking of dynamic parts of the route.
      *
-     * При добавлении после метода get( ... ) устанавливает проверку
+     * При добавлении после методов get(), post() и т.д. устанавливает проверку
      * динамических частей маршрута с помощью регулярных выражений.
+     *
+     * ```php
      * Route::get('/ru/{version}/{page}/', 'Content')
      *     ->where(['version' => '[a-z0-9]+', 'page' => '[a-z]+']);
+     * ```
      */
     public function where(array $rules): Where
     {

@@ -23,6 +23,10 @@ trait InsertControllerTrait
      * Если не указан, будет использован 'index'.
      * В $target можно указать App\Controllers\DefaultController::class,
      * тогда в аргументе $method должен быть указан метод контроллера.
+     *
+     * ```php
+     *   Route::get('/user/')->controller(UserController::class);
+     * ```
      */
     public function controller(string $target, ?string $method = null): Controller
     {

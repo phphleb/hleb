@@ -25,6 +25,12 @@ trait GroupAfterTrait
      * Если не указан, будет использован 'index'.
      * В $target можно указать App\Middleware\DefaultMiddlewareAfter::class,
      * тогда в аргументе $method должен быть указан метод контроллера.
+     *
+     * ```php
+     *   Route::toGroup()->after(DefaultMiddlewareAfter::class);
+     *      // ... //
+     *   Route::endGroup();
+     *  ```
      */
     public function after(string $target, ?string $method = null, array $data = []):  GroupAfter
     {

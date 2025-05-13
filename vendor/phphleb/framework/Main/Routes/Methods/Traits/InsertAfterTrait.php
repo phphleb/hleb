@@ -25,6 +25,10 @@ trait InsertAfterTrait
      * Если не указан, будет использован 'index'.
      * В $target можно указать App\Middleware\DefaultMiddlewareAfter::class,
      * тогда в аргументе $method должен быть указан метод контроллера.
+     *
+     * ```php
+     *  Route::get('/example/', view('example'))->after(After::class);
+     * ```
      */
     public function after(string $target, ?string $method = null, array $data = []): After
     {

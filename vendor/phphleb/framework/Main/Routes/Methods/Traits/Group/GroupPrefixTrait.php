@@ -17,6 +17,12 @@ trait GroupPrefixTrait
      * Установка префикса к группе маршрутов.
      * Например, для префикса '/test/', если в группе находится маршрут '/page/',
      * будет проверяться адрес '/test/page/' для этого маршрута.
+     *
+     * ```php
+     *  Route::toGroup()->prefix('/test/');
+     *    // ... //
+     *  Route::endGroup();
+     * ```
      */
     public function prefix(string $prefix): GroupPrefix
     {

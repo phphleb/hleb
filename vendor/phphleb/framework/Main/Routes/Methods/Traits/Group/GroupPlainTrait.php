@@ -26,6 +26,12 @@ trait GroupPlainTrait
      * (!) Положительное значение отключает инициализацию сессий
      * и Cookies при обращении к маршрутам в группе.
      *
+     * ```php
+     *  Route::toGroup()->plain();
+     *     // ... //
+     *  Route::endGroup();
+     *```
+     *
      * @param bool $on - simplification mode active.
      *
      *                 - активность режима упрощения.
