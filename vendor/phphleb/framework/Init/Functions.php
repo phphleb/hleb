@@ -12,12 +12,6 @@ use Hleb\Static\Settings;
  */
 final class Functions
 {
-    /** @internal */
-    final public const NEEDED_TAGS = ['<', '>'];
-
-    /** @internal */
-    final public const REPLACING_TAGS = ['&lt;', '&gt;'];
-
     final public const PREVIEW_TAG = '~{/preview/}';
 
     /** @internal */
@@ -40,32 +34,19 @@ final class Functions
              * Рекурсивная предварительная очистка данных.
              * Тип значений остаётся неизменным.
              */
-            function hl_clear_tags(mixed $value, array $neededTags = Functions::NEEDED_TAGS, array $replacingTags = Functions::REPLACING_TAGS): mixed
+            function hl_clear_tags(mixed $value): mixed
             {
                 if (empty($value)) {
                     return $value;
                 }
-                $type = \gettype($value);
-                if ($type === 'string') {
-                    return \str_replace($neededTags, $replacingTags, $value);
-                }
-                if ($type === 'array') {
-                    $preKeys = \implode(\array_keys($value));
-                    $clearKeys = false;
-                    foreach ($neededTags as $tag) {
-                        if (\str_contains($preKeys, $tag)) {
-                            $clearKeys = true;
-                            break;
-                        }
-                    }
-                    if ($clearKeys) {
-                        $new = [];
-                        foreach ($value as $key => $item) {
-                            $new[\hl_clear_tags($key)] = \hl_clear_tags($item);
-                        }
-                        return $new;
-                    } else {
-                        foreach ($value as $key => $item) {
+                if (\is_string($value)) {
+                    return \htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+                } else if (\is_array($value)) {
+                    foreach ($value as $key => $item) {
+                        if (\is_string($key)) {
+                            unset($value[$key]);
+                            $value[\hl_clear_tags($key)] = \hl_clear_tags($item);
+                        } else {
                             $value[$key] = \hl_clear_tags($item);
                         }
                     }

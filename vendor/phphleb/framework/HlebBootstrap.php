@@ -644,7 +644,16 @@ class HlebBootstrap
         }
         $_SERVER['REQUEST_METHOD'] = \strtoupper($_SERVER['REQUEST_METHOD']);
 
-        $_SERVER['REMOTE_ADDR'] = \strip_tags((string)($_SERVER['REMOTE_ADDR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null));
+        $ip = $_SERVER['REMOTE_ADDR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? '';
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ips = \explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            $ip = \trim(\reset($ips));
+        }
+        if (!\filter_var($ip, FILTER_VALIDATE_IP)) {
+            $ip = '';
+        }
+
+        $_SERVER['REMOTE_ADDR'] = $ip;
 
         isset($_SERVER["SERVER_PROTOCOL"]) or $_SERVER["SERVER_PROTOCOL"] = 'HTTP/1.1';
     }
@@ -880,7 +889,7 @@ class HlebBootstrap
             $allowed = $this->config['common']['allowed.hosts'];
             $current = \explode(':', $request->getUri()->getHost())[0];
             if (!$allowed || !\is_array($allowed)) {
-                $this->getLogger()->warning('common.allowed.hosts not set');
+                $this->getLogger()->warning('The `allowed.hosts` parameter of the `common` configuration is not set!');
             } else if (!in_array($current, $allowed)) {
                 $isValid = false;
                 foreach ($allowed as $pattern) {
