@@ -184,6 +184,7 @@ class FileLogger extends BaseLogger implements LoggerInterface
             // Если ещё не производилось действие или много отправлено логов.
             if (!self::$checkSize) {
                 $this->clear($dir);
+                $this->clearOut($dir);
                 self::$checkSize = true;
             }
         }
@@ -228,8 +229,20 @@ class FileLogger extends BaseLogger implements LoggerInterface
     private function clear(string $dir): void
     {
         WebCron::offer('hl_file_logger_cache', function() use ($dir) {
-            (new LogCleaner())->run($dir, 'Y_m_d');
+            (new LogCleaner())->clearInitialLogIfExceeded($dir, 'Y_m_d');
         }, 3600);
+    }
+
+    /**
+     * Every 10 seconds it checks whether the logs exceed the permissible size and if so, it deletes the logs.
+     *
+     * Каждые 10 секунд проверяет превышение допустимого размера логами и при превышении удаляет логи.
+     */
+    private function clearOut(string $dir): void
+    {
+        WebCron::offer('hl_file_log_exceeded_cache', function() use ($dir) {
+            (new LogCleaner())->clearAllLogsIfExceeded($dir, 'Y_m_d');
+        }, 10);
     }
 
     /**

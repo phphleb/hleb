@@ -507,6 +507,7 @@ return [
     │ Control over the size of the framework's file logs. Value in megabytes.
     │ If this value is exceeded, some older files will be deleted.
     │ To prevent data loss, the action will not affect logs with the current date.
+    │ If the limit is exceeded by a factor of two, all logs are deleted.
     │ Default: 0 (no restrictions)
     │
     │
@@ -517,6 +518,7 @@ return [
     │ Контроль за размерами файловых логов фреймворка. Значение в мегабайтах.
     │ При превышении этого значения будут удалены некоторые более старые файлы.
     │ Для предотвращения потерь данных, действие не затронет логи с текущей датой.
+    │ При двукратном превышении удаляются все логи.
     │ Изначально: 0 (без ограничений)
     │
     */

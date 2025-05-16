@@ -4,6 +4,7 @@
 
 namespace Hleb\Constructor\Cache;
 
+use Hleb\Helpers\DirectoryHelper;
 use Hleb\Static\Path;
 use Hleb\Static\Settings;
 
@@ -43,21 +44,41 @@ final class WebCron
      */
   public static function offer(string $key, \Closure $func, int $period = 1): bool
   {
-      $I = DIRECTORY_SEPARATOR;
       $dir = Path::get(self::DIR);
       if (!\file_exists($dir)) {
-          @\mkdir($dir, 0775, true);
+          @\mkdir($dir, 0777, true);
       }
-      $file = Path::get(self::DIR . $I . $key . '_' . $period . '.txt');
+      $files = \iterator_to_array(DirectoryHelper::getFileIterator($dir, $key . '_*.txt'));
+      $file = null;
+      $name = $key . '_' . $period . '.txt';
+      /**
+       * @var \SplFileInfo[] $files
+       */
+      foreach($files as $file) {
+          if ($file->getFilename() === $name) {
+              $file = $file->getRealPath();
+          } else {
+              try {
+                  \set_error_handler(function ($_errno, $errstr) {
+                      throw new \RuntimeException($errstr);
+                  });
+                  @\unlink($file->getRealPath());
+              } catch (\RuntimeException) {
+              } finally {
+                  \restore_error_handler();
+              }
+          }
+      }
       $time = Settings::getParam('system', 'start.unixtime');
-      if (\file_exists($file)) {
+      if ($file) {
           $previous = @\file_get_contents($file);
           if (!$previous || $previous == $time || (float)$previous >= $time - $period) {
               return false;
           }
       }
-      @\file_put_contents($file, $time) and $func();
-      @\chmod($file, 0664);
+      $path = $dir . DIRECTORY_SEPARATOR . $name;
+      @\file_put_contents($path, $time) and $func();
+      @\chmod($path, 0777);
 
       return true;
   }

@@ -111,10 +111,32 @@ final class CacheRoutes
     {
         $includes = \glob($dir . '/*');
         foreach ($includes as $include) {
-            \is_dir($include) ? $this->recursiveRemoveDir($include) : @\unlink($include);
+            if (\is_dir($include)) {
+                $this->recursiveRemoveDir($include);
+            } else {
+                try {
+                    \set_error_handler(function ($_errno, $errstr) {
+                        throw new \RuntimeException($errstr);
+                    });
+                    @\unlink($include);
+                } catch (\RuntimeException) {
+                } finally {
+                    \restore_error_handler();
+                }
+            }
         }
         \clearstatcache();
-        \is_dir($dir) and \rmdir($dir);
+        if (\is_dir($dir)) {
+            try {
+                \set_error_handler(function ($_errno, $errstr) {
+                    throw new \RuntimeException($errstr);
+                });
+                @\rmdir($dir);
+            } catch (\RuntimeException) {
+            } finally {
+                \restore_error_handler();
+            }
+        }
     }
 
     public function updateDefaultInfo(): bool

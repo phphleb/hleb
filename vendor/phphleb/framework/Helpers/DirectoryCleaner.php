@@ -109,7 +109,15 @@ final class DirectoryCleaner
                     if (\is_dir($tmp)) {
                         $this->removeDir($tmp);
                     } else {
-                        \file_exists($tmp) and @\unlink($tmp);
+                        try {
+                            \set_error_handler(function ($_errno, $errstr) {
+                                throw new \RuntimeException($errstr);
+                            });
+                            @\unlink($tmp);
+                        } catch (\RuntimeException) {
+                        } finally {
+                            \restore_error_handler();
+                        }
                     }
                 }
             }

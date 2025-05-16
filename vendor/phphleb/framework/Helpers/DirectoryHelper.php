@@ -54,19 +54,23 @@ class DirectoryHelper
     }
 
     /**
-     * Returns an iterator for the files in the folder.
+     * Returns an iterator for the files in the folder matching a mask.
      *
-     * Возвращает итератор для файлов в папке.
+     * Возвращает итератор для файлов в папке, соответствующих маске.
      */
-    public static function getFileIterator(string $path): CallbackFilterIterator
+    public static function getFileIterator(string $path, string $mask = '*'): CallbackFilterIterator
     {
         return new CallbackFilterIterator(
             new RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)
             ),
-            function (SplFileInfo $current) {
+            function (SplFileInfo $current) use ($mask) {
+                if ($mask !== '*') {
+                    return $current->isFile() && \fnmatch($mask, $current->getFilename());
+                }
                 return $current->isFile();
             }
         );
     }
+
 }
