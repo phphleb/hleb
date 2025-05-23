@@ -551,7 +551,6 @@ class HlebBootstrap
                 'session.options' => ['array'],
             ],
             'system' => [
-                'project.paths' => ['array'],
                 'classes.autoload' => ['boolean'], //required
                 'origin.request' => ['boolean'],
                 'ending.slash.url' => ['boolean', 'integer'],
