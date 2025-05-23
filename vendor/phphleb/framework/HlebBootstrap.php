@@ -515,7 +515,6 @@ class HlebBootstrap
         $map = [
             'common' => [
                 'debug' => ['boolean'], //required
-                'allowed.hosts' => ['array'], //required
                 'log.enabled' => ['boolean'], //required
                 'max.log.level' => ['string'], //required
                 'max.cli.log.level' => ['string'], //required
