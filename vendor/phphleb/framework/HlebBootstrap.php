@@ -109,7 +109,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.0.75');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.0');
 
         $this->logger = $logger;
 
@@ -192,16 +192,20 @@ class HlebBootstrap
 
         $moduleDirectory = $this->getModuleDirectoryName();
         $dir = $this->globalDirectory;
-
-        if (!$c) {
-            require __DIR__ . '/Init/Review/basic.php';
+        $defaultConfig = $this->getDefaultConfig();
+        require __DIR__ . '/Init/Review/basic.php';
+        if ($c) {
+            $c['common'] = \array_merge($defaultConfig['common'], $c['common'] ?? []);
+            $c['system'] = \array_merge($defaultConfig['system'], $c['system'] ?? []);
+            $c['main'] = \array_merge($defaultConfig['main'], $c['main'] ?? []);
+        } else {
             $func = static function (string $path): array {
                 return require $path;
             };
-            $c['common'] = $func($dir . '/config/common.php');
+            $c['common'] = \array_merge($defaultConfig['common'], $func($dir . '/config/common.php'));
             $c['database'] = $func($dir . '/config/database.php');
-            $c['system'] = $func($dir . '/config/system.php');
-            $c['main'] = $func($dir . '/config/main.php');
+            $c['system'] = \array_merge($defaultConfig['system'], $func($dir . '/config/system.php'));
+            $c['main'] = \array_merge($defaultConfig['main'], $func($dir . '/config/main.php'));
         }
         $c['system']['mode'] = $this->mode;
         if ($moduleDirectory) {
@@ -222,6 +226,7 @@ class HlebBootstrap
             'modules' => $this->moduleDirectory,
             'app' => $dir . '/app',
             'storage' => $dir . '/storage',
+            'logs' => $dir . '/storage/logs',
             'routes' => $dir . '/routes',
             'resources' => $dir . '/resources',
             'views' => $dir . '/resources/views',
@@ -237,6 +242,64 @@ class HlebBootstrap
             }
         }
         return ($this->config = $this->checkConfig($c));
+    }
+
+    /**
+     * Returns default parameters for optional values in the configuration.
+     *
+     * Возвращает дефолтные параметры для необязательных значений в конфигурации.
+     */
+    protected function getDefaultConfig(): array
+    {
+        return [
+            'common' => [
+                'allowed.hosts' => [],
+                'log.level.in-cli' => false,
+                'system.log.level' => 'warning',
+                'log.sort' => true,
+                'log.stream' => false,
+                'log.format' => 'row',
+                'log.db.excess' => 0,
+                'container.mock.allowed' => false,
+                'twig.options' => [
+                    'debug' => true,
+                    'charset' => 'utf-8',
+                    'auto_reload' => true,
+                    'strict_variables' => false,
+                    'autoescape' => false,
+                    'optimizations' => -1,
+                    'cache' => true,
+                ],
+                'twig.cache.inverted' => [],
+                'show.request.id' => true,
+                'max.log.size' => 0,
+                'max.cache.size' => 0,
+            ],
+            'main' => [
+                'default.lang' => 'en',
+                'allowed.languages' => ['en', 'ru', 'de', 'es', 'zh'],
+                'db.log.enabled' => false,
+                'session.options' => [],
+            ],
+            'system' => [
+                'project.paths' => [],
+                'origin.request' => false,
+                'ending.slash.url' => 0,
+                'ending.url.methods' => ['get'],
+                'url.validation' => false,
+                'session.name' => 'PHPSESSID',
+                'max.session.lifetime' => 0,
+                'allowed.route.paths' => [],
+                'allowed.structure.parts' => [],
+                'page.external.access' => true,
+                'events.used' => true,
+                'autowiring.mode' => 0,
+                'module.dir.name' => 'modules',
+                'custom.function.files' => [],
+                'custom.setting.files' => [],
+                'async.clear.state' => true,
+            ],
+        ];
     }
 
     /**
@@ -452,43 +515,43 @@ class HlebBootstrap
     {
         $map = [
             'common' => [
-                'debug' => ['boolean'],
-                'log.enabled' => ['boolean'],
-                'max.log.level' => ['string'],
-                'max.cli.log.level' => ['string'],
+                'debug' => ['boolean'], //required
+                'log.enabled' => ['boolean'], //required
+                'max.log.level' => ['string'], //required
+                'max.cli.log.level' => ['string'], //required
                 'log.level.in-cli' => ['boolean'],
-                'error.reporting' => ['integer'],
+                'error.reporting' => ['integer'], //required
                 'log.sort' => ['boolean'],
                 'log.stream' => ['boolean', 'string'],
                 'log.format' => ['string'],
                 'log.db.excess' => ['integer'],
-                'timezone' => ['string'],
-                'routes.auto-update' => ['boolean'],
+                'timezone' => ['string'], //required
+                'routes.auto-update' => ['boolean'], //required
                 'container.mock.allowed' => ['boolean'],
-                'app.cache.on' => ['boolean'],
+                'app.cache.on' => ['boolean'], //required
                 'show.request.id' => ['boolean'],
                 'max.log.size' => ['integer'],
                 'max.cache.size' => ['integer'],
 
-                // 'twig.options' => ['array'], // optional
-                // 'twig.cache.inverted' => ['array'], // optional
-                // 'allowed.hosts' => ['array'], // not necessary yet
-                // 'config.debug' => ['boolean'], // hidden
-                // 'system.log.level' => ['string'], // optional
+                'twig.options' => ['array'],
+                'twig.cache.inverted' => ['array'],
+                'allowed.hosts' => ['array'],
+                // 'config.debug' => ['boolean'], //hidden
+                'system.log.level' => ['string'],
             ],
             'database' => [
                 'base.db.type' => ['string'],
                 'db.settings.list' => ['array'],
             ],
             'main' => [
-                'session.enabled' => ['boolean'],
+                'session.enabled' => ['boolean'], //required
                 'db.log.enabled' => ['boolean'],
                 'default.lang' => ['string'],
                 'allowed.languages' => ['array'],
                 'session.options' => ['array'],
             ],
             'system' => [
-                'classes.autoload' => ['boolean'],
+                'classes.autoload' => ['boolean'], //required
                 'origin.request' => ['boolean'],
                 'ending.slash.url' => ['boolean', 'integer'],
                 'ending.url.methods' => ['array'],
@@ -501,9 +564,8 @@ class HlebBootstrap
                 'module.dir.name' => ['string'],
                 'custom.setting.files' => ['array'],
                 'custom.function.files' => ['array'],
-
-                // 'events.used' => ['boolean'], // optional
-                // 'autowiring.mode' => ['integer'], // optional
+                'events.used' => ['boolean'],
+                'autowiring.mode' => ['integer'],
                 // 'start.unixtime' => ['integer'], // system
                 // 'module.namespace' => ['string'], system
                 // 'route.files.checking' => ['boolean'], // hidden

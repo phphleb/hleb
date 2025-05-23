@@ -5,9 +5,11 @@ if (file_exists(__DIR__ . '/main-local.php')) { return (require __DIR__ . '/main
 /*
  * This file contains user settings that can be overridden in modules when creating
  * a similar /modules/{module_name}/config/main.php file.
+ * Required values are marked with an '*'.
  *
  * В этом файле находятся пользовательские настройки, которые можно переопределить в модулях
  * при создании аналогичного файла /modules/{module_name}/config/main.php.
+ * Обязательные значения отмечены знаком '*'.
  */
 
 return [
@@ -60,7 +62,7 @@ return [
 
     /*
     │-----------------------------------------------------------------------------
-    │ Default session initialization
+    │ Default session initialization *
     │-----------------------------------------------------------------------------
     │
     │ If the project does not use sessions, then in this case you can not activate
@@ -71,7 +73,7 @@ return [
     │
     │
     │-----------------------------------------------------------------------------
-    │ Инициализация сессий по умолчанию
+    │ Инициализация сессий по умолчанию *
     │-----------------------------------------------------------------------------
     │
     │ Если в проекте не используются сессии, то в этом случае можно их не
