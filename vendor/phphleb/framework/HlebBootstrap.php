@@ -516,9 +516,11 @@ class HlebBootstrap
         $map = [
             'common' => [
                 'debug' => ['boolean'], //required
+                'allowed.hosts' => ['array'], //required
                 'log.enabled' => ['boolean'], //required
                 'max.log.level' => ['string'], //required
                 'max.cli.log.level' => ['string'], //required
+                'system.log.level' => ['string'],
                 'log.level.in-cli' => ['boolean'],
                 'error.reporting' => ['integer'], //required
                 'log.sort' => ['boolean'],
@@ -532,12 +534,10 @@ class HlebBootstrap
                 'show.request.id' => ['boolean'],
                 'max.log.size' => ['integer'],
                 'max.cache.size' => ['integer'],
-
                 'twig.options' => ['array'],
                 'twig.cache.inverted' => ['array'],
-                'allowed.hosts' => ['array'],
                 // 'config.debug' => ['boolean'], //hidden
-                'system.log.level' => ['string'],
+
             ],
             'database' => [
                 'base.db.type' => ['string'],
@@ -551,6 +551,7 @@ class HlebBootstrap
                 'session.options' => ['array'],
             ],
             'system' => [
+                'project.paths' => ['array'],
                 'classes.autoload' => ['boolean'], //required
                 'origin.request' => ['boolean'],
                 'ending.slash.url' => ['boolean', 'integer'],
