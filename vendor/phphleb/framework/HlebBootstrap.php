@@ -253,7 +253,6 @@ class HlebBootstrap
     {
         return [
             'common' => [
-                'allowed.hosts' => [],
                 'log.level.in-cli' => false,
                 'system.log.level' => 'warning',
                 'log.sort' => true,
