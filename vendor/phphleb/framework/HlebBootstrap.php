@@ -836,7 +836,7 @@ class HlebBootstrap
 
         // Registration of autoload (will be done in reverse order).
         // Регистрация автозагрузки (будет выполнена в обратном порядке).
-        Autoloader::init($this->vendorDirectory, $this->globalDirectory, $this->mode !== self::CONSOLE_MODE);
+        Autoloader::init($this->vendorDirectory, $this->globalDirectory);
 
         if (!\function_exists('Hleb\agentLoader')) {
             $this->loadOtherClasses(); // #4

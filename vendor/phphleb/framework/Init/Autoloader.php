@@ -20,8 +20,6 @@ final class Autoloader
 
     private static ?string $globalPath = null;
 
-    private static bool $singleCall = true;
-
     /**
      * When starting the framework, you need to pass a values.
      *
@@ -32,13 +30,11 @@ final class Autoloader
     public static function init(
         string $vendorPath,
         string $globalPath,
-        bool   $singleCall = true,
     ): void
     {
         self::$vendorPath = $vendorPath;
         self::$globalPath = $globalPath;
         self::$frameworkPath = $vendorPath . '/phphleb/framework';
-        self::$singleCall = $singleCall;
     }
 
     /**
@@ -90,11 +86,6 @@ final class Autoloader
     {
         if (isset($data[$class])) {
             $classSubPath = $data[$class];
-            // In a real project, the class will only be needed once.
-            // В реальном проекте класс потребуется только один раз.
-            if (self::$singleCall) {
-                unset($data[$class]);
-            }
             return ($path ?? self::$vendorPath) . $classSubPath;
         }
 
