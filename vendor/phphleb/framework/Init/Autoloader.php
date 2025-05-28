@@ -74,19 +74,18 @@ final class Autoloader
     /**
      * Template method for loading arbitrary connectors.
      * A non-standard way, thanks to which you can search for a match
-     * only in a specific group of classes and reduce the scope of the search.
+     * only in a specific group of classes.
      * Returns the path to the file, or false if there is no match.
      *
      * Шаблонный метод для загрузки произвольных коннекторов.
      * Нестандартный способ, благодаря которому можно искать соответствие
-     * только в конкретной группе классов и сокращать область поиска.
+     * только в конкретной группе классов.
      * Возвращает путь к файлу или false при отсутствии совпадения.
      */
     public static function searchFile(string $class, array &$data, ?string $path = null): string|false
     {
         if (isset($data[$class])) {
-            $classSubPath = $data[$class];
-            return ($path ?? self::$vendorPath) . $classSubPath;
+            return ($path ?? self::$vendorPath) . $data[$class];
         }
 
         return false;
