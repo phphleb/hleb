@@ -6,7 +6,7 @@
 
 [![version](https://poser.pugx.org/phphleb/hleb/v)](https://packagist.org/packages/phphleb/hleb)
 [![Total Downloads](https://poser.pugx.org/phphleb/hleb/downloads)](https://packagist.org/packages/phphleb/hleb)
-[![License: MIT](https://img.shields.io/badge/License-MIT%20(Free)-brightgreen.svg)](https://github.com/phphleb/hleb/blob/master/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT%20(Free)-31C754.svg)](https://github.com/phphleb/hleb/blob/master/LICENSE)
 ![PHP](https://img.shields.io/badge/PHP-^8.2-blue)
 [![build](https://github.com/phphleb/framework/actions/workflows/build.yml/badge.svg?event=push)](https://github.com/phphleb/framework/actions/workflows/build.yml)
 
