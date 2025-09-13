@@ -3,7 +3,7 @@
  * @author  Foma Tuturov <fomiash@yandex.ru>
  */
 
-/*declare(strict_types=1);*/
+declare(strict_types=1);/*[0]*/
 
 namespace Hleb\Reference;
 
