@@ -9,6 +9,7 @@ class DefaultController extends Controller
 {
     public function index(): View
     {
+        $this->response()->getInstance();
         return view("default");
     }
 }

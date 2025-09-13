@@ -27,7 +27,7 @@ class ResponseReference extends ContainerUniqueItem implements ResponseInterface
     #[\Override]
     public function getInstance(): ?SystemResponse
     {
-        return self::$response;
+        return clone self::$response;
     }
 
     /** @inheritDoc */
