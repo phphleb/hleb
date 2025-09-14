@@ -4,6 +4,8 @@ declare(strict_types=1);/*[0]*/
 
 namespace Hleb\Constructor\Containers;
 
+use App\Bootstrap\BaseContainer;
+use Hleb\Helpers\ResetAndRollbackHelper;
 use Hleb\Main\Insert\BaseAsyncSingleton;
 use Hleb\Reference\Interface\{
     Arr,
@@ -255,6 +257,20 @@ abstract class BaseContainerFactory extends BaseAsyncSingleton
         $id = self::SERVICE_MAP[$id] ?? $id;
 
         return \array_key_exists($id, self::$singletons);
+    }
+
+    /**
+     * Resetting the state of services to the original according
+     * to the presence of the ResetInterface interface.
+     *
+     * Сброс состояния сервисов к первоначальному
+     * согласно наличию интерфейса ResetInterface.
+     *
+     * @see ResetInterface
+     */
+    final public static function reset(): void
+    {
+        ResetAndRollbackHelper::resetServices(self::$singletons, BaseContainer::instance()->get(Log::class));
     }
 
 }

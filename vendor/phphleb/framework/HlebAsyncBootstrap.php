@@ -16,12 +16,14 @@ use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
 use Hleb\HttpMethods\{External\RequestUri, External\SystemRequest};
 use Hleb\Constructor\Data\DebugAnalytics;
+use Hleb\Helpers\ResetAndRollbackHelper;
 use Hleb\HttpMethods\External\Response as SystemResponse;
 use Hleb\HttpMethods\Intelligence\Cookies\AsyncCookies;
 use Hleb\Init\ErrorLog;
 use Hleb\Init\Headers\ParsePsrHeaders;
 use Hleb\Init\Headers\ParseSwooleHeaders;
 use Hleb\Main\Logger\LoggerInterface;
+use Hleb\Reference\LogInterface;
 use Hleb\Static\Response;
 use Throwable;
 
@@ -239,10 +241,10 @@ class HlebAsyncBootstrap extends HlebBootstrap
             foreach (\get_declared_classes() as $class) {
                 \is_a($class, RollbackInterface::class, true) and $class::rollback();
             }
+            ContainerFactory::reset();
+            ResetAndRollbackHelper::rollbackClassState([Registrar::class, DebugAnalytics::class, ErrorLog::class]);
         }
-        foreach ([ContainerFactory::class, Registrar::class, DebugAnalytics::class, ErrorLog::class] as $class) {
-            \class_exists($class, false) and $class::rollback();
-        }
+        ResetAndRollbackHelper::rollbackClassState([ContainerFactory::class]);
 
         /*
          * Periodically clean up used memory and call GC. Will be applied to every $rate request.

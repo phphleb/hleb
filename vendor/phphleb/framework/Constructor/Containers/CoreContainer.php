@@ -4,6 +4,7 @@ declare(strict_types=1);/*[0]*/
 
 namespace Hleb\Constructor\Containers;
 
+use Hleb\DynamicStateException;
 use Hleb\Main\Insert\ExternalSingleton;
 use Hleb\Reference\{
     ArrInterface,
@@ -47,6 +48,7 @@ use Hleb\Reference\{
     TemplateInterface,
     TemplateReference
 };
+use Hleb\ReflectionProcessException;
 use Throwable;
 
 /**
@@ -57,9 +59,6 @@ use Throwable;
 abstract class CoreContainer extends ExternalSingleton implements CoreContainerInterface
 {
     private static array $containers = [];
-
-    private static ?bool $supportLazyObjects = null;
-
 
     /**
      * Registered keys for custom services.
@@ -256,10 +255,23 @@ abstract class CoreContainer extends ExternalSingleton implements CoreContainerI
     final public static function getLazyObject(string $class, array $params = []): object
     {
         if (self::isLazyObjectsSupported()) {
-            $reflector = new \ReflectionClass($class);
-            return $reflector->newLazyGhost(static function (object $object) use ($params): object {
-                return $params ? new $object(...$params) : new $object();
-            });
+            try {
+                $reflector = new \ReflectionClass($class);
+                return $reflector->newLazyGhost(static function (object $object) use ($params, $class): void {
+                    $rc = new \ReflectionClass($class);
+                    $hasPublicConstructor = $rc->hasMethod('__construct') && $rc->getConstructor()->isPublic();
+                    if ($params) {
+                        if (!$hasPublicConstructor) {
+                            throw new DynamicStateException("Parameters are assigned for lazy loading of class {$class} which has no accessible constructor");
+                        }
+                        $object->__construct(...$params);
+                        return;
+                    }
+                    $hasPublicConstructor and $object->__construct();
+                });
+            } catch (\ReflectionException $e) {
+                throw new ReflectionProcessException('Failed to process object for lazy loading', 0, $e);
+            }
         }
         return $params ? new $class(...$params) : new $class();
     }
@@ -271,10 +283,7 @@ abstract class CoreContainer extends ExternalSingleton implements CoreContainerI
      */
     final public static function isLazyObjectsSupported(): bool
     {
-        if (is_null(self::$supportLazyObjects)) {
-            self::$supportLazyObjects = \version_compare(\phpversion(), '8.4.0', '>=');
-        }
-        return self::$supportLazyObjects;
+        return PHP_VERSION_ID >= 80400;
     }
 
     /**
