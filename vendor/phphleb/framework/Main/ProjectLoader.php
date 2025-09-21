@@ -159,14 +159,20 @@ final class ProjectLoader
      */
     private static function createSimpleCacheData(string $value, string $contentType, bool $isSimple = true): array
     {
+        $length = (string)strlen($value);
         Response::addToBody($value);
-        Response::addHeaders(['Content-Type' => $contentType]);
+        Response::addHeaders([
+            'Content-Type'   => $contentType,
+            'Content-Length' => $length,
+            'Connection'     => 'close',
+        ]);
 
         if ($isSimple && SystemSettings::isAsync()) {
             return [
                 'id' => DynamicParams::addressAsString(true),
                 'value' => $value,
                 'type' => $contentType,
+                'length' => $length,
             ];
         }
         return [];
@@ -417,6 +423,11 @@ final class ProjectLoader
             if ($cache) {
                 Response::setBody($cache['value']);
                 Response::addHeaders(['Content-Type' => $cache['type']]);
+                Response::addHeaders([
+                    'Content-Type'   => $cache['type'],
+                    'Content-Length' => $cache['length'],
+                    'Connection'     => 'close',
+                ]);
                 return true;
             }
         }

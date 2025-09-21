@@ -34,7 +34,12 @@ final class RouteMark extends BaseAsyncSingleton implements RollbackInterface
 
     public static function getHash(): false|string
     {
-        return self::$hash ?? self::$hash = self::getFromFile();
+        if (self::$hash) {
+            return self::$hash;
+        }
+        $hashFromFile = self::getFromFile();
+
+        return $hashFromFile ?: false;
     }
 
     /**
