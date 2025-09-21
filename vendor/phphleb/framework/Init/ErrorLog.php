@@ -298,7 +298,7 @@ final class ErrorLog
         !\is_bool($c['debug'] ?? null) and $c['debug'] = false;
         isset($c['log.enabled']) or $c['log.enabled'] = true;
         isset($c['max.log.level']) or $c['max.log.level'] = 'info';
-        isset($c['max.cli.log.level']) or $c['max.log.level'] = 'info';
+        isset($c['max.cli.log.level']) or $c['max.cli.log.level'] = 'info';
         isset($c['log.level.in-cli']) or $c['log.level.in-cli'] = false;
         isset($c['log.stream']) or $c['log.stream'] = false;
         isset($c['log.format']) or $c['log.format'] = 'row';
