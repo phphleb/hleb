@@ -109,7 +109,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.3');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.5');
 
         $this->logger = $logger;
 
@@ -198,6 +198,7 @@ class HlebBootstrap
             $c['common'] = \array_merge($defaultConfig['common'], $c['common'] ?? []);
             $c['system'] = \array_merge($defaultConfig['system'], $c['system'] ?? []);
             $c['main'] = \array_merge($defaultConfig['main'], $c['main'] ?? []);
+            $c['database'] = \array_merge($defaultConfig['database'], $c['database'] ?? []);
         } else {
             $func = static function (string $path): array {
                 return require $path;
@@ -255,10 +256,13 @@ class HlebBootstrap
             'common' => [
                 'log.level.in-cli' => false,
                 'system.log.level' => 'warning',
+                'error.reporting' => E_ALL,
+                'max.cli.log.level' => 'info',
                 'log.sort' => true,
                 'log.stream' => false,
                 'log.format' => 'row',
                 'log.db.excess' => 0,
+                'timezone' => 'UTC',
                 'container.mock.allowed' => false,
                 'twig.options' => [
                     'debug' => true,
@@ -279,6 +283,10 @@ class HlebBootstrap
                 'allowed.languages' => ['en', 'ru', 'de', 'es', 'zh'],
                 'db.log.enabled' => false,
                 'session.options' => [],
+            ],
+            'database' => [
+                'base.db.type' => 'mysql.name',
+                'db.settings.list' => [],
             ],
             'system' => [
                 'project.paths' => [],

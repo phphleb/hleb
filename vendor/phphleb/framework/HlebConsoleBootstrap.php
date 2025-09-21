@@ -59,6 +59,20 @@ class HlebConsoleBootstrap extends HlebBootstrap
     }
 
     /**
+     * @return array
+     */
+    protected function getDefaultConfig(): array
+    {
+        $config = parent::getDefaultConfig();
+        $config['common']['allowed.hosts'] = [];
+        $config['common']['max.log.level'] = 'info';
+        $config['common']['routes.auto-update'] = false;
+        $config['main']['session.enabled'] = false;
+
+        return $config;
+    }
+
+    /**
      * Returns the command execution code.
      *
      * Возвращает код выполнения команды.
