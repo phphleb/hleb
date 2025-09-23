@@ -109,7 +109,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.6');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.7');
 
         $this->logger = $logger;
 
@@ -528,12 +528,12 @@ class HlebBootstrap
                 'max.cli.log.level' => ['string'], //required
                 'system.log.level' => ['string'],
                 'log.level.in-cli' => ['boolean'],
-                'error.reporting' => ['integer'], //required
+                'error.reporting' => ['integer'],
                 'log.sort' => ['boolean'],
                 'log.stream' => ['boolean', 'string'],
                 'log.format' => ['string'],
                 'log.db.excess' => ['integer'],
-                'timezone' => ['string'], //required
+                'timezone' => ['string'],
                 'routes.auto-update' => ['boolean'], //required
                 'container.mock.allowed' => ['boolean'],
                 'app.cache.on' => ['boolean'], //required
