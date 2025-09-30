@@ -20,6 +20,7 @@ final class RangeChecker
      * '-12' is equal to -12.
      * '10-∞' - greater than or equal to 10, from 10 inclusive to `infinity`.
      * '-∞--10' - minus `infinity` to -10.
+     * 'n+' - is alias to 'n-∞'.
      *
      * Позволяет задать числовые интервалы.
      * Например:
@@ -29,13 +30,18 @@ final class RangeChecker
      * '-12' - равно -12.
      * '10-∞' - больше или равно 10, от 10 включительно до `бесконечности`.
      * '-∞--10' - от минус `бесконечности` до -10.
+     * 'n+' - вариант конечного 'n-∞'.
      *
-     *
-     * @param string|array $range - '1,3,4-8,10,100' / ['1','3','4-8','10','100']
+     * @param string|array $range - '1,3,4-8,10,100,1000+' / ['1','3','4-8','10','100','1000+']
      */
     public function __construct(string|array $range)
     {
         $this->range = \is_array($range) ? $range : \explode(',', $range);
+        foreach($this->range as &$r) {
+            if (\str_ends_with($r, '+')) {
+                $r = \str_replace('+', '-∞', $r);
+            }
+        }
     }
 
     /**
