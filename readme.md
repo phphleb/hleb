@@ -36,10 +36,9 @@ Basic features of the framework:
 + Debug panel
 + Creating an [API](https://github.com/phphleb/api-multitool)
 + [Registration module](https://github.com/phphleb/hlogin)
-+ [Mutexes](https://github.com/phphleb/conductor)
 + [Admin panel](https://github.com/phphleb/adminpan)
 
-An additional [plugin](https://plugins.jetbrains.com/plugin/25645-hleb2) for the framework with integration into PhpStorm IDE.
+Additional plugins for the framework with integration into [PhpStorm IDE](https://github.com/phphleb/hleb2-phpstorm-plugin) and [Visual Studio Code](https://github.com/phphleb/hleb2-vsc-plugin).
 
 The framework code has been thoroughly [tested](https://github.com/phphleb/tests).
 
@@ -74,7 +73,7 @@ Project routes are assigned by the developer in the file “/routes/map.php”.
 Route::get('/', 'Hello, world!');
 ```
 
-Instructions for use
+User Guide
 -----------------------------------
 
 [Link to documentation](https://hleb2framework.ru) 
