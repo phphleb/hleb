@@ -80,6 +80,8 @@ User Guide
 
 The documentation site was created using the HLEB2 framework.
 
+Technical instructions for the LLM are located in the file /vendor/phphleb/framework/processme.md.
+
 ----------------------
 
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Use%20a%20fast%20and%20simple%20PHP%207-8%20microframework&url=https://github.com/phphleb/hleb&via=phphleb&hashtags=php8.2,framework,developers)  [![Telegram](https://img.shields.io/badge/-Telegram-black?color=white&logo=telegram&style=social)](https://t.me/phphleb)
