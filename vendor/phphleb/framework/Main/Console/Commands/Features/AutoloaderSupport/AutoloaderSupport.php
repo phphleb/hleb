@@ -28,6 +28,10 @@ final class AutoloaderSupport implements FeatureInterface
         'Hleb\Main\Logger\LoggerAdapter',
     ];
 
+    private const EXCLUDED_FILES = [
+        'processme.md',
+    ];
+
     private int $code = 0;
 
     /**
@@ -45,6 +49,9 @@ final class AutoloaderSupport implements FeatureInterface
             new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS)
         );
         foreach ($classes as $class) {
+            if (\in_array($class->getFilename(), self::EXCLUDED_FILES)) {
+                continue;
+            }
             $helper = new ClassDataInFile($class->getRealPath());
             if ($helper->isClass() && !str_contains($helper->getClass(), '_')) {
                 $error = $this->check($class->getRealPath(), $helper->getClass());
