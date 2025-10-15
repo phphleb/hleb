@@ -5,6 +5,25 @@ Text version of the [HLEB2 framework documentation](https://hleb2framework.ru/) 
 + Searching for alternatives and examples in other frameworks is not allowed.
 
 
+## General Framework Description
+
+The HLEB2 framework is written in PHP and supports PHP versions 8.2 and above. The primary focus during HLEB2’s development is on high performance. The framework’s philosophy centers around simplicity of code, ease of use, and applying the Common Sense design pattern.
+
+HLEB2 actively avoids so-called “magic” and adopts the concept of “code as configuration,” which means that certain parts of the framework remain under the control of the application developer. This approach also facilitates creating custom frameworks of any direction based on HLEB2.
+
+## Installation
+
+For beginners without Composer experience, it’s possible to install the framework by downloading the archive directly from the GitHub repository interface into a local folder. This is sufficient to start using the framework immediately. The vendor folder is included in the archive, so the welcome page will work without additional setup.
+
+The standard Composer installation command is:
+`$ composer create-project phphleb/hleb`
+
+Out of the box, the framework does not require third-party dependencies or PHP extensions that are not part of the default PHP distribution. You can use it immediately, adding necessary libraries and extensions over time.
+
+More details are available in the composer.json file.
+
+For local development or testing the framework in Docker, there is a library called `phphleb/toaster`.
+
 # HLEB2
 The HLEB2 framework is the next step in the evolution of the HLEB framework.
 The framework was originally designed to become the fastest PHP framework while still providing a robust toolkit for web development.
@@ -55,9 +74,7 @@ The framework HLEB2 includes both built-in console commands and the capability f
 Console commands are executed from the terminal or task scheduler, and their entry point is the 'console' file located in the project root, which is a regular PHP file.
 ## Standard Commands
 You can get the list of framework commands by running the console command:
-
-```
-$ php console --help
+```$ php console --help```
 --version or -v(displays the current version of the framework)
 --info or -i [name](shows current settings from common)
 --help or -h(displays the default list of commands)
@@ -74,25 +91,56 @@ $ php console --help
 --create module <name>(creates module files)
 --clear-cache--twig or -cc-twig(clears cache for Twig template engine)
 <command> --help(displays command help)
-```
 ## Creating Your Own Console Command
 Example of adding your own console command by creating the corresponding class in the /app/Commands/Demo/ folder:
+```
+<?php
+namespace App\Commands\Demo;
+use Hleb\Base\Task;
+class ExampleTask extends Task
+{
+    /**
+     * Short description of the action.
+     */
+    protected function run(?string $arg = null): int
+    {
+        // Your code here.
+        return self::SUCCESS_CODE;
+    }
+}
+```
 Or through the built-in console command:
-`$ php console --add task demo/example-task "task description"`
+```$ php console --add task demo/example-task "task description"```
 A file /app/Commands/Demo/ExampleTask.php will be created.
 If necessary, you can modify the default template for generating tasks.
 In the framework, the command name consists of the class name (relative path) located in the /app/Commands/ folder.
 Therefore, it is recommended to initially give significant names to commands that reflect the essence of their action.
 Now you can run the new command from the console, and it will also appear in the general list of commands.
 But since there is no output result yet, add the --help parameter to get information about the command.
-`$ php console demo/example-task --help`
+```$ php console demo/example-task --help```
 ## Passing Parameters with a Command
 Modify the command class so that the run() method accepts arguments.
+```
+<?php
+namespace App\Commands\Demo;
+use Hleb\Base\Task;
+class ExampleTask extends Task
+{
+    /**
+     * Connecting two values using `and`.
+     */
+    protected function run(string $argA, string $argB): int
+    {
+        echo $argA . ' and ' . $argB . PHP_EOL;
+        return self::SUCCESS_CODE;
+    }
+}
+```
 The return value self::SUCCESS_CODE in the command class indicates that the command completed successfully.
 If commands in the console or task scheduler are chained with &&, execution will stop if self::ERROR_CODE is returned.
 This can also be useful in complex cases like CI/CD.
 Next, run the command with two arguments to get the output 'speed and quality':
-`$ php console demo/example-task speed quality`
+```$ php console demo/example-task speed quality```
 For specific cases, the framework allows creating named parameters for commands.
 ## Executing a Command from Code
 You can execute the created command from within application code or from another console command.
@@ -101,8 +149,8 @@ use App\Commands\Demo\ExampleTask;
 use Hleb\Static\Command;
 Command::execute(new ExampleTask(), ['speed ', 'quality']);
 ```
-However, in this case, the command's output will not be displayed since its purpose has changed.
-To retrieve the command's result, use the $this->setResult() method within the class to set the data, and then access this data externally via the getResult() method.
+However, in this case, the command’s output will not be displayed since its purpose has changed.
+To retrieve the command’s result, use the $this->setResult() method within the class to set the data, and then access this data externally via the getResult() method.
 ```
 use App\Commands\Demo\ExampleTask;
 use Hleb\Static\Command;
@@ -113,9 +161,34 @@ echo $task->getResult();
 ## Specifying Text Color in the Terminal
 To output text or a portion of it in one of the basic terminal colors, use the specially designated color() method in the command.
 For example:
+```
+<?php
+namespace App\Commands\Demo;
+use Hleb\Base\Task;
+class ColoredTask extends Task
+{
+    protected function run(): int
+    {
+        $greenText = $this->color()->green('this text is green');
+        $yellowText = $this->color()->yellow('this text is yellow');
+        echo $greenText . " and " . $yellowText . PHP_EOL;
+        return self::SUCCESS_CODE;
+    }
+}
+```
 ## Setting Command Restrictions with Attributes
 The type and intended use of created commands can be controlled using PHP attributes.
-The attribute #[Purpose] is used to define the command's visibility scope.
+The attribute #[Purpose] is used to define the command’s visibility scope.
+```
+<?php
+namespace App\Commands\Demo;
+use Hleb\Base\Task;
+use Hleb\Constructor\Attributes\Task\Purpose;
+#[Purpose(status:Purpose::CONSOLE)]
+class ExampleTask extends Task {
+    // ... //
+}
+```
 This attribute has a status argument, where you can specify options:
 Purpose::FULL - unrestricted, the default value.
 Purpose::CONSOLE - can only be used as a console command.
@@ -136,6 +209,23 @@ This structure allows a significant number of services to be added to the contai
 ## BaseContainer Class
 This class represents the container that will be used to retrieve services.
 If a service needs to be a new instance of the class each time it's requested from the container, it should be specified here within a match() expression.
+```
+<?php
+// File /app/Bootstrap/BaseContainer.php
+namespace App\Bootstrap;
+use Hleb\Constructor\Containers\CoreContainer;
+final class BaseContainer extends CoreContainer implements ContainerInterface
+{
+    #[\Override]
+    final public function get(string $id): mixed
+    {
+        return ContainerFactory::getSingleton($id) ?? match ($id) {
+            // ... //
+            default => parent::get($id),
+        };
+    }
+}
+```
 Adding a service is similar to adding it in the ContainerFactory class.
 ## ContainerFactory Class
 A factory for creating services as singletons, with the ability to override the framework's default services.
@@ -143,11 +233,36 @@ It's used to add custom services, which are initialized only once per request.
 For example, we might need to add a RequestIdService that returns a unique ID for the current request.
 This is a demonstration example of a service; in general, services represent more complex structures.
 Let's add its creation to the ContainerFactory class:
+```
+<?php
+// File /app/Bootstrap/ContainerFactory.php
+namespace App\Bootstrap;
+use App\Bootstrap\Services\RequestIdService;
+use App\Bootstrap\Services\RequestIdInterface;
+use Hleb\Constructor\Containers\BaseContainerFactory;
+final class ContainerFactory extends BaseContainerFactory
+{
+    public static function getSingleton(string $id): mixed
+    {
+        self::has($id) or self::$singletons[$id] = match ($id) {
+            // New service controller.
+            RequestIdInterface::class => new RequestIdService(),
+            default => null
+        };
+        return self::$singletons[$id];
+    }
+    #[\Override]
+    public static function rollback(): void
+    {
+        self::$singletons = [];
+    }
+}
+```
 Now, when the RequestIdInterface is requested from the container, it will return an instance of RequestIdService, stored as a singleton.
 The key for retrieval can be defined not only as an interface but also as the base class RequestIdService, as it will be utilized in DI (Dependency Injection).
 Despite the fact that the match() expression can contain multiple keys to a value, to avoid duplicating services (and consequently violating the singleton principle), only one should be assigned.
 Starting from PHP v8.4, you can leverage "lazy objects" support in the container.
-An object of this kind, when retrieved from the container, won't be initialized until it's actually accessed. In the App\Bootstrap\ContainerFactory class, you need to define the service as follows:
+An object of this kind, when retrieved from the container, won’t be initialized until it’s actually accessed. In the App\Bootstrap\ContainerFactory class, you need to define the service as follows:
 ```
 ...
 ExampleServiceInterface::class => self::getLazyObject(ExampleService::class),
@@ -156,6 +271,30 @@ ExampleServiceInterface::class => self::getLazyObject(ExampleService::class),
 ## Creating a Method in the Container
 To simplify working with the new service keyed by RequestIdInterface, let's add a new method in the container. This will make it easier to find in the container through the IDE.
 The new method requestId is added to the container class (BaseContainer). Now the class looks like this:
+```
+<?php
+// File /app/Bootstrap/BaseContainer.php
+namespace App\Bootstrap;
+use App\Bootstrap\Services\RequestIdInterface;
+use Hleb\Constructor\Containers\CoreContainer;
+final class BaseContainer extends CoreContainer implements ContainerInterface
+{
+    #[\Override]
+    final public function get(string $id): mixed
+    {
+        return ContainerFactory::getSingleton($id) ?? match ($id) {
+            // ... //
+            default => parent::get($id),
+        };
+    }
+    // New method.
+    #[\Override]
+    final public function requestId(): RequestIdInterface
+    {
+        return $this->get(RequestIdInterface::class);
+    }
+}
+```
 Important! For this to work, the requestId method must also be added to the App\Bootstrap\ContainerInterface interface.
 In the example, the service is assigned by interface, allowing the service class in the container to change while maintaining the interface linkage.
 For your own internal application classes, you can also omit the interface here and specify the class mapping directly.
@@ -183,8 +322,48 @@ Otherwise, the framework will return an error indicating that the DI for the spe
 When a controller or middleware object is created on the framework side, the constructor's dependencies are resolved first, then those of the called method.
 Also, when a request is processed by the framework, only one method in the matched controller will be called. In such a case, it doesn't matter where the dependency comes from, whether from the constructor or method, although in some cases, the constructor is more convenient.
 The following example shows two controller methods with different assignments of $logger from the container via DI.
+```
+<?php
+namespace App\Controllers;
+use Hleb\Base\Controller;
+use Hleb\Reference\LogInterface;
+class ExampleController extends Controller
+{
+    public function __construct(private readonly LogInterface $logger, array $config = [])
+    {
+        parent::__construct($config);
+    }
+    public function first(LogInterface $logger): void
+    {
+        // variant 1
+    }
+    public function second(): void
+    {
+        // variant 2
+        $logger = $this->logger;
+    }
+}
+```
 Dependencies for middleware are set in a similar manner.
 In the framework commands and events (Events), this is implemented in a similar way, but only through the constructor:
+```
+<?php
+namespace App\Commands\Demo;
+use Hleb\Base\Task;
+use Hleb\Reference\LogInterface;
+class ExampleTask extends Task
+{
+    public function __construct(private readonly LogInterface $logger, array $config = [])
+    {
+        parent::__construct($config);
+    }
+    protected function run(): int
+    {
+        $logger = $this->logger;
+        return self::SUCCESS_CODE;
+    }
+}
+```
 ## Creating Objects with DI
 Dependency injection is convenient because during testing, we can create the necessary values for class dependencies.
 However, when creating an object manually, initializing all its dependencies ourselves would be inconvenient.
@@ -215,6 +394,21 @@ echo DI::method($exampleObject, 'run'); // Hleb\Reference\LogReference & Insert
 This section demonstrates how to create an object of a class whose constructor has a dependency, and how to call the desired method of the object where a value also needs to be automatically inserted.
 The example also shows a dependency that is not from the container (the Insert class), whose object is created and injected into the method.
 A frequently used variant of DI with Request and Response (in this case obtained from the container):
+```
+<?php
+namespace App\Controllers;
+use Hleb\Base\Controller;
+use Hleb\Reference\Interface\Request;
+use Hleb\Reference\Interface\Response;
+class MainController extends Controller
+{
+    public function index(Request $request, Response $response): Response
+    {
+        // ... //
+        return $response;
+    }
+}
+```
 Due to various approaches in interface naming conventions, obtaining standard services from the container may involve interfaces ending with Interface or not.
 For example, Hleb\Reference\RequestInterface is equivalent to Hleb\Reference\Interface\Request.
 ## Autowiring for Dependencies Not Found in the Container
@@ -224,6 +418,24 @@ The configuration parameter system.autowiring.mode sets the management mode for 
 There is a mode in which you can completely disable autowiring for dependencies not found in the container and a mode similar to this, but allowing the use of a class object when the AllowAutowire attribute is present, as well as the NoAutowire attribute that disallows autowiring for the current class if the permitting mode with support for this attribute is enabled.
 ## Dependency Management
 Using the special DI attribute, you can specify in a specific location (class method) which particular dependency with the specified interface should be used. If such a dependency from the attribute is found in the container, it will be used from the container. If not, the same rules for autowiring dependencies not found in the container apply as if it were specified directly in the method. Examples:
+```
+<?php
+use Hleb\Base\Controller;
+use Hleb\Constructor\Attributes\Autowiring\DI;
+class ExampleController extends Controller
+{
+    public function index(
+        #[DI(LocalFileStorage::class)]
+        FileSystemInterface $storage,
+        #[DI('\App\Notification\JwtAuthenticator')]
+        AuthenticatorInterface $authenticator,
+        #[DI(new EmailNotificationSender())]
+        NotificationSenderInterface $notificationSender,
+    ) {
+        //...//
+    }
+}
+```
 It shows options for how to specify a specific class from the required interface in the parameter, as well as creating the necessary class in the attribute.
 
 -------------------------
@@ -233,13 +445,66 @@ Direct access to the container's content is implemented in several ways.
 To choose the appropriate method suitable for coding a specific project, it is necessary to consider the pros and cons of each approach, as well as their testing options.
 ## Reference to the Container in the Current Class
 Classes inherited from the Hleb\Base\Container class gain additional capabilities in the form of methods and the $this->container property to access services.
-The standard framework classes - controllers, middlewares, commands, events - are already inherited from this class.
+The standard framework classes — controllers, middlewares, commands, events — are already inherited from this class.
 If a service in the container interface has its own method assigned, the service can be accessed through this method.
 Example of accessing a demo service in a controller:
+```
+<?php
+// File /app/Controllers/ExampleController.php
+namespace App\Controllers;
+use App\Bootstrap\Services\RequestIdInterface;
+use Hleb\Base\Controller;
+class ExampleController extends Controller
+{
+    public function index(): void
+    {
+        // variant 1
+        $requestIdService = $this->container->get(RequestIdInterface::class);
+        // variant 2
+        $requestIdService = $this->container->requestId();
+    }
+}
+```
 The reference to the container is stored in the $this->config property (key 'container' in the array) of the object class inherited from Hleb\Base\Container.
 When creating the specified object, a different value can be assigned (for example, with a test container) in the 'config' argument.
 Otherwise, if a specific container is not specified in the 'config' argument or the 'config' argument of the constructor is missing, the container will be created by default.
+```
+<?php
+use App\Bootstrap\Services\RequestIdInterface;
+class ExampleService extends \Hleb\Base\Container
+{
+    public RequestIdInterface $service;
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+        $this->service = $this->container->get(RequestIdInterface::class);
+    }
+}
+// Create an object with a framework container.
+$requestIdService = (new ExampleService())->service;
+// Create an object with a test container.
+$config = ['container' => new TestContainer()];
+$requestIdService = (new ExampleService($config))->service;
+```
 Exceptions are the Model classes, where accessing the service similarly will be as follows:
+```
+<?php
+// File /app/Models/DefaultModel.php
+namespace App\Models;
+use App\Bootstrap\Services\RequestIdInterface;
+use Hleb\Base\Model;
+class DefaultModel extends Model
+{
+    public static function getCollection(): array
+    {
+        // variant 1
+        $requestIdService = self::container()->get(RequestIdInterface::class);
+        // variant 2
+        $requestIdService = self::container()->requestId();
+        return [];
+    }
+}
+```
 ## Container Class
 Access to the service container is also provided by the Hleb\Static\Container class, for example:
 ```
@@ -266,7 +531,7 @@ Data is stored in the cache with a unique key, specifying a ttl in seconds.
 Within this time, starting from cache creation, cache requests by this key return cached data, which remains unchanged.
 The cache can be forcibly cleared by key or entirely at any time.
 If the cache was not created, cleared, or expired, a new cache will be created for the specified duration.
-The built-in service implementation supports main PHP data types-strings, numeric values, arrays, objects (via serialization).
+The built-in service implementation supports main PHP data types—strings, numeric values, arrays, objects (via serialization).
 If you need more advanced caching features, add another implementation to the container, replacing or supplementing the current one.
 This could be the github.com/symfony/cache component.
 Methods for using Cache in controllers (and all classes inheriting from Hleb\Base\Container) using the example of retrieving cache by key:
@@ -323,7 +588,7 @@ $data = Cache::getConform('example_cache_key',
 ```
 ## Clearing Cache
 The entire cache within the framework is cleared by using the clear() method, but caution must be taken with a large amount of cache. This call should be used rather infrequently, and it can also be done via a console command:
-`$ php console --clear-cache`
+```$ php console --clear-cache```
 Clearing the entire cache will only affect the cached template data and the framework data added by the Cache service.
 The TWIG templating engine has its own cache implementation, and a separate console command is provided for clearing it.
 If there is a need to delete the cache by one of the keys, this can be done using the delete() method.
@@ -473,6 +738,15 @@ $token = $this->container->get(CsrfInterface::class)->token();
 $token = $this->container->csrf()->token();
 ```
 Example of accessing the Csrf service in template code:
+```
+<?php
+/** @var \App\Bootstrap\ContainerInterface $container */
+?>
+<form action="/url">
+    <!-- ... -->
+    <input type="hidden" name="_token" value="<?= $container->csrf()->token(); ?>">
+</form>
+```
 For TWIG template engine:
 ```
 <form action="/url">
@@ -490,7 +764,7 @@ This method allows manual token validation (if protection is not enabled on the 
 
 -------------------------
 
-# DB Service & Using Databases
+# DB Service — Using Databases
 The DB service provides the initial capability to send queries to databases. Using a wrapper over PDO and the database configuration of the HLEB2 framework, the service offers simple methods to interact with various databases (supported by PDO).
 The PHP PDO extension and necessary database drivers must be enabled for this service to work.
 To use a different connection method, such as ORM(Object-Relational Mapping), add the instantiation of the chosen ORM as a service container using the framework's configuration settings.
@@ -498,6 +772,28 @@ According to the project's structure provided with the HLEB2 framework, the DB s
 A Model class (whose template can be created using a console command) acts as a basic framework for use within MVC (Action-Domain-Responder for web).
 It can be adapted or replaced according to preference for the selected AR(Active Record) or ORM library (and then adjust the template for the console command).
 Examples of usage in a Model for database queries:
+```
+<?php
+// File /app/Models/ExampleModel.php
+namespace App\Models;
+use Hleb\Base\Model;
+use Hleb\Reference\DbInterface;
+use Hleb\Static\DB;
+class ExampleModel extends Model
+{
+    public static function get(): false|array
+    {
+        $query = '"SELECT * FROM table_name WHERE active=1';
+        // variant 1
+        $data = self::container()->get(DbInterface::class)->dbQuery($query);
+        // variant 2
+        $data = self::container()->db()->dbQuery($query);
+        // variant 3
+        $data = DB::dbQuery($query);
+        return $data;
+    }
+}
+```
 The following methods of the DB service are used for executing database queries.
 ## dbQuery()
 The dbQuery() method was used in the examples above for creating direct SQL queries to the database.
@@ -611,17 +907,17 @@ throw new ErrorException('Error message');
 ```
 ## Viewing Logs
 With standard file storage of logs, the most recently added logs can be displayed in the terminal using the console command:
-`$ php console--logs 3 5`
+```$ php console--logs 3 5```
 The specified command will display the last three logs for the five most recent log files by date.
 In the log record (by default, in files), each log entry has a "request-id" label, which can be used to filter all logs for a specific request.
 For UNIX systems and macOS, you can use the 'grep' command to search by error type:
-`$ grep -m10 :ERROR ./storage/logs/*`
+```$ grep -m10 :ERROR ./storage/logs/*```
 This command's flexibility allows searches under various conditions, including by "request-id" of a request.
 For Windows, an alternative would be the 'findstr' command:
-D:\project>findstr /S /C:":ERROR" "storage/logs/*"
+```D:\project>findstr /S /C:":ERROR" "storage/logs/*"```
 ## Log Rotation
 The framework includes the App\Commands\RotateLogs class, a console command implementation for deleting outdated log files.
-`$ php console rotate-logs 5`
+```$ php console rotate-logs 5```
 This command will delete all log files created more than five days ago.
 By default, it is set to three days.
 The command is intended for manual rotation or to be added to a task scheduler (for daily execution).
@@ -815,7 +1111,7 @@ To retrieve the original dynamic route parameters as an array of values without 
 Note that when the framework processes incoming data (when selected), it only protects against XSS attacks. In other cases, such as when quote escaping is required for database storage, additional security measures must be applied.
 ## Request URI Data
 The object returned by the getUri() method is based on the UriInterface from PSR-7, enabling you to retrieve the following request data:
-getUri()->getHost() - the domain name of the current request, such as 'mob.example.com'. It may include the port if it's specified in the request.
+getUri()->getHost() - the domain name of the current request, such as 'mob.example.com'. It may include the port if it’s specified in the request.
 getUri()->getPath() - the path in the address following the host, e.g., '/ru/example/page' or '/ru/example/page/'.
 getUri()->getQuery() - the query parameters, such as '?param1=value1&param2=value2'.
 getUri()->getPort() - the request port.
@@ -883,10 +1179,10 @@ The alternative Response must be returned in the invoked controller method.
 The response body consists of data added to the Response object, which can be converted into a string.
 Typically, this is message text displayed to the user or data in the format of JSON or XML, possibly dynamically generated HTML, etc.
 The following methods of the Response service are available for adding data:
-set() or setBody() - assigns data, completely overwriting any previous response body if it exists.
-add() or addToBody() - appends to the end of the previously added data.
+set() or setBody() — assigns data, completely overwriting any previous response body if it exists.
+add() or addToBody() — appends to the end of the previously added data.
 To retrieve data from the service:
-get() or getBody() - retrieves the current state of the response body in the Response object.
+get() or getBody() — retrieves the current state of the response body in the Response object.
 Before sending data to the client, ensure it is checked for XSS vulnerabilities.
 If the data has not been processed in this way before, it can be passed through the PHP function htmlspecialchars().
 ## HTTP Response Status
@@ -898,6 +1194,26 @@ The method getStatus() allows you to obtain the current HTTP status from the Res
 ## Response Headers
 Besides the global server-side response headers, you can specify your own headers to be returned with a specific response from the framework.
 The following methods of the Response service are intended for this second type of headers.
+```
+<?php
+namespace App\Controllers;
+use Hleb\Base\Controller;
+use Hleb\Reference\Interface\Request;
+use Hleb\Reference\Interface\Response;
+class ExampleController extends Controller
+{
+    public function index(Request $request, Response $response): Response
+    {
+        $response->setHeader('Content-Type', 'application/json');
+        $headerData = $response->getHeader('Content-Type');
+        var_dump($headerData); // array(1) { [0]=> string(16) "application/json" }
+        $response->setHeader('Content-Type', 'text/html; charset=utf-8');
+        $headerData = $response->getHeader('Content-Type');
+        var_dump($headerData); // array(1) { [0]=> string(24) "text/html; charset=utf-8" }
+        return $response;
+    }
+}
+```
 The setHeader() method sets a header by name, overriding the previous value if it was set.
 In the rare case where multiple identical headers are needed, the replace argument allows adding a header to the current value.
 The hasHeader() method checks if a header exists by name.
@@ -967,7 +1283,7 @@ The data() method returns data for the current middleware if it has been set in 
 -------------------------
 
 # Sessions
-The user session mechanism in the HLEB2 framework is provided by the Session service - a simple wrapper around PHP's session management functions.
+The user session mechanism in the HLEB2 framework is provided by the Session service — a simple wrapper around PHP's session management functions.
 Examples of using Session in controllers (and all classes inheriting from Hleb\Base\Container), such as retrieving a value from a session:
 ```
 // variant 1
@@ -1058,6 +1374,19 @@ Upon a match, the framework creates an instance of this class and calls the meth
 The controller class must inherit from Hleb\Base\Controller.
 The framework searches for the controller in the /app/Controllers/ folder according to its namespace.
 Here is the default controller code:
+```
+<?php
+namespace App\Controllers;
+use Hleb\Base\Controller;
+use Hleb\Constructor\Data\View;
+class DefaultController extends Controller
+{
+    public function index(): View
+    {
+        return view("default");
+    }
+}
+```
 In the example, the controller's 'index' method returns a View object, created by the view() function and pointing to a template from the /resources/views/ folder.
 The template /resources/views/default.php will be used
 This is a simple example, as this function can be used similarly in a route.
@@ -1068,6 +1397,16 @@ view('/template/file', ['title' => 'Main template', 'description' => 'Template d
 ```
 If you use this example in a controller, the template /resources/views/template/file.php will be called.
 In the file, the variables $title and $description will be available with their corresponding values:
+```
+<?php
+// File /resources/views/template/file.php
+/**
+ * @var string $title
+ * @var string $description
+ */
+echo $title; // Main template
+echo $description; // Template description
+```
 In case the template file extension is not .php, for example, a .twig template, you need to rename the path to the template in the function, specifying the extension.
 ## Return Values
 Besides the previously mentioned View object, other types of values can be returned from a controller method:
@@ -1086,8 +1425,32 @@ Route::get('/resource/{version}/{page?}/')
     ->controller(DefaultController::class, 'resource');
 ```
 The variables $version and $page can be inserted into the 'resource' controller method.
+```
+<?php
+namespace App\Controllers;
+use Hleb\Base\Controller;
+class DefaultController extends Controller
+{
+    public function resource(int $version, ?string $page = null): void
+    {
+        // ... //
+    }
+}
+```
 ## Using Another Controller
 One controller can return data from another, but the return data types must match.
+```
+<?php
+namespace App\Controllers;
+use Hleb\Base\Controller;
+class DefaultController extends Controller
+{
+    public function index(): mixed
+    {
+        return (new OtherController($this->config))->index();
+    }
+}
+```
 No Events assigned to controllers will be applied to this nested controller.
 ## HTTP Error Classes
 If a certain condition in the controller code should end with an HTTP error, there are several predefined exception classes for this, such as 'Http404NotFoundException' and 'Http403ForbiddenException'.
@@ -1097,7 +1460,7 @@ In the HLEB2 framework, basic validation of dynamic parts of the route address c
 By using the trait from this library Phphleb\ApiMultitool\ApiRequestDataManagerTrait, the check() method becomes available and can be used to validate various request data.
 ## Creating a Controller
 Besides copying and modifying the demo file DefaultController.php, there is also a simple way to create a controller using a console command.
-`$ php console --add controller ExampleController`
+```$ php console --add controller ExampleController```
 This command will create a new controller template at /app/Controllers/ExampleController.php.
 A different suitable name for the class can be used.
 The framework also allows creating a custom default template for this command.
@@ -1119,7 +1482,7 @@ array - the returned array will be converted into a JSON string. After this, fur
 bool - if false is returned, it is equivalent to stopping further execution.
 ## Creating Middleware
 Besides copying the demonstration file DefaultMiddleware.php and modifying it, there is another simple way to create the required class using a console command.
-`$ php console --add middleware ExampleMiddleware`
+```$ php console --add middleware ExampleMiddleware```
 This command will create a new template /app/Middlewares/ExampleMiddleware.php.
 You can use another suitable name for the class.
 The HLEB2 framework also allows you to create a custom template by default for this command.
@@ -1128,37 +1491,35 @@ The HLEB2 framework also allows you to create a custom template by default for t
 
 # Module
 The modular approach in software architecture allows you to logically divide a project into large composite fragments (modules).
-A defining feature of a module is its self-sufficiency; in some sense, it's a form of dividing a monolithic application into "microservices".
+A defining feature of a module is its self-sufficiency; in some sense, it’s a form of dividing a monolithic application into "microservices".
 The key difference from microservices is that modules must exchange data through predefined contracts, which replace HTTP API (or message brokers), and they also share a common folder for routes, services, and external libraries from the /vendor/ directory.
 It is recommended to design contracts in a way that would allow extracting a module into a full-fledged microservice if needed.
 In the HLEB2 framework, a Module is essentially an MVC (Action-Domain-Responder for web) in miniature.
-The module has its own controller, its own folder for templates, and even its own configuration is permissible, all of which are located within the module's folder.
-Its own logic is also assumed (as well as Models), but for this, it is recommended to create a separate structure in the project's /app/ folder or within the module itself.
+The module has its own controller, its own folder for templates, and even its own configuration is permissible, all of which are located within the module’s folder.
+Its own logic is also assumed (as well as Models), but for this, it is recommended to create a separate structure in the project’s /app/ folder or within the module itself.
 When using the approach of full autonomy of parts in the project, which is the essence of modular development, you may not use controllers, middleware, or models from /app/ at all, implementing everything within the modules.
-The role of a module's controller in the route differs from a regular controller in that the method is named 'module' instead of 'controller', and it contains an additional initial argument with the module's name.
+The role of a module’s controller in the route differs from a regular controller in that the method is named 'module' instead of 'controller', and it contains an additional initial argument with the module’s name.
 ```
 use Modules\Example\Controllers\ExampleModuleController;
 Route::any('/demo-module')->module('example', ExampleModuleController::class, 'index');
 ```
-The module's controller must inherit from Hleb\Base\Module.
+The module’s controller must inherit from Hleb\Base\Module.
 For the Composer class loader to generate the class map for modules, add the module folder name ("modules/") to the "autoload" > "classmap" section of the /composer.json file.
 ## Creating a Module
 A simple way to create the basic structure of a module using a console command:
-`$ php console --create module example`
+```$ php console --create module example```
 This command will create a new module template in the /modules/example/ directory of the project.
 You can use another suitable name for the module, consisting of lowercase Latin letters, numbers, dashes, and the '/' symbol (indicating nesting).
 There is an option to override the original module files used during generation.
 Structure of the module after creation (if there was no modules folder previously, the console command will create it in the project root):
-```
 modules   - directory for modules
-      example   - example module folder
-        config
-     |       main.php   - module settings
-        controllers
-     |       DefaultModuleController.php   - module controller
-        views
-             example.php   - module template
-```
+example   - example module folder
+config
+|       main.php   - module settings
+controllers
+|       DefaultModuleController.php   - module controller
+views
+example.php   - module template
 The main.php file can contain settings similar to the /config/main.php file but with values used only in the module, meaning it will "override" them.
 Initially, the main.php file contains no settings; all settings from /config/main.php are used.
 Similarly, settings in the /config/database.php can be replaced by creating a file with the same name.
@@ -1170,28 +1531,26 @@ There is an option to group modules into collections nested in different subfold
 For this, modules are placed one level down, and the module name includes the group name.
 This creates a second level of module nesting.
 Let's assume we need to place a module group named 'main-product', which will contain the modules 'first-feature' and 'second-feature'.
-```
-  modules
-    main-product - module group
-     |
-        first-feature   - first-feature module folder
-     |      config
-     |   |       main.php
-     |   |       database.php
-     |      controllers
-     |   |       ModuleGetController.php
-     |   |       ModulePostController.php
-     |      views
-     |           template.php
-     |
-        second-feature   - second-feature module folder
-            controllers
-         |       ModuleController.php
-            middlewares
-         |       ModuleMiddleware.php
-            views
-                 template.php
-```
+modules
+main-product - module group
+|
+first-feature   - first-feature module folder
+|      config
+|   |       main.php
+|   |       database.php
+|      controllers
+|   |       ModuleGetController.php
+|   |       ModulePostController.php
+|      views
+|           template.php
+|
+second-feature   - second-feature module folder
+controllers
+|       ModuleController.php
+middlewares
+|       ModuleMiddleware.php
+views
+template.php
 This is how it will look in the route map:
 ```
 use Modules\MainProduct\{
@@ -1234,58 +1593,56 @@ maintaining an agreement with the developer on which directories to store settin
 framework. It also allows developers to quickly understand the folder structure in a new project based on the
 HLEB2 framework.
 The following diagram shows the folders of a new project after installing the framework:
-```
-  app   - application code folder
-      Bootstrap   - classes essential for managing the framework
-        Events   - actions for specific events
-     |       ControllerEvent.php   - on controller initialization
-     |       MiddlewareEvent.php  - on middleware initialization
-     |       ModuleEvent.php   - on module controller call
-     |       PageEvent.php   - on 'page' controller call
-     |       TaskEvent.php   - when executing a command
-        Http
-     |       ErrorContent.php   - content for HTTP errors
-     |    BaseContainer.php   - container class
-     |    ContainerFactory.php   - managing services in the container
-     |    ContainerInterface.php   - container interface
-      Commands   - folder with command classes
-     |   DefaultTask.php   - empty template for creating a command
-     |   RotateLogs.php   - command for log rotation
-      Controllers   - folder for controller classes
-     |   DefaultController.php   - empty template for creating a controller
-      Middlewares   - folder for middleware
-     |   DefaultMiddleware.php   - empty template for creating middleware
-      Models
-         DefaultModel.php   - empty template for creating a model
-  config   - configuration files
-     common.php   - common settings
-     database.php   - database settings
-     main.php   - module-overridable settings
-     system.php   - system settings
-  public   - public folder, where the web server should be pointed
-      css   - public style files
-      images   - public image files
-      js   - public script files
-      .htaccess   - server configuration
-      favicon.ico
-      index.php   - web server entry point
-      robots.txt
-  resources   - custom project resources
-      views   - view files (templates)
-         default.php   - framework demo template
-         error.php   - error page template
-  routes   - folder with route files
-      map.php
-  storage   - storage folder, contains auxiliary files
-      logs   - folder with log files
-  vendor   - folder with installed libraries
-      phphleb   - folder with framework libraries
+app   - application code folder
+Bootstrap   - classes essential for managing the framework
+Events   - actions for specific events
+|       ControllerEvent.php   - on controller initialization
+|       MiddlewareEvent.php  - on middleware initialization
+|       ModuleEvent.php   - on module controller call
+|       PageEvent.php   - on 'page' controller call
+|       TaskEvent.php   - when executing a command
+Http
+|       ErrorContent.php   - content for HTTP errors
+|    BaseContainer.php   - container class
+|    ContainerFactory.php   - managing services in the container
+|    ContainerInterface.php   - container interface
+Commands   - folder with command classes
+|   DefaultTask.php   - empty template for creating a command
+|   RotateLogs.php   - command for log rotation
+Controllers   - folder for controller classes
+|   DefaultController.php   - empty template for creating a controller
+Middlewares   - folder for middleware
+|   DefaultMiddleware.php   - empty template for creating middleware
+Models
+DefaultModel.php   - empty template for creating a model
+config   - configuration files
+common.php   - common settings
+database.php   - database settings
+main.php   - module-overridable settings
+system.php   - system settings
+public   - public folder, where the web server should be pointed
+css   - public style files
+images   - public image files
+js   - public script files
+.htaccess   - server configuration
+favicon.ico
+index.php   - web server entry point
+robots.txt
+resources   - custom project resources
+views   - view files (templates)
+default.php   - framework demo template
+error.php   - error page template
+routes   - folder with route files
+map.php
+storage   - storage folder, contains auxiliary files
+logs   - folder with log files
+vendor   - folder with installed libraries
+phphleb   - folder with framework libraries
 .gitignore   - Git visibility management for files
 .hgignore   - Mercurial visibility management for files
 composer.json   - Composer settings
 console   - entry point for console commands
 readme.md   - framework description
-```
 The files listed in the diagram are installed with the framework and are part of its structure, but are intended
 for modifications and filling by the developer.
 In addition to this, the developer can further develop the project according to this structure by adding new
@@ -1339,7 +1696,7 @@ work.
 Logs and error reports in a standardized format.
 This file without an extension contains PHP code and executes console commands.
 For example:
-`$ php console --version`
+```$ php console --version```
 Displays information about the current version of the framework.
 
 -------------------------
@@ -1355,6 +1712,30 @@ For instance, if an incoming Request validation by a third-party library is used
 If present, the after() method allows you to override the controller's response and is executed immediately after the controller. The method receives this result in the 'result' argument by reference, allowing you to change the returned data for a specific class and method of the controller.
 Globally, this might involve transforming a returned array not into JSON as set by default, but into another format like XML.
 The following example demonstrates attaching an additional action before calling a specific class and method of the controller:
+```
+<?php
+// File /app/Bootstrap/Events/ControllerEvent.php
+declare(strict_types=1);
+namespace App\Bootstrap\Events;
+use Hleb\Base\Event;
+final class ControllerEvent extends Event
+{
+    public function before(string $class, string $method, array $arguments): array|false
+    {
+        switch([$class, $method]) {
+            case [ExampleController::class, 'index']:
+                return (new ExampleControllerEvent())->beforeIndex($arguments);
+                // ... //
+            default:
+        }
+        return $arguments;
+    }
+    public function after(string $class, string $method, mixed &$result): void
+    {
+        // ... //
+    }
+}
+```
 ## MiddlewareEvent
 The before() method of this middleware class is executed before each middleware call from the framework. The method's arguments allow you to determine which class and method are involved, and whether this middleware is executed after the main action.
 If necessary, there are options to modify the target middleware method's arguments, altering them, and returning them from the current method. In such a case, it is necessary to specify the condition to terminate the script execution after the result is output, by returning false from the after() method.
@@ -1369,6 +1750,36 @@ This is another event similar to ControllerEvent, tied to calls of special 'page
 Such pages are used in the framework's registration library for the admin panel and also on this documentation site.
 ## KernelEvent
 The KernelEvent event is not necessarily present in the folder with other Events, but if a class file with this name is created, it will be utilized by the framework. Its unique feature is intercepting all web requests at the highest level and creating a global action for them. For example, this could be logging user requests (not initially included in the framework):
+```
+<?php
+// File /app/Bootstrap/Events/KernelEvent.php
+declare(strict_types=1);
+namespace App\Bootstrap\Events;
+use Hleb\Base\Event;
+use Hleb\Reference\Interface\Log;
+use Hleb\Reference\Interface\Request;
+class KernelEvent extends Event
+{
+    #[\Override]
+    public function __construct(
+        private readonly Log $log,
+        private readonly Request $request,
+        #[\SensitiveParameter] array $config = [],
+    ) {
+        parent::__construct($config);
+    }
+    public function before(): bool
+    {
+        $data = [
+            'url' => $this->request->getAddress() . $this->request->getUri()->getQuery(),
+            'method' => $this->request->getMethod(),
+            // Other parameters required in the log.
+        ];
+        $this->log->info('Request log for the site, url: {url} method: {method}', $data);
+        return true;
+    }
+}
+```
 ## TaskEvent
 The execution occurs before each framework command launch, excluding those built into it by default.
 It also allows determining the called class and the source of the call (from the code or from the console).
@@ -1378,6 +1789,39 @@ The after() method for this event differs in that it has access to the data set 
 This data is passed by reference to the 'result' argument and can be modified.
 If necessary, you can similarly change the returned response status using the statusCode() method.
 A demonstration example showing one of the ways to organize response (with a single common interface) to the execution of various tasks:
+```
+<?php
+// File /app/Bootstrap/Events/TaskEvent.php
+declare(strict_types=1);
+namespace App\Bootstrap\Events;
+use Hleb\Base\Event;
+final class TaskEvent extends Event
+{
+    private ?TaskEventInterface $action = null;
+    public function before(string $class, string $method, array $args): array
+    {
+        switch ($class) {
+            case FirstTask::class:
+                $this->action = new FirstTaskEvent($method);
+                break;
+            case SecondTask::class:
+                $this->action = new SecondTaskEvent($method);
+                break;
+            // ... //
+            default:
+        }
+        return $this->action ? $this->action->getBeforeAction($args) :  $args;
+    }
+    public function after(string $class, string $method, mixed &$result): void
+    {
+        $this->action and $result = $this->action->updateAfterAction($result);
+    }
+    public function statusCode(string $class, string $method, int $code): int
+    {
+        return $this->action ? $this->action->getCode($code) : $code;
+    }
+}
+```
 This principle can be applied not only to task events but to other Events as well.
 The switch operator is chosen for the Event due to its ability to match one result to multiple case blocks.
 ## Extended Conditions
@@ -1409,7 +1853,7 @@ The approach involves caching the output of a class method and forcing the metho
 It is necessary to determine which stored states relate to the request data and which pertain to the operation of the application as a whole.
 For example, a computed state for general tariff information won't change from request to request, but the selected tariff for each user needs to be reset. During asynchronous requests, the next request might belong to a different user, making it important to clear information about the previous one.
 ## ResetInterface
-Using ResetInterface provides a modern way to reset the state of services in the framework container asynchronously. This applies only to services stored as singletons and allows you - by adding this interface and its reset method - to clear a service's state and perform other preparations intended for the next request.
+Using ResetInterface provides a modern way to reset the state of services in the framework container asynchronously. This applies only to services stored as singletons and allows you — by adding this interface and its reset method — to clear a service's state and perform other preparations intended for the next request.
 For example, in this demonstration logging service, the state of the Monolog logger will be reset according to its own internal implementation of the reset method:
 ```
 class ExampleLogerService implements \Hleb\Base\ResetInterface
@@ -1488,7 +1932,7 @@ If you need to execute any action after completing an asynchronous request that 
 The HLEB2 framework includes a small console bowling game.
 At the moment, it's a single-player game with score counting, levels, and strikes according to the real bowling game rules.
 The game is launched with a command like:
-`$ php console flat-kegling-feature 8 1 50`
+```$ php console flat-kegling-feature 8 1 50```
 The numerical parameters of the command correspond to the ball throwing force (1-10), target pin number (1-10), and accuracy coefficient of hitting within the target pin (1-49 to the left and 51-100 to the right side).
 
 -------------------------
@@ -1498,30 +1942,30 @@ In the HLEB2 framework, when creating Models, Controllers, and entire modules, y
 Additionally, the initial file templates are customizable according to the developer's own preferences.
 ## Controller Generation
 Console command to generate a Controller class:
-`$ php console --add controller Demo/ExampleController`
+```$ php console --add controller Demo/ExampleController```
 The command will create the file /app/Controllers/Demo/ExampleController.php with the new Controller class.
 To change the template for creating a class, copy the file 'controller_class_template.php' from '/vendor/phphleb/framework/Optional/Templates/' to the folder '/app/Optional/Templates/' and make the necessary modifications.
 ## Middleware Generation
 Console command to generate new middleware:
-`$ php console --add middleware Demo/ExampleMiddleware`
+```$ php console --add middleware Demo/ExampleMiddleware```
 After execution, the file /app/Middlewares/Demo/ExampleMiddleware.php with the middleware class will be created.
 To modify the original middleware template, copy the file 'middleware_class_template.php' from '/vendor/phphleb/framework/Optional/Templates/' to the folder '/app/Optional/Templates/', and then make changes.
 ## Model Generation
 Example of creating a Model class from the console:
-`$ php console --add model Demo/ExampleModel`
+```$ php console --add model Demo/ExampleModel```
 This command will create the file /app/Models/Demo/ExampleModel.php with the Model class.
 To change the original template for the Model, copy the file 'model_class_template.php' from '/vendor/phphleb/framework/Optional/Templates/' to the folder '/app/Optional/Templates/' and edit it as needed.
 ## Generating a Command Class
 Console command to create a new task, specifying the task name:
-`$ php console --add task demo/example-task`
+```$ php console --add task demo/example-task```
 Upon execution, the file app/Commands/Demo/ExampleTask.php will be created.
 To make changes to the base class, copy the file 'task_class_template.php' from '/vendor/phphleb/framework/Optional/Templates/' to the folder '/app/Optional/Templates/' and adjust it as needed.
 ## Generating a Module
 To generate the base files for a Module in the 'modules' directory (the name can be changed in the settings), execute the following command:
-`$ php console --create module main`
+```$ php console --create module main```
 Where 'main' is the name of the new module.
 For a nested module in the 'modules/demo' folder, modify the command as follows:
-`$ php console --create module demo/main`
+```$ php console --create module demo/main```
 If you need to create your own module template files, copy the contents of the directory '/vendor/phphleb/framework/Optional/Modules/example/' to the folder '/app/Optional/Modules/example/' and make the necessary changes to the files.
 When modifying the base files, keep in mind that special tags are included, and they are necessary for the correct substitution of console parameters.
 
@@ -1583,9 +2027,59 @@ Next, we'll look at an example of adding a real library for mutexes as a Service
 The library github.com/phphleb/conductor contains a mutex mechanism. If you plan to use this library, you need to install it first.
 It is perfectly possible to assign a key in the container as a class from the library, but this may cause issues later as the application's code will be tied to a specific class or library interface, making it impossible to change it.
 It is better to connect external libraries to the project using the Adapter pattern, the class of which will be the key of the service in the container.
+```
+<?php
+// File /app/Bootstrap/Services/MutexService.php
+namespace App\Bootstrap\Services;
+use Phphleb\Conductor\Src\Scheme\MutexInterface;
+class MutexService
+{
+    public function __construct(private MutexInterface $mutex) { }
+    public function acquire(string $name, ?int $sec = null): bool
+    {
+        return $this->mutex->acquire($name, $sec);
+    }
+    public function release(string $name): bool
+    {
+        return $this->mutex->release($name);
+    }
+    public function unlock(string $name): bool
+    {
+        return $this->mutex->unlock($name);
+    }
+}
+```
 This wrapper class for the service is created in the /app/Bootstrap/Services/ folder.
 Although this is a convenient directory for examples, structurally the Services folder should be located next to the project logic.
 Now let's add the library to the container by the created class:
+```
+<?php
+// File /app/Bootstrap/ContainerFactory.php
+namespace App\Bootstrap;
+use App\Bootstrap\Services\MutexService;
+use Hleb\Constructor\Containers\BaseContainerFactory;
+use Phphleb\Conductor\FileMutex;
+use Phphleb\Conductor\Src\MutexDirector;
+final class ContainerFactory extends BaseContainerFactory
+{
+    public static function getSingleton(string $id): mixed
+    {
+        self::has($id) or self::$singletons[$id] = match ($id) {
+            // New service as singleton.
+            MutexService::class => new MutexService(new FileMutex()),
+            // ... //
+            default => null
+        };
+        return self::$singletons[$id];
+    }
+    public static function rollback(): void
+    {
+        // Rollback for an asynchronous request.
+        MutexDirector::rollback();
+        // ... //
+    }
+}
+```
 As seen in the example, the rollback() method has been added to reset the state for the connected mutex library that supports asynchrony.
 After adding, the new service is available from the container as a singleton through this class.
 ```
@@ -1649,7 +2143,7 @@ SiestaService::class => DI::method(DI::object(
 ```
 In this way, in the framework's container, despite its seeming simplicity, you can add various interdependent services.
 ## Adding Services in User Code
-By default, the framework does not allow adding services after the container has been initialized. However, by overriding the getSingleton() method to be public in the ContainerFactory class, you gain the ability to add objects to the container in your user code through this static method. Here's an example of modifying the class:
+By default, the framework does not allow adding services after the container has been initialized. However, by overriding the getSingleton() method to be public in the ContainerFactory class, you gain the ability to add objects to the container in your user code through this static method. Here’s an example of modifying the class:
 ```
 // File /app/Bootstrap/ContainerFactory.php
 use Hleb\Constructor\Containers\BaseContainerFactory;
@@ -1679,6 +2173,30 @@ Fetching a default service from the container can be modified by adding your own
 You need to create a new service and return it from the 'getSingleton' method of the App\Bootstrap\ContainerFactory class before selecting from the default services.
 In the HLEB2 framework, each built-in service uses two identical interfaces (for different naming options), and you must return your own service as a singleton for the interface ending with 'Interface'.
 For example, for the caching service, it would be 'Hleb\Reference\CacheInterface'.
+```
+<?php
+// File /app/Bootstrap/ContainerFactory.php
+namespace App\Bootstrap;
+use Hleb\Constructor\Containers\BaseContainerFactory;
+use Hleb\Reference\CacheInterface;
+final class ContainerFactory extends BaseContainerFactory
+{
+    public static function getSingleton(string $id): mixed
+    {
+        self::has($id) or self::$singletons[$id] = match ($id) {
+            // Adding a replacement for a service.
+            CacheInterface::class => new OtherCacheService(),
+            // ... //
+            default => null
+        };
+        return self::$singletons[$id];
+    }
+    public static function rollback(): void
+    {
+        // ... //
+    }
+}
+```
 The example shows how to replace the default caching service with your own.
 Here, it could be caching with database storage instead of file-based (default).
 Similarly, you can "remove" a default service from the container by overriding it with a NULL value.
@@ -1695,6 +2213,11 @@ To specify the application page on which to display the Web Console, create a ro
 Route::match(['get', 'post'], '/web-console', view('console'));
 ```
 You also need to create a template that outputs an HTML form for the Web Console:
+```
+<?php
+// File /resources/views/console.php
+(new \Hleb\Main\Console\WebConsoleOnPage())->run();
+```
 Now the Web Console is available at the relative address '/web-console' of the site. Additionally, you need to copy the key from the file '/storage/keys/web-console.key' and use it to access the command execution form.
 Commands that require user input will not work through the Web Console.
 
@@ -1705,10 +2228,10 @@ The 'Administrative Panel' module in the HLEB2 framework is an extension to the 
 This library was used to create the look of this framework documentation site without significant modifications.
 ## Installation
 Using Composer:
-`$ composer require phphleb/adminpan`
+```$ composer require phphleb/adminpan```
 ## Configuration
 By running the following command, the adminpan.php file, describing how to build a menu structure for the administrative panel, will be copied to the /config/structure/ directory.
-`$ php console phphleb/adminpan add`
+```$ php console phphleb/adminpan add```
 Initially, the /config/structure/adminpan.php file contains an empty array, with no menu sections defined.
 Menu sections are assigned by specifying special route names (or standard links).
 Example for a demo route:
@@ -1720,6 +2243,30 @@ Route::get('/{lang}/panel/page/default')
 Here, it specifies that for the menu 'adminpan' (named the same as the adminpan.php file), the URL '/{lang}/panel/page/default' is assigned the page() controller of the ExamplePanelController class, targeting the 'index' method.
 Additionally, the route has a name 'adminpan.default', which is needed for mapping to a section in the menu.
 Now the first menu item can be created in the /config/structure/adminpan.php file.
+```
+<?php
+return [
+    'design' => 'base', // base|light default `base`
+    'breadcrumbs' => 'on', // on|off default 'on'
+    'section' => [
+        [
+            'name' => [
+                'ru' => 'Главное меню',
+                'en' => 'Main menu'
+            ],
+            'section' => [
+                [
+                    'route' => 'adminpan.default',
+                    'name' => [
+                        'en' => 'Test page',
+                        'ru' => 'Тестовая страница',
+                    ],
+                ],
+            ],
+        ],
+    ]
+];
+```
 The menu can contain nested dropdown lists ('section'), currently there's only one assigned with a single item.
 If you navigate to the URL '/ru/panel/page/default', the design will be set to 'base' (from the settings) for the page. Also, the menu will have the 'Main Menu' with the active item 'Test Page' where content from the ExamplePanelController will be displayed.
 When used in conjunction with the HLOGIN library, the admin panel routes may be accessible only to a specific type of user (authenticated).
@@ -1733,10 +2280,28 @@ To implement API in the HLEB2 framework, a set of traits is provided to simplify
 The use of traits in PHP is a matter of various opinions, which is why this module is provided as a separate library, which you may choose to use;
 there is quite a number of validators available for development in PHP, and this is just a simple working alternative.
 Installation of the library github.com/phphleb/api-multitool using Composer:
-`$ composer require phphleb/api-multitool`
+```$ composer require phphleb/api-multitool```
 or download and unpack the library archive into the folder /vendor/phphleb/api-multitool.
 ## Connecting the BaseApiTrait (set of traits)
 First, you need to create a parent class BaseApiActions (or another name) for controllers with API:
+```
+<?php
+// File /app/Controllers/Api/BaseApiActions.php
+namespace App\Controllers\Api;
+use Hleb\Base\Controller;
+use Phphleb\ApiMultitool\BaseApiTrait;
+class BaseApiActions extends Controller
+{
+    // Adding a set of traits for the API.
+    use BaseApiTrait;
+    function __construct(array $config = [])
+    {
+        parent::__construct($config);
+        // Passing the debug mode value to the API constructor.
+        $this->setApiBoxDebug($this->container->settings()->isDebug());
+    }
+}
+```
 All auxiliary traits are collected in BaseApiTrait as a set.
 Therefore, it is enough to connect it to the controller and get the full implementation.
 If a different set of these traits is required, then either use them as a group or combine them into your own set.
@@ -1745,6 +2310,27 @@ After this, in all controllers inherited from this class, methods from each trai
 The trait ApiHandlerTrait contains several methods that may be useful for processing returned API data.
 This does not mean that its methods 'present' and 'error' form the final response, they return named arrays, which can be used in your own more complex standard.
 An example in the controller method:
+```
+<?php
+// Файл /app/Controllers/Api/UserController.php
+namespace App\Controllers\Api;
+use App\Models\UserModel;
+class UserController extends BaseApiActions
+{
+    public function actionGetOne(): array
+    {
+        $id = $this->container->request()->get('id')->asInt();
+        if (!$id) {
+            return $this->error('Invalid request data: id', 400);
+        }
+        $data = UserModel::getOne($id);
+        return array_merge(
+            $this->present($data ?: []),
+            ['error_cells' => $this->getErrorCells()]
+        );
+    }
+}
+```
 In the HLEB framework, when returning an array from a controller, it is automatically converted into JSON.
 When displaying the formatted array, a value 'error_cells' is added with a list of fields where validation errors occurred (if any).
 ## ApiMethodWrapperTrait
@@ -1781,7 +2367,6 @@ $result = $this->check($data,
 $errorCells = $this->getErrorCells(); // An array with a list of fields that did not pass the check.
 $errorMessage = $this->getErrorMessage(); // An array with messages about validation errors that occurred.
 ```
-```
 required - a required field, always located at the beginning.
 List of possible types ('type' - must be in the first position or directly after required):
 string - checks for the presence of a string value, constraints can be minlength and maxlength.
@@ -1797,7 +2382,6 @@ enum - searches among possible values, for example 'enum:1,2,3,4,south,east,nort
 The check for equality is not strict, so both 4 and '4' are correct; for exact matching, it is better to accompany it with a type check.
 You can add two or more types, and they will be checked against all common conditions inclusively, for example, 'type:string,null,void|minlen:5' - this means that the string should be checked, at least 5 characters long, or empty, or null value. In all other cases, it returns false as a result of a failed validation check.
 You can also check an array of fields with a list of standard array fields (they will be checked according to a unified template):
-```
 ```
 $result = $this->check($data,
     [
@@ -1827,15 +2411,15 @@ The HLOGIN library extends the capabilities of the HLEB2 framework by adding com
 Several basic design types are available. You can view a demonstration of the function and appearance of registration pop-up windows by clicking here.
 ## Installation
 Step 1: Install via Composer in a HLEB2-based project:
-`$ composer require phphleb/hlogin`
+```$ composer require phphleb/hlogin```
 Step 2: Install the library in the project. You will be prompted to select a design type from several options:
-`$ php console phphleb/hlogin add`
-`$ composer dump-autoload`
+```$ php console phphleb/hlogin add```
+```$ composer dump-autoload```
 ## Connection
 Step 3: You must have an active database connection before performing this action. In the project settings '/config/database.php', you need to add a connection or ensure it exists, and also verify its name is in the 'base.db.type' parameter.
-`$ php console hlogin/create-login-table`
+```$ php console hlogin/create-login-table```
 After this, use the console command to create a user with administrator rights (you will be prompted to provide E-mail and password):
-`$ php console hlogin/create-admin`
+```$ php console hlogin/create-admin```
 If you cannot execute the console command, create the tables using the appropriate SQL query from the file /vendor/phphleb/hlogin/planB.sql. Then register an administrator and set their 'regtype' to 11.
 Step 4: Now you can proceed to the main placeholder page of the website if it is the default framework page without changes and check that the authorization panels are available. If the library is installed in a HLEB2-based project not from the start and the placeholder has been removed, check the login on the page '/en/login/action/enter/' of the site (using the administrator data from the previous step).
 Step 5: Installation of registration on specific pages through routing. To do this, set the following conditions in the routing files (project folder /routes/):
@@ -1885,6 +2469,14 @@ if ($user) {
 ```
 You can also add the class Phphleb\Hlogin\Container\Auth to the container and retrieve this data from it.
 By default, the language used for panels is extracted from the url parameter (following the domain) or the lang attribute within the '<html lang="en">' tag. To forcefully set the design and/or language of the panels on a page:
+```
+<?php
+use Phphleb\Hlogin\App\PanelData;
+// Force setting the panel design type on the page.
+PanelData::setLocalDesign('base');
+// Forced installation of the panel language on the page.
+PanelData::setLocalLang('en');
+```
 ## Panel Management
 Standard authorization buttons can be replaced with any others by disabling the default ones in the admin panel beforehand. Custom buttons can be assigned one of the following actions (for JavaScript):
 ```
@@ -1927,7 +2519,6 @@ Or, using attributes:
 As can be understood, registration cannot be available for users with JavaScript disabled in the browser. There are hardly any left now.
 ## Specific Pages
 If there is a need to direct a user immediately to a login or registration page, several necessary pages are automatically created:
-```
 Registration Page
 /ru/login/action/registration/
 Login Page
@@ -1938,7 +2529,6 @@ Contact Page
 /ru/login/action/contact/
 Admin Panel Settings Page
 /ru/adminzone/registration/settings/
-```
 ## Additional Data Processing
 When validating values on the backend side submitted from registration forms, you can additionally process them with your own PHP script, if available. This way, for example, you can add a custom field to the form and check it yourself. The queries are divided into separate classes, which can be found in the folder /vendor/phphleb/hlogin/Optional/Inserted/. They can only be used after copying into the folder /app/Bootstrap/Auth/Handlers/.
 ## Design
@@ -1974,9 +2564,9 @@ The default library used for sending emails has limited capabilities and should 
 Create the class App\Bootstrap\Auth\MailServer at the path /app/Bootstrap/Auth/MailServer.php, which implements the interface Phphleb\Hlogin\App\Mail\MailInterface. Once the file is created, emails will be sent using this class, so you should first implement your own sending logic for the chosen mail server.
 ## Library Update
 To update, execute the console commands:
-`$ composer update phphleb/hlogin`
-`$ php console phphleb/hlogin add`
-`$ composer dump-autoload`
+```$ composer update phphleb/hlogin```
+```$ php console phphleb/hlogin add```
+```$ composer dump-autoload```
 During the installation process, choose the current design that is used by default.
 ## Links
 HLOGIN library on GitHub: github.com/phphleb/hlogin
@@ -1990,6 +2580,20 @@ The testing approach depends on the usage type of the services, which may be a c
 Dependency Injection within the framework is limited to objects created by it, including controllers, middleware, commands, events, and objects created by the service known as DI.
 ## Testing for Dependency Injection
 A simple example of a demonstration controller with DI:
+```
+<?php
+namespace App\Controllers;
+use Hleb\Base\Controller;
+use Hleb\Reference\Interface\Log;
+class ExampleController extends Controller
+{
+    public function index(Log $logger): string
+    {
+        $logger->info('Request to demo controller');
+        return 'OK';
+    }
+}
+```
 Suppose you need to ensure that the controller returns the text 'OK' without sending a message to the logs.
 ```
 use App\Controllers\ExampleController;
@@ -2003,7 +2607,7 @@ if ($result === 'OK') {
 ```
 Here, the logging class is replaced by a class with the same interface, but its methods do not send anything to the log.
 It is assumed that one of the special testing libraries (such as github.com/phhleb/test-o) is used, with checks implemented through it.
-Now, let's invoke the method of an arbitrary class through the DI service (specifically the framework service, not the architectural pattern itself):
+Now, let’s invoke the method of an arbitrary class through the DI service (specifically the framework service, not the architectural pattern itself):
 ```
 use Hleb\Reference\Interface\Log;
 class Example
@@ -2017,7 +2621,7 @@ class Example
 use Hleb\Static\DI;
 $result = DI::method(new Example(), 'run');
 ```
-In this case, the logging service will be injected from the container, and the message will be logged. Let's modify the method invocation for testing:
+In this case, the logging service will be injected from the container, and the message will be logged. Let’s modify the method invocation for testing:
 ```
 use Hleb\Main\Logger\NullLogger;
 use Hleb\Static\DI;
@@ -2055,6 +2659,30 @@ To prevent this approach from being used outside of tests, in a production proje
 ## Functional Testing
 To run tests that initialize the core of the framework, you may need to replace some or all services in the container with test objects.
 To do this, simply implement your own service and assign it based on a condition (in the example, this is the global constant APP_TEST_ON):
+```
+<?php
+// File /app/Bootstrap/BaseContainer.php
+namespace App\Bootstrap;
+use Hleb\Constructor\Containers\CoreContainer;
+final class BaseContainer extends CoreContainer implements ContainerInterface
+{
+    private ?ContainerInterface $testContainer = null;
+    #[\Override]
+    final public function get(string $id): mixed
+    {
+        if (get_constant('APP_TEST_ON')) {
+            if ($this->testContainer === null) {
+                $this->testContainer = new TestContainer();
+            }
+            return $this->testContainer->get($id);
+        }
+        return ContainerFactory::getSingleton($id) ?? match ($id) {
+            // ... //
+            default => parent::get($id),
+        };
+    }
+}
+```
 ## Testing Built-in Functions
 Several built-in framework functions that simplify service calls, such as the logger() function, are implemented through tested service calls, in this case, as a wrapper around Hleb\Static\Log.
 ## Testing for $this-container in Classes
@@ -2147,7 +2775,7 @@ $lang = config('main', 'default.lang');
 As the name get_config_or_fail() suggests, this function returns the configuration parameter's value or throws an error if the parameter is not found or is null.
 The arguments are similar to the config() function.
 ### setting()
-Since it's recommended to add custom values to the 'main' group,
+Since it’s recommended to add custom values to the 'main' group,
 a separate function setting() is provided for frequent use of this configuration.
 Its application is similar to the config() function with the first argument 'main'.
 ### hl_db_config()
@@ -2160,7 +2788,7 @@ These functions for accessing database parameters are essential when adding thir
 ## Debugging Functions
 The framework includes several functions for quick code debugging. They complement and extend the PHP var_dump() function in various ways. Depending on the situation, a suitable one can be chosen.
 ### print_r2()
-This function has been retained from the first version of the framework. It is used to display data in a readable format for the debug panel. Thus, when DEBUG mode is off, debug data passed to the function won't be displayed, as the debug panel is disabled. This is convenient during development, as you don't need to worry about its visibility outside of debug mode. An optional second argument to the print_r2() function allows you to add a description to the displayed data for easy identification in the panel. Example:
+This function has been retained from the first version of the framework. It is used to display data in a readable format for the debug panel. Thus, when DEBUG mode is off, debug data passed to the function won’t be displayed, as the debug panel is disabled. This is convenient during development, as you don’t need to worry about its visibility outside of debug mode. An optional second argument to the print_r2() function allows you to add a description to the displayed data for easy identification in the panel. Example:
 ```
 use Hleb\Static\Request;
 $debugData = Request::param('test')->toString();
@@ -2264,7 +2892,7 @@ Extract the downloaded archive to the desired folder on the server or locally.
 Use only verified links to the official repository of the framework.
 ## Cloning Using Git
 To clone the framework repository into the new_project folder, execute the following git command:
-`$ git clone https://github.com/phphleb/hleb new_project`
+```$ git clone https://github.com/phphleb/hleb new_project```
 This command will create a new_project folder, initialize a .git subdirectory in it, then download all the data for this repository and extract a working copy of the latest version.
 If you navigate to the directory created by this command new_project, you will find the project files ready for use.
 ## Local Development with Docker
@@ -2274,7 +2902,7 @@ the repository phphleb/toaster.
 An alternative option is using Composer.
 This method is more preferable, as Composer will allow you to install various packages and extensions in the future.
 Install the current version of the project using the console command (assuming Composer is installed globally):
-`$ composer create-project phphleb/hleb new_project`
+```$ composer create-project phphleb/hleb new_project```
 This command will install the framework into the new_project folder.
 ## Extension for Database Operations
 If your application will work with a database, you need to install the PHP PDO extension and the corresponding driver (for example, pdo_mysql for MySQL).
@@ -2312,7 +2940,8 @@ Route::get('/', view('default'))->name('homepage');
 ```
 The list of documentation sections is located in the site's menu.
 For beginners, it's recommended to start exploring the framework with topics on installation, routing, and configuration editing.
-
+Information that requires special attention will be highlighted in such a block.
+A warning that should not be ignored will be highlighted in this kind of block.
 ## Local Installation of Documentation
 This documentation can be installed and used offline.
 The code is located in an open repository, and after local installation, you simply need to keep track of updates.
@@ -2328,7 +2957,7 @@ The provided template can be used by the developer in their own way.
 It can use the built-in wrapper over PDO (class Hleb\Static\DB) or be replaced by your own template, for example, by connecting one of the existing ORM.
 ## Creating a Template
 Apart from copying and modifying the demonstration file DefaultModel.php, there is another simple way to create the required class using a console command.
-`$ php console --add model ExampleModel`
+```$ php console --add model ExampleModel```
 This command will create a new template /app/Models/ExampleModel.php.
 You can use another suitable name for the class.
 The HLEB2 framework also allows you to create a custom template by default for this command.
@@ -2399,6 +3028,12 @@ Variables can be passed to the function as a second argument in an associative a
 Route::get('/', view('index', ['title' => 'Index page']));
 ```
 The variables will be available in the template.
+```
+<?php
+// File /resources/views/index.php
+/** @var string $title */
+echo $title; // Index page
+```
 For predefined addresses '404', '403', and '401', the corresponding standard error page will be displayed in the view() function.
 ## Function preview()
 Sometimes, to specify a predefined textual response in a route, it is necessary to set the appropriate Content-Type header and output certain request parameters. Currently, in the preview() function, it only supports injecting the original route address, dynamic parameters from the address, the current IP address, and the HTTP request method. For example:
@@ -2522,7 +3157,7 @@ Route::endGroup();
 ```
 In this example, the parts named 'lang', 'user', and 'id' will be validated using regular expressions.
 ## Domain Limitation
-The special method domain() can be assigned to a route or group of routes. 
+The special method domain() can be assigned to a route or group of routes.
 The first argument can specify the domain or subdomain name, and the second argument defines the level of rule matching.
 ## Substitution Principle
 There is a method where the target controller and method are determined based on the values of the dynamic URL.
@@ -2547,7 +3182,7 @@ If the DEBUG panel output is disabled using the noDebug() method, but you still 
 ## Updating Route Cache
 By default, the route cache in the framework is automatically updated after changes are made to the /routes/map.php file.
 There is also a console command to update the route cache:
-`$ php console --routes-upd`
+```$ php console --routes-upd```
 For high-traffic projects, you might need to disable automatic updates in production and only recalculate the route cache using the console command.
 This is configured via the 'routes.auto-update' setting in the /config/common.php file.
 
@@ -2561,8 +3196,6 @@ This is configured via the 'routes.auto-update' setting in the /config/common.ph
 The project's public folder includes a .htaccess file with the necessary settings for running the HLEB2 framework.
 Before using the framework with Apache, make sure to enable the mod_rewrite module so that the .htaccess file is handled by the server.
 Basic configuration of Apache through setup. By default, these settings are already specified in /public/.htaccess, but when using the .htaccess file, ensure that AllowOverride is set to All here.
-
-```
 <VirtualHost *:80>
 ServerName mysite.com
 # Path to the public folder
@@ -2582,7 +3215,6 @@ RewriteRule ^ index.php [L]
 </IfModule>
 </Directory>
 </VirtualHost>
-```
 After starting the server, you can verify the installation by entering the previously assigned (locally or on a remote server) resource address in the browser's address bar.
 
 -------------------------
@@ -2594,7 +3226,7 @@ FrankenPHP has limited support for Windows.
 The FrankenPHP server is distributed as binary files and Docker images. The latest releases can be found in the official GitHub repository. Installation instructions are available in the server documentation at frankenphp.dev/docs.
 FrankenPHP operates in several modes; this example demonstrates the simplest way to get started locally with the framework and to verify that it is compatible with this web server.
 For the HLEB2 framework, simply specify the path to the public directory when launching from the project root:
-`$ frankenphp php-server -r public/ --listen 127.0.0.1:8080`
+```$ frankenphp php-server -r public/ --listen 127.0.0.1:8080```
 Here, an explicit address and port have been assigned for local development. Make sure this port is not in use.
 Your application will now be accessible at: http://127.0.0.1:8080
 
@@ -2637,7 +3269,7 @@ server {
     index index.php;
     location / {
         # Redirect all requests to index.php
-        try_files$uri $uri/ /index.php?$query_string;
+        try_files   $uri $uri/ /index.php?$query_string;
     }
     # Process PHP files with FPM
     location ~ \.php$ {
@@ -2652,17 +3284,18 @@ server {
     }
 }
 ```
+
 After starting the server, you can verify the installation by entering the previously assigned (locally or on a remote server) resource address in the browser's address bar.
 
 -------------------------
 
 # Built-in PHP Web Server
 After installing the HLEB2 framework, you can verify its functionality and settings using the built-in PHP web server.
-Here's a link to the official documentation.
+Here’s a link to the official documentation.
 For Linux, the permissions on resources created by the framework (cache) will be set by the terminal user, so if you have not configured permissions previously, the pages may become inaccessible to another web server afterward.
 Only a complete cache clearance of the framework and routes using console commands can help.
 You can check the framework by executing the following command (from the root directory of the installed project):
-`$ php -S localhost:8000 -t public`
+```$ php -S localhost:8000 -t public```
 Port 8000 may already be in use for localhost, in which case replace it with another free port, such as 8001 or 8002.
 Since the public folder (unless you changed its name earlier) is the public directory of the project, after executing this command, the welcome page of the framework will be accessible at http://localhost:8000.
 The built-in PHP web server does not support full server functionalities and should not be used on public networks.
@@ -2676,36 +3309,61 @@ It supports xDebug and its alternatives, as well as profiling and monitoring too
 For more details, refer to the documentation of RoadRunner.
 To install the server resources for RoadRunner, use the official repository: github.com/roadrunner-server/roadrunner.
 For RoadRunner, you will need to modify the file /public/index.php so that the HLEB2 framework operates in a loop.
-Here's a basic working example:
+Here’s a basic working example:
+```
+<?php
+// File /public/index.php
+use Spiral\RoadRunner;
+use Nyholm\Psr7;
+ini_set('display_errors', 'stderr');
+include __DIR__ . "/../vendor/autoload.php";
+$worker = RoadRunner\Worker::create();
+$psrFactory = new Psr7\Factory\Psr17Factory();
+$psr7 = new RoadRunner\Http\PSR7Worker($worker, $psrFactory, $psrFactory, $psrFactory);
+// Framework initialization outside the loop.
+$framework = new Hleb\HlebAsyncBootstrap(__DIR__);
+while ($request = $psr7->waitRequest()) {
+    try {
+        // Getting an object with a response.
+        $response = $framework->load($request)->getResponse();
+        // Convert the framework response to a handler format.
+        $psr7->respond(new Psr7\Response(...$response->getArgs()));
+    } catch (\Throwable $e) {
+        $psr7->respond(new Psr7\Response(500, [], 'Something Went Wrong!'));
+        $framework->errorLog($e);
+    }
+}
+```
 For RoadRunner, you also need to create a configuration file .rr.yaml in the root directory of the project (assuming the compiled server file named rr is located there).
 An example of a minimal working configuration in .rr.yaml:
 ```
 version: '3'
 server:
-command: 'php ./public/index.php'
+    command: 'php ./public/index.php'
 http:
-address: :8088
-middleware:
-- gzip
-- static
-static:
-dir: public
-forbid:
-- .php
-- .htaccess
-pool:
-num_workers: 6
-max_jobs: 64
-debug: false
-supervisor:
-max_worker_memory: 5
+    address: :8088
+    middleware:
+        - gzip
+        - static
+    static:
+        dir: public
+        forbid:
+            - .php
+            - .htaccess
+    pool:
+        num_workers: 6
+        max_jobs: 64
+        debug: false
+        supervisor:
+            max_worker_memory: 5
 metrics:
-address: '127.0.0.1:2113'
+    address: '127.0.0.1:2113'
 ```
+
 In this configuration, RoadRunner limits the operation of a single process (worker) by the maximum allowable memory setting: http.pool.supervisor.max_worker_memory in megabytes.
 Therefore, if the process exceeds this limit, RoadRunner properly terminates it and proceeds to the next one.
 The RoadRunner server is started with the console command:
-`$ ./rr serve`
+```$ ./rr serve```
 According to the configuration, the application will be accessible at the address: http://localhost:8088
 Server metrics in Prometheus format: http://localhost:2113
 
@@ -2721,20 +3379,15 @@ A basic working example:
 ```
 <?php
 // File /public/index.php
-
 // use Swoole\Http\{Request, Response, Server};
 use OpenSwoole\Http\{Request, Response, Server};
-
 include __DIR__ . "/../vendor/autoload.php";
-
 $http = new Server('127.0.0.1', 9504);
 $http->set([
     'log_file' => '/dev/stdout'
 ]);
-
 // Framework initialization outside the loop.
 $framework = new Hleb\HlebAsyncBootstrap(__DIR__);
-
 $http->on('request', function ($request, Response $response) use ($framework) {
     // Getting an object with a response.
     $res = $framework->load($request)->getResponse();
@@ -2744,12 +3397,10 @@ $http->on('request', function ($request, Response $response) use ($framework) {
     $response->status($res->getStatus(), (string)$res->getReason());
     $response->end($res->getBody());
 });
-
 $http->start();
 ```
-
 The Swoole server is started with the console command:
-`$ php ./public/index.php`
+```$ php ./public/index.php```
 According to the configuration, the application will be accessible at the address: http://localhost:9504
 
 -------------------------
@@ -2763,11 +3414,40 @@ The workers are standard CRON-like processes, which are now available on practic
 The difference in configuring these workers lies only in the designs of hosting providers' admin panels.
 To use WebRotor, you will need to modify the /public_html/index.php file (which is the presumed path to the index file on shared hosting) so that the HLEB2 framework runs in a loop.
 Here is a basic working example:
+```
+<?php
+// File /public_html/index.php
+use Phphleb\Webrotor\Config;
+use Phphleb\Webrotor\Src\Handler\NyholmPsr7Creator;
+use Phphleb\Webrotor\WebRotor;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+include __DIR__ . "/../vendor/autoload.php";
+$psr7Creator = new NyholmPsr7Creator(); // or GuzzlePsr7Creator()
+$config = new Config();
+$config->logLevel = 'warning';
+$config->workerNum = 2; // Must correspond to the number of workers
+$config->workerLifetimeSec = 120; // Must correspond to the worker launch interval
+$config->runtimeDirectory = __DIR__ . '/../storage/wr-runtime';
+$config->logDirectory = __DIR__ . '/../storage/wr-logs';
+$server = new WebRotor($config);
+$server->init($psr7Creator);
+// Framework initialization outside the loop.
+$framework = new Hleb\HlebAsyncBootstrap(__DIR__);
+$server->run(function(ServerRequestInterface $request, ResponseInterface $response) use ($framework) {
+    $res = $framework->load($request)->getResponse();
+    $response->getBody()->write($res->getBody());
+    foreach($res->getHeaders() as $name => $header) {
+        $response = $response->withHeader($name, $header);
+    }
+    return $response->withStatus($res->getStatus());
+});
+```
 This code uses the HTTP client libraries nyholm/psr7 and nyholm/psr7-server, which need to be installed additionally.
 To complete this configuration, you will also need to launch "workers" on your hosting. These are essentially the CRON-like processes provided by the hosting service.
 Typically, they are configured in the hosting admin panel, and while the design of the panel can vary, the principle remains the same. You need to launch two handlers at a two-minute interval (as shown in the settings above):
-`*/2 * * * * /usr/local/bin/php7.2 /my-project/public_html/index.php --id=1`
-`*/2 * * * * /usr/local/bin/php7.2 /my-project/public_html/index.php --id=2`
+```*/2 * * * * /usr/local/bin/php7.2 /my-project/public_html/index.php --id=1```
+```*/2 * * * * /usr/local/bin/php7.2 /my-project/public_html/index.php --id=2```
 These two processes differ only in the ID number for the workers. After this, all requests coming to the application will be handled by two asynchronous workers.
 For more details, refer to the library documentation: github.com/phphleb/webrotor
 For local development, you can avoid running workers, as requests will be processed in the usual manner if they are not running or inactive.
@@ -2801,7 +3481,7 @@ $server->onMessage = function (TcpConnection $connection, $request) use ($framew
 Worker::runAll();
 ```
 The Workerman server is started with the following console command:
-`$ php ./public/index.php start`
+```$ php ./public/index.php start```
 According to the specified settings, the application will be available at: http://127.0.0.1:2345
 
 -------------------------
@@ -2816,9 +3496,22 @@ It is best used for static site pages, where changes are infrequent and in areas
 ## Function insertCacheTemplate()
 This function is similar to insertTemplate(), but includes an additional argument sec, where you can specify the duration in seconds to set caching.
 After this period expires, the next request to the template will refresh it in the cache for the same number of seconds (one minute in the example).
+```
+<?php
+// File /resources/views/example.php
+insertCacheTemplate('resource/page', sec: 60);
+```
 Care should be taken with the data that enters the cached template and also with data that might be obtained within the template from external sources.
 In the first case, a new cache will be created based on the hash of changed data, leading to increased disk space usage by cached data.
 In the second case, the data will not change and will remain in the cache from the moment it was refreshed.
+```
+<?php
+// File /resources/views/example.php
+/**
+ * @var ?int $userId
+ */
+insertCacheTemplate('resource/page', ['id' => $userId], 60);
+```
 In the example, a separate hash will be created for each different user ID upon request, and for the value NULL, another cache variant will be returned.
 When in doubt about the appropriateness of template caching, it's better not to do it.
 
@@ -2837,6 +3530,30 @@ Code parts in included files from the /resources/views/ directory can be repetit
 To extract them into a separate template, independent of the surrounding content, use the function insertTemplate(), with the first argument specifying the template name from the /resources/views/ folder, and the second specifying an array of variables that will be available in the template by array keys.
 To differentiate templates from other files, it's recommended to place them in a separate /templates/ folder.
 Example of how another template /resources/views/templates/counter.php is inserted into the template /resources/views/content.php, using part of the data from the first.
+```
+<?php
+// File /resources/views/content.php
+/**
+ * @var $title string
+ * @var $total int
+ * @var $unique int
+ */
+echo "<h1>$title</h1>";
+insertTemplate('templates/counter', ['totalVisitors' => $total, 'uniqueVisitors' => $unique]);
+```
+```
+<?php
+// File /resources/views/templates/counter.php
+/**
+ * @var $totalVisitors int
+ * @var $uniqueVisitors int
+ */
+?>
+<div class="metrics">
+    <div>Total: <?= $totalVisitors; ?></div>
+    <div>Unique: <?= $uniqueVisitors; ?></div>
+</div>
+```
 ## Function template()
 The helper function template() is similar to insertTemplate(), but it returns the template content as a string representation, instead of outputting it at the place where it is defined.
 
@@ -2847,7 +3564,7 @@ The Twig templating engine is quite well-known in its field and is used by defau
 It can be used as a replacement for the standard templates in the HLEB2 framework.
 ## Integrating TWIG
 Using Composer:
-`$ composer require "twig/twig:^3.0"`
+```$ composer require "twig/twig:^3.0"```
 ## Using TWIG
 When assigning a template in the view() function, you need to specify the .twig extension for Twig templates.
 The parameters from this function will be passed as variables to the Twig template in a similar manner.
@@ -2861,10 +3578,10 @@ The Twig templating engine is distributed under the BSD 3-Clause license, which 
 # Framework Setup
 After installing the project, you need to configure the framework itself.
 In the previous step, the project was installed in the new_project directory (or any other directory name you chose), to execute the following console commands, you need to navigate to this directory:
-`$ cd new_project`
+```$ cd new_project```
 The example provided may differ for various console environments.
 It is assumed that all console commands in the documentation are run from this root project directory unless otherwise specified.
-If the application is running on a host where the framework's console commands are not available, they can be executed via the framework's special Web Console.
+If the application is running on a host where the framework’s console commands are not available, they can be executed via the framework’s special Web Console.
 ## Access Rights Configuration in Linux
 By default, in DEBUG mode, this permission setting is not necessary, and hosting usually provides advanced permissions, so if the project is in development mode or on a hosting, this step can be skipped.
 After installing the HLEB2 framework on Linux, it is necessary to configure permissions.
@@ -2873,17 +3590,17 @@ Next, here's how you can set extended edit permissions for files in the project'
 The web server may be named www-data, and its group may be named the same www-data.
 When running the framework, if the permissions are not yet set, an error will be displayed attempting to determine the active web server's name and group.
 To allow new files created by the web server to be editable via the console by the current user, add the user to the web server group:
-`$ sudo usermod -aG www-data ${USER}`
+```$ sudo usermod -aG www-data ${USER}```
 After these group changes, to apply them, you need to log out and log back into the system as this user, or run the following command:
-`$ su - ${USER}`
+```$ su - ${USER}```
 The next check should display 'www-data' in the group list:
-`$ id -nG`
+```$ id -nG```
 Then, extend permissions on the /storage/ directory for the group (from the root directory of the project).
-`$ sudo chmod -R 750 ./ ; sudo chmod -R 770 ./storage`
+```$ sudo chmod -R 750 ./ ; sudo chmod -R 770 ./storage```
 ## Auto-configuration via Console Command
 After setting permissions, if needed, you can use the framework's own console commands.
 If the project was installed not via Composer, which should have executed this script automatically (and then removed it), run the command manually:
-`$ php console project-setup-task`
+```$ php console project-setup-task```
 This action will perform several minor optimizations of the project that do not directly affect its operability.
 ## Project Settings
 The /config/ directory is often used to store the project's settings.
@@ -2894,7 +3611,7 @@ The 'start.unixtime' parameter under the settings name 'common' contains the UNI
 This parameter remains constant throughout the request.
 ## Class Autoloading
 A universal class autoloader is provided alongside Composer, and its use is preferred.
-If a file (class) is not found, an attempt will be made to load it with the framework`s auxiliary autoloader, which follows PSR-0 naming conventions and works independently of Composer.
+If a file (class) is not found, an attempt will be made to load it with the framework’s auxiliary autoloader, which follows PSR-0 naming conventions and works independently of Composer.
 For instance, for the framework's autoloader, the class App\Controllers\ExampleController should correspond to the file /app/Controllers/ExampleController.php in the project.
 # Optimization
 ## Class Preloading in OPcache
