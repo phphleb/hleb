@@ -160,6 +160,14 @@ final class ProjectLoader
     private static function createSimpleCacheData(string $value, string $contentType, bool $isSimple = true): array
     {
         $length = (string)strlen($value);
+
+        if (!SystemSettings::isAsync()) {
+            echo $value;
+            header('Content-Type: ' . $contentType);
+            header('Content-Length: ' . $length);
+            header('Connection: close');
+            exit();
+        }
         Response::addToBody($value);
         Response::addHeaders([
             'Content-Type'   => $contentType,
@@ -167,7 +175,7 @@ final class ProjectLoader
             'Connection'     => 'close',
         ]);
 
-        if ($isSimple && SystemSettings::isAsync()) {
+        if ($isSimple) {
             return [
                 'id' => DynamicParams::addressAsString(true),
                 'value' => $value,
