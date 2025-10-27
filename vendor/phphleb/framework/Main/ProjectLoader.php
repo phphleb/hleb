@@ -161,7 +161,7 @@ final class ProjectLoader
     {
         $length = (string)strlen($value);
 
-        if (!SystemSettings::isAsync()) {
+        if (!SystemSettings::isAsync() && SystemSettings::getSystemValue('classes.preload') === false) {
             echo $value;
             header('Content-Type: ' . $contentType);
             header('Content-Length: ' . $length);
@@ -175,7 +175,7 @@ final class ProjectLoader
             'Connection'     => 'close',
         ]);
 
-        if ($isSimple) {
+        if ($isSimple && SystemSettings::isAsync()) {
             return [
                 'id' => DynamicParams::addressAsString(true),
                 'value' => $value,
