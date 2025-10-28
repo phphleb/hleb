@@ -109,7 +109,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.10');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.11');
 
         $this->logger = $logger;
 
@@ -833,6 +833,8 @@ class HlebBootstrap
         $this->vendorDirectory = \rtrim($this->searchVendorDirectory(), '/\\');
 
         $this->initConfig($config);
+        $this->skipInitializationIfNeeded();
+        
         if ($this->config['common']['config.debug'] ?? null) {
             \defined('HLEB_STRICT_UMASK') or @\umask(0000);
         }
@@ -980,6 +982,16 @@ class HlebBootstrap
             return;
         }
         async_exit('', 301, \array_merge(Response::getHeaders(), ['Location' => $urlValidator->getResultUrl()]));
+    }
+
+    private function skipInitializationIfNeeded(): void
+    {
+        if ($this->mode === self::STANDARD_MODE
+            && ($this->config['system']['classes.preload'] ?? null) === false
+            && ($_SERVER['REQUEST_URI'] ?? '') === '/'
+        ) {
+            \hl_standard_response();
+        }
     }
 
     /**
