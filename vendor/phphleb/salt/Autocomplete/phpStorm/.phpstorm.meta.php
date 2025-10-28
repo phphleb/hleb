@@ -6,8 +6,10 @@ namespace PHPSTORM_META {
         'common', 'database', 'main', 'system',
     );
     expectedArguments(\hl_config(), 0, argumentsSet('phphleb_config_schemes'));
+    expectedArguments(\config(), 0, argumentsSet('phphleb_config_schemes'));
     expectedArguments(\Hleb\Static\Settings::getParam(), 0, argumentsSet('phphleb_config_schemes'));
     expectedArguments(\Hleb\Reference\SettingInterface::getParam(), 0, argumentsSet('phphleb_config_schemes'));
+    expectedArguments(\Hleb\Reference\Interface\Setting::getParam(), 0, argumentsSet('phphleb_config_schemes'));
 
     registerArgumentsSet('phphleb_http_code_schemes',
         100, 101, 102,
@@ -21,6 +23,7 @@ namespace PHPSTORM_META {
     expectedArguments(\hl_redirect(), 1, argumentsSet('phphleb_http_code_schemes'));
     expectedArguments(\Hleb\Static\Redirect::to() , 1, argumentsSet('phphleb_http_code_schemes'));
     expectedArguments(\Hleb\Reference\RedirectInterface::to() , 1, argumentsSet('phphleb_http_code_schemes'));
+    expectedArguments(\Hleb\Reference\Interface\Redirect::to() , 1, argumentsSet('phphleb_http_code_schemes'));
 
     expectedArguments(\view(), 2, argumentsSet('phphleb_http_code_schemes'));
     expectedArguments(\Hleb\Static\View::view() , 2, argumentsSet('phphleb_http_code_schemes'));
@@ -57,10 +60,16 @@ namespace PHPSTORM_META {
     expectedArguments(\Hleb\Static\Path::isDir(), 0, argumentsSet('phphleb_special_path_schemes'));
     expectedArguments(\Hleb\Reference\PathInterface::isDir(), 0, argumentsSet('phphleb_special_path_schemes'));
 
+    expectedArguments(\hl_realpath(), 0, argumentsSet('phphleb_special_path_schemes'));
+    expectedArguments(\Hleb\Static\Path::getReal(), 0, argumentsSet('phphleb_special_path_schemes'));
+    expectedArguments(\Hleb\Reference\PathInterface::getReal(), 0, argumentsSet('phphleb_special_path_schemes'));
     expectedArguments(\Hleb\Static\Settings::getRealPath(), 0, argumentsSet('phphleb_special_path_schemes'));
     expectedArguments(\Hleb\Reference\SettingInterface::getRealPath(), 0, argumentsSet('phphleb_special_path_schemes'));
     expectedArguments(\Hleb\Reference\SettingReference::getRealPath(), 0, argumentsSet('phphleb_special_path_schemes'));
 
+    expectedArguments(\hl_path(), 0, argumentsSet('phphleb_special_path_schemes'));
+    expectedArguments(\Hleb\Static\Path::get(), 0, argumentsSet('phphleb_special_path_schemes'));
+    expectedArguments(\Hleb\Reference\PathInterface::get(), 0, argumentsSet('phphleb_special_path_schemes'));
     expectedArguments(\Hleb\Static\Settings::getPath(), 0, argumentsSet('phphleb_special_path_schemes'));
     expectedArguments(\Hleb\Reference\SettingInterface::getPath(), 0, argumentsSet('phphleb_special_path_schemes'));
     expectedArguments(\Hleb\Reference\SettingReference::getPath(), 0, argumentsSet('phphleb_special_path_schemes'));
@@ -89,10 +98,12 @@ namespace PHPSTORM_META {
     expectedArguments(\Hleb\Reference\RequestInterface::isMethod(), 0, argumentsSet('phphleb_http_method_schemes'));
     expectedArguments(\Hleb\Reference\RequestReference::isMethod(), 0, argumentsSet('phphleb_http_method_schemes'));
 
+    expectedArguments(\url(), 3, argumentsSet('phphleb_http_method_schemes'));
     expectedArguments(\Hleb\Static\Route::url(), 3, argumentsSet('phphleb_http_method_schemes'));
     expectedArguments(\Hleb\Reference\RouteInterface::url(), 3, argumentsSet('phphleb_http_method_schemes'));
     expectedArguments(\Hleb\Reference\RouteReference::url(), 3, argumentsSet('phphleb_http_method_schemes'));
 
+    expectedArguments(\address(), 3, argumentsSet('phphleb_http_method_schemes'));
     expectedArguments(\Hleb\Static\Route::address(), 3, argumentsSet('phphleb_http_method_schemes'));
     expectedArguments(\Hleb\Reference\RouteInterface::address(), 3, argumentsSet('phphleb_http_method_schemes'));
     expectedArguments(\Hleb\Reference\RouteReference::address(), 3, argumentsSet('phphleb_http_method_schemes'));

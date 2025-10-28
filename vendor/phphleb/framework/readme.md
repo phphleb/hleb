@@ -3,8 +3,9 @@ Engine for PHP Framework HLEB2
 
 ![HLEB2](https://img.shields.io/badge/HLEB-2-darkcyan)
 ![PHP](https://img.shields.io/badge/PHP-^8.2-blue)
+[![Total Downloads](https://poser.pugx.org/phphleb/framework/downloads)](https://packagist.org/packages/phphleb/framework)
 [![License: MIT](https://img.shields.io/badge/License-MIT%20(Free)-brightgreen.svg)](https://github.com/phphleb/hleb/blob/master/LICENSE)
-[![build](https://github.com/phphleb/framework/actions/workflows/build.yml/badge.svg?event=push)](https://github.com/phphleb/framework/actions/workflows/build.yml)
+[![tests](https://github.com/phphleb/framework/actions/workflows/tests.yml/badge.svg?event=push)](https://github.com/phphleb/framework/actions/workflows/tests.yml)
 
 If you need to install the framework, use the link: [github.com/phphleb/hleb](https://github.com/phphleb/hleb)
 
@@ -16,3 +17,5 @@ At the same time, it solves typical tasks, such as routing, shifting actions to 
 📄 [**Pull Request Template**](https://github.com/phphleb/framework/blob/master/.github/PULL_REQUEST_TEMPLATE.md)
 
 📄 [**Security Info**](https://github.com/phphleb/framework/blob/master/.github/SECURITY.md)
+
+Technical instructions for the LLM are located in the file processme.md
