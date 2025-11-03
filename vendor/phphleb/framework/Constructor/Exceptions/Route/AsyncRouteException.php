@@ -94,6 +94,8 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
 
     final public const HL41_ERROR = 'HL41_ERROR';
 
+    final public const HL42_ERROR = 'HL42_ERROR';
+
     private const ALL = [
         self::HL00_ERROR => [
             'en' => 'Sample error output number %value%',
@@ -266,6 +268,10 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
         self::HL41_ERROR => [
             'en' => 'Error in creating routes. No route alias found for `%target%` >>> `%origin%`.',
             'ru' => 'Ошибка составления маршрутов. Не найден алиас маршрута для `%target%` >>> `%origin%`.'
+        ],
+        self::HL42_ERROR => [
+            'en' => 'Error in creating routes. Class `%class%` not found.',
+            'ru' => 'Ошибка составления маршрутов. Не найден класс `%class%`.'
         ],
     ];
 

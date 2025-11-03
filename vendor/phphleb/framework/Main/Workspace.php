@@ -159,8 +159,11 @@ final class Workspace
                 continue;
             }
             DynamicParams::setControllerRelatedData($middleware['related-data']);
+            if (!\class_exists($initiator) ) {
+                $this->error(AsyncRouteException::HL42_ERROR, ['class' => $initiator]);
+            }
             $refConstruct = new ReflectionMethod($initiator, '__construct');
-            if (\class_exists($initiator) && \is_callable([$initiatorObject = new $initiator(
+            if (\is_callable([$initiatorObject = new $initiator(
                     ...($refConstruct->countArgs() > 1 ? DependencyInjection::prepare($refConstruct) : [])
                 ), $method])) {
 

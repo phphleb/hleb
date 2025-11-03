@@ -117,8 +117,10 @@ abstract class StandardRoute
     protected function searchClassAndMethod(string $target, ?string $baseMethod): array
     {
         $class = $target;
-        $method = 'index';
-        if ($baseMethod) {
+
+        if (\is_null($baseMethod)) {
+            $method = 'index';
+        } else {
             $method = $baseMethod;
         }
         $parts = \explode('@', $target);
