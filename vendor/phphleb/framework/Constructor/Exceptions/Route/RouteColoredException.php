@@ -27,13 +27,14 @@ class RouteColoredException extends AsyncRouteException
         $brColor = '#CC9966';
         $bgColor = 'seashell';
         $c = '';
+        $code = $this->location;
 
         if ($this->isDebug) {
             $c = PHP_EOL . '<div>' . PHP_EOL;
             $c .= '<font size="5" face="Arial">' . PHP_EOL;
             $c .= "<table width='100%' border='1' cellspacing='0' cellpadding='5' bordercolor='$brColor' bgcolor='$bgColor'>";
             $c .= PHP_EOL;
-            $count = \count($this->errorInfo);
+            $count = \count($this->errorInfo) + 1;
             $link = "<b>{$this->tag}</b>";
 
             foreach ($this->errorInfo as $key => $value) {
@@ -48,9 +49,12 @@ class RouteColoredException extends AsyncRouteException
                 $c .= \str_repeat(' ', 4) . "</tr>" . PHP_EOL;
                 $link = '';
             }
+            if ($code) {
+                $c .= "<td>File</td><td>{$code}</td>"  . PHP_EOL;
+            }
             $c .= "</table>" . PHP_EOL;
-            $c .= "</font>" . PHP_EOL;
             $c .= "</div>" . PHP_EOL;
+            $c .= "</font>" . PHP_EOL;
         }
         return $c;
     }

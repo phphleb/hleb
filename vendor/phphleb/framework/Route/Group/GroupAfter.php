@@ -28,6 +28,7 @@ final class GroupAfter extends StandardRoute
             'class-method' => $method,
             'from-group' => true,
             'related-data' => $data,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

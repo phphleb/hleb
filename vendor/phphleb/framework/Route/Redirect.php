@@ -32,6 +32,7 @@ final class Redirect extends StandardRoute
             'method' => self::REDIRECT_TYPE,
             'location' => $location,
             'status' => $status,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

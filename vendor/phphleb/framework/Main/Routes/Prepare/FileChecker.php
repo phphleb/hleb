@@ -69,7 +69,7 @@ final readonly class FileChecker
     {
         if ((\str_contains($route['class'], '<') === false) && (\str_contains($route['class'], '[') === false)) {
             if (DynamicParams::isDebug() && !\class_exists($route['class'])) {
-                $this->error(AsyncRouteException::HL35_ERROR, ["class" => "{$route['class']}"]);
+                $this->error(AsyncRouteException::HL35_ERROR, ["class" => "{$route['class']}"], $route['code'] ?? '');
             }
         }
     }
@@ -82,12 +82,12 @@ final readonly class FileChecker
         $this->checkController($route);
         $name = $route['name'];
         if (!$name || !preg_match('/^[A-Za-z0-9\-]+$/', $name)) {
-            $this->error(AsyncRouteException::HL30_ERROR);
+            $this->error(AsyncRouteException::HL30_ERROR, code: $route['code'] ?? '');
         }
         $relPath = "@/config/structure/$name.php";
         $path = SystemSettings::getRealPath($relPath);
         if (!$path || !SystemSettings::getRealPath('@library/adminpan')) {
-            $this->error(AsyncRouteException::HL31_ERROR, ['name' => $name, 'path' => "@/config/structure/$name.php"]);
+            $this->error(AsyncRouteException::HL31_ERROR, ['name' => $name, 'path' => "@/config/structure/$name.php"], $route['code'] ?? '');
         }
     }
 
@@ -97,7 +97,7 @@ final readonly class FileChecker
     private function checkMiddleware(array $route): void
     {
         if (DynamicParams::isDebug() && !\class_exists($route['class'])) {
-            $this->error(AsyncRouteException::HL35_ERROR, ["class" => "{$route['class']}"]);
+            $this->error(AsyncRouteException::HL35_ERROR, ["class" => "{$route['class']}"], $route['code'] ?? '');
         }
     }
 
@@ -115,7 +115,7 @@ final readonly class FileChecker
         }
 
         if (!SystemSettings::getRealPath("@views/$template") && !SystemSettings::getRealPath("@views/$template.php")) {
-            $this->error(AsyncRouteException::HL16_ERROR, ["path" => "@/resources/views/$template", 'method' => $route['name']]);
+            $this->error(AsyncRouteException::HL16_ERROR, ["path" => "@/resources/views/$template", 'method' => $route['name']], $route['code'] ?? '');
         }
     }
 
@@ -127,7 +127,7 @@ final readonly class FileChecker
         $class = $route['class'];
         if ((\str_contains($class, '<') === false) && (\str_contains($class, '[') === false)) {
             if (!\str_starts_with($class, Settings::getParam('system', 'module.namespace'))) {
-                $this->error(AsyncRouteException::HL35_ERROR, ["class" => "$class"]);
+                $this->error(AsyncRouteException::HL35_ERROR, ["class" => "$class"], $route['code'] ?? '');
             }
         }
         $this->checkController($route);
@@ -136,8 +136,10 @@ final readonly class FileChecker
     /**
      * @throws RouteColoredException
      */
-    private function error(string $tag, array $replace = []): void
+    private function error(string $tag, array $replace = [], string $code = ''): void
     {
-        throw (new RouteColoredException($tag))->complete(DynamicParams::isDebug(), $replace);
+        throw (new RouteColoredException($tag))
+            ->addLocation($code)
+            ->complete(DynamicParams::isDebug(), $replace);
     }
 }

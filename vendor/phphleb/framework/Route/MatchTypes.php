@@ -17,7 +17,7 @@ final class MatchTypes extends BaseType
         string                     $route,
         float|View|int|string|null $view = null)
     {
-        parent::__construct($route, $view);
+        parent::__construct($route, $view, 3);
     }
 
     #[\Override]

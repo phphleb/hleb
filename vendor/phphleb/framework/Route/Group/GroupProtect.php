@@ -22,6 +22,7 @@ final class GroupProtect extends StandardRoute
             'method' => self::PROTECT_TYPE,
             'from-group' => true,
             'data' => ['rules' => $rules],
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

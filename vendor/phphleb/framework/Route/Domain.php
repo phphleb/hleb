@@ -41,7 +41,8 @@ final class Domain extends StandardRoute
         $this->register([
             'method' => self::DOMAIN_TYPE,
             'name' => \is_array($part) ? $part : [$part],
-            'level' => $level
+            'level' => $level,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

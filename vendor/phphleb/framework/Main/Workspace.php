@@ -155,15 +155,14 @@ final class Workspace
         foreach ($list as $middleware) {
             $initiator = $middleware['class'];
             $method = $middleware['class-method'];
+            $code = $middleware['code'] ?? '';
+
             if (!$this->checkMethod($initiator, $method)) {
                 continue;
             }
             DynamicParams::setControllerRelatedData($middleware['related-data']);
-            if (!\class_exists($initiator) ) {
-                $this->error(AsyncRouteException::HL42_ERROR, ['class' => $initiator]);
-            }
             $refConstruct = new ReflectionMethod($initiator, '__construct');
-            if (\is_callable([$initiatorObject = new $initiator(
+            if (\class_exists($initiator) && \is_callable([$initiatorObject = new $initiator(
                     ...($refConstruct->countArgs() > 1 ? DependencyInjection::prepare($refConstruct) : [])
                 ), $method])) {
 
@@ -213,7 +212,7 @@ final class Workspace
                     async_exit();
                 }
             } else {
-                $this->error(AsyncRouteException::HL21_ERROR, ['class' => $initiator, 'method' => $method]);
+                $this->error(AsyncRouteException::HL21_ERROR, ['class' => $initiator, 'method' => $method], $code);
             }
         }
         return true;
@@ -225,7 +224,7 @@ final class Workspace
     private function controllerUsage(array $block, array $params, string $event, ?string $type): View|SystemResponse|ResponseInterface|PsrResponseInterface|array|string|bool|int|float
     {
         $controller = $block['controller'] ?? $block['page'];
-        return $this->baseController($controller['class'], $controller['class-method'], $params, $event, $type);
+        return $this->baseController($controller['class'], $controller['class-method'], $params, $event, $type, $controller['code'] ?? '');
     }
 
     /**
@@ -237,7 +236,7 @@ final class Workspace
         $name = $module['name'];
         DynamicParams::setActiveModuleName($name);
 
-        return $this->baseController($module['class'], $module['class-method'], $params, ModuleEvent::class, $name);
+        return $this->baseController($module['class'], $module['class-method'], $params, ModuleEvent::class, $name, $module['code'] ?? '');
     }
 
     /**
@@ -322,6 +321,7 @@ final class Workspace
         array   $params,
         string  $eventClass,
         ?string $type = null,
+        string  $code = '',
     ): View|SystemResponse|ResponseInterface|PsrResponseInterface|array|string|bool|int|float
     {
         // If tags are inserted into the name of the class or method.
@@ -388,11 +388,11 @@ final class Workspace
                                 'class' => $initiator,
                                 'method' => $method,
                                 'cells' => \implode(', ', $errors)
-                            ]);
+                            ], $code);
                         }
                         $data = $refMethod->convertArguments($params, favorites: \array_keys($params));
                     } catch (DynamicStateException) {
-                        $this->error(AsyncRouteException::HL26_ERROR, ['class' => $initiator, 'method' => $method]);
+                        $this->error(AsyncRouteException::HL26_ERROR, ['class' => $initiator, 'method' => $method], $code);
                     }
                     if ($data === false) {
                         throw new CoreProcessException(
@@ -434,15 +434,17 @@ final class Workspace
             return false;
         }
 
-        $this->error(AsyncRouteException::HL21_ERROR, ['class' => $initiator, 'method' => $method]);
+        $this->error(AsyncRouteException::HL21_ERROR, ['class' => $initiator, 'method' => $method], $code);
     }
 
     /**
      * @throws RouteColoredException
      */
-    private function error(string $tag, array $replace = []): void
+    private function error(string $tag, array $replace = [], string $code = ''): void
     {
-        throw (new RouteColoredException($tag))->complete($this->isDebug, $replace);
+        throw (new RouteColoredException($tag))
+            ->addLocation($code)
+            ->complete($this->isDebug, $replace);
     }
 
     /**

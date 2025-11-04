@@ -15,7 +15,9 @@ use Hleb\Helpers\RouteHelper;
 use Hleb\HttpException;
 use Hleb\HttpMethods\External\SystemRequest;
 use Hleb\HttpMethods\Intelligence\Cookies\AsyncCookies;
+use Hleb\Main\BaseErrorPage;
 use Hleb\Main\Routes\Search\RouteAsyncFileManager;
+use Hleb\Main\Workspace;
 use \Hleb\Static\Csrf;
 use Hleb\HttpMethods\Intelligence\AsyncConsolidator;
 use Hleb\HttpMethods\Intelligence\Cookies\StandardCookies;
@@ -163,12 +165,9 @@ final class ProjectLoader
             \hl_standard_response($value, $contentType);
         }
 
-        $length = (string)strlen($value);
-
         Response::addToBody($value);
         Response::addHeaders([
             'Content-Type'   => $contentType,
-            'Content-Length' => $length,
             'Connection'     => 'close',
         ]);
 
@@ -177,7 +176,6 @@ final class ProjectLoader
                 'id' => DynamicParams::addressAsString(true),
                 'value' => $value,
                 'type' => $contentType,
-                'length' => $length,
             ];
         }
         return [];
@@ -430,7 +428,6 @@ final class ProjectLoader
                 Response::addHeaders(['Content-Type' => $cache['type']]);
                 Response::addHeaders([
                     'Content-Type'   => $cache['type'],
-                    'Content-Length' => $cache['length'],
                     'Connection'     => 'close',
                 ]);
                 return true;

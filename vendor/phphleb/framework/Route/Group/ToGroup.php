@@ -22,6 +22,7 @@ final class ToGroup extends StandardRoute
     {
         $this->register([
             'method' => self::TO_GROUP_TYPE,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

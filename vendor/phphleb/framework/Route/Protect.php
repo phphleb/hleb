@@ -40,6 +40,7 @@ final class Protect extends StandardRoute
             'method' => self::PROTECT_TYPE,
             'from-group' => false,
             'data' => ['rules' => $rules],
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

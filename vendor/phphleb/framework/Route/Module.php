@@ -37,6 +37,7 @@ final class Module extends StandardRoute
             'name' => $name,
             'class' => $class,
             'class-method' => $method,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

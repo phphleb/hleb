@@ -24,7 +24,8 @@ final class GroupDomain extends StandardRoute
             'method' => self::DOMAIN_TYPE,
             'name' => \is_array($part) ? $part : [$part],
             'level' => $level,
-            'from-group' => true
+            'from-group' => true,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

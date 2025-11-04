@@ -25,7 +25,8 @@ final class GroupWhere extends StandardRoute
             'data' => [
                 'rules' => $rules,
             ],
-            'from-group' => true
+            'from-group' => true,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

@@ -38,6 +38,7 @@ final class After extends StandardRoute
             'class-method' => $method,
             'from-group' => false,
             'related-data' => $data,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

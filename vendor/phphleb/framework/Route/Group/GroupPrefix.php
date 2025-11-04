@@ -23,7 +23,8 @@ final class GroupPrefix extends StandardRoute
         $this->register([
             'method' => self::PREFIX_TYPE,
             'prefix' => $prefix,
-            'from-group' => true
+            'from-group' => true,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

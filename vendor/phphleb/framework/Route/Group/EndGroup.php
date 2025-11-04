@@ -15,6 +15,7 @@ final class EndGroup extends StandardRoute
     {
         $this->register([
             'method' => self::END_GROUP_TYPE,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

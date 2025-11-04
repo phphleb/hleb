@@ -48,6 +48,7 @@ final class Fallback extends StandardRoute
             'method' => self::ADD_TYPE,
             'name' => $this->methodName(),
             'types' => $types,
+            'code' => $this->getFileAndLineNumber(),
             'data' => [
                 'route' => '*',
                 'view' => $params,

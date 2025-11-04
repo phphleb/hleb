@@ -19,6 +19,7 @@ final class GroupNoDebug extends StandardRoute
         $this->register([
             'method' => self::NO_DEBUG_TYPE,
             'from-group' => true,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

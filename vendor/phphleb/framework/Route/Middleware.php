@@ -38,6 +38,7 @@ final class Middleware extends StandardRoute
             'class-method' => $method,
             'from-group' => false,
             'related-data' => $data,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

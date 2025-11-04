@@ -20,6 +20,7 @@ final class GroupPlain extends StandardRoute
             'method' => self::PLAIN_TYPE,
             'from-group' => true,
             'data' => ['on' => $on],
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

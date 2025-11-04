@@ -38,6 +38,7 @@ final class Plain extends StandardRoute
             'method' => self::PLAIN_TYPE,
             'from-group' => false,
             'data' => ['on' => $on],
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

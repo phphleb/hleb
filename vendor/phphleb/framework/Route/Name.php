@@ -38,7 +38,8 @@ final class Name extends StandardRoute
     {
         $this->register([
             'method' => self::NAME_TYPE,
-            'name' => $name
+            'name' => $name,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

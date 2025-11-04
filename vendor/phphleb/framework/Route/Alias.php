@@ -19,9 +19,10 @@ final class Alias extends StandardRoute
             'name' => $name,
             'new-name' => $newName,
             'types' => $this->types(),
+            'code' => $this->getFileAndLineNumber(),
             'data' => [
                 'route' => $route,
-            ]
+            ],
         ]);
     }
 

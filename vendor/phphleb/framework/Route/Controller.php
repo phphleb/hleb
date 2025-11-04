@@ -36,6 +36,7 @@ final class Controller extends StandardRoute
             'method' => self::CONTROLLER_TYPE,
             'class' => $class,
             'class-method' => $method,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }

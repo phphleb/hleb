@@ -14,9 +14,11 @@ use Hleb\Main\Routes\StandardRoute;
 /**
  * @internal
  */
-final readonly class Verifier
+final class Verifier
 {
-    public function __construct(private array $routes)
+    private string $currentCode = '';
+
+    public function __construct(readonly private array $routes)
     {
     }
 
@@ -34,16 +36,11 @@ final readonly class Verifier
         foreach ($this->routes as $httpMethod => $routes) {
             foreach ($routes as $route) {
                 $searchTypes = HlebBootstrap::HTTP_TYPES;
+                $code = $route['code'] ?? '';
+                $this->currentCode = $code;
                 $all = \strtolower(\implode(', ', $searchTypes));
                 $this->checkAddress($route['full-address']);
                 $this->checkHttpMethods($route['types'], $all);
-                $tags = [];
-                if (\str_contains($route['full-address'], '{')) {
-                    \preg_match_all('/[{]+}/i', $route['full-address'], $tags);
-                    $tags = \array_map(static function ($v) {
-                        return \trim($v, '?}{');
-                    }, $tags[0] ?? []);
-                }
 
                 if (\str_contains($route['full-address'], '...')) {
                     if (\str_contains($route['full-address'], '{') || \str_contains($route['full-address'], '?')) {
@@ -73,6 +70,8 @@ final readonly class Verifier
                 $noDebugCount = 0;
                 foreach ($route['actions'] ?? [] as $action) {
                     $method = $action['method'];
+                    $actionCode = $action['code'] ?? '';
+                    $this->currentCode = $actionCode;
                     if (\in_array($method, [
                         StandardRoute::CONTROLLER_TYPE,
                         StandardRoute::MODULE_TYPE,
@@ -110,17 +109,14 @@ final readonly class Verifier
                         }
                     }
                     if ($method === StandardRoute::WHERE_TYPE) {
-                        $rules = $route['data']['rules'] ?? [];
+                        $rules = $action['data']['rules'] ?? [];
                         foreach ($rules as $key => $rule) {
                             if (!\is_string($key)) {
                                 $this->error(AsyncRouteException::HL05_ERROR);
                             }
-                            if (\in_array($key, $realTagKeys, true) || !\in_array($key, $tags, true)) {
-                                $this->error(AsyncRouteException::HL06_ERROR);
-                            }
                             // Check if the passed regular expression is valid.
                             // Проверка на валидность переданного регулярного выражения.
-                            if (\preg_match($rule, '') === false && \preg_match("/$rule/", '') === false) {
+                            if (@\preg_match($rule, '') === false && @\preg_match("/$rule/", '') === false) {
                                 $this->error(AsyncRouteException::HL07_ERROR);
                             }
                             $realTagKeys[] = $key;
@@ -145,14 +141,14 @@ final readonly class Verifier
                         $nameCount++;
                     }
                 }
+
+                $this->currentCode = $code;
+
                 if ($pageCount && !$nameCount) {
                     $this->error(AsyncRouteException::HL29_ERROR);
                 }
                 if ($protectCount && $plainCount) {
                     $this->error(AsyncRouteException::HL34_ERROR);
-                }
-                if (\count($realTagKeys) > \count($tags)) {
-                    $this->error(AsyncRouteException::HL05_ERROR);
                 }
                 if ($controllerCount > 1) {
                     $this->error(AsyncRouteException::HL11_ERROR, ['method' => $route['name']]);
@@ -295,7 +291,9 @@ final readonly class Verifier
      */
     private function error(string $tag, array $replace = []): void
     {
-        throw (new RouteColoredException($tag))->complete(DynamicParams::isDebug(), $replace);
+        throw (new RouteColoredException($tag))
+            ->addLocation($this->currentCode)
+            ->complete(DynamicParams::isDebug(), $replace);
     }
 
 }
