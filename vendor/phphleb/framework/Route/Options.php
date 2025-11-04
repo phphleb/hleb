@@ -13,7 +13,7 @@ final class Options extends BaseType
 {
     public function __construct(string $route)
     {
-        parent::__construct($route);
+        parent::__construct($route, codeLevel: 3);
     }
 
     #[\Override]

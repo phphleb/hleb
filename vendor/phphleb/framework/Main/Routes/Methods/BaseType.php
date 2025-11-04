@@ -15,7 +15,7 @@ abstract class BaseType extends StandardRoute
 {
     use StandardTrait;
 
-    public function __construct(string $route, null|int|float|string|View $view = null)
+    public function __construct(string $route, null|int|float|string|View $view = null, int $codeLevel = 2)
     {
         $params = null;
         if ($view instanceof View) {
@@ -43,7 +43,7 @@ abstract class BaseType extends StandardRoute
             'name' => $this->methodName(),
             'types' => $types,
             'data' => $data,
-            'code' => $this->getFileAndLineNumber(),
+            'code' => $this->getFileAndLineNumber($codeLevel),
         ]);
     }
 
