@@ -43,6 +43,7 @@ abstract class BaseType extends StandardRoute
             'name' => $this->methodName(),
             'types' => $types,
             'data' => $data,
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 
