@@ -298,7 +298,8 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
         $this->isDebug = $isDebug;
         $this->setReplacements(\array_map('_e', $replacements));
         if ($sendToLog) {
-            Log::error( $this->tag . ': ' . $this->errorInfo['en']);
+            $file = $this->location ? ' File ' . $this->location : '';
+            Log::error( $this->tag . ': ' . $this->errorInfo['en'] . $file);
         }
 
         return $this;
