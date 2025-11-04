@@ -40,7 +40,8 @@ final class Where extends StandardRoute
             'method' => self::WHERE_TYPE,
             'data' => [
                 'rules' => $rules,
-            ]
+            ],
+            'code' => $this->getFileAndLineNumber(),
         ]);
     }
 }
