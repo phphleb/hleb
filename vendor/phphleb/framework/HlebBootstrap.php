@@ -109,11 +109,11 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.12');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.13');
 
         $this->logger = $logger;
 
-        $this->mode === self::STANDARD_MODE and $this->skipInitializationIfNeeded($config);
+        $this->mode === self::STANDARD_MODE and $this->switchInit($config);
 
         // Register an error handler.
         // Регистрация обработчика ошибок.
@@ -1001,7 +1001,7 @@ class HlebBootstrap
      *
      * @link https://github.com/the-benchmarker/web-frameworks/issues/8647
      */
-    protected function skipInitializationIfNeeded(array $config): void
+    protected function switchInit(array $config): void
     {
         if ($config && ($config['system']['classes.preload'] ?? null) === false) {
             $output = '';

@@ -105,7 +105,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
         \ob_start();
         try {
             try {
-                $this->skipInitializationIfNeeded($this->config, $request);
+                $this->switchInit($this->config, $request);
 
                 $this->loadProject($request);
 
@@ -471,7 +471,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
     /**
      * @inheritDoc 
      */
-    protected function skipInitializationIfNeeded(array $config, ?object $request = null): void
+    protected function switchInit(array $config, ?object $request = null): void
     {
         if ($config && $request && ($config['system']['classes.preload'] ?? null) === false) {
             $connection = \strtolower($request->getHeaderLine('Connection') ?: 'close');
