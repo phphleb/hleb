@@ -23,9 +23,11 @@ class AsyncExitException extends \ErrorException
     private array $headers = [];
 
     /**
-     * Sets the HTTP status for the exception.
+     * Returns the previously set HTTP status.
      *
-     * Устанавливает HTTP-статус для исключения.
+     * Возвращает ранее установленный HTTP-статус.
+     *
+     * @internal
      */
     public function getStatus(): int
     {
@@ -33,11 +35,9 @@ class AsyncExitException extends \ErrorException
     }
 
     /**
-     * Returns the previously set HTTP status.
+     * Sets the HTTP status for the exception.
      *
-     * Возвращает ранее установленный HTTP-статус.
-     *
-     * @internal
+     * Устанавливает HTTP-статус для исключения.
      */
     public function setStatus(int $status): self
     {

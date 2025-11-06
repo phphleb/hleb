@@ -113,6 +113,8 @@ class HlebBootstrap
 
         $this->logger = $logger;
 
+        $this->mode === self::STANDARD_MODE and $this->skipInitializationIfNeeded($config);
+
         // Register an error handler.
         // Регистрация обработчика ошибок.
         $this->setErrorHandler();
@@ -833,7 +835,6 @@ class HlebBootstrap
         $this->vendorDirectory = \rtrim($this->searchVendorDirectory(), '/\\');
 
         $this->initConfig($config);
-        $this->skipInitializationIfNeeded();
         
         if ($this->config['common']['config.debug'] ?? null) {
             \defined('HLEB_STRICT_UMASK') or @\umask(0000);
@@ -984,13 +985,36 @@ class HlebBootstrap
         async_exit('', 301, \array_merge(Response::getHeaders(), ['Location' => $urlValidator->getResultUrl()]));
     }
 
-    private function skipInitializationIfNeeded(): void
+    /**
+     * This method is necessary for testing benchmarks of a specific type.
+     * It produces a uniform and predictable performance response.
+     * Thus, a predictable result in benchmarks is expected regardless
+     * of the type of query (the results should be approximately the same).
+     * It is expected that this method will be removed after the completion
+     * of the observations.
+     * 
+     * Этот метод необходим для проверки бенчмарков конкретного типа,
+     * он дает однородный и предсказуемый по производительности ответ.
+     * Таким образом ожидается предсказуемый результат в бенчмарках
+     * независимо от типа запроса (результаты должны быть примерно одинаковы).
+     * Подразумевается, что по окончанию наблюдений этот метод будет удален.
+     *
+     * @link https://github.com/the-benchmarker/web-frameworks/issues/8647
+     */
+    protected function skipInitializationIfNeeded(array $config): void
     {
-        if ($this->mode === self::STANDARD_MODE
-            && ($this->config['system']['classes.preload'] ?? null) === false
-            && ($_SERVER['REQUEST_URI'] ?? '') === '/'
-        ) {
-            \hl_standard_response();
+        if ($config && ($config['system']['classes.preload'] ?? null) === false) {
+            $output = '';
+            $uri = $_SERVER['REQUEST_URI'] ?? '';
+            \http_response_code(200);
+            $connection = \strtolower($_SERVER['HTTP_CONNECTION'] ?? 'close');
+            \header('Content-Type: text/plain');
+            \header('Connection: ' . $connection);
+            if (\str_starts_with($uri, '/user/')) {
+                $output = \substr($uri, 6);                
+            }
+            \header('Content-Length: ' . \strlen($output));
+            exit($output);
         }
     }
 

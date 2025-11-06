@@ -39,8 +39,6 @@ use App\Middlewares\Hlogin\Registrar;
  */
 final class ProjectLoader
 {
-    private static array $cachePlainRoutes = [];
-
     private static ?bool $kernelEventExists = null;
 
     /**
@@ -53,7 +51,7 @@ final class ProjectLoader
     public static function init(): void
     {
         /** @see hl_check() - ProjectLoader start */
-        if (self::cachePlainRoutes() || self::insertServiceResource()) {
+        if (self::insertServiceResource()) {
             return;
         }
         /** @see hl_check() - insertServiceResource worked */
@@ -103,24 +101,27 @@ final class ProjectLoader
 
     /**
      * Outputting the value from the route with the assignment of headers.
-     * Returns the matched data for caching.
      *
      * Вывод значения из маршрута c назначением заголовков.
-     * Возвращает совпавшие данные для кеширования.
      *
      * @internal
      */
-    public static function renderSimpleValue(string $value, string $address): array
+    public static function renderSimpleValue(string $value, string $address): void
     {
-        $isSimple = false;
         $contentType = 'text/plain';
+        $connection = \strtolower($_SERVER['HTTP_CONNECTION'] ?? 'close');
         if (\str_starts_with($value, \Functions::PREVIEW_TAG)) {
             $value = \substr($value, \strlen(\Functions::PREVIEW_TAG));
             $replacements = [];
             if ($hasKeyReplacement = \str_contains($value, '{%')) {
                 foreach (DynamicParams::getDynamicUriParams() as $key => $param) {
                     if ("{%$key%}" === $value) {
-                        return self::createSimpleCacheData($param, $contentType);
+                        Response::addToBody($param);
+                        Response::addHeaders([
+                            'Content-Type'   => $contentType,
+                            'Connection'     => $connection,
+                        ]);
+                        return;
                     }
                     $replacements["{%$key%}"] = (string)$param;
                 }
@@ -138,49 +139,22 @@ final class ProjectLoader
                     $replacements['{{route}}'] = $address;
                 }
             }
-            if (!$hasKeyReplacement && !$hasIp) {
-                $isSimple = true;
-            }
             if ($replacements) {
                 $value = \strtr($value, $replacements);
             }
-        } else {
-            $isSimple = true;
         }
-        if (\str_starts_with($value, '{') && \str_ends_with($value, '}')) {
+        if (\str_starts_with($value, '{')
+            && \str_ends_with($value, '}')
+            && \json_validate($value)
+        ) {
             $contentType = 'application/json';
         }
-
-        return self::createSimpleCacheData($value, $contentType, $isSimple);
-    }
-
-    /**
-     * Transformation of final data into framework format.
-     *
-     * Преобразование конечных данных в формат фреймворка.
-     */
-    private static function createSimpleCacheData(string $value, string $contentType, bool $isSimple = true): array
-    {
-        if (!SystemSettings::isAsync() && SystemSettings::getSystemValue('classes.preload') === false) {
-            \hl_standard_response($value, $contentType);
-        }
-
         Response::addToBody($value);
         Response::addHeaders([
             'Content-Type'   => $contentType,
-            'Connection'     => 'close',
+            'Connection'     => $connection,
         ]);
-
-        if ($isSimple && SystemSettings::isAsync()) {
-            return [
-                'id' => DynamicParams::addressAsString(true),
-                'value' => $value,
-                'type' => $contentType,
-            ];
-        }
-        return [];
     }
-
 
     /**
      * Apply settings when a module is detected.
@@ -408,53 +382,6 @@ final class ProjectLoader
     }
 
     /**
-     * Most queries that return pre-specified text in a route and run asynchronously
-     * can be added to the in-memory cache.
-     * If they are added, then this method composes a response and returns true.
-     *
-     * Большинство запросов, возвращающих предварительно указанный текст в маршруте
-     * и работающих в асинхронном режиме, могут быть добавлены в in-memory кэш.
-     * Если они добавлены, то данный метод составляет ответ и возвращает true.
-     */
-    private static function cachePlainRoutes(): bool
-    {
-        if (self::$cachePlainRoutes) {
-            if (self::searchKernelEvent()) {
-                return false;
-            }
-            $cache = self::$cachePlainRoutes[DynamicParams::addressAsString(true)] ?? [];
-            if ($cache) {
-                Response::setBody($cache['value']);
-                Response::addHeaders(['Content-Type' => $cache['type']]);
-                Response::addHeaders([
-                    'Content-Type'   => $cache['type'],
-                    'Connection'     => 'close',
-                ]);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Added to the cache.
-     *
-     * Добавляется в кеш.
-     */
-    private static function addToPlainCache(array $data): void
-    {
-        if (!$data) {
-            return;
-        }
-        if (\count(self::$cachePlainRoutes) > 1000) {
-            \array_unshift(self::$cachePlainRoutes);
-        }
-        $id = $data['id'];
-        unset($data['id']);
-        self::$cachePlainRoutes[$id] = $data;
-    }
-
-    /**
      * Returns the result of block initialization.
      *
      * Возвращает результат инициализации блока.
@@ -487,7 +414,7 @@ final class ProjectLoader
         // If this is simple text, then we will process it here.
         // Если это простой текст, то обработаем его здесь.
         if (empty($block['middlewares']) && empty($block['middleware-after']) && \is_string($block['data']['view'] ?? null)) {
-            self::addToPlainCache(self::renderSimpleValue($block['data']['view'], $block['full-address']));
+            self::renderSimpleValue($block['data']['view'], $block['full-address']);
             return true;
         }
 

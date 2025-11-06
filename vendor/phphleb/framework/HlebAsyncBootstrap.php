@@ -98,14 +98,15 @@ class HlebAsyncBootstrap extends HlebBootstrap
     #[\Override]
     public function load(?object $request = null, ?array $session = null, ?array $cookie = null): HlebAsyncBootstrap
     {
-        $this->session = $session;
-        $this->cookies = $cookie;
-
         self::$processNumber++;
+        $this->session = $session;
+        $this->cookies = $cookie;        
 
         \ob_start();
         try {
             try {
+                $this->skipInitializationIfNeeded($this->config, $request);
+
                 $this->loadProject($request);
 
                 $this->requestCompletion((string)\ob_get_contents());
@@ -373,6 +374,7 @@ class HlebAsyncBootstrap extends HlebBootstrap
         if (\method_exists($req, 'getProtocolVersion')) {
             $_SERVER["SERVER_PROTOCOL"] = 'HTTP/' . $req->getProtocolVersion();
         }
+        $params = \method_exists($req, 'getServerParams') ? $req->getServerParams() : null;
 
         if (\method_exists($req, 'getUri') && \is_object($req->getUri())) {
             /** @var object $uri */
@@ -384,9 +386,9 @@ class HlebAsyncBootstrap extends HlebBootstrap
             isset($_SERVER['SERVER_PORT']) or $_SERVER['SERVER_PORT'] = $uri->getPort();
             isset($_SERVER['REQUEST_URI']) or $_SERVER['REQUEST_URI'] = $uri->getPath() . '?' .
                 \ltrim($uri->getQuery(), '?/');
+
             if (empty($_SERVER['REMOTE_ADDR'])) {
-                if (\method_exists($req, 'getServerParams')) {
-                    $params = $uri->getServerParams();
+                if ($params !== null) {
                     $_SERVER['REMOTE_ADDR'] = (string)($params['REMOTE_ADDR'] ?? $params['HTTP_CLIENT_IP'] ?? $params['HTTP_X_FORWARDED_FOR'] ?? null);
                 } else if (\filter_var($_SERVER['HTTP_HOST'], FILTER_VALIDATE_IP)) {
                     $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_HOST'];
@@ -464,6 +466,24 @@ class HlebAsyncBootstrap extends HlebBootstrap
         $_FILES = $req->file() ?: [];
 
         return [$body, $headers];
+    }
+    
+    /**
+     * @inheritDoc 
+     */
+    protected function skipInitializationIfNeeded(array $config, ?object $request = null): void
+    {
+        if ($config && $request && ($config['system']['classes.preload'] ?? null) === false) {
+            $connection = \strtolower($request->getHeaderLine('Connection') ?: 'close');
+            $headers = ['Content-Type' => 'text/plain', 'Connection' => $connection];
+            $output = '';
+            $uri = $request->getUri()->getPath();
+            if (\str_starts_with($uri, '/user/')) {
+                $output = \substr($uri, 6);
+            }
+            $headers['Content-Length'] = \strlen($output);
+            throw (new AsyncExitException($output))->setHeaders($headers);
+        }
     }
 
     /**

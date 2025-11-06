@@ -269,19 +269,4 @@ namespace {
             defined($name) or define($name, $value);
         }
     }
-
-    if (!function_exists('hl_standard_response')) {
-        #[NoReturn]
-        /**
-         * @internal - not suitable for asynchronous use.
-         */
-        function hl_standard_response(string $text = '', mixed $type = 'text/plain', int $code = 200): never
-        {
-            http_response_code($code);
-            header('Content-Type: ' . $type);
-            header('Content-Length: ' . strlen($text));
-            header('Connection: close');
-            exit($text);
-        }
-    }
 }
