@@ -113,7 +113,7 @@ class HlebBootstrap
 
         $this->logger = $logger;
 
-        $this->mode === self::STANDARD_MODE and $this->switchInit($config);
+        $this->switchInit($config);
 
         // Register an error handler.
         // Регистрация обработчика ошибок.
@@ -1001,20 +1001,22 @@ class HlebBootstrap
      *
      * @link https://github.com/the-benchmarker/web-frameworks/issues/8647
      */
-    protected function switchInit(array $config): void
+    protected function switchInit(array &$config): void
     {
         if ($config && ($config['system']['classes.preload'] ?? null) === false) {
-            $output = '';
-            $uri = $_SERVER['REQUEST_URI'] ?? '';
-            \http_response_code(200);
-            $connection = \strtolower($_SERVER['HTTP_CONNECTION'] ?? 'close');
-            \header('Content-Type: text/plain');
-            \header('Connection: ' . $connection);
-            if (\str_starts_with($uri, '/user/')) {
-                $output = \substr($uri, 6);                
+            if ($this->mode === self::STANDARD_MODE) {
+                $output = '';
+                $uri = \parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+                \http_response_code(200);
+                \header('Content-Type: text/plain');
+                \header('Connection: close');
+                if (\str_starts_with($uri, '/user/')) {
+                    $output = \substr($uri, 6);
+                }
+                \header('Content-Length: ' . \strlen($output));
+                exit($output);
             }
-            \header('Content-Length: ' . \strlen($output));
-            exit($output);
+            $config['common']['routes.auto-update'] = false;
         }
     }
 
