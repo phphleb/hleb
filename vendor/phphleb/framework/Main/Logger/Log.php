@@ -89,7 +89,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     {
         if (self::checkLevel('emergency')) {
             self::initLogger();
-            self::$logger->emergency($this->convertMessage($message, $context), self::prepareContext('emergency', $context));
+            self::$logger?->emergency($this->convertMessage($message, $context), self::prepareContext('emergency', $context));
         }
     }
 
@@ -103,7 +103,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     {
         if (self::checkLevel('alert')) {
             self::initLogger();
-            self::$logger->alert($this->convertMessage($message, $context), self::prepareContext('alert', $context));
+            self::$logger?->alert($this->convertMessage($message, $context), self::prepareContext('alert', $context));
         }
     }
 
@@ -117,7 +117,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     {
         if (self::checkLevel('critical')) {
             self::initLogger();
-            self::$logger->critical($this->convertMessage($message, $context), self::prepareContext('critical', $context));
+            self::$logger?->critical($this->convertMessage($message, $context), self::prepareContext('critical', $context));
         }
     }
 
@@ -131,7 +131,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     {
         if (self::checkLevel('error')) {
             self::initLogger();
-            self::$logger->error($this->convertMessage($message, $context), self::prepareContext('error', $context));
+            self::$logger?->error($this->convertMessage($message, $context), self::prepareContext('error', $context));
         }
     }
 
@@ -145,7 +145,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     {
         if (self::checkLevel('warning')) {
             self::initLogger();
-            self::$logger->warning($this->convertMessage($message, $context), self::prepareContext('warning', $context));
+            self::$logger?->warning($this->convertMessage($message, $context), self::prepareContext('warning', $context));
         }
     }
 
@@ -159,7 +159,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     {
         if (self::checkLevel('notice')) {
             self::initLogger();
-            self::$logger->notice($this->convertMessage($message, $context), self::prepareContext('notice', $context));
+            self::$logger?->notice($this->convertMessage($message, $context), self::prepareContext('notice', $context));
         }
     }
 
@@ -173,7 +173,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     {
         if (self::checkLevel('info')) {
             self::initLogger();
-            self::$logger->info($this->convertMessage($message, $context), self::prepareContext('info', $context));
+            self::$logger?->info($this->convertMessage($message, $context), self::prepareContext('info', $context));
         }
     }
 
@@ -187,7 +187,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     {
         if (self::checkLevel('debug')) {
             self::initLogger();
-            self::$logger->debug($this->convertMessage($message, $context), self::prepareContext('debug', $context));
+            self::$logger?->debug($this->convertMessage($message, $context), self::prepareContext('debug', $context));
         }
     }
 
@@ -205,7 +205,7 @@ final class Log extends BaseSingleton implements LoggerInterface
         }
         if (self::checkLevel((string)$level)) {
             self::initLogger();
-            self::$logger->log($level, $this->convertMessage($message, $context), self::prepareContext($level, $context));
+            self::$logger?->log($level, $this->convertMessage($message, $context), self::prepareContext($level, $context));
         }
     }
 
@@ -382,6 +382,7 @@ final class Log extends BaseSingleton implements LoggerInterface
             if (self::$logger === null) {
                 if (!SystemSettings::getLogOn()) {
                     self::setLogger(new NullLogger());
+                    return;
                 }
                 if (\class_exists(ErrorLog::class, false) &&
                     $logger = ErrorLog::getLogger()

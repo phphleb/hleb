@@ -89,9 +89,11 @@ final class ErrorLog
      *
      * Вывод ошибок в механизм логирования даже если часть классов не загружена.
      */
-    public static function execute(int $errno, string $errstr, ?string $errfile = null, ?int $errline = null): bool
+    public static function execute(int $errno, ?string $errstr, ?string $errfile = null, ?int $errline = null): bool
     {
         try {
+            $errstr = (string)$errstr;
+
             self::loadBaseClasses();
 
             $params = [];
@@ -109,7 +111,9 @@ final class ErrorLog
                 case E_CORE_ERROR:
                     self::outputNotice();
                     $log->critical($errstr, $params);
-                    \async_exit($debug ? (SystemSettings::isCli() ?  '' : self::format($errstr)) : '', 500);
+                    if (\function_exists('async_exit')) {
+                        \async_exit($debug ? (SystemSettings::isCli() ? '' : self::format($errstr)) : '', 500);
+                    }
                     break;
                 case E_ERROR:
                 case E_USER_ERROR:
@@ -118,7 +122,9 @@ final class ErrorLog
                 case E_RECOVERABLE_ERROR:
                     self::outputNotice();
                     $log->error($errstr, $params);
-                    \async_exit($debug ? (SystemSettings::isCli() ?  '' : self::format($errstr)) : '', 500);
+                    if (\function_exists('async_exit')) {
+                        \async_exit($debug ? (SystemSettings::isCli() ? '' : self::format($errstr)) : '', 500);
+                    }
                     break;
                 case E_USER_WARNING:
                 case E_WARNING:
@@ -139,7 +145,9 @@ final class ErrorLog
                 default:
                     self::outputNotice();
                     $log->error($errstr, $params);
-                    \async_exit($debug ? (SystemSettings::isCli() ?  '' : self::format($errstr)) : '', 500);
+                    if (\function_exists('async_exit')) {
+                        \async_exit($debug ? (SystemSettings::isCli() ? '' : self::format($errstr)) : '', 500);
+                    }
                     break;
             }
             self::$config and SystemSettings::setData(self::$config);

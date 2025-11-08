@@ -5,10 +5,14 @@ if (file_exists(__DIR__ . '/main-local.php')) { return (require __DIR__ . '/main
 /*
  * This file contains user settings that can be overridden in modules when creating
  * a similar /modules/{module_name}/config/main.php file.
+ * Here and in other custom files (see `custom.setting.files`) the substitution
+ * of values from other configurations of the form {%custom.key%} is supported.
  * Required values are marked with an '*'.
  *
  * В этом файле находятся пользовательские настройки, которые можно переопределить в модулях
  * при создании аналогичного файла /modules/{module_name}/config/main.php.
+ * Здесь и в других пользовательских файлах (см. `custom.setting.files`)
+ * поддерживается подстановка значения из других конфигураций вида {%custom.key%}.
  * Обязательные значения отмечены знаком '*'.
  */
 

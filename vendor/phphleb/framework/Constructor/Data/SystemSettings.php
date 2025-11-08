@@ -48,8 +48,8 @@ final class SystemSettings extends BaseSingleton
      * ```
      *
      *
-     * @param int $mode       - framework execution mode.
-     *                        - режим выполнения фреймворка.
+     * @param int $mode - framework execution mode.
+     *                  - режим выполнения фреймворка.
      *
      * @internal
      */
@@ -73,7 +73,7 @@ final class SystemSettings extends BaseSingleton
         }
     }
 
-    /** @internal  */
+    /** @internal */
     public static function getData(): array
     {
         return self::$data ?? [];
@@ -112,7 +112,7 @@ final class SystemSettings extends BaseSingleton
      */
     public static function getValue(string $name, string $key): null|string|array|float|int|bool
     {
-        return self::$data[$name][$key] ?? null;
+        return self::prepareValue($name, self::$data[$name][$key] ?? null, $key);
     }
 
     /**
@@ -128,7 +128,7 @@ final class SystemSettings extends BaseSingleton
      */
     public static function getMainValue(string $key): null|string|array|float|int|bool
     {
-        return self::$data['main'][$key] ?? null;
+        return self::prepareValue('main', self::$data['main'][$key] ?? null, $key);
     }
 
 
@@ -207,7 +207,7 @@ final class SystemSettings extends BaseSingleton
     /** @internal */
     public static function getPath(string $keyOrPath): string
     {
-        return (string)self::getAlias($keyOrPath, ifExists:false);
+        return (string)self::getAlias($keyOrPath, ifExists: false);
     }
 
     /** @internal */
@@ -219,7 +219,7 @@ final class SystemSettings extends BaseSingleton
     /** @internal */
     public static function getSortLog(): bool
     {
-        return (bool)self::getCommonValue( 'log.sort');
+        return (bool)self::getCommonValue('log.sort');
     }
 
     /** @internal */
@@ -255,4 +255,64 @@ final class SystemSettings extends BaseSingleton
         self::$data['system']['start.unixtime'] = $time;
     }
 
+    /**
+     * Allows you to replace or substitute parameter values
+     * into other parameters in user configurations.
+     * Replaces configuration parameters of the form `{%key%}` or `{%main.key%}`.
+     *
+     * Позволяет заменить или подставить в пользовательских конфигурациях
+     * значения параметров в другие параметры.
+     * Заменяет параметры конфигурации вида `{%key%}` или `{%main.key%}`.
+     *
+     * @param string $type - the currently requested configuration type for the value.
+     *                     - текущий запрашиваемый тип конфигурации для значения.
+     *
+     * @param mixed $value - value from the configuration to substitute another value.
+     *                     - значение из конфигурации для подстановки другого значения.
+     *
+     * @return mixed - return the modified string or replacement if `{%key%}` matches exactly.
+     *               - возвращает измененную строку или замену при полном совпадении `{%key%}`.
+     */
+    private static function prepareValue(string $type, mixed $value, string $origin): mixed
+    {
+        if ($value === null || \in_array($type, ['common', 'database', 'default.database', 'system', 'path'])) {
+            return $value;
+        }
+        if (\is_string($value) && \str_contains($value, '{%')) {
+            return \preg_replace_callback(
+                pattern: '/\{%([^}]+)%\}/',
+                callback: fn(array $m) => self::replaceCallback($m, $type, $origin),
+                subject: $value
+            );
+        }
+        return $value;
+    }
+
+    private static function replaceCallback(array $m, string $type, string $origin): string
+    {
+        $param = $m[1];
+        $value = null;
+        if (isset(self::$data[$type]) && \array_key_exists($param, self::$data[$type])) {
+            $value = self::getValue($type, $param);
+        } else {
+            $parts = \explode('.', $param);
+            $name = \array_shift($parts);
+            if ($parts) {
+                $key = implode('.', $parts);
+                if (isset(self::$data[$name]) && \array_key_exists($key, self::$data[$name])) {
+                    $value = self::getValue($name, $key);
+                }
+            }
+        }
+        if (\is_null($value)) {
+            throw new \InvalidArgumentException("Configuration parameter `{$m[0]}` was not found when substituting into value for `{$type}`.`{$origin}`");
+        }
+        if (!\is_numeric($value) && !\is_string($value)) {
+            throw new \InvalidArgumentException(
+                "When substituting into the configuration value of `{$type}`.`{$origin}`, "
+                . "the parameter `{$m[0]}` must be a numeric or string, but not " .  \get_debug_type($value)
+            );
+        }
+         return (string)$value;
+    }
 }
