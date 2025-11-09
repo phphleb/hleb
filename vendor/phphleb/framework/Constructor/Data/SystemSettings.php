@@ -301,7 +301,7 @@ final class SystemSettings extends BaseSingleton
             $parts = \explode('.', $param);
             $name = \array_shift($parts);
             if ($parts) {
-                $key = implode('.', $parts);
+                $key = \implode('.', $parts);
                 if (isset(self::$data[$name]) && \array_key_exists($key, self::$data[$name])) {
                     $value = self::getValue($name, $key);
                 }
