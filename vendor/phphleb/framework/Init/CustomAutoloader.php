@@ -45,6 +45,10 @@ final class CustomAutoloader
         if ($file = self::searchPsr0($examples, $vendorPath)) {
             return $file;
         }
+        if ($examples[0] === 'Psr' && \in_array($examples[1], ['Log', 'SimpleCache', 'Container'])) {
+            $psrExamples = \array_splice($examples, 2, 0, ['src']);
+            return self::searchPsr0($psrExamples, $vendorPath);
+        }
         # :(
         return false;
     }
