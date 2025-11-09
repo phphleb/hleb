@@ -279,6 +279,9 @@ final class SystemSettings extends BaseSingleton
             return $value;
         }
         if (\is_string($value) && \str_contains($value, '{%')) {
+            if (\substr_count($value, '{%') === 1 && \str_ends_with($value, '%}')) {
+                return self::replaceCallback([$value, \substr($value, 2, -2)], $type, $origin);
+            }
             return \preg_replace_callback(
                 pattern: '/\{%([^}]+)%\}/',
                 callback: fn(array $m) => self::replaceCallback($m, $type, $origin),
