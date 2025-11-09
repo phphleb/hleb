@@ -279,8 +279,8 @@ final class SystemSettings extends BaseSingleton
             return $value;
         }
         if (\is_string($value) && \str_contains($value, '{%')) {
-            if (\substr_count($value, '{%') === 1 && \str_ends_with($value, '%}')) {
-                return self::replaceCallback([$value, \substr($value, 2, -2)], $type, $origin);
+            if (\substr_count($value, '{%') === 1 && \str_starts_with($value, '{%') && \str_ends_with($value, '%}')) {
+                return self::replaceCallback([$value, \substr($value, 2, -2)], $type, $origin, true);
             }
             return \preg_replace_callback(
                 pattern: '/\{%([^}]+)%\}/',
@@ -291,7 +291,7 @@ final class SystemSettings extends BaseSingleton
         return $value;
     }
 
-    private static function replaceCallback(array $m, string $type, string $origin): string
+    private static function replaceCallback(array $m, string $type, string $origin, bool $mixed = false): mixed
     {
         $param = $m[1];
         $value = null;
@@ -307,15 +307,16 @@ final class SystemSettings extends BaseSingleton
                 }
             }
         }
+
         if (\is_null($value)) {
             throw new \InvalidArgumentException("Configuration parameter `{$m[0]}` was not found when substituting into value for `{$type}`.`{$origin}`");
         }
-        if (!\is_numeric($value) && !\is_string($value)) {
+        if (!$mixed && !\is_numeric($value) && !\is_string($value)) {
             throw new \InvalidArgumentException(
                 "When substituting into the configuration value of `{$type}`.`{$origin}`, "
                 . "the parameter `{$m[0]}` must be a numeric or string, but not " .  \get_debug_type($value)
             );
         }
-         return (string)$value;
+        return $mixed ? $value : (string)$value;
     }
 }
