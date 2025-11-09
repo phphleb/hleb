@@ -88,8 +88,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     public function emergency(string|\Stringable $message, array $context = []): void
     {
         if (self::checkLevel('emergency')) {
-            self::initLogger();
-            self::$logger?->emergency($this->convertMessage($message, $context), self::prepareContext('emergency', $context));
+            self::getLogger()->emergency($this->convertMessage($message, $context), self::prepareContext('emergency', $context));
         }
     }
 
@@ -102,8 +101,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     public function alert(string|\Stringable $message, array $context = []): void
     {
         if (self::checkLevel('alert')) {
-            self::initLogger();
-            self::$logger?->alert($this->convertMessage($message, $context), self::prepareContext('alert', $context));
+            self::getLogger()->alert($this->convertMessage($message, $context), self::prepareContext('alert', $context));
         }
     }
 
@@ -116,8 +114,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     public function critical(string|\Stringable $message, array $context = []): void
     {
         if (self::checkLevel('critical')) {
-            self::initLogger();
-            self::$logger?->critical($this->convertMessage($message, $context), self::prepareContext('critical', $context));
+            self::getLogger()->critical($this->convertMessage($message, $context), self::prepareContext('critical', $context));
         }
     }
 
@@ -130,8 +127,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     public function error(string|\Stringable $message, array $context = []): void
     {
         if (self::checkLevel('error')) {
-            self::initLogger();
-            self::$logger?->error($this->convertMessage($message, $context), self::prepareContext('error', $context));
+            self::getLogger()->error($this->convertMessage($message, $context), self::prepareContext('error', $context));
         }
     }
 
@@ -144,8 +140,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     public function warning(string|\Stringable $message, array $context = []): void
     {
         if (self::checkLevel('warning')) {
-            self::initLogger();
-            self::$logger?->warning($this->convertMessage($message, $context), self::prepareContext('warning', $context));
+            self::getLogger()->warning($this->convertMessage($message, $context), self::prepareContext('warning', $context));
         }
     }
 
@@ -158,8 +153,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     public function notice(string|\Stringable $message, array $context = []): void
     {
         if (self::checkLevel('notice')) {
-            self::initLogger();
-            self::$logger?->notice($this->convertMessage($message, $context), self::prepareContext('notice', $context));
+            self::getLogger()->notice($this->convertMessage($message, $context), self::prepareContext('notice', $context));
         }
     }
 
@@ -172,8 +166,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     public function info(string|\Stringable $message, array $context = []): void
     {
         if (self::checkLevel('info')) {
-            self::initLogger();
-            self::$logger?->info($this->convertMessage($message, $context), self::prepareContext('info', $context));
+            self::getLogger()->info($this->convertMessage($message, $context), self::prepareContext('info', $context));
         }
     }
 
@@ -186,8 +179,7 @@ final class Log extends BaseSingleton implements LoggerInterface
     public function debug(string|\Stringable $message, array $context = []): void
     {
         if (self::checkLevel('debug')) {
-            self::initLogger();
-            self::$logger?->debug($this->convertMessage($message, $context), self::prepareContext('debug', $context));
+            self::getLogger()->debug($this->convertMessage($message, $context), self::prepareContext('debug', $context));
         }
     }
 
@@ -204,8 +196,7 @@ final class Log extends BaseSingleton implements LoggerInterface
             throw new InvalidLogLevelException("Specified logging level `$level` is not supported, use: " . $list);
         }
         if (self::checkLevel((string)$level)) {
-            self::initLogger();
-            self::$logger?->log($level, $this->convertMessage($message, $context), self::prepareContext($level, $context));
+            self::getLogger()->log($level, $this->convertMessage($message, $context), self::prepareContext($level, $context));
         }
     }
 
@@ -230,8 +221,40 @@ final class Log extends BaseSingleton implements LoggerInterface
      */
     public static function getLogger(): LoggerInterface
     {
-        self::initLogger();
-
+        try {
+            if (self::$logger === null) {
+                if (!SystemSettings::getLogOn()) {
+                    self::setLogger(new NullLogger());
+                    return self::$logger;
+                }
+                if (\class_exists(ErrorLog::class, false) &&
+                    $logger = ErrorLog::getLogger()
+                ) {
+                    self::setLogger($logger);
+                } else {
+                    if (SystemSettings::getCommonValue('log.stream')) {
+                        self::setLogger((new StreamLogger(
+                            SystemSettings::getCommonValue('log.stream'),
+                            DynamicParams::getHost() ?? 'local',
+                            DynamicParams::isDebug(),
+                        ))->setFormat(SystemSettings::getCommonValue('log.format')));
+                    } else {
+                        self::setLogger((new FileLogger(
+                            SystemSettings::getRealPath('storage'),
+                            DynamicParams::getHost() ?? '',
+                            SystemSettings::getSortLog(),
+                            SystemSettings::isCli(),
+                            DynamicParams::isDebug(),
+                        ))->setFormat(SystemSettings::getCommonValue('log.format')));
+                    }
+                }
+            }
+        } catch (Throwable $t) {
+            // If an error occurred at all resource loading levels.
+            // Если ошибка произошла на всех уровнях загрузки ресурса.
+            \error_log((string)$t);
+            self::setLogger(new NullLogger());
+        }
         return self::$logger;
     }
 
@@ -366,50 +389,6 @@ final class Log extends BaseSingleton implements LoggerInterface
             } else if (\is_object($c)) {
                 $c = \method_exists($c, '__toString') ? (string)$c : '{"' . $c::class . '":' . \json_encode($c) . '}';
             }
-        }
-    }
-
-    /**
-     * Lazy initialization of the logging object.
-     *
-     * Отложенная инициализация объекта логирования.
-     *
-     * @return void
-     */
-    private static function initLogger(): void
-    {
-        try {
-            if (self::$logger === null) {
-                if (!SystemSettings::getLogOn()) {
-                    self::setLogger(new NullLogger());
-                    return;
-                }
-                if (\class_exists(ErrorLog::class, false) &&
-                    $logger = ErrorLog::getLogger()
-                ) {
-                    self::setLogger($logger);
-                } else {
-                    if (SystemSettings::getCommonValue('log.stream')) {
-                        self::setLogger((new StreamLogger(
-                            SystemSettings::getCommonValue('log.stream'),
-                            DynamicParams::getHost() ?? 'local',
-                            DynamicParams::isDebug(),
-                        ))->setFormat(SystemSettings::getCommonValue('log.format')));
-                    } else {
-                        self::setLogger((new FileLogger(
-                            SystemSettings::getRealPath('storage'),
-                            DynamicParams::getHost() ?? '',
-                            SystemSettings::getSortLog(),
-                            SystemSettings::isCli(),
-                            DynamicParams::isDebug(),
-                        ))->setFormat(SystemSettings::getCommonValue('log.format')));
-                    }
-                }
-            }
-        } catch (Throwable $t) {
-            // If an error occurred at all resource loading levels.
-            // Если ошибка произошла на всех уровнях загрузки ресурса.
-            \error_log((string)$t);
         }
     }
 }

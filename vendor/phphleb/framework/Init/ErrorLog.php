@@ -89,30 +89,30 @@ final class ErrorLog
      *
      * Вывод ошибок в механизм логирования даже если часть классов не загружена.
      */
-    public static function execute(int $errno, ?string $errstr, ?string $errfile = null, ?int $errline = null): bool
+    public static function execute(int $errorNumber, ?string $errorMessage, ?string $errorFile = null, ?int $errorLine = null): bool
     {
         try {
-            $errstr = (string)$errstr;
+            $errorMessage = (string)$errorMessage;
 
             self::loadBaseClasses();
 
             $params = [];
-            if ($errfile) {
-                $params['file'] = $errfile;
+            if ($errorFile) {
+                $params['file'] = $errorFile;
             }
-            if ($errline) {
-                $params['line'] = $errline;
+            if ($errorLine) {
+                $params['line'] = $errorLine;
             }
             $params['request-id'] = DynamicParams::getDynamicRequestId();
             $log = self::$logger ?? Log::instance();
 
             $debug = DynamicParams::isDebug();
-            switch ($errno) {
+            switch ($errorNumber) {
                 case E_CORE_ERROR:
                     self::outputNotice();
-                    $log->critical($errstr, $params);
+                    $log->critical($errorMessage, $params);
                     if (\function_exists('async_exit')) {
-                        \async_exit($debug ? (SystemSettings::isCli() ? '' : self::format($errstr)) : '', 500);
+                        \async_exit($debug ? (SystemSettings::isCli() ? '' : self::format($errorMessage)) : '', 500);
                     }
                     break;
                 case E_ERROR:
@@ -121,9 +121,9 @@ final class ErrorLog
                 case E_COMPILE_ERROR:
                 case E_RECOVERABLE_ERROR:
                     self::outputNotice();
-                    $log->error($errstr, $params);
+                    $log->error($errorMessage, $params);
                     if (\function_exists('async_exit')) {
-                        \async_exit($debug ? (SystemSettings::isCli() ? '' : self::format($errstr)) : '', 500);
+                        \async_exit($debug ? (SystemSettings::isCli() ? '' : self::format($errorMessage)) : '', 500);
                     }
                     break;
                 case E_USER_WARNING:
@@ -131,22 +131,22 @@ final class ErrorLog
                 case E_CORE_WARNING:
                 case E_COMPILE_WARNING:
                     self::outputNotice();
-                    $log->warning($errstr, $params);
-                    $debug and print self::format( "Warning: $errstr in $errfile:$errline");
+                    $log->warning($errorMessage, $params);
+                    $debug and print self::format( "Warning: $errorMessage in $errorFile:$errorLine");
                     break;
                 case E_USER_NOTICE:
                 case E_NOTICE:
                 // case E_STRICT: // deprecated in PHP 8.4
                 case E_DEPRECATED:
                 case E_USER_DEPRECATED:
-                    $log->notice($errstr, $params);
-                    $debug and self::$notices[] = self::format("Notice: $errstr in $errfile:$errline");
+                    $log->notice($errorMessage, $params);
+                    $debug and self::$notices[] = self::format("Notice: $errorMessage in $errorFile:$errorLine");
                     break;
                 default:
                     self::outputNotice();
-                    $log->error($errstr, $params);
+                    $log->error($errorMessage, $params);
                     if (\function_exists('async_exit')) {
-                        \async_exit($debug ? (SystemSettings::isCli() ? '' : self::format($errstr)) : '', 500);
+                        \async_exit($debug ? (SystemSettings::isCli() ? '' : self::format($errorMessage)) : '', 500);
                     }
                     break;
             }
