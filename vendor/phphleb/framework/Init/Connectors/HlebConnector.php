@@ -85,6 +85,7 @@ final class HlebConnector
         'Hleb\Helpers\ClassDataInFile' => '/Helpers/ClassDataInFile.php',
         'Hleb\Helpers\DirectoryCleaner' => '/Helpers/DirectoryCleaner.php',
         'Hleb\Helpers\DirectoryInspector' => '/Helpers/DirectoryInspector.php',
+        'Hleb\Helpers\FlashSessionHelper' => '/Helpers/FlashSessionHelper.php',
         'Hleb\Helpers\DirectoryHelper' => '/Helpers/DirectoryHelper.php',
         'Hleb\Helpers\NameConverter' => '/Helpers/NameConverter.php',
         'Hleb\Helpers\HostHelper' => '/Helpers/HostHelper.php',

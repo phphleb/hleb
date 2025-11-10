@@ -10,6 +10,7 @@ use Hleb\Constructor\Data\DynamicParams;
 use Hleb\Constructor\Data\SystemSettings;
 use Hleb\Constructor\DI\DependencyInjection;
 use Hleb\CoreProcessException;
+use Hleb\Helpers\FlashSessionHelper;
 use Hleb\Helpers\ReflectionMethod;
 use Hleb\Helpers\RouteHelper;
 use Hleb\HttpException;
@@ -314,22 +315,8 @@ final class ProjectLoader
      */
     private static function updateSession(array &$session): void
     {
-        $id = '_hl_flash_';
-        if (isset($session[$id])) {
-            foreach ($session[$id] as $key => &$data) {
-                $data['reps_left']--;
-                if ($data['reps_left'] < 0) {
-                    unset($session[$id][$key]);
-                    continue;
-                }
-                if (isset($data['new'])) {
-                    $data['old'] = $data['new'];
-                    $data['new'] = null;
-                }
-                if (\is_null($data['old'])) {
-                    unset($session[$id][$key]);
-                }
-            }
+        if (!empty($session['_hl_flash_'])) {
+            FlashSessionHelper::update($session, '_hl_flash_');
         }
     }
 
