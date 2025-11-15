@@ -470,6 +470,7 @@ return [
     │ be available by the specified name.
     │ For the name 'custom', the value of the 'param' setting can be obtained from
     │ the function config('custom', 'param').
+    │ The path to the file must be specified from the root folder of the project.
     │ Default: []
     │
     │
@@ -482,6 +483,7 @@ return [
     │ доступны по указанному названию.
     │ Для названия 'custom' значение настройки 'param' может быть получено из
     │ функции config('custom', 'param').
+    │ Путь к файлу должен быть указан от корневой папки проекта.
     │ Изначально: []
     │
     */
