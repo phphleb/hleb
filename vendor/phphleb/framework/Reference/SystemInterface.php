@@ -315,4 +315,28 @@ interface SystemInterface
      * @return array
      */
     public static function getTaskPermissions(string $taskClass): array;
+
+    /**
+     * Allows you to add additional settings to the Twig instance being used.
+     * To configure it globally, add the initialization to one of the files
+     * from the `custom.function.files` of the `system` configuration:
+     *
+     * Позволяет добавить дополнительные настройки к используемому экземпляру Twig.
+     * Для настройки глобально добавьте инициализацию в один из файлов
+     * из `custom.function.files` конфигурации `system`:
+     *
+     * ```php
+     *  \Hleb\Static\System::extendTwig(function (\Twig\Environment $twig) {
+     *      $twig->addGlobal('support_email', config('main', 'support.email'));
+     *  });
+     * ```
+     */
+    public static function extendTwig(\Closure $callable): void;
+
+    /**
+     * @internal
+     *
+     * @return Closure[]
+     */
+    public static function getTwigConfigurators(): array;
 }

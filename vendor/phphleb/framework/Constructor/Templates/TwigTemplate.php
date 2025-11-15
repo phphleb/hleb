@@ -11,6 +11,7 @@ use Hleb\Static\Request;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
 
 /**
  * Outputting content by reference from a file using the `Twig` template engine.
@@ -22,15 +23,17 @@ use Twig\Loader\FilesystemLoader;
 final readonly class TwigTemplate implements TemplateInterface
 {
     public function __construct(
-        private string $path,
-        private array $data,
-        private array $twigLoader,
-        private array $twigOptions,
-        private string $cachePath,
-        private string $rootDirectory,
-        private array $invertedDirectories,
-        private string $realPath,
+        private string             $path,
+        private array              $data,
+        private array              $twigLoader,
+        private array              $twigOptions,
+        private string             $cachePath,
+        private string             $rootDirectory,
+        private array              $invertedDirectories,
+        private string             $realPath,
         private ContainerInterface $container,
+        private array              $functions,
+        private array              $callableList,
     )
     {
     }
@@ -38,7 +41,7 @@ final readonly class TwigTemplate implements TemplateInterface
     #[\Override]
     public function view(): void
     {
-        $data = \array_merge($this->data, $this->data());
+        $data = \array_merge($this->data(), $this->data);
         if (\class_exists('Twig\Loader\FilesystemLoader') && \class_exists('Twig\Environment')) {
             $options = $this->twigOptions;
 
@@ -62,13 +65,23 @@ final readonly class TwigTemplate implements TemplateInterface
                 }
             }
             $twig = new Environment($loader, $options);
+            if ($this->functions) {
+                foreach($this->functions as $func) {
+                    $twig->addFunction(new TwigFunction($func, $func));
+                }
+            }
+            if ($this->callableList) {
+                foreach($this->callableList as $callable) {
+                    ($callable)($twig);
+                }
+            }
             try {
                 echo $twig->render($this->path, $data);
             } catch(\Exception $e) {
                 throw new CoreProcessException($e->getMessage());
             }
         } else {
-            throw new CoreProcessException('Undefined Twig library');
+            throw new CoreProcessException('Twig library is not installed. Run: composer require "twig/twig:^3.0"');
         }
     }
 
@@ -90,6 +103,7 @@ final readonly class TwigTemplate implements TemplateInterface
         return ($isCache && !$searchDir) || (!$isCache && $searchDir);
     }
 
+
     /**
      * Adding standard variables to shared data.
      * They can be called in a .twig template like this:
@@ -97,11 +111,10 @@ final readonly class TwigTemplate implements TemplateInterface
      * Добавление стандартных переменных в общие данные.
      * Их можно вызвать в шаблоне .twig по принципу:
      *
-     * ```twig
+     * {{ app.url.path }}
+     * {{ app.url.full }}
+     * {{ app.container.requestId.get() }}
      *
-     * {{ app_request_uri }}
-     * {{ container.requestId.get }}
-     * ```
      */
     private function data(): array
     {
@@ -114,16 +127,16 @@ final readonly class TwigTemplate implements TemplateInterface
         $container = $this->container;
 
         return [
-            'app_request_uri' => $path,
-            'app_request_path' => $path,
-            'app_request_pathAndQuery' => $path . $query,
-            'app_request_schemeAndHttpHost' => $scheme . '://' . $host,
-            'app_request_scheme' => $scheme,
-            'app_request_httpHost' => $host,
-            'app_request_host' => $host,
-            'app_request_url' => $address,
-            'app_request_urlAndQuery' => $address . $query,
-            'container' => $container,
-        ];
+            'app' => [
+                'url' => [
+                    'path' => $path,                    // /blog/article
+                    'query' => $query,                  // ?id=5
+                    'full' => $address . $query,        // https://example.com/blog/article?id=5
+                    'base' => $scheme . '://' . $host,  // https://example.com
+                    'scheme' => $scheme,                // https
+                    'host' => $host,                    // example.com
+                ],
+                'container' => $container,
+            ]];
     }
 }

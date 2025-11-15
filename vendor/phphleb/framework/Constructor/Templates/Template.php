@@ -6,6 +6,7 @@ namespace Hleb\Constructor\Templates;
 
 use App\Bootstrap\ContainerInterface;
 use Hleb\Constructor\Data\SystemSettings;
+use Hleb\Static\System;
 
 /**
  * @internal
@@ -54,6 +55,8 @@ final class Template
                 $this->invertedPaths,
                 $this->realPath,
                 $this->container,
+                SystemSettings::getValue('common', 'twig.allowed.functions') ?? [],
+                System::getTwigConfigurators(),
             ))->view(),
             self::PHP => (new PhpTemplate(
                 $this->path,

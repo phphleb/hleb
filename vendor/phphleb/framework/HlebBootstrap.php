@@ -109,7 +109,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.17');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.18');
 
         $this->logger = $logger;
 
@@ -275,6 +275,7 @@ class HlebBootstrap
                     'optimizations' => -1,
                     'cache' => true,
                 ],
+                'twig.allowed.functions' => ['csrf_token', 'url'],
                 'twig.cache.inverted' => [],
                 'show.request.id' => true,
                 'max.log.size' => 0,
@@ -575,7 +576,7 @@ class HlebBootstrap
                 'events.used' => ['boolean'],
                 'autowiring.mode' => ['integer'],
                 // 'start.unixtime' => ['integer'], // system
-                // 'module.namespace' => ['string'], system
+                // 'module.namespace' => ['string'], // system
                 // 'route.files.checking' => ['boolean'], // hidden
                 // 'async.clear.state' => ['boolean'], // hidden
             ],

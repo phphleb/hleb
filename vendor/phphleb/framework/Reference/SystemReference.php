@@ -2,6 +2,7 @@
 
 namespace Hleb\Reference;
 
+use Hleb\Base\RollbackInterface;
 use Hleb\Base\Task;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Constructor\Attributes\AvailableAsParent;
@@ -32,8 +33,10 @@ use Hleb\Static\Settings;
  * Различные системные вызовы для использования собственными библиотеками фреймворка.
  */
 #[Accessible] #[AvailableAsParent]
-class SystemReference extends ContainerUniqueItem implements SystemInterface, Interface\System
+class SystemReference extends ContainerUniqueItem implements SystemInterface, Interface\System, RollbackInterface
 {
+    protected static array $twigExtensions = [];
+
     /** @inheritDoc */
     #[\Override]
     public function getRouteName(): ?string
@@ -309,5 +312,23 @@ class SystemReference extends ContainerUniqueItem implements SystemInterface, In
         }
 
         return [];
+    }
+
+    /** @inheritDoc */
+    public static function extendTwig(\Closure $callable): void
+    {
+        \array_unshift(self::$twigExtensions, $callable);
+    }
+
+    /** @inheritDoc */
+    public static function getTwigConfigurators(): array
+    {
+        return self::$twigExtensions;
+    }
+
+    /** @inheritDoc */
+    public static function rollback(): void
+    {
+        self::$twigExtensions = [];
     }
 }

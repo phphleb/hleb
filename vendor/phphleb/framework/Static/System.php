@@ -547,6 +547,43 @@ class System extends BaseSingleton
     }
 
     /**
+     * Allows you to add additional settings to the Twig instance being used.
+     * To configure it globally, add the initialization to one of the files
+     * from the `custom.function.files` of the `system` configuration:
+     *
+     * Позволяет добавить дополнительные настройки к используемому экземпляру Twig.
+     * Для настройки глобально добавьте инициализацию в один из файлов
+     * из `custom.function.files` конфигурации `system`:
+     *
+     * ```php
+     *  \Hleb\Static\System::extendTwig(function (\Twig\Environment $twig) {
+     *      $twig->addGlobal('support_email', config('main', 'support.email'));
+     *  });
+     * ```
+     */
+    public static function extendTwig(\Closure $callable): void
+    {
+        if (self::$replace) {
+            self::$replace->extendTwig($callable);
+        } else {
+            BaseContainer::instance()->get(SystemInterface::class)->extendTwig($callable);
+        }
+    }
+
+    /**
+     * @return Closure[]
+     *
+     * @internal
+     */
+    public static function getTwigConfigurators(): array
+    {
+        if (self::$replace) {
+            return self::$replace->getTwigConfigurators();
+        }
+        return BaseContainer::instance()->get(SystemInterface::class)->getTwigConfigurators();
+    }
+
+    /**
      * @internal
      *
      * @see SystemForTest
