@@ -25,7 +25,7 @@ final readonly class LightDataType
      */
     public function toInt(): int
     {
-        return is_numeric($this->value) ? (integer)$this->value : 0;
+        return is_numeric($this->value) ? (int)$this->value : 0;
     }
 
     /**
