@@ -152,11 +152,17 @@ final readonly class LightDataType
      * The value of $default is assumed to be a safe value.
      * If there is no value, you can also set the exception class $exc, which is called
      *  instead of the default value; if true, the standard error class will be called.
+     * (!) Is not suitable for producing a valid JSON string, as it escapes consecutive double quotes.
+     * To get the original JSON string, you can use value(), and to convert it
+     * to an array with escaped values, use asArray().
      *
      * Возвращает значение приведенное к типу `string`, если значение не существует - возвращает $default.
      * Предполагается, что значением $default является безопасное значение.
      * При отсутствии значения также можно задать класс исключения $exc, вызываемый вместо
      * дефолтного значения; при true будет вызван стандартный класс ошибки.
+     * (!) Не подходит для получения валидной JSON-строки, так как экранирует двойные кавычки подряд.
+     * Для получения оригинальной JSON-строки можно использовать value(),
+     * а преобразованный в массив c экранированными значениями - asArray().
      */
     public function asString(string|null $default = null, bool|string $exc = false): string|null
     {
