@@ -219,7 +219,7 @@ final readonly class LightDataType
         ) {
             $value = $this->value;
             try {
-                $value = \json_decode(\trim($value), true, JSON_THROW_ON_ERROR);
+                $value = \json_decode(\trim($value), true, 512, JSON_THROW_ON_ERROR);
             } catch (\JsonException) {
             }
             if (!\is_array($value)) {

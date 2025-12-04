@@ -210,7 +210,7 @@ namespace {
                 return $default;
             }
             if (str_starts_with($env, '{') && str_ends_with($env,'}')) {
-                return json_decode($env, true, JSON_THROW_ON_ERROR);
+                return json_decode($env, true, 512, JSON_THROW_ON_ERROR);
             }
             throw new RuntimeException("The value of the environment variable `{$name}` is expected to be an JSON string!");
         }
