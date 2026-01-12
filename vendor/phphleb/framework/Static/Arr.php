@@ -317,6 +317,54 @@ final class Arr extends BaseSingleton
     }
 
     /**
+     * Returns a new array that checks the original for all elements with the keys listed in $keys.
+     *
+     * Возвращает новый массив, исключая из исходного все элементы с ключами, перечисленными в $keys.
+     */
+    public static function except(array $array, array|string $keys): array
+    {
+        if (self::$replace) {
+            return self::$replace->except($array, $keys);
+        }
+
+        return BaseContainer::instance()->get(ArrInterface::class)->except($array, $keys);
+    }
+
+    /**
+     * Returns an array that contains only the matching values from $values.
+     *
+     * Возвращает массив, в котором оставлены только совпавшие значения из $values.
+     *
+     * @param bool $strict - strict comparison when searching for matches.
+     *                      - строгое сравнение при поиске совпадений.
+     */
+    public static function onlyValues(array $array, array $values, bool $strict = false): array
+    {
+        if (self::$replace) {
+            return self::$replace->onlyValues($array, $values, $strict);
+        }
+
+        return BaseContainer::instance()->get(ArrInterface::class)->onlyValues($array, $values, $strict);
+    }
+
+    /**
+     * Returns an array excluding all values from $values.
+     *
+     * Возвращает массив, в котором исключены все значения из $values.
+     *
+     * @param bool $strict - strict comparison when searching for matches.
+     *                     - строгое сравнение при поиске совпадений.
+     */
+    public static function exceptValues(array $array, array $values, bool $strict = false): array
+    {
+        if (self::$replace) {
+            return self::$replace->exceptValues($array, $values, $strict);
+        }
+
+        return BaseContainer::instance()->get(ArrInterface::class)->exceptValues($array, $values, $strict);
+    }
+
+    /**
      * @internal
      *
      * @see ArrForTest

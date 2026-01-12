@@ -190,4 +190,31 @@ interface ArrInterface
      * ```
      */
     public function expand(iterable $array): array;
+
+    /**
+     * Returns a new array that checks the original for all elements with the keys listed in $keys.
+     *
+     * Возвращает новый массив, исключая из исходного все элементы с ключами, перечисленными в $keys.
+     */
+    public function except(array $array, array|string $keys): array;
+
+    /**
+     * Returns an array that contains only the matching values from $values.
+     *
+     * Возвращает массив, в котором оставлены только совпавшие значения из $values.
+     *
+     * @param bool $strict - strict comparison when searching for matches.
+     *                      - строгое сравнение при поиске совпадений.
+     */
+    public function onlyValues(array $array, array $values, bool $strict = false): array;
+
+    /**
+     * Returns an array excluding all values from $values.
+     *
+     * Возвращает массив, в котором исключены все значения из $values.
+     *
+     * @param bool $strict - strict comparison when searching for matches.
+     *                     - строгое сравнение при поиске совпадений.
+     */
+    public function exceptValues(array $array, array $values, bool $strict = false): array;
 }

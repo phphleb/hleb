@@ -109,7 +109,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.20');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.21');
 
         $this->logger = $logger;
 
@@ -1010,7 +1010,7 @@ class HlebBootstrap
                 $uri = \parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
                 \http_response_code(200);
                 \header('Content-Type: text/plain');
-                \header('Connection: close');
+                //\header('Connection: close');
                 if (\str_starts_with($uri, '/user/')) {
                     $output = \substr($uri, 6);
                 }

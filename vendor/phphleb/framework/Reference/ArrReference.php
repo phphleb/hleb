@@ -102,4 +102,25 @@ class ArrReference extends ContainerUniqueItem implements ArrInterface, Interfac
     {
         return ArrayHelper::expand($array);
     }
+
+    /** @inheritDoc */
+    #[\Override]
+    public function except(array $array, array|string $keys): array
+    {
+        return ArrayHelper::except($array, $keys);
+    }
+
+    /** @inheritDoc */
+    #[\Override]
+    public function onlyValues(array $array, array $values, bool $strict = false): array
+    {
+        return ArrayHelper::onlyValues($array, $values, $strict);
+    }
+
+    /** @inheritDoc */
+    #[\Override]
+    public function exceptValues(array $array, array $values, bool $strict = false): array
+    {
+        return ArrayHelper::exceptValues($array, $values, $strict);
+    }
 }

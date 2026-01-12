@@ -419,4 +419,48 @@ final class ArrayHelper
         return \array_values(\array_merge([$key => $value], $array));
 
     }
+
+    /**
+     * Returns a new array that excludes all elements with the keys listed in $keys.
+     *
+     * Возвращает новый массив, исключая из исходного все элементы с ключами, перечисленными в $keys.
+     */
+    #[Pure]
+    public static function except(array $array, array|string $keys): array
+    {
+        $keys = (array) $keys;
+        $result = \array_diff_key($array, \array_flip($keys));
+
+        return self::isAssoc($array) ? $result : \array_values($result);
+    }
+
+    /**
+     * Returns an array that contains only the matching values from $values.
+     *
+     * Возвращает массив, в котором оставлены только совпавшие значения из $values.
+     *
+     * @param bool $strict - strict comparison when searching for matches.
+     *                      - строгое сравнение при поиске совпадений.
+     */
+    public static function onlyValues(array $array, array $values, bool $strict = false): array
+    {
+        $result = \array_filter($array, fn($v) => \in_array($v, $values, $strict));
+
+        return self::isAssoc($array) ? $result : \array_values($result);
+    }
+
+    /**
+     * Returns an array excluding all values from $values.
+     *
+     * Возвращает массив, в котором исключены все значения из $values.
+     *
+     * @param bool $strict - strict comparison when searching for matches.
+     *                     - строгое сравнение при поиске совпадений.
+     */
+    public static function exceptValues(array $array, array $values, bool $strict = false): array
+    {
+        $result = \array_filter($array, fn($v) => !\in_array($v, $values, $strict));
+
+        return self::isAssoc($array) ? $result : \array_values($result);
+    }
 }
