@@ -421,13 +421,13 @@ class RouteFileManager
             return true;
         }
 
-        // The update was not performed by another request.
-        // Обновление не было выполнено другим запросом.
+        // The update was not started by another request.
+        // Обновление не было начато другим запросом.
         if ($firstInfo['time'] === $secondInfo['time']) {
             return true;
         }
 
-        return $this->updateRounds($secondInfo);
+        return $this->updateRounds();
     }
 
     /**
@@ -437,16 +437,25 @@ class RouteFileManager
      *
      * @throws RouteColoredException
      */
-    private function updateRounds(array $info): bool
+    private function updateRounds(): bool
     {
-        $update = static function ($i) {
-            empty($i['update_status']) || $i['update_status'] < \microtime(true) - 1;
-        };
-        while ($update($info)) {
+        for ($i = 0; $i < 200; $i++) {
             \usleep(10000);
             $info = $this->getInfoFromCache();
+            if (!$info) {
+                \usleep(10000);
+                $info = $this->getInfoFromCache();
+                if (!$info) {
+                   return true;
+                }
+            }
+            // The parallel process started has completed the update.
+            // Парралельно начатый процесс завершил обновление.
+            if (empty($info['update_status'])) {
+                return false;
+            }
         }
-        return !empty($info['update_status']);
+        return true;
     }
 
     /**

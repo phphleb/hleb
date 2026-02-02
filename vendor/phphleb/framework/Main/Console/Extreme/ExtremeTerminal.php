@@ -4,6 +4,8 @@
 
 namespace Hleb\Main\Console\Extreme;
 
+use Hleb\Static\Csrf;
+
 /**
  * Terminal output with interpretation of query parameters into console commands.
  *
@@ -20,9 +22,11 @@ final readonly class ExtremeTerminal
     public function get(): true
     {
         $uri = ExtremeRequest::getUri();
+        $uriEsc = \htmlspecialchars($uri, \ENT_QUOTES, 'UTF-8');
+        $csrfField = Csrf::field();
 
         echo '<h2>Terminal</h2><hr>     
-        <form name="console" action="' . $uri . '" method="post">
+        <form name="console" action="' . $uriEsc . '" method="post">' . $csrfField . '
         <table border="0" height="50" width="100%" cellpadding="0" cellspacing="0"><tr>        
         <td valign="center" width="40">        
               <input name="command" type=text autocomplete="on" formmethod="post" value="php console" placeholder="php console <command>">           
@@ -31,14 +35,14 @@ final readonly class ExtremeTerminal
         </form>  
         </td><td valign="center" width="10">              &emsp;               
         </td><td valign="center" width="20">  
-              <a href="' . $uri . '?command=php+console+--help">help</a>
+              <a href="' . $uriEsc . '?command=php+console+--help">help</a>
         </td><td valign="top" width="10">              &emsp;
-        </td><td valign="center" width="20">       
-              <a href="' . $uri . '?command=php+console+--list">list</a><br>     
+        </td><td valign="center" width="20">    
+              <a href="' . $uriEsc . '?command=php+console+--list">list</a><br>     
         </td><td valign="top" width="137">
-        <form name="close" method="post" action="' . $uri . '">
+        <form name="close" method="post" action="' . $uriEsc . '">' . $csrfField . '
         </td><td valign="center" align="right">
-              <button type="submit">Exit</button>
+              <button type="submit" name="exit" value="1">Exit</button>
         </form> 
         </td>
         </tr></table>

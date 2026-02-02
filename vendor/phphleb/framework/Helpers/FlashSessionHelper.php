@@ -16,7 +16,7 @@ class FlashSessionHelper
      */
    public static function update(array &$session, string $id): void
    {
-      if (\is_array($session[$id])) {
+      if (\array_key_exists($id, $session) && \is_array($session[$id])) {
            foreach ($session[$id] as $key => &$data) {
                $data['reps_left']--;
                if ($data['reps_left'] < 0) {

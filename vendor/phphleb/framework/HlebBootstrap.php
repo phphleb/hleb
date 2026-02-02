@@ -109,7 +109,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.22');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.23');
 
         $this->logger = $logger;
 
@@ -657,19 +657,21 @@ class HlebBootstrap
      */
     protected function convertForcedMethod(array &$post, array &$server, ?object &$request = null): ?string
     {
-        if ($server['REQUEST_METHOD'] === 'POST' && isset($post['_method']) && \is_string($post['_method'])) {
-            $forced = \strtoupper($post['_method']);
-            if (!$forced || $forced === 'POST') {
-                return null;
-            }
-            if (!\in_array($forced, ['PUT', 'PATCH', 'DELETE'])) {
-                throw new RuntimeException('The `_method` value is incorrect.');
-            }
-            unset($post['_method']);
-            $server['REQUEST_METHOD'] = $forced;
-            return $forced;
+        if (($server['REQUEST_METHOD'] ?? '') !== 'POST') {
+            return null;
         }
-        return null;
+        if (!isset($post['_method']) || !\is_string($post['_method'])) {
+            return null;
+        }
+        
+        $forced = \strtoupper(\trim($post['_method']));
+        unset($post['_method']);
+        if (!\in_array($forced, ['PUT', 'PATCH', 'DELETE'], true)) {
+            return null;
+        }
+        
+        $server['REQUEST_METHOD'] = $forced;
+        return $forced;
     }
 
     /**
@@ -1010,7 +1012,7 @@ class HlebBootstrap
                 $uri = \parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
                 \http_response_code(200);
                 \header('Content-Type: text/plain');
-                //\header('Connection: close');
+                // \header('Connection: close');
                 if (\str_starts_with($uri, '/user/')) {
                     $output = \substr($uri, 6);
                 }

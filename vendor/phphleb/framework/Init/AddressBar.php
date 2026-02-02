@@ -37,7 +37,8 @@ final class AddressBar
         $this->config = $config;
         $this->request = $request;
         $this->uri = $request->getUri();
-        $this->originUrl = $this->uri->getScheme() . '://' . $this->uri->getHost() . $this->uri->getPath() . $this->uri->getQuery();
+        // Use relative URL for normalization redirects to avoid dependency on Host header.
+        $this->originUrl = $this->uri->getPath() . $this->uri->getQuery();
     }
 
     /**
@@ -80,9 +81,9 @@ final class AddressBar
         // Check for a regular expression, if it is specified in the settings.
         // Проверка на регулярное выражение, если оно задано в настройках.
         if ($validateUrl && !\preg_match($validateUrl, $urlPath)) {
-            $this->resultUrl = $this->uri->getScheme() . '://' . $this->uri->getHost();
+            $this->resultUrl = '/';
         } else {
-            $this->resultUrl = $this->uri->getScheme() . '://' . $this->uri->getHost() . $urlPath . $this->uri->getQuery();
+            $this->resultUrl = $urlPath . $this->uri->getQuery();
         }
 
         return $this;

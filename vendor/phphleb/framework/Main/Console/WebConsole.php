@@ -9,6 +9,7 @@ use Hleb\Base\RollbackInterface;
 use Hleb\Constructor\Attributes\Accessible;
 use Hleb\Static\Request;
 use Hleb\Static\Settings;
+use Hleb\Static\Csrf;
 
 /**
  * A mechanism that allows a console application to act as a WEB site.
@@ -75,8 +76,15 @@ class WebConsole implements RollbackInterface
         }
         $transfer = new ExtremeDataTransfer();
         if ($method === 'POST') {
-            if (empty($params)) {
-                (new ExtremeIdentifier())->exit();
+            $isExit = isset($params['exit']);
+            $isCommand = \array_key_exists('command', $params);
+            if ($isExit || $isCommand) {
+                if (!Csrf::validate(Csrf::discover())) {
+                    async_exit(httpStatus: 403);
+                }
+                if ($isExit) {
+                    (new ExtremeIdentifier())->exit();
+                }
             }
         }
         if ($method === 'GET' && !empty($params['command'])) {

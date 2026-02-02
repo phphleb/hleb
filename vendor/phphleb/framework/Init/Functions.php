@@ -21,7 +21,7 @@ final class Functions
             return false;
         }
         if ($files = SystemSettings::getValue('system', 'custom.function.files')) {
-            foreach($files as $file) {
+            foreach ($files as $file) {
                 require Path::get('global') . DIRECTORY_SEPARATOR . \ltrim($file, '\\/');
             }
         }
@@ -296,7 +296,8 @@ final class Functions
              * Возвращает первое значение массива без смещения указателя.
              * Аналогично array_first() в PHP 8.5
              */
-            function array_first(array $array): mixed {
+            function array_first(array $array): mixed
+            {
                 if (empty($array)) {
                     return null;
                 }
@@ -312,7 +313,8 @@ final class Functions
              * Возвращает последнее значение массива без смещения указателя.
              * Аналогично array_last() в PHP 8.5
              */
-            function array_last() {
+            function array_last()
+            {
                 if (empty($array)) {
                     return null;
                 }
