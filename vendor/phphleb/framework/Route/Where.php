@@ -34,6 +34,9 @@ final class Where extends StandardRoute
     use InsertPlainTrait;
     use InsertRedirectTrait;
 
+    /**
+     * @param array<string, string> $rules
+     */
     public function __construct(array $rules)
     {
         $this->register([

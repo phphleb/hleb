@@ -47,11 +47,12 @@ trait InsertDomainTrait
      *    Route::get('/api/')->domain('api', 3);
      *  ```
      *
-     * @param string|array $name - the name of the domain or subdomain for this level.
-     *                           - название домена или поддомена для этого уровня.
+     * @param string|string[] $name - the name of the domain or subdomain for this level.
+     *                              - название домена или поддомена для этого уровня.
      *
-     * @param int $level - уровень назначения от 0. По умолчанию 2.
-     *                   - assignment level from 0. Default 2.
+     * @param int $level - assignment level from 0. Default 2.
+     *                   - уровень назначения от 0. По умолчанию 2.
+     *
      *
      * @return Domain
      */

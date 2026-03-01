@@ -18,6 +18,9 @@ final class GroupWhere extends StandardRoute
     use GroupPlainTrait;
     use GroupProtectTrait;
 
+    /**
+     * @param array<string, string> $rules
+     */
     public function __construct(array $rules)
     {
         $this->register([

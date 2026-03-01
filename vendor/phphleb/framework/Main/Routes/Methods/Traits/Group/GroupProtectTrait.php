@@ -19,6 +19,8 @@ trait GroupProtectTrait
      *       // ... //
      *  Route::endGroup();
      * ```
+     *
+     * @param string[] $rules
      */
     public function protect(string|array $rules = 'CSRF'): GroupProtect
     {

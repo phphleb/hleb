@@ -29,6 +29,9 @@ trait InsertAfterTrait
      * ```php
      *  Route::get('/example/', view('example'))->after(After::class);
      * ```
+     *
+     * @param array<mixed> $data - allows you to pass arbitrary parameters to the router - Router::data().
+     *                           - позволяет передать произвольные параметры в роутер - Router::data().
      */
     public function after(string $target, ?string $method = null, array $data = []): After
     {

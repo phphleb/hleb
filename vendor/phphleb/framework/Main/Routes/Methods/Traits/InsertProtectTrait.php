@@ -19,6 +19,8 @@ trait InsertProtectTrait
      *      ->controller(UserController::class, 'add')
      *      ->protect();
      * ``
+     *
+     * @param string[]|string $rules
      */
     public function protect(string|array $rules = 'CSRF'): Protect
     {

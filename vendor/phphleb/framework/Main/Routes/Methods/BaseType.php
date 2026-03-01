@@ -47,6 +47,9 @@ abstract class BaseType extends StandardRoute
         ]);
     }
 
+    /**
+     * @return string[]
+     */
     abstract protected function types(): array;
 
     abstract protected function methodName(): string;

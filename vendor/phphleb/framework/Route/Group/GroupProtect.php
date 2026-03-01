@@ -14,9 +14,14 @@ final class GroupProtect extends StandardRoute
 {
     use StandardGroupTrait;
 
+    /**
+     * @param string|string[] $rules
+     */
     public function __construct(string|array $rules)
     {
-        \is_string($rules) and $rules = [$rules];
+        if (\is_string($rules)) {
+            $rules = [$rules];
+        }
 
         $this->register([
             'method' => self::PROTECT_TYPE,

@@ -18,6 +18,9 @@ final class GroupMiddleware extends StandardRoute
     use GroupPlainTrait;
     use GroupProtectTrait;
 
+    /**
+     * @param array<mixed> $data
+     */
     public function __construct(string $target, ?string $method = null, array $data = [])
     {
         [$class, $method] = $this->searchMiddlewareAttributes($target, $method);

@@ -31,6 +31,9 @@ trait GroupAfterTrait
      *      // ... //
      *   Route::endGroup();
      *  ```
+     *
+     * @param array<mixed> $data - allows you to pass arbitrary parameters to the router - Router::data().
+     *                           - позволяет передать произвольные параметры в роутер - Router::data().
      */
     public function after(string $target, ?string $method = null, array $data = []):  GroupAfter
     {

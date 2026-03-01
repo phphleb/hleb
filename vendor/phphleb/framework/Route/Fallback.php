@@ -28,11 +28,21 @@ final class Fallback extends StandardRoute
     use InsertPageTrait;
     use InsertRedirectTrait;
 
+    /**
+     * @var string[]
+     */
     private array $types;
+
+    /**
+     * @param float|View|int|string|null $view
+     * @param string[] $httpTypes
+     */
 
     public function __construct(float|View|int|string|null $view = null, array $httpTypes = [])
     {
-        $httpTypes or $httpTypes = HlebBootstrap::HTTP_TYPES;
+        if (!$httpTypes) {
+            $httpTypes = HlebBootstrap::HTTP_TYPES;
+        }
 
         $this->types = \array_merge($httpTypes, ['OPTIONS']);
 
@@ -56,6 +66,9 @@ final class Fallback extends StandardRoute
         ]);
     }
 
+    /**
+     * @return string[]
+     */
     protected function types(): array
     {
         return $this->types;

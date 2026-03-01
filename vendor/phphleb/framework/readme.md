@@ -12,6 +12,15 @@ If you need to install the framework, use the link: [github.com/phphleb/hleb](ht
 A distinctive feature of the PHP framework HLEB2 is the minimalism of the code and the speed of work. The choice of this framework allows you to launch a full-fledged product with minimal time costs and appeals to documentation; it is easy, simple and fast.
 At the same time, it solves typical tasks, such as routing, shifting actions to controllers, model support, so, the basic MVC implementation. This is the very minimum you need to quickly launch an application.
 
+Checking the code using the phpstan analyzer:
+
+```bash
+composer require phpstan/phpstan:^2.1
+```
+```bash
+php vendor/bin/phpstan analyse --configuration=phpstan.neon
+```
+
 📄 [**Issue Template**](https://github.com/phphleb/framework/blob/master/.github/ISSUE_TEMPLATE.md)
 
 📄 [**Pull Request Template**](https://github.com/phphleb/framework/blob/master/.github/PULL_REQUEST_TEMPLATE.md)

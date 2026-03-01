@@ -20,10 +20,11 @@ trait InsertWhereTrait
      * Route::get('/ru/{version}/{page}/', 'Content')
      *     ->where(['version' => '[a-z0-9]+', 'page' => '[a-z]+']);
      * ```
+     *
+     * @param array<string, string> $rules
      */
     public function where(array $rules): Where
     {
         return new Where($rules);
-
     }
 }

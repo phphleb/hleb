@@ -20,6 +20,8 @@ trait GroupWhereTrait
      *        // ... //
      *   Route::endGroup();
      * ```
+     *
+     * @param array<string, string> $rules
      */
     public function where(array $rules): GroupWhere
     {

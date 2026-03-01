@@ -49,7 +49,7 @@ trait GroupDomainTrait
      *  Route::endGroup();
      * ```
      *
-     * @param string|array $name - the name of the domain or subdomain for this level.
+     * @param string|string[] $name - the name of the domain or subdomain for this level.
      *                           - название домена или поддомена для этого уровня.
      *
      * @param int $level - уровень назначения от 0. По умолчанию 2.

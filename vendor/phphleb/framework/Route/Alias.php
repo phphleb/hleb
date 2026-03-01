@@ -26,6 +26,9 @@ final class Alias extends StandardRoute
         ]);
     }
 
+    /**
+     * @return string[]
+     */
     protected function types(): array
     {
         return HlebBootstrap::HTTP_TYPES;
