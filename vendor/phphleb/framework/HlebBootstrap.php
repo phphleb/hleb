@@ -109,7 +109,7 @@ class HlebBootstrap
 
         // The current version of the framework.
         // Текущая версия фреймворка.
-        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.23');
+        \defined('HLEB_CORE_VERSION') or \define('HLEB_CORE_VERSION', '2.1.24');
 
         $this->logger = $logger;
 
@@ -681,17 +681,21 @@ class HlebBootstrap
      */
     protected function standardization(): void
     {
-        $reqUri = $_SERVER['REQUEST_URI'];
+        $reqUri = (string)($_SERVER['REQUEST_URI'] ?? '/');
+        $_SERVER['REQUEST_URI'] = $reqUri;
 
         /* If the full address came in the value. */
         /* Если в значении пришёл полный адрес. */
         if (\str_starts_with($reqUri, 'http')) {
-            $_SERVER['REQUEST_SCHEME'] = \strstr($reqUri, '://', true);
-            $addr = \strstr($reqUri, '://');
-            $addr = \ltrim($addr ?: $reqUri, ':/');
-            $host = \strstr($addr, '/', true);
-            $_SERVER['REQUEST_URI'] = \strstr($addr, '/');
-            $_SERVER['HTTP_HOST'] = $host ?: $_SERVER['HTTP_HOST'];
+            $parts = \parse_url($reqUri);
+            if (\is_array($parts) && isset($parts['scheme'], $parts['host'])) {
+                $_SERVER['REQUEST_SCHEME'] = $parts['scheme'];
+                $host = $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '');
+                $_SERVER['HTTP_HOST'] = $host ?: (string)($_SERVER['HTTP_HOST'] ?? '');
+                $path = $parts['path'] ?? '/';
+                $query = isset($parts['query']) ? '?' . $parts['query'] : '';
+                $_SERVER['REQUEST_URI'] = $path . $query;
+            }
         }
 
         // Standardization of server values for the entire project.

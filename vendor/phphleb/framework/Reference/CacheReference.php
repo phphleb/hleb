@@ -17,7 +17,6 @@ use Hleb\Constructor\Data\SystemSettings;
 use Hleb\CoreProcessException;
 use Hleb\Helpers\DirectoryCleaner;
 use Hleb\Main\Insert\ContainerUniqueItem;
-use Hleb\Main\Routes\Prepare\Defender;
 use Hleb\Static\Cache;
 use Hleb\Static\Settings;
 use RecursiveIteratorIterator;
@@ -55,8 +54,6 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
     private static ?ClassWithDataCreator $creator = null;
 
     private static array $lastKeys = [];
-
-    private static ?Defender $defender = null;
 
     private static $cacheOn = true;
 
@@ -673,7 +670,6 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
             $data = \serialize($data);
         }
         $data = self::createData($key, $data, $time, $type);
-        self::$defender->handle($data);
 
         self::$creator->saveContent(
             className: $class,
@@ -903,9 +899,6 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
             self::$cacheOn = SystemSettings::getCommonValue('app.cache.on');
             self::$creator = new ClassWithDataCreator();
             self::$globalTime = \time();
-        }
-        if (!self::$defender) {
-            self::$defender = new Defender();
         }
     }
 

@@ -49,11 +49,11 @@ final class ArrayWriting
             } else if (\is_int($key)) {
                 $tag = "$key => ";
             } else {
-                $tag = "'$key' => ";
+                $tag = \var_export($key, true) . ' => ';
             }
 
             if (\is_string($value)) {
-                $value = "'$value'";
+                $value = \var_export($value, true);
             }
             if (\is_bool($value)) {
                 $value = $value ? 'true' : 'false';

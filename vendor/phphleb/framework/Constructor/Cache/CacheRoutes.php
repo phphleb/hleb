@@ -6,7 +6,6 @@ namespace Hleb\Constructor\Cache;
 
 use FilesystemIterator;
 use Hleb\Constructor\Data\SystemSettings;
-use Hleb\Main\Routes\Prepare\Defender;
 use Hleb\Main\Routes\Update\CheckRouteForUpdates;
 use Hleb\RouteColoredException;
 use Hleb\Main\Routes\Prepare\FileChecker;
@@ -84,8 +83,6 @@ final class CacheRoutes
      */
     private function savePreviewData(array $data): void
     {
-        (new Defender())->handle($data);
-
         foreach ($data as $method => $items) {
             if ($method === 'head') {
                 continue;
@@ -196,7 +193,6 @@ final class CacheRoutes
      */
     private function saveSortData(array $list): void
     {
-        (new Defender())->handle($list);
         foreach ($list as $method => $items) {
             if ($method === 'head') {
                 continue;

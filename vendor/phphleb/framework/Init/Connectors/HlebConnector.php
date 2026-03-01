@@ -187,7 +187,6 @@ final class HlebConnector
         'Hleb\Main\Info\PathInfoDoc' => '/Main/Info/PathInfoDoc.php',
         'Hleb\Main\Console\Colorizer' => '/Main/Console/Colorizer.php',
         'Hleb\Main\Console\ReplacingColorizer' => '/Main/Console/ReplacingColorizer.php',
-        'Hleb\Main\Routes\Prepare\Defender' => '/Main/Routes/Prepare/Defender.php',
         'Hleb\Main\Routes\Prepare\FileChecker' => '/Main/Routes/Prepare/FileChecker.php',
         'Hleb\Main\Routes\Prepare\Handler' => '/Main/Routes/Prepare/Handler.php',
         'Hleb\Main\Routes\Prepare\Optimizer' => '/Main/Routes/Prepare/Optimizer.php',

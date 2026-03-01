@@ -193,9 +193,14 @@ final class SystemSettings extends BaseSingleton
         if (!$path) {
             throw new DynamicStateException("The `@$keyOrPath` value was not found in the valid file path abbreviations.");
         }
-        // May not be obvious, but realpath may return false.
-        // Может быть неочевидным, но realpath может вернуть false.
-        return $ifExists ? \realpath($path) . (\str_ends_with($path, '/') ? DIRECTORY_SEPARATOR : '') : $path;
+        if (!$ifExists) {
+            return $path;
+        }
+        $real = \realpath($path);
+        if ($real === false) {
+            return false;
+        }
+        return $real . (\str_ends_with($path, '/') ? DIRECTORY_SEPARATOR : '');
     }
 
     /** @internal */
