@@ -21,6 +21,8 @@ composer require phpstan/phpstan:^2.1
 php vendor/bin/phpstan analyse --configuration=phpstan.neon
 ```
 
+-----------------
+
 📄 [**Issue Template**](https://github.com/phphleb/framework/blob/master/.github/ISSUE_TEMPLATE.md)
 
 📄 [**Pull Request Template**](https://github.com/phphleb/framework/blob/master/.github/PULL_REQUEST_TEMPLATE.md)

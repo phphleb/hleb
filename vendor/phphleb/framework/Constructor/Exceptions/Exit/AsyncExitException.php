@@ -20,6 +20,9 @@ class AsyncExitException extends \ErrorException
 {
     private int $status = 200;
 
+    /**
+     * @var array<string, mixed>
+     */
     private array $headers = [];
 
     /**
@@ -50,6 +53,8 @@ class AsyncExitException extends \ErrorException
      * Sets the HTTP headers for the exception.
      *
      * Устанавливает HTTP-заголовки для исключения.
+     *
+     * @param array<string, mixed> $headers
      */
     public function setHeaders(array $headers): self
     {
@@ -64,6 +69,8 @@ class AsyncExitException extends \ErrorException
      * Возвращает ранее установленные HTTP-заголовки.
      *
      * @internal
+     *
+     * @return array<string, mixed>
      */
     public function getHeaders(): array
     {

@@ -269,6 +269,9 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
         ],
     ];
 
+    /**
+     * @var array<string, string>
+     */
     protected array $errorInfo = [];
 
     protected bool $isDebug = false;
@@ -284,14 +287,20 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
         $this->setStatus(500);
 
         $this->tag = $messageKey;
+        $constant = \constant(self::class . '::'. $messageKey);
+        if (!\is_string($constant)) {
+            throw new \RuntimeException('Undefined constant');
+        }
 
-        $this->errorInfo = self::ALL[(string)\constant(self::class . '::'. $messageKey)];
+        $this->errorInfo = self::ALL[$constant];
     }
 
     /**
      * Extends the output of a message and performs related actions.
      *
      * Расширяет вывод сообщения и осуществляет сопутствующие действия.
+     *
+     * @param array<string, int|string> $replacements
      */
     public function complete(bool $isDebug, array $replacements = [], bool $sendToLog = true): static
     {
@@ -326,6 +335,8 @@ abstract class AsyncRouteException extends \AsyncExitException implements CoreEx
      * Substring replacement, for example for HL000_ROUTE_ERROR it could be ['value' => 0].
      *
      * Замена подстрок, например для HL000_ROUTE_ERROR это может быть ['value' => 0].
+     *
+     * @param array<string, int|string> $trans
      */
     private function setReplacements(array $trans): void
     {

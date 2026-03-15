@@ -7,7 +7,6 @@ namespace Hleb\Main\Routes\Prepare;
 use Hleb\Constructor\Data\DynamicParams;
 use Hleb\Constructor\Data\SystemSettings;
 use Hleb\AsyncRouteException;
-use Hleb\Helpers\NameConverter;
 use Hleb\RouteColoredException;
 use Hleb\Main\Routes\StandardRoute;
 use Hleb\Static\Settings;
@@ -17,11 +16,11 @@ use Hleb\Static\Settings;
  */
 final readonly class FileChecker
 {
-    private NameConverter $converter;
-
+    /**
+     * @param array<int, array<string, string|mixed>> $rawRoutes
+     */
     public function __construct(private array $rawRoutes)
     {
-        $this->converter = new NameConverter();
     }
 
     /**
@@ -134,6 +133,7 @@ final readonly class FileChecker
     }
 
     /**
+     * @param array<string, int|string> $replace
      * @throws RouteColoredException
      */
     private function error(string $tag, array $replace = [], string $code = ''): void
