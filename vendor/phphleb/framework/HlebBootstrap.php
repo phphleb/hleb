@@ -271,7 +271,7 @@ class HlebBootstrap
                     'charset' => 'utf-8',
                     'auto_reload' => true,
                     'strict_variables' => false,
-                    'autoescape' => false,
+                    'autoescape' => true,
                     'optimizations' => -1,
                     'cache' => true,
                 ],
@@ -967,7 +967,7 @@ class HlebBootstrap
             $allowed = $this->config['common']['allowed.hosts'];
             $current = \explode(':', $request->getUri()->getHost())[0];
             if (!$allowed || !\is_array($allowed)) {
-                $this->getLogger()->warning('The `allowed.hosts` parameter of the `common` configuration is not set!');
+                throw new RuntimeException('The `allowed.hosts` parameter of the `common` configuration is not set!');
             } else if (!in_array($current, $allowed)) {
                 $isValid = false;
                 foreach ($allowed as $pattern) {

@@ -80,6 +80,7 @@ class RouteFileManager
                 $this->throwSaveError();
             }
         }
+        /** @see hl_check() - getInfoFromCache completed */
         /** @see hl_check() - checkFromUpdate completed */
 
         self::$stubData = $this->siteStubSearch(self::$infoCache);
@@ -88,8 +89,7 @@ class RouteFileManager
             $this->isBlocked = true;
             return \is_array(self::$stubData) ? self::$stubData : false;
         }
-        self::$infoCache = $this->getInfoFromCache();
-        /** @see hl_check() - getInfoFromCache completed */
+
 
         return $this->searchBlock();
     }

@@ -443,7 +443,7 @@ return [
         'charset' => 'utf-8',
         'auto_reload' => true,
         'strict_variables' => false,
-        'autoescape' => false,
+        'autoescape' => true,
         'optimizations' => -1,
         'cache' => true,
     ],

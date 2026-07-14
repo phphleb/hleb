@@ -39,7 +39,7 @@ readonly final class ErrorContent
     {
         return template('error', [
             'httpCode' => $this->httpCode,
-            'message' => $this->message,
+            'message' => htmlspecialchars($this->message, ENT_QUOTES, 'UTF-8'),
             'apiVersion' => $this->container->system()->getFrameworkApiVersion(),
             'uriPrefix' => $this->container->system()->getFrameworkResourcePrefix(),
         ]);
