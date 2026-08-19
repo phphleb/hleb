@@ -1,0 +1,13 @@
+parameters:
+   level: max
+   paths:
+       - Route
+       - Main/Routes/Methods
+       - Init/Review/basic.php
+       - Init/Review/functions.php
+       - Constructor/Exceptions
+   excludePaths:
+       # Polyfill functions in Functions::create() — intentionally excluded from the index
+       - Init/Functions.php
+   scanFiles:
+       - Init/Functions.php

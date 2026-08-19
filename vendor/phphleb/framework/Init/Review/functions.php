@@ -20,7 +20,6 @@ use Hleb\Static\Router;
 use Hleb\Static\Script;
 use Hleb\Static\Settings;
 use Hleb\Static\Template;
-use JetBrains\PhpStorm\NoReturn;
 
 if (!function_exists('hl_debug')) {
     /**
@@ -51,10 +50,16 @@ if (!function_exists('hl_db_connection')) {
      * Obtaining database connection data from the framework configuration by connection name.
      *
      * Получение данных соединения к базе данных из конфигурации фреймворка по названию подключения.
+     *
+     * @return array<mixed>
      */
     function hl_db_connection(string $name): array
     {
-        $connection = hl_db_config('db.settings.list')[$name] ?? null;
+        $list = hl_db_config('db.settings.list');
+        if (!\is_array($list)) {
+            throw new InvalidArgumentException('Connection not found: ' . $name);
+        }
+        $connection = $list[$name] ?? null;
         if (!$connection || !\is_array($connection)) {
             throw new InvalidArgumentException('Connection not found: ' . $name);
         }
@@ -67,10 +72,16 @@ if (!function_exists('hl_db_active_connection')) {
      * Retrieving active database connection data from the framework configuration.
      *
      * Получение данных активного соединения к базе данных из конфигурации фреймворка.
+     *
+     * @return array<mixed>
      */
     function hl_db_active_connection(): array
     {
-        return hl_db_connection(hl_db_config('base.db.type'));
+        $type = hl_db_config('base.db.type');
+        if (!\is_string($type)) {
+            throw new InvalidArgumentException('Active database connection type is not configured.');
+        }
+        return hl_db_connection($type);
     }
 }
 
@@ -180,9 +191,11 @@ if (!function_exists('async_exit')) {
      * @throws AsyncExitException - in asynchronous mode.
      *                             - в асинхронном режиме.
      * @alias hl_async_exit()
+     *
+     * @param mixed $message
+     * @param array<string, string> $headers
      */
-    #[NoReturn]
-    function async_exit($message = '', ?int $httpStatus = null, array $headers = []): never
+    function async_exit(mixed $message = '', ?int $httpStatus = null, array $headers = []): never
     {
         Script::asyncExit($message, $httpStatus, $headers);
     }
@@ -201,9 +214,11 @@ if (!function_exists('hl_async_exit')) {
      *
      * @see async_exit() - learn more about the capabilities of the function in the main version.     *
      *                   - подробно о возможностях функции в основном варианте.
+     *
+     * @param mixed $message
+     * @param array<string, string> $headers
      */
-    #[NoReturn]
-    function hl_async_exit($message = '', ?int $httpStatus = null, array $headers = []): never
+    function hl_async_exit(mixed $message = '', ?int $httpStatus = null, array $headers = []): never
     {
         Script::asyncExit($message, $httpStatus, $headers);
     }
@@ -224,8 +239,8 @@ if (!function_exists('view')) {
      *                         - путь до шаблона в папке resources/views (или modules/{module_name}/views в модуле).
      *                           Если это PHP-файл, то расширение указывать не нужно.
      *
-     * @param array $params - The named parameters will be passed to the assigned template as variables.
-     *                      - Именованные параметры будут переданы в назначенный шаблон как переменные.
+     * @param array<mixed> $params - The named parameters will be passed to the assigned template as variables.
+     *                             - Именованные параметры будут переданы в назначенный шаблон как переменные.
      *
      * @param int|null $status - For some simple tasks, you can immediately assign an HTTP response code.
      *                         - Для некоторых простых задач,  можно сразу назначить HTTP-код ответа.
@@ -241,6 +256,8 @@ if (!function_exists('view')) {
 if (!function_exists('hl_view')) {
     /**
      * @internal
+     *
+     * @param array<mixed> $params
      *
      * @see view() - current version of the function.
      *             - актуальная версия функции.
@@ -320,18 +337,18 @@ if (!function_exists('template')) {
      * @param string $viewPath - special path to the template file.
      *                         - специальный путь к файлу шаблона.
      *
-     * @param array $extractParams - a named array of values converted into variables inside the template.
-     *                             - именованный массив значений преобразуемых в переменные внутри шаблона.
+     * @param array<mixed> $extractParams - a named array of values converted into variables inside the template.
+     *                                    - именованный массив значений преобразуемых в переменные внутри шаблона.
      *
-     * @param array $config - config for replacing data in the transferred container when testing the template.
-     *                      - конфиг для замены данных в передаваемом контейнере при тестировании шаблона.
+     * @param array<mixed> $config - config for replacing data in the transferred container when testing the template.
+     *                             - конфиг для замены данных в передаваемом контейнере при тестировании шаблона.
      *
      * @see insertTemplate()
      * @alias hl_template()
      */
     function template(string $viewPath, array $extractParams = [], array $config = []): string
     {
-        /**
+        /*
          * Additional variables that will be active in the template.
          *
          * Дополнительные переменные, которые будут активны в шаблоне.
@@ -354,6 +371,9 @@ if (!function_exists('hl_template')) {
      *
      * @see insertTemplate()
      * @see template() - alias with short name.
+     *
+     * @param array<mixed> $extractParams
+     * @param array<mixed> $config
      */
     function hl_template(string $viewPath, array $extractParams = [], array $config = []): string
     {
@@ -380,17 +400,17 @@ if (!function_exists('insertTemplate')) {
      * @param string $viewPath - special path to the template file.
      *                         - специальный путь к файлу шаблона.
      *
-     * @param array $extractParams - a named array of values converted into variables inside the template.
-     *                             - именованный массив значений преобразуемых в переменные внутри шаблона.
+     * @param array<mixed> $extractParams - a named array of values converted into variables inside the template.
+     *                                    - именованный массив значений преобразуемых в переменные внутри шаблона.
      *
-     * @param array $config - config for replacing data in the transferred container when testing the template.
-     *                      - конфиг для замены данных в передаваемом контейнере при тестировании шаблона.
+     * @param array<mixed> $config - config for replacing data in the transferred container when testing the template.
+     *                             - конфиг для замены данных в передаваемом контейнере при тестировании шаблона.
      *
      * @alias hl_insert_template()
      */
     function insertTemplate(string $viewPath, array $extractParams = [], array $config = []): void
     {
-        /**
+        /*
          * Additional variables that will be active in the template.
          *
          * Дополнительные переменные, которые будут активны в шаблоне.
@@ -415,6 +435,9 @@ if (!function_exists('hl_insert_template')) {
      *
      * @see insertTemplate() - current version of the function.
      *                       - актуальная версия функции.
+     *
+     * @param array<mixed> $extractParams
+     * @param array<mixed> $config
      */
     function hl_insert_template(string $viewPath, array $extractParams = [], array $config = []): void
     {
@@ -441,20 +464,20 @@ if (!function_exists('insertCacheTemplate')) {
      * @param string $viewPath - special path to the template file.
      *                         - специальный путь к файлу шаблона.
      *
-     * @param array $extractParams - a named array of values converted into variables inside the template.
-     *                             - именованный массив значений преобразуемых в переменные внутри шаблона.
+     * @param array<mixed> $extractParams - a named array of values converted into variables inside the template.
+     *                                    - именованный массив значений преобразуемых в переменные внутри шаблона.
      *
      * @param int $sec - number of seconds for caching.
      *                 - количество секунд для кеширования.
      *
-     * @param array $config - config for replacing data in the transferred container when testing the template.
-     *                      - конфиг для замены данных в передаваемом контейнере при тестировании шаблона.
+     * @param array<mixed> $config - config for replacing data in the transferred container when testing the template.
+     *                             - конфиг для замены данных в передаваемом контейнере при тестировании шаблона.
      *
      * @alias hl_insert_cache_template()
      */
     function insertCacheTemplate(string $viewPath, array $extractParams = [], int $sec = Cache::DEFAULT_TIME, array $config = []): void
     {
-        /**
+        /*
          * Additional variables that will be active in the template.
          *
          * Дополнительные переменные, которые будут активны в шаблоне.
@@ -481,6 +504,9 @@ if (!function_exists('hl_insert_cache_template')) {
      *
      * @see insertCacheTemplate() - current version of the function.
      *                            - актуальная версия функции.
+     *
+     * @param array<mixed> $extractParams
+     * @param array<mixed> $config
      */
     function hl_insert_cache_template(string $viewPath, array $extractParams = [], int $sec = Cache::DEFAULT_TIME, array $config = []): void
     {
@@ -509,8 +535,8 @@ if (!function_exists('url')) {
      * @param string $routeName - route name. The name must be used in routes.
      *                          - название маршрута. Название должно быть используемым в маршрутах.
      *
-     * @param array $replacements - an array of substitutions for substitution in a dynamic route.
-     *                            - массив замен для подстановки в динамический маршрут.
+     * @param array<mixed> $replacements - an array of substitutions for substitution in a dynamic route.
+     *                                   - массив замен для подстановки в динамический маршрут.
      *
      * @param bool $endPart - whether it is necessary to leave the final part in the route, where it may be optional.
      *                      - нужно ли оставлять конечную часть в маршруте, где она может быть необязательна.
@@ -538,6 +564,8 @@ if (!function_exists('hl_url')) {
      *
      * @see url() - current version of the function.
      *            - актуальная версия функции.
+     *
+     * @param array<mixed> $replacements
      */
     function hl_url(string $routeName, array $replacements = [], bool $endPart = true, string $method = 'get'): string
     {
@@ -562,9 +590,11 @@ if (!function_exists('address')) {
      * @see url() - more about method arguments.
      *            - подробнее об аргументах метода.
      *
+     * @param array<mixed> $replacements
+     *
      * @alias hl_address()
      */
-    function address(string $routeName, array $replacements = [], bool $endPart = true, string $method = 'get'): string
+    function address(string $routeName, array $replacements = [], bool $endPart = true, string $method = 'get'): string|false
     {
         return Router::address($routeName, $replacements, $endPart, $method);
     }
@@ -578,8 +608,10 @@ if (!function_exists('hl_address')) {
      *
      * @see address() - current version of the function.
      *                - актуальная версия функции.
+     *
+     * @param array<mixed> $replacements
      */
-    function hl_address(string $routeName, array $replacements = [], bool $endPart = true, string $method = 'get'): string
+    function hl_address(string $routeName, array $replacements = [], bool $endPart = true, string $method = 'get'): string|false
     {
         return Router::address($routeName, $replacements, $endPart, $method);
     }
@@ -706,6 +738,7 @@ if (!function_exists('dump')) {
     {
         if (($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
 
+            // @phpstan-ignore function.notFound, echo.nonString
             echo PHP_EOL, \core_formatting_debug_info($value, ...$values), PHP_EOL;
         } else {
             \var_dump($value, ...$values);
@@ -737,7 +770,6 @@ if (!function_exists('dd')) {
      *                            - в асинхронном режиме.
      * @alias hl_dd()
      */
-    #[NoReturn]
     function dd(mixed $value, mixed ...$values): never
     {
         \dump($value, ...$values);
@@ -757,7 +789,6 @@ if (!function_exists('hl_dd')) {
      *
      * @see dd() - alias with short name.
      */
-    #[NoReturn]
     function hl_dd(mixed $value, mixed ...$values): never
     {
         \dd($value, ...$values);
@@ -941,7 +972,6 @@ if (!function_exists('hl_redirect')) {
      * @param int $status - response code of the current HTTP request for the redirect.
      *                    - код ответа текущего HTTP-запроса для редиректа.
      */
-    #[NoReturn]
     function hl_redirect(string $location, int $status = 302): void
     {
         Redirect::to($location, $status);
@@ -1116,7 +1146,7 @@ if (!function_exists('hl_file_get_contents')) {
      * Аналог функции file_get_contents, но дополнительно
      * может принимать специальные пути с '@' в начале.
      */
-    function hl_file_get_contents(string $path, bool $use_include_path = false, $context = null, int $offset = 0, ?int $length = null): false|string
+    function hl_file_get_contents(string $path, bool $use_include_path = false, mixed $context = null, int $offset = 0, ?int $length = null): false|string
     {
         return Path::contents($path, $use_include_path, $context, $offset, $length);
     }
@@ -1130,7 +1160,7 @@ if (!function_exists('hl_file_put_contents')) {
      * Аналог функции file_put_contents, но дополнительно
      * может принимать специальные пути с '@' в начале.
      */
-    function hl_file_put_contents(string $path, mixed $data, int $flags = 0, $context = null): false|int
+    function hl_file_put_contents(string $path, mixed $data, int $flags = 0, mixed $context = null): false|int
     {
         return Path::put($path, $data, $flags, $context);
     }
