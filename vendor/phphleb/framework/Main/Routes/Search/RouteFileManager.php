@@ -190,7 +190,7 @@ class RouteFileManager
         $index = $this->searchIndexPage((int)(self::$infoCache['index_page'] ?? 0), $request);
         if ($index) {
             $this->routeName = self::$infoCache['index_page_name'] ?? null;
-            $this->isNoDebug = self::$infoCache['no_debug'] ?? null;
+            $this->isNoDebug = (bool)(self::$infoCache['index_page_no_debug'] ?? false);
 
             return $index;
         }

@@ -73,6 +73,7 @@ final class Optimizer
         $this->routesInfo = [
             'index_page' => 0,
             'index_page_name' => '',
+            'index_page_no_debug' => 0,
             'has_dynamic_rules' => 0,
             'has_where' => 0,
             'has_protect' => 0,
@@ -112,6 +113,9 @@ final class Optimizer
                 }
                 if ($action['method'] === StandardRoute::NO_DEBUG_TYPE) {
                     $this->routesInfo['no_debug'] = 1;
+                    if ($isIndexPage) {
+                        $this->routesInfo['index_page_no_debug'] = 1;
+                    }
                 }
                 if ($action['method'] === StandardRoute::PLAIN_TYPE) {
                     $this->routesInfo['has_plain'] = 1;
