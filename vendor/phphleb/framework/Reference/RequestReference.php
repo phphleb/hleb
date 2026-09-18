@@ -134,13 +134,75 @@ class RequestReference extends ContainerUniqueItem implements RequestInterface, 
     #[\Override]
     public function isAjax(): bool
     {
-        if (\strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'xmlhttprequest') {
+        $xrw = $this->headerValue('X-Requested-With');
+        if ($xrw !== null && \in_array(\strtolower($xrw), ['xmlhttprequest', 'fetch'], true)) {
             return true;
         }
-        if ($header = $this->getHeader('X-Requested-With')) {
-            return \strtolower((string)\end($header)) === 'xmlhttprequest';
+
+        return $this->isPjax();
+    }
+
+    /** @inheritDoc */
+    #[\Override]
+    public function isPjax(): bool
+    {
+        $pjax = $this->headerValue('X-PJAX');
+
+        return $pjax !== null && $pjax !== '';
+    }
+
+    /** @inheritDoc */
+    #[\Override]
+    public function acceptsJson(): bool
+    {
+        $accept = $this->headerValue('Accept');
+
+        return $accept !== null && \str_contains($accept, 'application/json');
+    }
+
+    /** @inheritDoc */
+    #[\Override]
+    public function getContentTypeFormat(): ?string
+    {
+        $contentType = $this->headerValue('Content-Type');
+        if ($contentType === null) {
+            return null;
         }
-        return false;
+
+        $mime = \strtolower(\trim(\explode(';', $contentType, 2)[0]));
+
+        $map = [
+            'application/json'                  => 'json',
+            'application/x-json'                => 'json',
+            'text/json'                         => 'json',
+            'application/xml'                   => 'xml',
+            'text/xml'                          => 'xml',
+            'application/xhtml+xml'             => 'html',
+            'text/html'                         => 'html',
+            'application/x-www-form-urlencoded' => 'form',
+            'multipart/form-data'               => 'form',
+            'text/plain'                        => 'txt',
+            'application/javascript'            => 'js',
+            'application/x-javascript'          => 'js',
+            'text/javascript'                   => 'js',
+            'text/css'                          => 'css',
+        ];
+
+        return $map[$mime] ?? null;
+    }
+
+    public function isSoap(): bool
+    {
+        $contentType = $this->headerValue('Content-Type');
+        if ($contentType !== null
+            && \str_contains(\strtolower($contentType), 'application/soap+xml')
+        ) {
+            return true;
+        }
+
+        $soapAction = $this->headerValue('SOAPAction');
+
+        return $soapAction !== null && $soapAction !== '';
     }
 
     /** @inheritDoc */
@@ -271,5 +333,19 @@ class RequestReference extends ContainerUniqueItem implements RequestInterface, 
     public static function rollback(): void
     {
         self::$cachedParams = [];
+    }
+
+    private function headerValue(string $name): ?string
+    {
+        $key = 'HTTP_' . \strtoupper(\str_replace('-', '_', $name));
+        if (isset($_SERVER[$key])) {
+            return (string)$_SERVER[$key];
+        }
+
+        if ($header = $this->getHeader($name)) {
+            return (string)\end($header);
+        }
+
+        return null;
     }
 }

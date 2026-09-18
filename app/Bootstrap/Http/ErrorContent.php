@@ -6,6 +6,7 @@ namespace App\Bootstrap\Http;
 
 use Hleb\Constructor\Attributes\Dependency;
 use \App\Bootstrap\ContainerInterface;
+use JsonException;
 
 /**
  * Implements content management of returned HTTP errors.
@@ -34,9 +35,14 @@ readonly final class ErrorContent
      * Returns the content for the GET method.
      *
      * Возвращает контент для метода 'GET'.
+     *
+     * @throws JsonException
      */
     public function get(): string
     {
+        if ($this->container->request()->isAjax() || $this->container->request()->acceptsJson()) {
+            return $this->other();
+        }
         return template('error', [
             'httpCode' => $this->httpCode,
             'message' => htmlspecialchars($this->message, ENT_QUOTES, 'UTF-8'),
@@ -50,7 +56,7 @@ readonly final class ErrorContent
      *
      * Возвращает контент для 'POST', 'PUT', 'PATCH', 'DELETE' методов.
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function other(): string
     {
