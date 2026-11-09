@@ -407,10 +407,10 @@ final class Cache extends BaseSingleton
     }
 
     /**
-     * Complete removal of expired cache.
+     * Complete removal of expired cache and enforcement of its maximum size.
      * (!) With a large amount of cache, execution may take a long time.
      *
-     * Полное удаление просроченного кеша.
+     * Полное удаление просроченного кеша и контроль его максимального размера.
      * (!) При большом количестве кеша выполнение может занять длительное время.
      */
     public static function clearExpired(): void

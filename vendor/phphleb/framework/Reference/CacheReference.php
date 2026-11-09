@@ -92,6 +92,8 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
 
     private static $cacheOn = true;
 
+    private static bool $cleanupOnlyCli = false;
+
     public function __construct()
     {
         $this->rollback();
@@ -110,6 +112,7 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
         self::$creator = null;
         self::$cachePath = null;
         self::$cacheOn = true;
+        self::$cleanupOnlyCli = false;
     }
 
     /**
@@ -468,7 +471,9 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
             if ($time && $time > self::$globalTime) {
                 return $time - self::$globalTime;
             }
-            self::delete($key);
+            if (!self::$cleanupOnlyCli) {
+                self::delete($key);
+            }
         }
         return false;
     }
@@ -528,7 +533,12 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
     public function clearExpired(): void
     {
         self::init();
+        $headlinePath = self::$cachePath . self::HEADLINE_PREFIX;
+        if (!\is_dir($headlinePath)) {
+            return;
+        }
         self::clearAllExpiredCache();
+        (new ClearRandomFileCache())->run($headlinePath);
     }
 
     /**
@@ -767,7 +777,7 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
      */
     private static function clearRandomExpiredCache(): void
     {
-        if (self::$notCleaningAction) {
+        if (self::$notCleaningAction && !self::$cleanupOnlyCli) {
             self::clearRandomExpiredFiles();
             $maxSize = Settings::getParam('common', 'max.cache.size');
             if ($maxSize > 0) {
@@ -954,6 +964,7 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
         if (!self::$creator) {
             self::$cachePath = SystemSettings::getPath('storage') . '/cache/source/';
             self::$cacheOn = SystemSettings::getCommonValue('app.cache.on');
+            self::$cleanupOnlyCli = (bool)SystemSettings::getCommonValue('cache.cleanup.only-cli');
             self::$creator = new ClassWithDataCreator();
             self::$globalTime = \time();
         }

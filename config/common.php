@@ -579,4 +579,27 @@ return [
     │
     */
     'max.cache.size' => 0,
+
+    /*
+    │-----------------------------------------------------------------------------
+    │ Cache cleanup only from the console
+    │-----------------------------------------------------------------------------
+    │
+    │ Disables automatic removal of expired cache files during requests, including
+    │ cleanup caused by exceeding max.cache.size. The configured size limit and
+    │ expired entries can be processed with `php console clear-expired-cache`.
+    │ Default: false
+    │
+    │
+    │-----------------------------------------------------------------------------
+    │ Очистка кеша только из консоли
+    │-----------------------------------------------------------------------------
+    │
+    │ Отключает автоматическое удаление просроченных файлов кеша при запросах,
+    │ включая очистку при превышении max.cache.size. Просроченные записи и лимит
+    │ размера можно обработать командой `php console clear-expired-cache`.
+    │ Изначально: false
+    │
+    */
+    'cache.cleanup.only-cli' => false,
 ];

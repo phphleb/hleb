@@ -229,9 +229,9 @@ interface CacheInterface
     public function clear(): bool;
 
     /**
-     * Complete removal of expired cache.
+     * Complete removal of expired cache and enforcement of its maximum size.
      *
-     * Полное удаление просроченного кеша.
+     * Полное удаление просроченного кеша и контроль его максимального размера.
      */
     public function clearExpired(): void;
 }
