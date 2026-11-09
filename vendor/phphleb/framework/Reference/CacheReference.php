@@ -43,6 +43,41 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
 
     private const SECOND_PREFIX_LEN = 2;
 
+    /**
+     * Long-term cache TTL threshold in seconds.
+     *
+     * Порог TTL долгосрочного кеша в секундах.
+     */
+    private const LONG_TERM_TTL_THRESHOLD = 3600;
+
+    /**
+     * Early refresh period in seconds.
+     *
+     * Период раннего обновления в секундах.
+     */
+    private const EARLY_REFRESH_PERIOD = 10;
+
+    /**
+     * Long-term cache early refresh period in seconds.
+     *
+     * Период раннего обновления долгосрочного кеша в секундах.
+     */
+    private const LONG_TERM_EARLY_REFRESH_PERIOD = 20;
+
+    /**
+     * Early refresh probability divisor (1/N).
+     *
+     * Делитель вероятности раннего обновления (1/N).
+     */
+    private const EARLY_REFRESH_PROBABILITY_DIVISOR = 5;
+
+    /**
+     * Long-term cache refresh probability divisor (1/N).
+     *
+     * Делитель вероятности обновления долгосрочного кеша (1/N).
+     */
+    private const LONG_TERM_EARLY_REFRESH_PROBABILITY_DIVISOR = 10;
+
     private static ?array $applicants = null;
 
     private static bool $notCleaningAction = true;
@@ -129,16 +164,38 @@ class CacheReference extends ContainerUniqueItem implements CacheInterface, Inte
      * @inheritDoc
      */
     #[\Override]
-    public function getConform(string $key, callable $func, int $ttl = Cache::DEFAULT_TIME): mixed
+    public function getConform(
+        string $key,
+        callable $func,
+        int $ttl = Cache::DEFAULT_TIME,
+        bool $earlyRefresh = false
+    ): mixed
     {
         self::init();
-        if (self::isExists($key)) {
+        $remainingTtl = self::getExpire($key);
+        if ($remainingTtl !== false && (!$earlyRefresh || !$this->isEarlyRefreshRequired($remainingTtl, $ttl))) {
             return self::get($key);
         }
         $data = $func();
         self::set($key, $data, $ttl);
 
         return $data;
+    }
+
+    /**
+     * Determines whether the cache should be refreshed before it expires.
+     *
+     * Определяет необходимость обновления кеша до истечения срока действия.
+     */
+    protected function isEarlyRefreshRequired(int $remainingTtl, int $ttl): bool
+    {
+        $longTerm = $ttl > self::LONG_TERM_TTL_THRESHOLD;
+        $refreshPeriod = $longTerm ? self::LONG_TERM_EARLY_REFRESH_PERIOD : self::EARLY_REFRESH_PERIOD;
+        $chance = $longTerm
+            ? self::LONG_TERM_EARLY_REFRESH_PROBABILITY_DIVISOR
+            : self::EARLY_REFRESH_PROBABILITY_DIVISOR;
+
+        return $remainingTtl <= $refreshPeriod && \mt_rand(1, $chance) === 1;
     }
 
     /**

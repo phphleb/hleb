@@ -54,17 +54,19 @@ interface CacheInterface
      * Replaces the standard set of cache operations.
      * Checks if the value is in the cache and returns the result,
      * otherwise caches the result of the function execution and returns the value.
+     * Early refresh allows the function to run shortly before the cache expires.
      * For example:
      *
      * Заменяет стандартный набор операций с кешем.
      * Проверяет наличие значения в кеше и возвращает результат,
      * в противном случае кеширует результат выполнения функции и возвращает значение.
+     * Раннее обновление позволяет выполнить функцию незадолго до истечения кеша.
      * Например:
      *
      *  $x = mt_rand();
      *  $data = $cache->getConform('test', function() use ($x) { return round($x / 10); }, 30);
      */
-    public function getConform(string $key, callable $func, int $ttl): mixed;
+    public function getConform(string $key, callable $func, int $ttl, bool $earlyRefresh = false): mixed;
 
     /**
      * Returns a cached value of an arbitrary type.
